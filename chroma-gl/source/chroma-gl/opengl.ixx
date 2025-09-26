@@ -2381,28 +2381,4 @@ export namespace gl
     {
         ::glHint(gl::to_underlying(target), gl::to_underlying(mode));
     }
-
-
-
-
-
-#ifdef GL_EXTENSION
-    namespace extension
-    {
-
-    }
-#endif
-#ifdef GL_LEGACY
-    namespace legacy
-    {
-        auto get_error() -> gl::error_flag_e
-        {
-            return static_cast<gl::error_flag_e>(glGetError());
-        }
-        auto is_sync(gl::sync_t sync) -> gl::bool_t
-        {
-            return static_cast<gl::bool_t>(glIsSync(sync));
-        }
-    }
-#endif
 }
