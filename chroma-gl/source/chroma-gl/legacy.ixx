@@ -16,22 +16,151 @@ export namespace gl::legacy
         return static_cast<gl::bool_t>(::glIsSync(sync));
     }
 
+
+
+
+
+
+//    void active_shader_program      ()
+//    {
+//        glActiveShaderProgram();
+//    }
+//    void active_texture             ()
+//    {
+//        glActiveTexture();
+//    }
+//    void attach_shader              ()
+//    {
+//        glAttachShader();
+//    }
+//    void bind_attrib_location       ()
+//    {
+//        glBindAttribLocation();
+//    }
+//    void bind_buffer                ()
+//    {
+//        glBindBuffer();
+//    }
+//    void bind_texture               ()
+//    {
+//        glBindTexture();
+//    }
+//    void bind_textures              ()
+//    {
+//        glBindTextures();
+//    }
+//    void bind_transform_feedback    ()
+//    {
+//        glBindTransformFeedback();
+//    }
+//    void bind_vertex_buffer         ()
+//    {
+//        glBindVertexBuffer();
+//    }
+//    void bind_vertex_buffers        ()
+//    {
+//        glBindVertexBuffers();
+//    }
+//    void buffer_data                ()
+//    {
+//        glBufferData();
+//    }
+//    void buffer_sub_data            ()
+//    {
+//        glBufferSubData();
+//    }
+//    void check_framebuffer_status   ()
+//    {
+//        glCheckFramebufferStatus();
+//    }
+//    void clear_buffer_data          ()
+//    {
+//        glClearBufferData();
+//    }
+//    void clear_buffer_sub_data      ()
+//    {
+//        glClearBufferSubData();
+//    }
+//    void compressed_tex_image1_d    ()
+//    {
+//        glCompressedTexImage1D();
+//    }
+//    void compressed_tex_image2_d    ()
+//    {
+//        glCompressedTexImage2D();
+//    }
+//    void compressed_tex_image3_d    ()
+//    {
+//        glCompressedTexImage3D();
+//    }
+//    void compressed_tex_sub_image1_d()
+//    {
+//        glCompressedTexSubImage1D();
+//    }
+//    void compressed_tex_sub_image2_d()
+//    {
+//        glCompressedTexSubImage2D();
+//    }
+//    void compressed_tex_sub_image3_d()
+//    {
+//        glCompressedTexSubImage3D();
+//    }
+//    void copy_buffer_sub_data       ()
+//    {
+//        glCopyBufferSubData();
+//    }
+//    void copy_tex_image1_d          ()
+//    {
+//        glCopyTexImage1D();
+//    }
+//    void copy_tex_image2_d          ()
+//    {
+//        glCopyTexImage2D();
+//    }
+//    void copy_tex_sub_image1_d      ()
+//    {
+//        glCopyTexSubImage1D();
+//    }
+//    void copy_tex_sub_image2_d      ()
+//    {
+//        glCopyTexSubImage2D();
+//    }
+//    void copy_tex_sub_image3_d      ()
+//    {
+//        glCopyTexSubImage3D();
+//    }
+//    void delete_transform_feedbacks ()
+//    {
+//        glDeleteTransformFeedbacks();
+//    }
+//    void disable_vertex_attrib_array()
+//     {
+//      glDisableVertexAttribArray();
+//}
+
+
+
+
+
+
+
+
+
+
+
     //glActiveShaderProgram;
     //glActiveTexture;
     //glAttachShader;
     //glBindAttribLocation
     //glBindBuffer
-    //glBindRenderBuffer
     //glBindTexture
     //glBindTextures
     //glBindTransformFeedback
     //glBindVertexBuffer
     //glBindVertexBuffers
-    //glBlitFrameBuffer
     //glBufferData
     //glBufferSubData
     //glCheckFramebufferStatus
-    //glClearBuffer
     //glClearBufferData
     //glClearBufferSubData
     //glCompressedTexImage1D
@@ -71,15 +200,12 @@ export namespace gl::legacy
     //glGenTransformFeedbacks
     //glGenVertexArrays
     //glGenerateMipmap
-    //glGet
     //glGetActiveAttrib
     //glGetActiveUniform
-    //glGetActiveUniformBlock
     //glGetActiveUniformBlockName
     //glGetActiveUniformName
     //glGetActiveUniformsiv
     //glGetAttribLocation
-    //glGetBufferParameter
     //glGetBufferParameteriv
     //glGetBufferPointerv
     //glGetBufferSubData
@@ -87,28 +213,15 @@ export namespace gl::legacy
     //glGetError
     //glGetFragDataIndex
     //glGetFragDataLocation
-    //glGetFramebufferAttachmentParameter
-    //glGetFramebufferParameter
-    //glGetInternalformat
-    //glGetProgramInterface
-    //glGetProgramPipeline
-    //glGetProgramResource
     //glGetProgramResourceIndex
     //glGetProgramResourceLocation
     //glGetProgramResourceLocationIndex
     //glGetProgramResourceName
-    //glGetRenderbufferParameter
     //glGetTexImage
-    //glGetTexLevelParameter
-    //glGetTexParameter
-    //glGetTransformFeedback
     //glGetTransformFeedbackVarying
-    //glGetUniform
     //glGetUniformBlockIndex
     //glGetUniformIndices
     //glGetUniformLocation
-    //glGetUniformSubroutine
-    //glGetVertexAttrib
     //glHint
     //glInvalidateFramebuffer
     //glInvalidateSubFramebuffer
@@ -126,7 +239,6 @@ export namespace gl::legacy
     //glIsVertexArray
     //glMapBufferRange
     //glPolygonOffset
-    //glProgramUniform
     //glReadBuffer
     //glReadPixels
     //glRenderbufferStorage
@@ -139,7 +251,6 @@ export namespace gl::legacy
     //glTexImage2DMultisample
     //glTexImage3D
     //glTexImage3DMultisample
-    //glTexParameter
     //glTexStorage1D
     //glTexStorage2D
     //glTexStorage2DMultisample
@@ -151,12 +262,9 @@ export namespace gl::legacy
     //glTransformFeedbackBufferBase
     //glTransformFeedbackBufferRange
     //glTransformFeedbackVaryings
-    //glUniform
     //glUniformBlockBinding
-    //glUniformSubroutines
     //glUnmapBuffer
     //glUseProgram
-    //glVertexAttrib
     //glVertexAttribBinding
     //glVertexAttribDivisor
     //glVertexAttribFormat
@@ -198,4 +306,32 @@ export namespace gl::legacy
     //glMultiDrawElementsIndirect
     //glPauseTransformFeedback
     //glShaderStorageBlockBinding
+
+
+
+    //Not found
+    //glBindRenderBuffer
+    //glBlitFrameBuffer
+    //glClearBuffer
+    //glGet
+    //glGetActiveUniformBlock
+    //glGetBufferParameter
+    //glGetFramebufferAttachmentParameter
+    //glGetFramebufferParameter
+    //glGetInternalformat
+    //glGetProgramInterface
+    //glGetProgramPipeline
+    //glGetProgramResource
+    //glGetRenderbufferParameter
+    //glGetTexLevelParameter
+    //glGetTexParameter
+    //glGetTransformFeedback
+    //glGetUniform
+    //glGetUniformSubroutine
+    //glGetVertexAttrib
+    //glProgramUniform
+    //glTexParameter
+    //glUniform
+    //glUniformSubroutines
+    //glVertexAttrib
 }
