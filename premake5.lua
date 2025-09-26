@@ -16,6 +16,10 @@ workspace "chroma-gl"
 		
 		targetdir "%{wks.location}/bin/debug/windows/%{prj.name}"
 		objdir    "%{wks.location}/build/debug/windows/%{prj.name}"
+		
+		defines {
+			'BUILD_CONFIGURATION="debug"', 
+		}
 	
 	filter "configurations:Release"
 		runtime   "Release"
@@ -78,6 +82,16 @@ group "Application"
 			
 			"opengl32.lib", 
 		}
+		
+		filter "configurations:Debug"
+			defines {
+				"BUILD_CONFIGURATION=debug", 
+			}
+		filter "configurations:Release"
+			defines {
+				"BUILD_CONFIGURATION=release", 
+			}
+
 
 	project "run"
 		location         "run"
