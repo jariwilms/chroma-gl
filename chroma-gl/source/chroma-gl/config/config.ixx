@@ -8,5 +8,5 @@ export namespace gl::config
         release, 
     };
 
-    constexpr auto build_configuration = config::build_configuration_e::debug;
+    constexpr auto build_configuration = config::build_configuration_e::BUILD_CONFIGURATION;
 }
