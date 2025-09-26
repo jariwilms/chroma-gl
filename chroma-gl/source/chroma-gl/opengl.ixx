@@ -29,7 +29,6 @@ export namespace gl
 
     //Todo:
     //Span type with 4-byte size for easier conversion?
-    //Legacy OpenGL functions at the top/different file for convenience? (for example: glGetBooleanv, glHint, ... etc.)
     //A lot of testing because templates do not get compiled if they are not instantiated...
 
 
