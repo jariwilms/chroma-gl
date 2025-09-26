@@ -352,19 +352,19 @@ export namespace gl
                 auto value = gl::int64_t{};
                 return ::glGetInteger64i_v(gl::to_underlying(data), index, &value), static_cast<gl::uint64_t>(value);
             };
-        auto get_area = [](gl::data_e data, gl::index_t index) -> gl::area_t
+        auto get_area                 = [](gl::data_e data, gl::index_t index) -> gl::area_t
             {
                 auto value = gl::vector4u{};
                 ::glGetIntegeri_v(gl::to_underlying(data), index, static_cast<gl::int32_t*>(gl::value_pointer(value)));
 
                 return gl::area_t{ gl::vector2u{ value.z, value.w }, gl::vector2u{ value.x, value.y } };
             };
-        auto get_blending_equation = [](gl::data_e data, gl::index_t index) -> std::array<gl::blending_equation_e, 8u>
+        auto get_blending_equation    = [](gl::data_e data, gl::index_t index) -> std::array<gl::blending_equation_e, 8u>
             {
                 auto value = std::array<gl::int32_t, 8u>{};
                 return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::blending_equation_e, 8u>>(value);
             };
-        auto get_blending_factor = [](gl::data_e data, gl::index_t index) -> std::array<gl::blending_factor_e, 8u>
+        auto get_blending_factor      = [](gl::data_e data, gl::index_t index) -> std::array<gl::blending_factor_e, 8u>
             {
                 auto value = std::array<gl::int32_t, 8u>{};
                 return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::blending_equation_e, 8u>>(value);
