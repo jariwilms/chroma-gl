@@ -597,9 +597,9 @@ export namespace gl
     template<typename T>
     auto get_buffer_sub_data                        (gl::handle_t buffer, gl::range range) -> std::vector<T>
     {
-        const auto byterange = gl::convert_range<T>(range);
-              auto data      = std::vector<T>(range.count);
-        return ::glGetNamedBufferSubData(gl::to_underlying(buffer), byterange.offset, byterange.size, data.data()), data;
+        const auto byte_range = gl::convert_range<T>(range);
+              auto data       = std::vector<T>(range.count);
+        return ::glGetNamedBufferSubData(gl::to_underlying(buffer), byte_range.offset, byte_range.size, data.data()), data;
     }
     
 
@@ -1377,7 +1377,7 @@ export namespace gl
                 ::glSamplerParameterfv(gl::to_underlying(sampler), gl::to_underlying(parameter), &value);
             };
 
-        const auto overload = gl::overload
+        const auto overload = gl::overload_t
         {
             [=](glp::compare_mode         _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::compare_mode        , gl::to_underlying(_.value)); }, 
             [=](glp::compare_function     _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::compare_function    , gl::to_underlying(_.value)); },
@@ -1388,11 +1388,11 @@ export namespace gl
             [=](glp::wrapping_t           _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::wrapping_t          , gl::to_underlying(_.value)); },
             [=](glp::border_color         _) 
                 {
-                    const auto overload = gl::overload
+                    const auto overload = gl::overload_t
                     {
-                        [=](gl::vector4i _) { glSamplerParameterIiv (gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
-                        [=](gl::vector4u _) { glSamplerParameterIuiv(gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
-                        [=](gl::vector4f _) { glSamplerParameterfv  (gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
+                        [=](gl::vector4i _) { ::glSamplerParameterIiv (gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
+                        [=](gl::vector4u _) { ::glSamplerParameterIuiv(gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
+                        [=](gl::vector4f _) { ::glSamplerParameterfv  (gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
                     };
 
                     std::visit(overload, _.value);
@@ -1493,8 +1493,8 @@ export namespace gl
     template<typename T>
     void texture_buffer_range                       (gl::handle_t texture, gl::handle_t buffer, gl::buffer_format_e format, gl::range range)
     {
-        const auto byterange = gl::convert_range<T>(range);
-        ::glTextureBufferRange(gl::to_underlying(texture), gl::to_underlying(format), gl::to_underlying(buffer), byterange.offset, byterange.size);
+        const auto byte_range = gl::convert_range<T>(range);
+        ::glTextureBufferRange(gl::to_underlying(texture), gl::to_underlying(format), gl::to_underlying(buffer), byte_range.offset, byte_range.size);
     }
     void texture_parameter                          (gl::handle_t texture, glp::texture_parameter_v parameter)
     {
@@ -1515,7 +1515,7 @@ export namespace gl
                 return ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(parameter), gl::to_underlying_ptr(value.data()));
             };
 
-        auto overload = gl::overload
+        auto overload = gl::overload_t
         {
             [=](glp::compare_function     _) { texture_parameter_uiv(texture, gl::texture_parameter_e::compare_function    , gl::to_underlying(_.value)); }, 
             [=](glp::compare_mode         _) { texture_parameter_uiv(texture, gl::texture_parameter_e::compare_mode        , gl::to_underlying(_.value)); },
@@ -1523,11 +1523,11 @@ export namespace gl
             [=](glp::maximum_level        _) { texture_parameter_uiv(texture, gl::texture_parameter_e::maximum_level       ,                   _.value ); },
             [=](glp::border_color         _)
             {
-                auto overload = gl::overload
+                auto overload = gl::overload_t
                 {
-                    [=](gl::vector4i __) { glTextureParameterIiv (gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
-                    [=](gl::vector4u __) { glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
-                    [=](gl::vector4f __) { glTextureParameterfv  (gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
+                    [=](gl::vector4i __) { ::glTextureParameterIiv (gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
+                    [=](gl::vector4u __) { ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
+                    [=](gl::vector4f __) { ::glTextureParameterfv  (gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
                 };
 
                 std::visit(overload, _.value);
@@ -1744,7 +1744,7 @@ export namespace gl
                 ::glPatchParameterfv(gl::to_underlying(parameter), &value);
             };
 
-        auto overload = gl::overload
+        auto overload = gl::overload_t
         {
             [=](glp::patch_vertices            _) { patch_parameter_i (                    gl::patch_parameter_e::patch_vertices            , _.value)       ; }, 
             [=](glp::patch_default_outer_level _) { ::glPatchParameterfv(gl::to_underlying(gl::patch_parameter_e::patch_default_outer_level), _.value.data()); },
@@ -1879,7 +1879,7 @@ export namespace gl
     {
         ::glVertexArrayVertexBuffer(gl::to_underlying(vertex_array), gl::to_underlying(binding), gl::to_underlying(vertex_buffer), static_cast<gl::offset_t>(index), static_cast<gl::sizei_t>(stride));
     }
-    void vertex_array_vertex_buffers                (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, std::span<const gl::byterange> strides, gl::range range)
+    void vertex_array_vertex_buffers                (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, std::span<const gl::byte_range> strides, gl::range range)
     {
         gl::todo();
         //::glVertexArrayVertexBuffers(gl::to_underlying(vertex_array), range.index, range.count, gl::to_underlying_ptr(vertex_buffers.data()), );
@@ -2014,7 +2014,7 @@ export namespace gl
                 ::glPointParameterf(gl::to_underlying(parameter), value);
             };
 
-        auto overload = gl::overload
+        auto overload = gl::overload_t
         {
             [=](glp::fade_threshold_size      _) { point_parameter_f(gl::point_parameter_e::fade_threshold_size     ,                   _.value ); }, 
             [=](glp::sprite_coordinate_origin _) { point_parameter_i(gl::point_parameter_e::sprite_coordinate_origin, gl::to_underlying(_.value)); }, 
@@ -2197,11 +2197,11 @@ export namespace gl
                 ::glClearNamedFramebufferfi(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), static_cast<gl::int32_t>(index), depth, stencil);
             };
 
-        auto overload = gl::overload
+        auto overload = gl::overload_t
         {
             [=](glp::color_index  _)
             {
-                auto overload = gl::overload
+                auto overload = gl::overload_t
                 {
                     [=](gl::vector4i __) { clear_frame_buffer_iv (frame_buffer, gl::frame_buffer_attachment_e::color0, _.index, gl::value_pointer(__)); }, 
                     [=](gl::vector4u __) { clear_frame_buffer_uiv(frame_buffer, gl::frame_buffer_attachment_e::color0, _.index, gl::value_pointer(__)); }, 
@@ -2212,7 +2212,7 @@ export namespace gl
             }, 
             [=](glp::depth        _)
             {
-                auto overload = gl::overload
+                auto overload = gl::overload_t
                 {
                     [=](gl::int32_t   __) { clear_frame_buffer_iv (frame_buffer, gl::frame_buffer_attachment_e::depth, gl::uint32_t{ 0u }, &__); }, 
                     [=](gl::uint32_t  __) { clear_frame_buffer_uiv(frame_buffer, gl::frame_buffer_attachment_e::depth, gl::uint32_t{ 0u }, &__); }, 
@@ -2223,7 +2223,7 @@ export namespace gl
             }, 
             [=](glp::stencil      _)
             {
-                auto overload = gl::overload
+                auto overload = gl::overload_t
                 {
                     [=](gl::int32_t   __) { clear_frame_buffer_iv (frame_buffer, gl::frame_buffer_attachment_e::stencil, gl::uint32_t{ 0u }, &__); }, 
                     [=](gl::uint32_t  __) { clear_frame_buffer_uiv(frame_buffer, gl::frame_buffer_attachment_e::stencil, gl::uint32_t{ 0u }, &__); }, 
@@ -2327,7 +2327,7 @@ export namespace gl
     //Chapter 19 - Compute Shaders
     void dispatch_compute                           (glp::dispatch_v parameter)
     {
-        auto overload = gl::overload
+        auto overload = gl::overload_t
         {
             [=](gl::vector3u _) { ::glDispatchCompute        (_.x, _.y, _.z); }, 
             [=](gl::offset_t _) { ::glDispatchComputeIndirect(_            ); }, 

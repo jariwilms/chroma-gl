@@ -43,12 +43,12 @@ export namespace gl
 
 
     template<typename T>
-    constexpr auto convert_range(gl::range     range) -> gl::byterange
+    constexpr auto convert_range(gl::range     range) -> gl::byte_range
     {
-        return gl::byterange{ static_cast<gl::size_t>(range.count * sizeof(T)), static_cast<gl::offset_t>(range.index * sizeof(T)) };
+        return gl::byte_range{ static_cast<gl::size_t>(range.count * sizeof(T)), static_cast<gl::offset_t>(range.index * sizeof(T)) };
     }
     template<typename T>
-    constexpr auto convert_range(gl::byterange range) -> gl::range
+    constexpr auto convert_range(gl::byte_range range) -> gl::range
     {
         return gl::range{ static_cast<gl::count_t>(range.size / sizeof(T)), static_cast<gl::index_t>(range.offset / sizeof(T)) };
     }
@@ -57,21 +57,9 @@ export namespace gl
     {
         return (first.index < second.index + second.count) && (second.index < first.index + second.count);
     }
-    constexpr auto range_overlaps(gl::byterange first, gl::byterange second) -> gl::bool_t
+    constexpr auto range_overlaps(gl::byte_range first, gl::byte_range second) -> gl::bool_t
     {
         return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
-    }
-
-
-
-    template<typename T> requires std::is_integral_v<T> && std::is_unsigned_v<T>
-    constexpr auto to_positive_signed_integral(T value) -> std::make_signed_t<T>
-    {
-        constexpr auto bitsize = sizeof(T) * 8u;
-        constexpr auto mask    = ~(static_cast<T>(1u) << (bitsize - 1u));
-                  auto result  = value & mask;
-
-        return static_cast<std::make_signed_t<T>>(result);
     }
 
 
@@ -97,5 +85,5 @@ export namespace gl
 
 
     template<typename... Ts>
-    struct overload : Ts... { using Ts::operator()...; };
+    struct overload_t : Ts... { using Ts::operator()...; };
 }

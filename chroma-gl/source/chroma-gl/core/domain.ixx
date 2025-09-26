@@ -26,12 +26,12 @@ export namespace gl
         gl::count_t count{};
         gl::index_t index{};
     };
-    struct byterange
+    struct byte_range
     {
-        constexpr byterange(gl::size_t size = {}, gl::offset_t offset = {})
+        constexpr byte_range(gl::size_t size = {}, gl::offset_t offset = {})
             : size{ size }, offset{ offset } {}
 
-        auto operator==(const byterange&) const -> gl::bool_t = default;
+        auto operator==(const byte_range&) const -> gl::bool_t = default;
 
         gl::size_t   size{};
         gl::offset_t offset{};
