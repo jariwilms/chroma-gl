@@ -1,6 +1,6 @@
 export module opengl.window;
 
-//import vendor.glfw;
+//import glfw;
 
 export namespace gl
 {
