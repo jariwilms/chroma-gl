@@ -340,7 +340,7 @@ export namespace gl
         if constexpr (D == gl::data_e::viewport_sub_pixel_bits                              ) return get_uint32(D);
     }
     template<gl::data_e D>    requires (gl::indexed_data_c<D>)
-    auto get_value_index                            (gl::index_t index) -> auto
+    auto get_indexed_value                          (gl::index_t index) -> auto
     {
         auto get_uint32               = [](gl::data_e data, gl::index_t index) -> gl::uint32_t
             {
