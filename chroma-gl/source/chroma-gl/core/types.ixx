@@ -47,16 +47,12 @@ export namespace gl
 
 
 
-
-
     template<typename T, gl::uint32_t N>
     using vector_t     = glm::vec<N, T, glm::packed_highp>;
     template<typename T, gl::uint32_t R, gl::uint32_t C = R>
     using matrix_t     = glm::mat<R, C, T>;
     template<typename T>
     using quaternion   = glm::qua<T, glm::packed_highp>;
-
-
 
     using vector1b     = gl::vector_t  <gl::boolean_t, 1u>;
     using vector2b     = gl::vector_t  <gl::boolean_t, 2u>;
@@ -89,7 +85,11 @@ export namespace gl
 
     using quaternion4f = gl::quaternion<gl::float32_t    >;
 
-
+    template<typename T>
+    auto value_pointer(T value) -> auto*
+    {
+        return glm::value_ptr(value);
+    }
 
 
 

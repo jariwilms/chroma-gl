@@ -36,9 +36,6 @@ export namespace gl
             || D == gl::data_e::vertex_binding_buffer
         );
 
-    template<gl::data_e D>
-    concept non_indexed_data_c = !indexed_data_c<D>;
-
     template<gl::texture_target_e T, gl::texture_target_e U>
     concept valid_texture_view_c = 
            (T == gl::texture_target_e::_1d                   && (U == gl::texture_target_e::_1d             || U == gl::texture_target_e::_1d_array                                                                                                ))
