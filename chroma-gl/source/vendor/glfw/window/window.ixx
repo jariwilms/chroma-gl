@@ -34,7 +34,7 @@ export namespace vendor::glfw
             glfw::window_hint(glfw::hint_e::context_version_minor, glfw::hint_value_e::opengl_version_minor_6);
             glfw::window_hint(glfw::hint_e::opengl_profile       , glfw::hint_value_e::opengl_core_profile   );
             glfw::window_hint(glfw::hint_e::refresh_rate         , glfw::hint_value_e::dont_care             );
-            glfw::window_hint(glfw::hint_e::visible              , glfw::hint_value_e::false_);
+            glfw::window_hint(glfw::hint_e::visible              , glfw::hint_value_e::false_                );
 
             if constexpr (gl::config::build_configuration == gl::config::build_configuration_e::debug)
                 glfw::window_hint(glfw::hint_e::opengl_debug_context , glfw::hint_value_e::true_);
@@ -53,13 +53,9 @@ export namespace vendor::glfw
             vendor::glad::initialize();
             gl::context::initialize();
 
-
-
             input_     = std::make_shared<glfw::input>();
             user_data_ = window::user_data{ input_, &dimensions_ };
             glfw::set_window_user_pointer(window_.get(), &user_data_);
-
-
 
             glfw::set_error_callback            (         [](                               gl::int32_t   error , const gl::char_t* description)
                 {
