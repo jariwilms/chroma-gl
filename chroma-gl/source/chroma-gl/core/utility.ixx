@@ -12,12 +12,12 @@ export namespace gl
         return static_cast<std::underlying_type_t<T>>(value);
     }
     template<typename T>
-    constexpr auto to_underlying_ptr(      T* const value) noexcept -> std::underlying_type_t<T>* const
+    constexpr auto to_underlying_pointer(      T* const value) noexcept -> std::underlying_type_t<T>* const
     {
         return std::bit_cast<std::underlying_type_t<T>* const>(value);
     }
     template<typename T>
-    constexpr auto to_underlying_ptr(const T* const value) noexcept -> const std::underlying_type_t<T>* const
+    constexpr auto to_underlying_pointer(const T* const value) noexcept -> const std::underlying_type_t<T>* const
     {
         return std::bit_cast<const std::underlying_type_t<T>* const>(value);
     }

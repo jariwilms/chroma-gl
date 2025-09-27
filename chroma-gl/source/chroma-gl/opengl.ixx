@@ -680,7 +680,7 @@ export namespace gl
     {
         const auto attached_shader_count = gl::get_program_value<gl::program_parameter_e::attached_shaders>(program);
               auto shaders               = std::vector<gl::handle_t>(attached_shader_count);
-        return ::glGetAttachedShaders(gl::to_underlying(program), attached_shader_count, nullptr, gl::to_underlying_ptr(shaders.data())), shaders;
+        return ::glGetAttachedShaders(gl::to_underlying(program), attached_shader_count, nullptr, gl::to_underlying_pointer(shaders.data())), shaders;
     }
     auto get_shader_info_log                        (gl::handle_t shader) -> std::string
     {
@@ -972,12 +972,12 @@ export namespace gl
 
                 return ::glGetDebugMessageLog(
                     count, static_cast<gl::sizei_t>(maximum_debug_message_length), 
-                    gl::to_underlying_ptr(sources    .data()), 
-                    gl::to_underlying_ptr(types      .data()), 
-                                          ids        .data() , 
-                    gl::to_underlying_ptr(severities .data()), 
-                                          lengths    .data() , 
-                                          message_log.data());
+                    gl::to_underlying_pointer(sources    .data()), 
+                    gl::to_underlying_pointer(types      .data()), 
+                                              ids        .data() , 
+                    gl::to_underlying_pointer(severities .data()), 
+                                              lengths    .data() , 
+                                              message_log.data());
             };
         
               auto sources      = std::vector<gl::debug_source_e>  (count);
@@ -1050,20 +1050,20 @@ export namespace gl
     auto create_query                               (gl::query_target_e target) -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateQueries(gl::to_underlying(target), gl::sizei_t{ 1 }, gl::to_underlying_ptr(&handle)), handle;
+        return ::glCreateQueries(gl::to_underlying(target), gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_queries                             (gl::query_target_e target, gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateQueries(gl::to_underlying(target), static_cast<gl::sizei_t>(count), gl::to_underlying_ptr(handles.data())), handles;
+        return ::glCreateQueries(gl::to_underlying(target), static_cast<gl::sizei_t>(count), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_query                               (gl::handle_t query)
     {
-        ::glDeleteQueries(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&query));
+        ::glDeleteQueries(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&query));
     }
     void delete_queries                             (std::span<const gl::handle_t> queries)
     {
-        ::glDeleteQueries(static_cast<gl::sizei_t>(queries.size()), gl::to_underlying_ptr(queries.data()));
+        ::glDeleteQueries(static_cast<gl::sizei_t>(queries.size()), gl::to_underlying_pointer(queries.data()));
     }
     void begin_query                                (gl::handle_t query, gl::query_target_e target)
     {
@@ -1092,20 +1092,20 @@ export namespace gl
     auto create_buffer                              () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateBuffers(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&handle)), handle;
+        return ::glCreateBuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_buffers                             (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateBuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_ptr(handles.data())), handles;
+        return ::glCreateBuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_buffer                              (gl::handle_t buffer)
     {
-        ::glDeleteBuffers(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&buffer));
+        ::glDeleteBuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&buffer));
     }
     void delete_buffers                             (std::span<const gl::handle_t> buffers)
     {
-        ::glDeleteBuffers(static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_ptr(buffers.data()));
+        ::glDeleteBuffers(static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
     }
     void bind_buffer_base                           (gl::handle_t buffer, gl::buffer_base_target_e target, gl::binding_t binding)
     {
@@ -1113,7 +1113,7 @@ export namespace gl
     }
     void bind_buffers_base                          (std::span<const gl::handle_t> buffers, gl::buffer_base_target_e target, gl::binding_t binding)
     {
-        ::glBindBuffersBase(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_ptr(buffers.data()));
+        ::glBindBuffersBase(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
     }
     template<typename T>
     void bind_buffer_range                          (gl::handle_t buffer, gl::buffer_base_target_e target, gl::binding_t binding, gl::range range)
@@ -1135,7 +1135,7 @@ export namespace gl
                 offsets.emplace_back(byte_range.offset);
             });
 
-        ::glBindBuffersRange(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_ptr(buffers.data()), offsets.data(), sizes.data());
+        ::glBindBuffersRange(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()), offsets.data(), sizes.data());
     }
     template<typename T>
     void buffer_storage                             (gl::handle_t buffer, gl::buffer_storage_flags_e flags, gl::count_t count)
@@ -1229,11 +1229,11 @@ export namespace gl
     }
     void shader_binary                              (gl::handle_t shader, gl::enum_t format, std::span<const gl::byte_t> binary)
     {
-        ::glShaderBinary(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&shader), format, binary.data(), static_cast<gl::sizei_t>(binary.size_bytes()));
+        ::glShaderBinary(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&shader), format, binary.data(), static_cast<gl::sizei_t>(binary.size_bytes()));
     }
     void shader_binaries                            (std::span<const gl::handle_t> shaders, gl::enum_t format, std::span<const gl::byte_t> binary)
     {
-        ::glShaderBinary(static_cast<gl::sizei_t>(shaders.size()), gl::to_underlying_ptr(shaders.data()), format, binary.data(), static_cast<gl::sizei_t>(binary.size_bytes()));
+        ::glShaderBinary(static_cast<gl::sizei_t>(shaders.size()), gl::to_underlying_pointer(shaders.data()), format, binary.data(), static_cast<gl::sizei_t>(binary.size_bytes()));
     }
     template<gl::count_t N = 0>
     void specialize_shader                          (gl::handle_t shader, const std::string& entry, std::span<const gl::uint32_t, N> indices = {}, std::span<const gl::uint32_t, N> values = {})
@@ -1274,20 +1274,20 @@ export namespace gl
     auto create_program_pipeline                    () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateProgramPipelines(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&handle)), handle;
+        return ::glCreateProgramPipelines(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_program_pipelines                   (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateProgramPipelines(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_ptr(handles.data())), handles;
+        return ::glCreateProgramPipelines(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_program_pipeline                    (gl::handle_t pipeline)
     {
-        ::glDeleteProgramPipelines(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&pipeline));
+        ::glDeleteProgramPipelines(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&pipeline));
     }
     void delete_program_pipelines                   (std::span<const gl::handle_t> pipeline)
     {
-        ::glDeleteProgramPipelines(static_cast<gl::sizei_t>(pipeline.size()), gl::to_underlying_ptr(pipeline.data()));
+        ::glDeleteProgramPipelines(static_cast<gl::sizei_t>(pipeline.size()), gl::to_underlying_pointer(pipeline.data()));
     }
     void bind_program_pipeline                      (gl::handle_t pipeline)
     {
@@ -1322,20 +1322,20 @@ export namespace gl
     auto create_texture                             (gl::texture_target_e target) -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateTextures(gl::to_underlying(target), gl::sizei_t{ 1 }, gl::to_underlying_ptr(&handle)), handle;
+        return ::glCreateTextures(gl::to_underlying(target), gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_textures                            (gl::texture_target_e target, gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateTextures(gl::to_underlying(target), static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_ptr(handles.data())), handles;
+        return ::glCreateTextures(gl::to_underlying(target), static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_texture                             (gl::handle_t texture)
     {
-        ::glDeleteTextures(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&texture));
+        ::glDeleteTextures(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&texture));
     }
     void delete_textures                            (std::span<const gl::handle_t> textures)
     {
-        ::glDeleteTextures(static_cast<gl::sizei_t>(textures.size()), gl::to_underlying_ptr(textures.data()));
+        ::glDeleteTextures(static_cast<gl::sizei_t>(textures.size()), gl::to_underlying_pointer(textures.data()));
     }
     void bind_texture_unit                          (gl::handle_t texture, gl::binding_t binding)
     {
@@ -1344,20 +1344,20 @@ export namespace gl
     auto create_sampler                             () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateSamplers(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&handle)), handle;
+        return ::glCreateSamplers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_samplers                            (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateSamplers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_ptr(handles.data())), handles;
+        return ::glCreateSamplers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_sampler                             (gl::handle_t sampler)
     {
-        ::glDeleteSamplers(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&sampler));
+        ::glDeleteSamplers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&sampler));
     }
     void delete_samplers                            (std::span<const gl::handle_t> samplers)
     {
-        ::glDeleteSamplers(static_cast<gl::sizei_t>(samplers.size()), gl::to_underlying_ptr(samplers.data()));
+        ::glDeleteSamplers(static_cast<gl::sizei_t>(samplers.size()), gl::to_underlying_pointer(samplers.data()));
     }
     void bind_sampler                               (gl::handle_t sampler, gl::binding_t binding)
     {
@@ -1365,7 +1365,7 @@ export namespace gl
     }
     void bind_samplers                              (std::span<const gl::handle_t> samplers, gl::range range)
     {
-        ::glBindSamplers(range.index, range.count, gl::to_underlying_ptr(samplers.data()));
+        ::glBindSamplers(range.index, range.count, gl::to_underlying_pointer(samplers.data()));
     }
     auto sampler_parameter                          (gl::handle_t sampler, glp::sampler_parameter_v parameter) -> auto
     {
@@ -1517,7 +1517,7 @@ export namespace gl
             };
         auto get_swizzle_rgba      = [](gl::handle_t texture, gl::texture_parameter_e parameter, std::array<gl::texture_swizzle_e, 4u>& value)
             {
-                return ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(parameter), gl::to_underlying_ptr(value.data()));
+                return ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(parameter), gl::to_underlying_pointer(value.data()));
             };
 
         auto overload = gl::overload_t
@@ -1639,20 +1639,20 @@ export namespace gl
     auto create_frame_buffer                        () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateFramebuffers(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&handle)), handle;
+        return ::glCreateFramebuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_frame_buffer                        (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateFramebuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_ptr(handles.data())), handles;
+        return ::glCreateFramebuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_frame_buffer                        (gl::handle_t frame_buffer)
     {
-        ::glDeleteFramebuffers(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&frame_buffer));
+        ::glDeleteFramebuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&frame_buffer));
     }
     void delete_frame_buffers                       (std::span<const gl::handle_t> frame_buffers)
     {
-        ::glDeleteFramebuffers(static_cast<gl::sizei_t>(frame_buffers.size()), gl::to_underlying_ptr(frame_buffers.data()));
+        ::glDeleteFramebuffers(static_cast<gl::sizei_t>(frame_buffers.size()), gl::to_underlying_pointer(frame_buffers.data()));
     }
     void bind_frame_buffer                          (gl::handle_t frame_buffer, gl::frame_buffer_target_e target)
     {
@@ -1678,20 +1678,20 @@ export namespace gl
     auto create_render_buffer                       () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateRenderbuffers(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&handle)), handle;
+        return ::glCreateRenderbuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_render_buffers                      (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateRenderbuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_ptr(handles.data())), handles;
+        return ::glCreateRenderbuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_render_buffer                       (gl::handle_t render_buffer)
     {
-        ::glDeleteRenderbuffers(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&render_buffer));
+        ::glDeleteRenderbuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&render_buffer));
     }
     void delete_render_buffers                      (std::span<const gl::handle_t> render_buffers)
     {
-        ::glDeleteRenderbuffers(static_cast<gl::sizei_t>(render_buffers.size()), gl::to_underlying_ptr(render_buffers.data()));
+        ::glDeleteRenderbuffers(static_cast<gl::sizei_t>(render_buffers.size()), gl::to_underlying_pointer(render_buffers.data()));
     }
     void render_buffer_storage                      (gl::handle_t render_buffer, gl::render_buffer_format_e format, const gl::vector2u& dimensions)
     {
@@ -1808,20 +1808,20 @@ export namespace gl
     auto create_vertex_array                        () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateVertexArrays(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&handle)), handle;
+        return ::glCreateVertexArrays(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_vertex_arrays                       (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateVertexArrays(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_ptr(handles.data())), handles;
+        return ::glCreateVertexArrays(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_vertex_array                        (gl::handle_t vertex_array)
     {
-        ::glDeleteVertexArrays(gl::sizei_t{ 1 }, gl::to_underlying_ptr(&vertex_array));
+        ::glDeleteVertexArrays(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&vertex_array));
     }
     void delete_vertex_arrays                       (std::span<const gl::handle_t> vertex_arrays)
     {
-        ::glDeleteVertexArrays(static_cast<gl::sizei_t>(vertex_arrays.size()), gl::to_underlying_ptr(vertex_arrays.data()));
+        ::glDeleteVertexArrays(static_cast<gl::sizei_t>(vertex_arrays.size()), gl::to_underlying_pointer(vertex_arrays.data()));
     }
     void bind_vertex_array                          (gl::handle_t vertex_array)
     {
@@ -1887,7 +1887,7 @@ export namespace gl
     void vertex_array_vertex_buffers                (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, std::span<const gl::byte_range> strides, gl::range range)
     {
         gl::todo();
-        //::glVertexArrayVertexBuffers(gl::to_underlying(vertex_array), range.index, range.count, gl::to_underlying_ptr(vertex_buffers.data()), );
+        //::glVertexArrayVertexBuffers(gl::to_underlying(vertex_array), range.index, range.count, gl::to_underlying_pointer(vertex_buffers.data()), );
     }
     void vertex_array_attribute_binding             (gl::handle_t vertex_array, gl::index_t attribute, gl::binding_t binding)
     {
@@ -2145,7 +2145,7 @@ export namespace gl
     }
     void frame_buffer_draw_buffers                  (gl::handle_t frame_buffer, std::span<const gl::frame_buffer_source_e> sources)
     {
-        ::glNamedFramebufferDrawBuffers(gl::to_underlying(frame_buffer), static_cast<gl::sizei_t>(sources.size()), gl::to_underlying_ptr(sources.data()));
+        ::glNamedFramebufferDrawBuffers(gl::to_underlying(frame_buffer), static_cast<gl::sizei_t>(sources.size()), gl::to_underlying_pointer(sources.data()));
     }
     void color_mask                                 (const gl::vector4b& mask)
     {
@@ -2248,17 +2248,17 @@ export namespace gl
     void invalidate_frame_buffer_data               (gl::handle_t frame_buffer, std::span<const gl::frame_buffer_attachment_e> attachments)
     {
         ::glInvalidateNamedFramebufferData(
-            gl::to_underlying       (frame_buffer)       , 
-            static_cast<gl::sizei_t>(attachments.size()) , 
-            gl::to_underlying_ptr   (attachments.data()));
+            gl::to_underlying        (frame_buffer)       , 
+            static_cast<gl::sizei_t> (attachments.size()) , 
+            gl::to_underlying_pointer(attachments.data()));
     }
     void invalidate_frame_buffer_sub_data           (gl::handle_t frame_buffer, std::span<const gl::frame_buffer_attachment_e> attachments, gl::area_t region)
     {
         ::glInvalidateNamedFramebufferSubData(
             gl::to_underlying       (frame_buffer)      , 
-            static_cast<gl::sizei_t>(attachments.size()), gl::to_underlying_ptr   (attachments.data()), 
-            static_cast<gl::int32_t>(region.origin.x)   , static_cast<gl::int32_t>(region.origin.y)   , 
-            static_cast<gl::sizei_t>(region.extent.x)   , static_cast<gl::sizei_t>(region.extent.y)  );
+            static_cast<gl::sizei_t>(attachments.size()), gl::to_underlying_pointer(attachments.data()), 
+            static_cast<gl::int32_t>(region.origin.x)   , static_cast<gl::int32_t> (region.origin.y)   , 
+            static_cast<gl::sizei_t>(region.extent.x)   , static_cast<gl::sizei_t> (region.extent.y)  );
     }
 
 
