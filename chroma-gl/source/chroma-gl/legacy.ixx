@@ -33,10 +33,10 @@ export namespace gl::legacy
         auto value = gl::float64_t{};
         return ::glGetDoublev(gl::to_underlying(data), &value), value;
     }
-    auto get_indexed_boolean_value  (gl::data_e data, gl::index_t index) -> gl::boolean_t
+    auto get_indexed_boolean_value  (gl::data_e data, gl::index_t index) -> gl::bool_t
     {
         auto value = gl::boolean_t{};
-        return ::glGetBooleani_v(gl::to_underlying(data), index, &value), value;
+        return ::glGetBooleani_v(gl::to_underlying(data), index, &value), static_cast<gl::bool_t>(value);
     }
     auto get_indexed_integer_value  (gl::data_e data, gl::index_t index) -> gl::int32_t
     {
