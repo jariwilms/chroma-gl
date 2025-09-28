@@ -790,7 +790,7 @@ export namespace gl
             ::glGetTextureImage(
                 gl::to_underlying       (texture)                       , 
                 static_cast<gl::int32_t>(level)                         , 
-                gl::to_underlying       (gl::buffer_base_format_e::rgba), gl::to_underlying(gl::pixel_data_type_e::unsigned_byte_), 
+                gl::to_underlying       (gl::buffer_base_format_e::rgba), gl::to_underlying(gl::pixel_data_type_e::uint8_t), 
                 static_cast<gl::sizei_t>(value.size())                  , value.data());
 
             return value;
@@ -811,7 +811,7 @@ export namespace gl
                 static_cast<gl::int32_t>(level)                         , 
                 static_cast<gl::int32_t>(region.origin.x)               , static_cast<gl::int32_t>(region.origin.y)               , static_cast<gl::int32_t>(region.origin.z), 
                 static_cast<gl::sizei_t>(region.extent.x)               , static_cast<gl::sizei_t>(region.extent.y)               , static_cast<gl::sizei_t>(region.extent.z), 
-                gl::to_underlying       (gl::buffer_base_format_e::rgba), gl::to_underlying(gl::pixel_data_type_e::unsigned_byte_), 
+                gl::to_underlying       (gl::buffer_base_format_e::rgba), gl::to_underlying(gl::pixel_data_type_e::uint8_t), 
                 static_cast<gl::sizei_t>(value.size())                  , value.data());
 
             return value;
@@ -1039,9 +1039,9 @@ export namespace gl
     {
         if (sync) ::glDeleteSync(sync);
     }
-    auto client_wait_sync                           (gl::sync_t sync, gl::synchronization_command_e command, gl::time_t timeout) -> gl::synchronization_status_e
+    auto client_wait_sync                           (gl::sync_t sync, gl::synchronization_command_e synchronization_command, gl::time_t timeout) -> gl::synchronization_status_e
     {
-        return static_cast<gl::synchronization_status_e>(::glClientWaitSync(sync, gl::to_underlying(command), timeout));
+        return static_cast<gl::synchronization_status_e>(::glClientWaitSync(sync, gl::to_underlying(synchronization_command), timeout));
     }
     void server_wait_sync                           (gl::sync_t sync)
     {
@@ -1851,29 +1851,27 @@ export namespace gl
         
         switch (type)
         {
-            case gl::vertex_array_attribute_type_e::byte                                  : 
-            case gl::vertex_array_attribute_type_e::unsigned_byte                         : 
-            case gl::vertex_array_attribute_type_e::short_                                : 
-            case gl::vertex_array_attribute_type_e::unsigned_short                        : 
-            case gl::vertex_array_attribute_type_e::integer                               : 
-            case gl::vertex_array_attribute_type_e::unsigned_integer                      : 
-            case gl::vertex_array_attribute_type_e::int_2_10_10_10_rev                    : 
-            case gl::vertex_array_attribute_type_e::unsigned_integer_2_10_10_10_rev       : 
-            case gl::vertex_array_attribute_type_e::unsigned_integer_10_11_11_11_float_rev:
+            case gl::vertex_array_attribute_type_e::int8_t                        : 
+            case gl::vertex_array_attribute_type_e::uint8_t                       : 
+            case gl::vertex_array_attribute_type_e::int16_t                       : 
+            case gl::vertex_array_attribute_type_e::uint16_t                      : 
+            case gl::vertex_array_attribute_type_e::int32_t                       : 
+            case gl::vertex_array_attribute_type_e::uint32_t                      : 
+            case gl::vertex_array_attribute_type_e::int32_2_10_10_10_rev_t        : 
+            case gl::vertex_array_attribute_type_e::uint32_2_10_10_10_rev_t       : 
+            case gl::vertex_array_attribute_type_e::uint32_10_11_11_11_float_rev_t:
             {
                 vertex_array_attribute_format_i(vertex_array, attribute, type, count, offset);
                 break;
             }
-
-            case gl::vertex_array_attribute_type_e::float_                               : 
-            case gl::vertex_array_attribute_type_e::half_float                           : 
-            case gl::vertex_array_attribute_type_e::fixed                                : 
+            case gl::vertex_array_attribute_type_e::fixed_t                       : 
             {
                 vertex_array_attribute_format_f(vertex_array, attribute, type, count, offset, is_normalized);
                 break;
             }
-
-            case gl::vertex_array_attribute_type_e::double_                              : 
+            case gl::vertex_array_attribute_type_e::float16_t                     : 
+            case gl::vertex_array_attribute_type_e::float32_t                     : 
+            case gl::vertex_array_attribute_type_e::float64_t                     : 
             {
                 vertex_array_attribute_format_l(vertex_array, attribute, type, count, offset);
                 break;

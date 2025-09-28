@@ -46,20 +46,21 @@ export namespace gl
     enum class binding_t            : gl::index_t ;
     enum class key_t                : gl::uint64_t;
 
-    enum class buffer_t             : std::underlying_type_t<gl::handle_t>;
-    enum class frame_buffer_t       : std::underlying_type_t<gl::handle_t>;
-    enum class program_t            : std::underlying_type_t<gl::handle_t>;
-    enum class pipeline_t           : std::underlying_type_t<gl::handle_t>;
-    enum class query_t              : std::underlying_type_t<gl::handle_t>;
-    enum class render_buffer_t      : std::underlying_type_t<gl::handle_t>;
-    enum class sampler_t            : std::underlying_type_t<gl::handle_t>;
-    enum class shader_t             : std::underlying_type_t<gl::handle_t>;
-    enum class shader_program_t     : std::underlying_type_t<gl::handle_t>;
-    enum class texture_1d_t         : std::underlying_type_t<gl::handle_t>;
-    enum class texture_2d_t         : std::underlying_type_t<gl::handle_t>;
-    enum class texture_3d_t         : std::underlying_type_t<gl::handle_t>;
-    enum class transform_feedback_t : std::underlying_type_t<gl::handle_t>;
-    enum class vertex_array_t       : std::underlying_type_t<gl::handle_t>;
+    //enum class buffer_t             : std::underlying_type_t<gl::handle_t>;
+    //enum class frame_buffer_t       : std::underlying_type_t<gl::handle_t>;
+    //enum class program_t            : std::underlying_type_t<gl::handle_t>;
+    //enum class pipeline_t           : std::underlying_type_t<gl::handle_t>;
+    //enum class query_t              : std::underlying_type_t<gl::handle_t>;
+    //enum class render_buffer_t      : std::underlying_type_t<gl::handle_t>;
+    //enum class sampler_t            : std::underlying_type_t<gl::handle_t>;
+    //enum class shader_t             : std::underlying_type_t<gl::handle_t>;
+    //enum class shader_program_t     : std::underlying_type_t<gl::handle_t>;
+    //enum class texture_t            : std::underlying_type_t<gl::handle_t>;
+    //enum class texture_1d_t         : std::underlying_type_t<gl::handle_t>;
+    //enum class texture_2d_t         : std::underlying_type_t<gl::handle_t>;
+    //enum class texture_3d_t         : std::underlying_type_t<gl::handle_t>;
+    //enum class transform_feedback_t : std::underlying_type_t<gl::handle_t>;
+    //enum class vertex_array_t       : std::underlying_type_t<gl::handle_t>;
 
 
 
@@ -103,8 +104,7 @@ export namespace gl
 
     using quaternion4f = gl::quaternion<gl::float32_t    >;
 
-    template<typename T>
-    auto value_pointer(T value) -> auto*
+    auto value_pointer(auto value) -> auto*
     {
         return glm::value_ptr(value);
     }

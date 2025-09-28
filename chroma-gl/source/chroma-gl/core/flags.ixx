@@ -974,33 +974,33 @@ export namespace gl
     };
     enum class pixel_data_type_e : gl::enum_t
     {
-        byte_                            = GL_BYTE,
-        unsigned_byte_                   = GL_UNSIGNED_BYTE,
-        short_                           = GL_SHORT,
-        unsigned_short_                  = GL_UNSIGNED_SHORT,
-        integer_                         = GL_INT,
-        unsigned_integer_                = GL_UNSIGNED_INT,
-        half_float_                      = GL_HALF_FLOAT,
-        float_                           = GL_FLOAT,
+        int8_t                        = GL_BYTE,
+        uint8_t                       = GL_UNSIGNED_BYTE,
+        int16_t                       = GL_SHORT,
+        uint16_t                      = GL_UNSIGNED_SHORT,
+        int32_t                       = GL_INT,
+        uint32_t                      = GL_UNSIGNED_INT,
+        float16_t                     = GL_HALF_FLOAT,
+        float32_t                     = GL_FLOAT,
                                            
-        unsigned_byte_3_3_2              = GL_UNSIGNED_BYTE_3_3_2,
-        unsigned_byte_2_3_3_rev          = GL_UNSIGNED_BYTE_2_3_3_REV,
-        unsigned_short_5_6_5             = GL_UNSIGNED_SHORT_5_6_5,
-        unsigned_short_5_6_5_rev         = GL_UNSIGNED_SHORT_5_6_5_REV,
-        unsigned_short_4_4_4_4           = GL_UNSIGNED_SHORT_4_4_4_4,
-        unsigned_short_4_4_4_4_rev       = GL_UNSIGNED_SHORT_4_4_4_4_REV,
-        unsigned_short_5_5_5_1           = GL_UNSIGNED_SHORT_5_5_5_1,
-        unsigned_short_1_5_5_5_rev       = GL_UNSIGNED_SHORT_1_5_5_5_REV,
-        unsigned_int_8_8_8_8             = GL_UNSIGNED_INT_8_8_8_8,
-        unsigned_int_8_8_8_8_rev         = GL_UNSIGNED_INT_8_8_8_8_REV,
-        unsigned_int_10_10_10_2          = GL_UNSIGNED_INT_10_10_10_2,
-        unsigned_int_2_10_10_10_rev      = GL_UNSIGNED_INT_2_10_10_10_REV,
+        uint8_3_3_2_t                 = GL_UNSIGNED_BYTE_3_3_2,
+        uint8_2_3_3_rev_t             = GL_UNSIGNED_BYTE_2_3_3_REV,
+        uint16_5_6_5_t                = GL_UNSIGNED_SHORT_5_6_5,
+        uint16_5_6_5_rev_t            = GL_UNSIGNED_SHORT_5_6_5_REV,
+        uint16_4_4_4_4_t              = GL_UNSIGNED_SHORT_4_4_4_4,
+        uint16_4_4_4_4_rev_t          = GL_UNSIGNED_SHORT_4_4_4_4_REV,
+        uint16_5_5_5_1_t              = GL_UNSIGNED_SHORT_5_5_5_1,
+        uint16_1_5_5_5_rev_t          = GL_UNSIGNED_SHORT_1_5_5_5_REV,
+        uint32_8_8_8_8_t              = GL_UNSIGNED_INT_8_8_8_8,
+        uint32_8_8_8_8_rev_t          = GL_UNSIGNED_INT_8_8_8_8_REV,
+        uint32_10_10_10_2_t           = GL_UNSIGNED_INT_10_10_10_2,
+        uint32_2_10_10_10_rev_t       = GL_UNSIGNED_INT_2_10_10_10_REV,
                                            
-        unsigned_int_24_8                = GL_UNSIGNED_INT_24_8,
+        uint32_24_8_t                 = GL_UNSIGNED_INT_24_8,
 
-        unsigned_int_10_11_11_float_rev  = GL_UNSIGNED_INT_10F_11F_11F_REV,
-        unsigned_int_5_9_9_9_rev         = GL_UNSIGNED_INT_5_9_9_9_REV,
-        float_unsigned_int_24_8_rev      = GL_FLOAT_32_UNSIGNED_INT_24_8_REV,
+        uint32_10_11_11_float32_rev_t = GL_UNSIGNED_INT_10F_11F_11F_REV,
+        uint32_5_9_9_9_rev_t          = GL_UNSIGNED_INT_5_9_9_9_REV,
+        float32_uint32_24_8_rev_t     = GL_FLOAT_32_UNSIGNED_INT_24_8_REV,
     };
     enum class polygon_face_e : gl::enum_t
     {
@@ -1218,21 +1218,17 @@ export namespace gl
     };
     enum class render_buffer_format_e : gl::enum_t
     {
-        r8                = GL_R8, 
-        rg8               = GL_RG8, 
-        rgb8              = GL_RGB8, 
-        rgba8             = GL_RGBA8, 
-
-        rgba8_srgb        = GL_SRGB8_ALPHA8, 
-
-        d16_unorm         = GL_DEPTH_COMPONENT16, 
-        d24_unorm         = GL_DEPTH_COMPONENT24, 
-        d32_float         = GL_DEPTH_COMPONENT32, 
-
-        d24_unorm_s8_uint = GL_DEPTH24_STENCIL8, 
-        d32_float_s8_uint = GL_DEPTH32F_STENCIL8, 
-
-        s8_uint           = GL_STENCIL_INDEX8, 
+        r8_unorm          = GL_R8               , 
+        rg8_unorm         = GL_RG8              , 
+        rgb8_unorm        = GL_RGB8             , 
+        rgba8_unorm       = GL_RGBA8            , 
+        rgba8_srgb        = GL_SRGB8_ALPHA8     , 
+        d16_unorm         = GL_DEPTH_COMPONENT16,  
+        d24_unorm         = GL_DEPTH_COMPONENT24,  
+        d32_float         = GL_DEPTH_COMPONENT32,  
+        d24_unorm_s8_uint = GL_DEPTH24_STENCIL8 , 
+        d32_float_s8_uint = GL_DEPTH32F_STENCIL8,  
+        s8_uint           = GL_STENCIL_INDEX8   , 
     };
     enum class render_buffer_parameter_e : gl::enum_t
     {
@@ -1711,19 +1707,19 @@ export namespace gl
     };
     enum class vertex_array_attribute_type_e : gl::enum_t
     {
-        byte                                   = GL_BYTE, 
-        double_                                = GL_DOUBLE, 
-        fixed                                  = GL_FIXED, 
-        float_                                 = GL_FLOAT, 
-        half_float                             = GL_HALF_FLOAT, 
-        integer                                = GL_INT, 
-        int_2_10_10_10_rev                     = GL_INT_2_10_10_10_REV, 
-        short_                                 = GL_SHORT, 
-        unsigned_byte                          = GL_UNSIGNED_BYTE, 
-        unsigned_short                         = GL_UNSIGNED_SHORT, 
-        unsigned_integer                       = GL_UNSIGNED_INT, 
-        unsigned_integer_2_10_10_10_rev        = GL_UNSIGNED_INT_2_10_10_10_REV, 
-        unsigned_integer_10_11_11_11_float_rev = GL_UNSIGNED_INT_10F_11F_11F_REV, 
+        int8_t                         = GL_BYTE, 
+        uint8_t                        = GL_UNSIGNED_BYTE, 
+        int16_t                        = GL_SHORT, 
+        uint16_t                       = GL_UNSIGNED_SHORT, 
+        int32_t                        = GL_INT, 
+        uint32_t                       = GL_UNSIGNED_INT, 
+        int32_2_10_10_10_rev_t         = GL_INT_2_10_10_10_REV, 
+        uint32_2_10_10_10_rev_t        = GL_UNSIGNED_INT_2_10_10_10_REV, 
+        uint32_10_11_11_11_float_rev_t = GL_UNSIGNED_INT_10F_11F_11F_REV,  
+        fixed_t                        = GL_FIXED, 
+        float16_t                      = GL_HALF_FLOAT, 
+        float32_t                      = GL_FLOAT, 
+        float64_t                      = GL_DOUBLE, 
     };
     enum class vertex_array_parameter_e : gl::enum_t
     {

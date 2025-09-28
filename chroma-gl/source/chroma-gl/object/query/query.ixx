@@ -1,4 +1,4 @@
-export module opengl.query;
+export module opengl.object.query;
 
 import std;
 import opengl;

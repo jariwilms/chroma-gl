@@ -11,6 +11,7 @@ export namespace gl
     class object
     {
     public:
+        //TODO -> protected?
         auto handle() const -> gl::handle_t
         {
             return handle_;
