@@ -64,6 +64,9 @@ export namespace gl
 
 
 
+    template<typename... Ts>
+    struct overload_t : Ts... { using Ts::operator()...; };
+
 
 
     template<typename T, gl::uint32_t N>

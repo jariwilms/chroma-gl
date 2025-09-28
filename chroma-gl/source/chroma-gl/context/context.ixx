@@ -5,9 +5,8 @@ import opengl;
 
 export namespace gl
 {
-    class context
+    struct context
     {
-    public:
         static void initialize()
         {
             context_flags_            = gl::get_value <gl::data_e            ::context_flags           >();
@@ -87,7 +86,6 @@ export namespace gl
             }
         }
 
-    private:
         static inline gl::context_flag_e    context_flags_;
         static inline gl::context_profile_e context_profile_;
         static inline gl::uint32_t          major_version_;

@@ -13,6 +13,8 @@ export namespace gl
             : gl::object{ gl::create_buffer(), [](auto* handle) { gl::delete_buffer(*handle); } }
             , size_{ static_cast<gl::size_t>(count * sizeof(T)) }, range_{}, locks_{}, data_{}
         {
+            if (gl::compare<std::equal_to>(count, gl::count_t{ 0u })) throw std::invalid_argument{ "Count must be greater than 0!" };
+
             gl::buffer_storage<T>(
                 handle()                                    , 
                 gl::buffer_storage_flags_e::dynamic_storage | 
@@ -25,6 +27,8 @@ export namespace gl
             : gl::object{ gl::create_buffer(), [](auto* handle) { gl::delete_buffer(*handle); } }
             , size_{ static_cast<gl::size_t>(data.size_bytes()) }, range_{}, locks_{}, data_{}
         {
+            if (data.empty()) throw std::invalid_argument{ "Data may not be empty!" };
+
             gl::buffer_storage<T>(
                 handle()                                    , 
                 gl::buffer_storage_flags_e::dynamic_storage | 

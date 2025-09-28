@@ -12,7 +12,6 @@ export import opengl.utility;
 
 import std;
 import <glad/gl.h>;
-import opengl.legacy;
 
 export namespace gl
 {
@@ -22,10 +21,10 @@ export namespace gl
     //Its primary goals are to:
     //    * Offer a more intuitive and correct interface for development
     //    * Encapsulate existing OpenGL functions, simplifying integration of custom logic
-    //    * Implement state caching to eliminate redundant driver calls
-    //    * Ensure compile-time and runtime safety through comprehensive input validation
+    //    * Implement state caching in order to eliminate redundant driver calls
+    //    * Ensure compile-and runtime safety through input validation
     //
-    //Functions are organized based on their appearance in the OpenGL 4.6 Core Profile Specification
+    //Functions are organized according to their appearance in the OpenGL 4.6 Core Profile Specification
     //Reference: https://registry.khronos.org/OpenGL/specs/gl/glspec46.core.pdf
 
     //Todo:
