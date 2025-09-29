@@ -27,16 +27,7 @@ export namespace gl
     //Functions are organized according to their appearance in the OpenGL 4.6 Core Profile Specification
     //Reference: https://registry.khronos.org/OpenGL/specs/gl/glspec46.core.pdf
 
-    //Todo:
-    //Data class for storing and querying global state   !!!
-    //Modern program introspection fix                   !!
-    //Create a best-practice vertex-array implementation !
-    //    Single, massive buffer for each vertex-layout
-    //
-    //Span type with 4-byte size for easier conversion?
-    //A lot of testing because templates do not get compiled if they are not instantiated...
-    //Uncomment classes (texture, buffer etc.)
-    //Legacy OpenGL functions for those who want them
+
 
 
 
