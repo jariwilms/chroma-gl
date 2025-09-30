@@ -26,9 +26,11 @@ export namespace vendor::glfw
             gl::vector2u*                dimensions = {};
         };
 
-         window(const std::string& title, const gl::vector2u& dimensions)
-            : title_{ title }, dimensions_{ dimensions }, display_mode_{ display_mode_e::windowed }
+        window(const std::string& title, const gl::vector2u& dimensions)
+           : title_{ title }, dimensions_{ dimensions }, display_mode_{ display_mode_e::windowed }
         {
+            using namespace vendor;
+
             glfw::initialize();
             glfw::window_hint(glfw::hint_e::context_version_major, glfw::hint_value_e::opengl_version_major_4);
             glfw::window_hint(glfw::hint_e::context_version_minor, glfw::hint_value_e::opengl_version_minor_6);
@@ -41,17 +43,17 @@ export namespace vendor::glfw
 
             window_ = std::unique_ptr<glfw::window_t, decltype([](auto* window)
                 {
-                    vendor::glfw::destroy_window(window);
-                    vendor::glfw::terminate();
+                    glfw::destroy_window(window);
+                    glfw::terminate();
                 })>{ glfw::create_window(title_, dimensions_) };
 
             glfw::make_context_current(window_.get());
             glfw::swap_interval       (gl::uint32_t{ 0u });
             glfw::set_window_monitor  (window_.get(), nullptr, dimensions_);
             glfw::show_window         (window_.get());
-            
-            vendor::glad::initialize();
-            gl::context::initialize();
+           
+            glad::initialize    ();
+            gl  ::create_context();
 
             input_     = std::make_shared<glfw::input>();
             user_data_ = window::user_data{ input_, &dimensions_ };
@@ -98,7 +100,7 @@ export namespace vendor::glfw
             glfw::swap_buffers(window_.get());
         }
 
-        void rename             (const std::string  & title     )
+        void rename             (const std::string & title     )
         {
             glfw::set_window_title(window_.get(), title.c_str());
         }
@@ -116,7 +118,7 @@ export namespace vendor::glfw
             glfw::set_window_monitor(window_.get(), monitor, gl::vector2u{ 1280, 720 });
         }
 
-        void        close       () const
+        void        close       ()
         {
             glfw::set_window_should_close(window_.get(), gl::true_);
         }
@@ -142,20 +144,13 @@ export namespace vendor::glfw
         {
             return input_;
         }
-        auto input_handler      () -> std::shared_ptr<glfw::input>
-        {
-            return input_;
-        }
 
     private:
-        using window_ptr = std::unique_ptr<glfw::window_t, std::function<void(glfw::window_t*)>>;
-        using input_ptr  = std::shared_ptr<glfw::input>;
-        
-        window_ptr     window_;
-        input_ptr      input_;
-        std::string    title_;
-        gl::vector2u   dimensions_;
-        display_mode_e display_mode_;
-        user_data      user_data_;
+        std::unique_ptr<glfw::window_t, std::function<void(glfw::window_t*)>> window_;
+        std::shared_ptr<glfw::input>                                          input_;
+        std::string                                                           title_;
+        gl::vector2u                                                          dimensions_;
+        display_mode_e                                                        display_mode_;
+        user_data                                                             user_data_;
     };
 }
