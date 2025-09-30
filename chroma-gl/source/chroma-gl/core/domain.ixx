@@ -33,7 +33,7 @@ export namespace gl
 
         auto operator==(const byte_range&) const -> gl::bool_t = default;
 
-        gl::size_t   size{};
+        gl::size_t   size  {};
         gl::offset_t offset{};
     };
 
@@ -41,5 +41,4 @@ export namespace gl
     using area_t        = gl::region<gl::uint32_t, 2u>;
     using volume_t      = gl::region<gl::uint32_t, 3u>;
     using hypervolume_t = gl::region<gl::uint32_t, 4u>; //Yes, this exists
-
 }
