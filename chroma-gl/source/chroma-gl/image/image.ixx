@@ -31,7 +31,7 @@ export namespace gl
         template<extension_e E>
         static auto encode(const gl::image& image) -> auto
         {
-            stb::set_flip_vertically_on_write(config::flip_images);
+            stb::set_flip_vertically_on_write(config::flip_images_vertically);
 
             const auto channels   = map_channels(format_);
             const auto dimensions = image.dimensions();
@@ -45,7 +45,7 @@ export namespace gl
         }
         static auto decode(format_e format, std::span<const gl::byte_t> data) -> gl::image
         {
-            stb::set_flip_vertically_on_load(gl::config::flip_images);
+            stb::set_flip_vertically_on_load(gl::config::flip_images_vertically);
             
             const auto channels  = map_channels(format);
             const auto stb_image = std::invoke([&](format_e format)
