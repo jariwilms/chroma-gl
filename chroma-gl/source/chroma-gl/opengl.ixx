@@ -136,7 +136,7 @@ export namespace gl
         if constexpr (D == gl::data_e::clipping_origin                                      ) return static_cast<gl::clipping_origin_e>            (get_uint32(D));
         if constexpr (D == gl::data_e::color_clear_value                                    ) return get_vector4f(D);
         if constexpr (D == gl::data_e::color_write_mask                                     ) return get_vector4b(D);
-        if constexpr (D == gl::data_e::context_flags                                        ) return static_cast<gl::context_flag_e>               (get_uint32(D));
+        if constexpr (D == gl::data_e::context_flags                                        ) return static_cast<gl::context_flags_e>              (get_uint32(D));
         if constexpr (D == gl::data_e::context_profile_mask                                 ) return static_cast<gl::context_profile_e>            (get_uint32(D));
         if constexpr (D == gl::data_e::copy_read_buffer_binding                             ) return get_handle(D);
         if constexpr (D == gl::data_e::copy_write_buffer_binding                            ) return get_handle(D);
