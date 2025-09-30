@@ -247,7 +247,7 @@ export namespace gl
         lower_left = GL_LOWER_LEFT,
         upper_left = GL_UPPER_LEFT,
     };
-    enum class context_flag_e : gl::bitfield_t
+    enum class context_flags_e : gl::bitfield_t
     {
         forward_compatible = GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT, 
         debug              = GL_CONTEXT_FLAG_DEBUG_BIT, 
@@ -1788,7 +1788,7 @@ export namespace gl
     template<> struct bit_mask_traits<gl::buffer_mapping_range_access_flags_e> { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
     template<> struct bit_mask_traits<gl::buffer_mask_e>                       { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
     template<> struct bit_mask_traits<gl::buffer_storage_flags_e>              { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::context_flag_e>                      { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
+    template<> struct bit_mask_traits<gl::context_flags_e>                     { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
     template<> struct bit_mask_traits<gl::context_profile_e>                   { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
     template<> struct bit_mask_traits<gl::feature_e>                           { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
     template<> struct bit_mask_traits<gl::frame_buffer_attachment_e>           { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
