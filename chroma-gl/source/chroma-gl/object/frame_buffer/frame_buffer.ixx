@@ -67,7 +67,7 @@ export namespace gl
                 case gl::texture2d::format_e::d32_float_s8_uint: return gl::frame_buffer_attachment_e::depth_stencil;
                 case gl::texture2d::format_e::s8_uint          : return gl::frame_buffer_attachment_e::stencil      ;
 
-                default: return gl::frame_buffer_attachment_e::color0 + color_index++;
+                default: return gl::frame_buffer_attachment_e::color_0 + color_index++;
             }
         };
     auto map_cubemap_attachment      (gl::cubemap::format_e       format, gl::uint32_t& color_index) -> gl::frame_buffer_attachment_e
@@ -81,7 +81,7 @@ export namespace gl
             case gl::cubemap::format_e::d32_float_s8_uint: return gl::frame_buffer_attachment_e::depth_stencil;
             case gl::cubemap::format_e::s8_uint          : return gl::frame_buffer_attachment_e::stencil      ;
 
-            default: return gl::frame_buffer_attachment_e::color0 + color_index++;
+            default: return gl::frame_buffer_attachment_e::color_0 + color_index++;
         }
     };
     auto map_render_buffer_attachment(gl::render_buffer::format_e format, gl::uint32_t& color_index) -> gl::frame_buffer_attachment_e
@@ -95,7 +95,7 @@ export namespace gl
             case gl::render_buffer::format_e::d32_float_s8_uint: return gl::frame_buffer_attachment_e::depth_stencil;
             case gl::render_buffer::format_e::s8_uint          : return gl::frame_buffer_attachment_e::stencil      ;
 
-            default: return gl::frame_buffer_attachment_e::color0 + color_index++;
+            default: return gl::frame_buffer_attachment_e::color_0 + color_index++;
         }
     };
 
@@ -157,7 +157,7 @@ export namespace gl
                 auto color_buffer_sources = std::vector<gl::frame_buffer_source_e>(color_index);
                 std::ranges::for_each(std::views::iota(0u, color_index), [&](gl::uint32_t index)
                     {
-                        color_buffer_sources.at(index) = gl::frame_buffer_source_e::color0 + index;
+                        color_buffer_sources.at(index) = gl::frame_buffer_source_e::color_0 + index;
                     });
 
                 gl::frame_buffer_draw_buffers(handle(), color_buffer_sources);
@@ -223,15 +223,15 @@ export namespace gl
         {
             auto& texture = texture_map_.at(identifier);
 
-            gl::frame_buffer_texture    (handle(), texture->handle(), gl::frame_buffer_attachment_e::color0 + index, level);
-            gl::frame_buffer_read_buffer(handle(), gl::frame_buffer_source_e::color0 + index);
+            gl::frame_buffer_texture    (handle(), texture->handle(), gl::frame_buffer_attachment_e::color_0 + index, level);
+            gl::frame_buffer_read_buffer(handle(), gl::frame_buffer_source_e::color_0 + index);
         }
         void write_to (const std::string& identifier, gl::index_t index, gl::uint32_t level = 0u)
         {
             auto& texture = texture_map_.at(identifier);
 
-            gl::frame_buffer_texture    (handle(), texture->handle(), gl::frame_buffer_attachment_e::color0 + index, level);
-            gl::frame_buffer_draw_buffer(handle(), gl::frame_buffer_source_e::color0 + index);
+            gl::frame_buffer_texture    (handle(), texture->handle(), gl::frame_buffer_attachment_e::color_0 + index, level);
+            gl::frame_buffer_draw_buffer(handle(), gl::frame_buffer_source_e::color_0 + index);
         }
 
         void resize(const gl::vector2u& dimensions)

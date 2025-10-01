@@ -2196,9 +2196,9 @@ export namespace gl
             {
                 auto overload = gl::overload_t
                 {
-                    [=](gl::vector4i __) { clear_frame_buffer_iv (frame_buffer, gl::frame_buffer_attachment_e::color0, _.index, gl::value_pointer(__)); }, 
-                    [=](gl::vector4u __) { clear_frame_buffer_uiv(frame_buffer, gl::frame_buffer_attachment_e::color0, _.index, gl::value_pointer(__)); }, 
-                    [=](gl::vector4f __) { clear_frame_buffer_fv (frame_buffer, gl::frame_buffer_attachment_e::color0, _.index, gl::value_pointer(__)); }, 
+                    [=](gl::vector4i __) { clear_frame_buffer_iv (frame_buffer, gl::frame_buffer_attachment_e::color_0, _.index, gl::value_pointer(__)); }, 
+                    [=](gl::vector4u __) { clear_frame_buffer_uiv(frame_buffer, gl::frame_buffer_attachment_e::color_0, _.index, gl::value_pointer(__)); }, 
+                    [=](gl::vector4f __) { clear_frame_buffer_fv (frame_buffer, gl::frame_buffer_attachment_e::color_0, _.index, gl::value_pointer(__)); }, 
                 };
 
                 std::visit(overload, _.color);
