@@ -69,13 +69,13 @@ export namespace gl
         {
             using enum gl::texture_format_e;
 
-            case r8_unorm : case rg8_unorm : case rgb8_unorm : case rgba8_unorm : return gl::pixel_data_type_e::uint8_t  ;
-            case r16_unorm: case rg16_unorm: case rgb16_unorm: case rgba16_unorm: return gl::pixel_data_type_e::uint16_t ;
-            case r8_snorm : case rg8_snorm : case rgb8_snorm : case rgba8_snorm : return gl::pixel_data_type_e::uint8_t  ;
-            case r16_snorm: case rg16_snorm: case rgb16_snorm: case rgba16_snorm: return gl::pixel_data_type_e::int16_t  ;
-            case rgb8_srgb: case rgba8_srgb:                                      return gl::pixel_data_type_e::uint8_t  ;
-            case r16_float: case rg16_float: case rgb16_float: case rgba16_float: return gl::pixel_data_type_e::float16_t;
-            case r32_float: case rg32_float: case rgb32_float: case rgba32_float: return gl::pixel_data_type_e::float32_t;
+            case r8_unorm : case rg8_unorm : case rgb8_unorm : case rgba8_unorm : return gl::pixel_data_type_e::uint8  ;
+            case r16_unorm: case rg16_unorm: case rgb16_unorm: case rgba16_unorm: return gl::pixel_data_type_e::uint16 ;
+            case r8_snorm : case rg8_snorm : case rgb8_snorm : case rgba8_snorm : return gl::pixel_data_type_e::uint8  ;
+            case r16_snorm: case rg16_snorm: case rgb16_snorm: case rgba16_snorm: return gl::pixel_data_type_e::int16  ;
+            case rgb8_srgb: case rgba8_srgb:                                      return gl::pixel_data_type_e::uint8  ;
+            case r16_float: case rg16_float: case rgb16_float: case rgba16_float: return gl::pixel_data_type_e::float16;
+            case r32_float: case rg32_float: case rgb32_float: case rgba32_float: return gl::pixel_data_type_e::float32;
             
             default: throw std::invalid_argument{ "Invalid format!" };
         }

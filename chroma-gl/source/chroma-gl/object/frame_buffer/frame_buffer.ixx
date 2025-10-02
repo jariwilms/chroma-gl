@@ -88,12 +88,12 @@ export namespace gl
     {
         switch (format)
         {
-            case gl::render_buffer::format_e::d16_unorm        :
-            case gl::render_buffer::format_e::d24_unorm        :
-            case gl::render_buffer::format_e::d32_float        : return gl::frame_buffer_attachment_e::depth        ;
-            case gl::render_buffer::format_e::d24_unorm_s8_uint:
-            case gl::render_buffer::format_e::d32_float_s8_uint: return gl::frame_buffer_attachment_e::depth_stencil;
-            case gl::render_buffer::format_e::s8_uint          : return gl::frame_buffer_attachment_e::stencil      ;
+            case gl::render_buffer::format_e::d_uint16_n       :
+            case gl::render_buffer::format_e::d_uint24_n       :
+            case gl::render_buffer::format_e::d_float32        : return gl::frame_buffer_attachment_e::depth        ;
+            case gl::render_buffer::format_e::ds_uint32_24_8   :
+            case gl::render_buffer::format_e::ds_float32_uint8 : return gl::frame_buffer_attachment_e::depth_stencil;
+            case gl::render_buffer::format_e::s_uint8          : return gl::frame_buffer_attachment_e::stencil      ;
 
             default: return gl::frame_buffer_attachment_e::color_0 + color_index++;
         }
