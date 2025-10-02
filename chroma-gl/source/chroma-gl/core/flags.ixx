@@ -25,6 +25,7 @@ export namespace gl
         add              = GL_FUNC_ADD             , 
         subtract         = GL_FUNC_SUBTRACT        , 
         reverse_subtract = GL_FUNC_REVERSE_SUBTRACT, 
+        
         minimum          = GL_MIN                  , 
         maximum          = GL_MAX                  , 
     };
@@ -32,6 +33,7 @@ export namespace gl
     {
         zero                        = GL_ZERO                    , 
         one                         = GL_ONE                     , 
+        
         source_color                = GL_SRC_COLOR               , 
         one_minus_source_color      = GL_ONE_MINUS_SRC_COLOR     , 
         destination_color           = GL_DST_COLOR               , 
@@ -68,16 +70,16 @@ export namespace gl
         rgba_int = GL_RGBA_INTEGER   , 
         bgr_int  = GL_BGR_INTEGER    , 
         bgra_int = GL_BGRA_INTEGER   , 
-        s        = GL_STENCIL_INDEX  , 
         d        = GL_DEPTH_COMPONENT, 
+        s        = GL_STENCIL_INDEX  , 
         ds       = GL_DEPTH_STENCIL  , 
     };
     enum class buffer_base_target_e : gl::enum_t
     {
-        atomic_counter_buffer     = GL_ATOMIC_COUNTER_BUFFER    , 
-        shader_storage_buffer     = GL_SHADER_STORAGE_BUFFER    , 
         uniform_buffer            = GL_UNIFORM_BUFFER           , 
         transform_feedback_buffer = GL_TRANSFORM_FEEDBACK_BUFFER, 
+        shader_storage_buffer     = GL_SHADER_STORAGE_BUFFER    , 
+        atomic_counter_buffer     = GL_ATOMIC_COUNTER_BUFFER    , 
     };
     enum class buffer_format_e : gl::enum_t
     {
