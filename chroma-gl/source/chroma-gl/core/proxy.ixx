@@ -5,7 +5,7 @@ import opengl.meta;
 
 export namespace gl
 {
-    template<typename... T> requires (gl::all_same_type_v<T...>)
+    template<typename... T> requires (meta::all_same_type_v<T...>)
     struct proxy
     {
         template<typename U> requires (std::is_convertible_v<U, T> && ...)

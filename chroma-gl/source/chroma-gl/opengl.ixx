@@ -2,6 +2,7 @@ export module opengl;
 export import opengl.domain;
 export import opengl.flags;
 export import opengl.lock;
+export import opengl.mapping;
 export import opengl.meta;
 export import opengl.object;
 export import opengl.parameters;
@@ -32,7 +33,7 @@ export namespace gl
 
 
     //Chapter 22 - Context State Queries
-    template<gl::data_e D>    requires (!gl::indexed_data_c<D>)
+    template<gl::data_e D>    requires (meta::is_non_indexed_data<D>())
     auto get_value                                  () -> auto
     {
         auto get_boolean        = [](gl::data_e data) -> gl::bool_t
@@ -335,7 +336,7 @@ export namespace gl
         if constexpr (D == gl::data_e::viewport_index_provoking_vertex                      ) return static_cast<gl::provoking_vertex_convention_e>(get_uint32(D));
         if constexpr (D == gl::data_e::viewport_sub_pixel_bits                              ) return get_uint32(D);
     }
-    template<gl::data_e D>    requires (gl::indexed_data_c<D>)
+    template<gl::data_e D>    requires (meta::is_indexed_data<D>())
     auto get_indexed_value                          (gl::index_t index) -> auto
     {
         auto get_uint32               = [](gl::data_e data, gl::index_t index) -> gl::uint32_t
@@ -443,7 +444,7 @@ export namespace gl
     {
         ::glEnable(gl::to_underlying(F));
     }
-    template<gl::feature_e F> requires (gl::indexed_feature_c<F>)
+    template<gl::feature_e F> requires (meta::is_indexed_feature<F>())
     void enable_index                               (gl::index_t index)
     {
         ::glEnablei(gl::to_underlying(F), index);
@@ -453,7 +454,7 @@ export namespace gl
     {
         ::glDisable(gl::to_underlying(F));
     }
-    template<gl::feature_e F> requires (gl::indexed_feature_c<F>)
+    template<gl::feature_e F> requires (meta::is_indexed_feature<F>())
     void disable_index                              (gl::index_t index)
     {
         ::glDisablei(gl::to_underlying(F), index);
@@ -463,7 +464,7 @@ export namespace gl
     {
         return ::glIsEnabled(gl::to_underlying(F));
     }
-    template<gl::feature_e F> requires (gl::indexed_feature_c<F>)
+    template<gl::feature_e F> requires (meta::is_indexed_feature<F>())
     auto is_enabled_index                           (gl::index_t index) -> gl::bool_t
     {
         return ::glIsEnabledi(gl::to_underlying(F));
@@ -774,6 +775,8 @@ export namespace gl
     template<gl::texture_format_e F>
     auto get_texture_image                          (gl::handle_t texture, gl::uint32_t level, gl::size_t size) -> auto
     {
+        gl::todo();
+
         if constexpr (F == gl::texture_format_e::rgba8_unorm )
         {
             auto value = std::vector<gl::vector4u>(size);
@@ -793,6 +796,8 @@ export namespace gl
     template<gl::texture_format_e F>
     auto get_texture_sub_image                      (gl::handle_t texture, gl::uint32_t level, gl::volume_t region, gl::size_t size) -> auto
     {
+        gl::todo();
+
         if constexpr (F == gl::texture_format_e::rgba8_unorm )
         {
             auto value = std::vector<gl::vector4u>(size);
@@ -1145,12 +1150,15 @@ export namespace gl
     template<typename T>
     void clear_buffer_data                          (gl::handle_t buffer, gl::buffer_base_format_e base_format, gl::buffer_format_e format, gl::data_type_e type, std::span<const T> data)
     {
-        gl::todo();
+        gl::todo(); //map buffer_base_format from buffer_format
+
         ::glClearNamedBufferData(gl::to_underlying(buffer), gl::to_underlying(format), gl::to_underlying(base_format), gl::to_underlying(type), data.data());
     }
     template<typename T>
     void clear_buffer_sub_data                      (gl::handle_t buffer, gl::buffer_base_format_e base_format, gl::buffer_format_e format, gl::data_type_e type, gl::range range)
     {
+        gl::todo(); //do same as clear_buffer_data()
+
         const auto byte_range = gl::convert_range<T>(range);
         ::glClearNamedBufferSubData(gl::to_underlying(buffer), gl::to_underlying(format), byte_range.offset, byte_range.size, gl::to_underlying(base_format), gl::to_underlying(type), nullptr);
     }
@@ -1534,10 +1542,10 @@ export namespace gl
             [=](glp::wrapping_s           _) { texture_parameter_uiv(texture, gl::texture_parameter_e::wrapping_s          , gl::to_underlying(_.value)); },
             [=](glp::wrapping_t           _) { texture_parameter_uiv(texture, gl::texture_parameter_e::wrapping_t          , gl::to_underlying(_.value)); },
             [=](glp::wrapping_r           _) { texture_parameter_uiv(texture, gl::texture_parameter_e::wrapping_r          , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_r            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_red         , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_g            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_green       , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_b            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_blue        , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_a            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_alpha       , gl::to_underlying(_.value)); },
+            [=](glp::swizzle_r            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_r         , gl::to_underlying(_.value)); },
+            [=](glp::swizzle_g            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_g       , gl::to_underlying(_.value)); },
+            [=](glp::swizzle_b            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_b        , gl::to_underlying(_.value)); },
+            [=](glp::swizzle_a            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_a       , gl::to_underlying(_.value)); },
             [=](glp::swizzle_rgba         _) { get_swizzle_rgba     (texture, gl::texture_parameter_e::swizzle_rgba        ,                   _.value ); },
             [=](glp::maximum_lod          _) { texture_parameter_fv (texture, gl::texture_parameter_e::maximum_lod         ,                   _.value ); },
             [=](glp::minimum_lod          _) { texture_parameter_fv (texture, gl::texture_parameter_e::minimum_lod         ,                   _.value ); },
@@ -1841,31 +1849,21 @@ export namespace gl
         
         switch (type)
         {
-            case gl::vertex_array_attribute_type_e::int8_t                        : 
-            case gl::vertex_array_attribute_type_e::uint8_t                       : 
-            case gl::vertex_array_attribute_type_e::int16_t                       : 
-            case gl::vertex_array_attribute_type_e::uint16_t                      : 
-            case gl::vertex_array_attribute_type_e::int32_t                       : 
-            case gl::vertex_array_attribute_type_e::uint32_t                      : 
-            case gl::vertex_array_attribute_type_e::int32_2_10_10_10_rev_t        : 
-            case gl::vertex_array_attribute_type_e::uint32_2_10_10_10_rev_t       : 
-            case gl::vertex_array_attribute_type_e::uint32_10_11_11_11_float_rev_t:
-            {
-                vertex_array_attribute_format_i(vertex_array, attribute, type, count, offset);
-                break;
-            }
-            case gl::vertex_array_attribute_type_e::fixed_t                       : 
-            {
-                vertex_array_attribute_format_f(vertex_array, attribute, type, count, offset, is_normalized);
-                break;
-            }
-            case gl::vertex_array_attribute_type_e::float16_t                     : 
-            case gl::vertex_array_attribute_type_e::float32_t                     : 
-            case gl::vertex_array_attribute_type_e::float64_t                     : 
-            {
-                vertex_array_attribute_format_l(vertex_array, attribute, type, count, offset);
-                break;
-            }
+            using enum vertex_array_attribute_type_e;
+
+            case int8                      : 
+            case uint8                     : 
+            case int16                     : 
+            case uint16                    : 
+            case int32                     : 
+            case uint32                    : 
+            case int32_2_10_10_10_r        : 
+            case uint32_2_10_10_10_r       : 
+            case uint32_10_11_11_11_float_r: return vertex_array_attribute_format_i(vertex_array, attribute, type, count, offset);
+            case fixed                     : return vertex_array_attribute_format_f(vertex_array, attribute, type, count, offset, is_normalized);
+            case float16                   : 
+            case float32                   : 
+            case float64                   : return vertex_array_attribute_format_l(vertex_array, attribute, type, count, offset);
         }
     }
     void vertex_array_vertex_buffer                 (gl::handle_t vertex_array, gl::handle_t vertex_buffer, gl::binding_t binding, gl::size_t stride, gl::index_t index)
@@ -2029,7 +2027,7 @@ export namespace gl
     }
     void polygon_mode                               (gl::polygon_mode_e mode)
     {
-        ::glPolygonMode(gl::to_underlying(gl::polygon_face_e::front_back), gl::to_underlying(mode));
+        ::glPolygonMode(gl::to_underlying(gl::polygon_face_e::front_and_back), gl::to_underlying(mode));
     }
     void polygon_offset_clamp                       (gl::float32_t factor, gl::float32_t units, gl::float32_t clamp)
     {

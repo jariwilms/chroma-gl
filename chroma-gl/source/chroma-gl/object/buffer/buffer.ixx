@@ -99,10 +99,10 @@ export namespace gl
         }
         void await_range(gl::range range)
         {
-            auto locks = std::vector<gl::sync_lock_t>{};
-            std::ranges::for_each(locks_, [&](const gl::sync_lock_t& syncLock)
+            auto locks = std::vector<gl::lock_t>{};
+            std::ranges::for_each(locks_, [&](const gl::lock_t& lock)
                 {
-                    if   (const auto& [sync, lock] = syncLock; gl::range_overlaps(range, lock))
+                    if   (const auto& [sync, range] = lock; gl::range_overlaps(range, range))
                     {
                         auto command = gl::synchronization_command_e::none;
                         auto timeout = gl::time_t{};
@@ -123,7 +123,7 @@ export namespace gl
                     }
                     else
                     {
-                        locks.emplace_back(lock, sync);
+                        locks.emplace_back(range, sync);
                     }
                 });
 
@@ -150,7 +150,7 @@ export namespace gl
     private:
         gl::size_t                    size_ ;
         gl::range                     range_;
-        std::vector<gl::sync_lock_t>  locks_;
+        std::vector<gl::lock_t>       locks_;
         std::shared_ptr<std::span<T>> data_ ;
     };
     template<typename T>
@@ -300,10 +300,10 @@ export namespace gl
         }
         void await     (gl::range range)
         {
-            auto locks = std::vector<gl::sync_lock_t>{};
-            std::ranges::for_each(locks_, [&](const gl::sync_lock_t& syncLock)
+            auto locks = std::vector<gl::lock_t>{};
+            std::ranges::for_each(locks_, [&](const gl::lock_t& lock)
                 {
-                    if   (const auto& [sync, lock] = syncLock; gl::range_overlaps(range, lock))
+                    if   (const auto& [sync, range] = lock; gl::range_overlaps(range, range))
                     {
                         auto command = gl::synchronization_command_e::none;
                         auto timeout = gl::time_t{};
@@ -324,7 +324,7 @@ export namespace gl
                     }
                     else
                     {
-                        locks.emplace_back(lock, sync);
+                        locks.emplace_back(range, sync);
                     }
                 });
 
@@ -351,7 +351,7 @@ export namespace gl
     private:
         gl::size_t                    size_ ;
         gl::range                     range_;
-        std::vector<gl::sync_lock_t>  locks_;
+        std::vector<gl::lock_t>       locks_;
         std::shared_ptr<std::span<T>> data_ ;
     };
 }

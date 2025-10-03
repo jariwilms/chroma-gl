@@ -4,29 +4,6 @@ import std;
 import opengl;
 import opengl.object.buffer;
 
-export namespace gl::meta //TODO, remove
-{
-    template<typename T, typename... Ts>
-    constexpr auto all_same_type_v = static_cast<gl::bool_t>(std::conjunction_v<std::is_same<T, Ts>...>);
-    
-    template<auto value, auto min, auto max>
-    constexpr auto within_open_interval_v   = value >  min && value <  max;
-    template<auto value, auto min, auto max>
-    constexpr auto within_closed_interval_v = value >= min && value <= max;
-
-    template<typename T>
-    constexpr auto map_type() -> gl::vertex_array_attribute_type_e
-    {
-        if constexpr (std::is_same_v<T, gl::int8_t   >) return gl::vertex_array_attribute_type_e::int8_t   ;          
-        if constexpr (std::is_same_v<T, gl::uint8_t  >) return gl::vertex_array_attribute_type_e::uint8_t  ;  
-        if constexpr (std::is_same_v<T, gl::int16_t  >) return gl::vertex_array_attribute_type_e::int16_t  ;         
-        if constexpr (std::is_same_v<T, gl::uint16_t >) return gl::vertex_array_attribute_type_e::uint16_t ;  
-        if constexpr (std::is_same_v<T, gl::int32_t  >) return gl::vertex_array_attribute_type_e::int32_t  ;        
-        if constexpr (std::is_same_v<T, gl::uint32_t >) return gl::vertex_array_attribute_type_e::uint32_t ;
-        if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32_t; ;
-        if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64_t;        
-    }
-}
 export namespace gl
 {
     template<typename T, gl::uint32_t N, gl::index_t L = 0u, gl::uint32_t I = 0u> requires (meta::within_closed_interval_v<N, 1u, 4u>)
@@ -107,7 +84,7 @@ export namespace gl
                         {
                             enable_attribute(attribute_index_);
 
-                            gl::vertex_array_attribute_format (handle(), attribute_index_, offset, meta::map_type<typename decltype(attribute)::type>(), attribute.count(), gl::false_);
+                            gl::vertex_array_attribute_format (handle(), attribute_index_, offset, gl::map_type<typename decltype(attribute)::type>(), attribute.count(), gl::false_);
                             gl::vertex_array_attribute_binding(handle(), attribute_index_, binding_point_);
                             gl::vertex_array_binding_divisor  (handle(), gl::binding_t{ attribute_index_ }, attribute.instancing_rate());
 

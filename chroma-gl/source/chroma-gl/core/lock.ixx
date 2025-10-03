@@ -6,5 +6,5 @@ import opengl.types;
 
 export namespace gl
 {
-    using sync_lock_t = std::tuple<gl::sync_t, gl::range>;
+    using lock_t = std::tuple<gl::sync_t, gl::range>;
 }
