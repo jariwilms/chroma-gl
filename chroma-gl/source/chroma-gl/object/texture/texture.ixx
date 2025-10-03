@@ -19,7 +19,7 @@ export namespace gl
         return glm::levels(vector);
     }
 
-    auto map_texture_minification_filter         (gl::texture_filter_e filter) -> gl::texture_minification_filter_e
+    auto map_texture_minification_filter (gl::texture_filter_e filter) -> gl::texture_minification_filter_e
     {
         switch (filter)
         {
@@ -33,7 +33,7 @@ export namespace gl
             default: throw std::invalid_argument{ "Invalid filter!" };
         }
     }
-    auto map_texture_magnification_filter         (gl::texture_filter_e filter) -> gl::texture_magnification_filter_e
+    auto map_texture_magnification_filter(gl::texture_filter_e filter) -> gl::texture_magnification_filter_e
     {
         switch (filter)
         {
@@ -47,35 +47,35 @@ export namespace gl
             default: throw std::invalid_argument{ "Invalid filter!" };
         }
     }
-    auto map_texture_format_base        (gl::texture_format_e format) -> gl::texture_base_format_e
+    auto map_texture_format_base         (gl::texture_format_e format) -> gl::texture_base_format_e
     {
         switch (format)
         {
             using enum gl::texture_format_e;
 
-            case r8_unorm   : case r16_unorm   : case r8_snorm   : case r16_snorm   : case r16_float : case r32_float   :                    return gl::texture_base_format_e::r   ;
-            case rg8_unorm  : case rg16_unorm  : case rg8_snorm  : case rg16_snorm  : case rg16_float: case rg32_float  :                    return gl::texture_base_format_e::rg  ;
-            case rgb8_unorm : case rgb16_unorm : case rgb8_snorm : case rgb16_snorm : case rgb8_srgb : case rgb16_float : case rgb32_float : return gl::texture_base_format_e::rgb ;
-            case rgba8_unorm: case rgba16_unorm: case rgba8_snorm: case rgba16_snorm: case rgba8_srgb: case rgba16_float: case rgba32_float: return gl::texture_base_format_e::rgba;
-            case d16_unorm  : case d24_unorm   : case d32_float  :                                                                           return gl::texture_base_format_e::d   ;
-            case s8_uint    :                                                                                                                return gl::texture_base_format_e::s   ;
+            case r_uint8_n   : case r_uint16_n   : case r_int8_n   : case r_int16_n   : case r_float16  : case r_float32   :                    return gl::texture_base_format_e::r   ;
+            case rg_uint8_n  : case rg_uint16_n  : case rg_int8_n  : case rg_int16_n  : case rg_float16 : case rg_float32  :                    return gl::texture_base_format_e::rg  ;
+            case rgb_uint8_n : case rgb_uint16_n : case rgb_int8_n : case rgb_int16_n : case srgb_uint8 : case rgb_float16 : case rgb_float32 : return gl::texture_base_format_e::rgb ;
+            case rgba_uint8_n: case rgba_uint16_n: case rgba_int8_n: case rgba_int16_n: case srgba_uint8: case rgba_float16: case rgba_float32: return gl::texture_base_format_e::rgba;
+            case d_uint16_n  : case d_uint24_n   : case d_float32  :                                                                            return gl::texture_base_format_e::d   ;
+            case s_uint8     :                                                                                                                  return gl::texture_base_format_e::s   ;
 
             default: throw std::invalid_argument{ "Invalid format!" };
         }
     }
-    auto map_texture_format_type        (gl::texture_format_e format) -> gl::pixel_data_type_e
+    auto map_texture_format_type         (gl::texture_format_e format) -> gl::pixel_data_type_e
     {
         switch (format)
         {
             using enum gl::texture_format_e;
 
-            case r8_unorm : case rg8_unorm : case rgb8_unorm : case rgba8_unorm : return gl::pixel_data_type_e::uint8  ;
-            case r16_unorm: case rg16_unorm: case rgb16_unorm: case rgba16_unorm: return gl::pixel_data_type_e::uint16 ;
-            case r8_snorm : case rg8_snorm : case rgb8_snorm : case rgba8_snorm : return gl::pixel_data_type_e::uint8  ;
-            case r16_snorm: case rg16_snorm: case rgb16_snorm: case rgba16_snorm: return gl::pixel_data_type_e::int16  ;
-            case rgb8_srgb: case rgba8_srgb:                                      return gl::pixel_data_type_e::uint8  ;
-            case r16_float: case rg16_float: case rgb16_float: case rgba16_float: return gl::pixel_data_type_e::float16;
-            case r32_float: case rg32_float: case rgb32_float: case rgba32_float: return gl::pixel_data_type_e::float32;
+            case r_int8_n  : case rg_int8_n  : case rgb_int8_n  : case rgba_int8_n  : return gl::pixel_data_type_e::int8   ;
+            case r_int16_n : case rg_int16_n : case rgb_int16_n : case rgba_int16_n : return gl::pixel_data_type_e::int16  ;
+            case r_uint8_n : case rg_uint8_n : case rgb_uint8_n : case rgba_uint8_n : return gl::pixel_data_type_e::uint8  ;
+            case r_uint16_n: case rg_uint16_n: case rgb_uint16_n: case rgba_uint16_n: return gl::pixel_data_type_e::uint16 ;
+                                               case srgb_uint8  : case srgba_uint8  : return gl::pixel_data_type_e::uint8  ;
+            case r_float16 : case rg_float16 : case rgb_float16 : case rgba_float16 : return gl::pixel_data_type_e::float16;
+            case r_float32 : case rg_float32 : case rgb_float32 : case rgba_float32 : return gl::pixel_data_type_e::float32;
             
             default: throw std::invalid_argument{ "Invalid format!" };
         }

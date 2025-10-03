@@ -60,12 +60,12 @@ export namespace gl
         {
             switch (format)
             {
-                case gl::texture2d::format_e::d16_unorm        :
-                case gl::texture2d::format_e::d24_unorm        :
-                case gl::texture2d::format_e::d32_float        : return gl::frame_buffer_attachment_e::depth        ;
-                case gl::texture2d::format_e::d24_unorm_s8_uint:
-                case gl::texture2d::format_e::d32_float_s8_uint: return gl::frame_buffer_attachment_e::depth_stencil;
-                case gl::texture2d::format_e::s8_uint          : return gl::frame_buffer_attachment_e::stencil      ;
+                case gl::texture2d::format_e::d_uint16_n       :
+                case gl::texture2d::format_e::d_uint24_n       :
+                case gl::texture2d::format_e::d_float32        : return gl::frame_buffer_attachment_e::depth        ;
+                case gl::texture2d::format_e::s_uint8          : return gl::frame_buffer_attachment_e::stencil      ;
+                case gl::texture2d::format_e::ds_uint24_n_uint8:
+                case gl::texture2d::format_e::ds_float32_uint8 : return gl::frame_buffer_attachment_e::depth_stencil;
 
                 default: return gl::frame_buffer_attachment_e::color_0 + color_index++;
             }
@@ -74,12 +74,12 @@ export namespace gl
     {
         switch (format)
         {
-            case gl::cubemap::format_e::d16_unorm        :
-            case gl::cubemap::format_e::d24_unorm        :
-            case gl::cubemap::format_e::d32_float        : return gl::frame_buffer_attachment_e::depth        ;
-            case gl::cubemap::format_e::d24_unorm_s8_uint:
-            case gl::cubemap::format_e::d32_float_s8_uint: return gl::frame_buffer_attachment_e::depth_stencil;
-            case gl::cubemap::format_e::s8_uint          : return gl::frame_buffer_attachment_e::stencil      ;
+            case gl::cubemap::format_e::d_uint16_n       :
+            case gl::cubemap::format_e::d_uint24_n       :
+            case gl::cubemap::format_e::d_float32        : return gl::frame_buffer_attachment_e::depth        ;
+            case gl::cubemap::format_e::s_uint8          : return gl::frame_buffer_attachment_e::stencil      ;
+            case gl::cubemap::format_e::ds_uint24_n_uint8:
+            case gl::cubemap::format_e::ds_float32_uint8 : return gl::frame_buffer_attachment_e::depth_stencil;
 
             default: return gl::frame_buffer_attachment_e::color_0 + color_index++;
         }

@@ -83,45 +83,49 @@ export namespace gl
     };
     enum class buffer_format_e : gl::enum_t
     {
-        r8           = GL_R8      , 
-        rg8          = GL_RG8     , 
-        rgba8        = GL_RGBA8   , 
-        r16          = GL_R16     , 
-        rg16         = GL_RG16    , 
-        rgba16       = GL_RGBA16  , 
-        r8_int       = GL_R8I     , 
-        rg8_int      = GL_RG8I    , 
-        rgba8_int    = GL_RGBA8I  , 
-        r16_int      = GL_R16I    , 
-        rg16_int     = GL_RG16I   , 
-        rgba16_int   = GL_RGBA16I , 
-        r32_int      = GL_R32I    , 
-        rg32_int     = GL_RG32I   , 
-        rgb32_int    = GL_RGB32I  , 
-        rgba32_int   = GL_RGBA32I , 
-        r8_uint      = GL_R8UI    , 
-        rg8_uint     = GL_RG8UI   , 
-        rgba8_uint   = GL_RGBA8UI , 
-        r16_uint     = GL_R16UI   , 
-        rg16_uint    = GL_RG16UI  , 
-        rgba16_uint  = GL_RGBA16UI, 
-        rgba32_uint  = GL_RGBA32UI, 
-        r32_uint     = GL_R32UI   , 
-        rg32_uint    = GL_RG32UI  , 
-        rgb32_uint   = GL_RGB32UI , 
-        r16_float    = GL_R16F    , 
-        r32_float    = GL_R32F    , 
-        rg16_float   = GL_RG16F   , 
-        rg32_float   = GL_RG32F   , 
-        rgb32_float  = GL_RGB32F  , 
-        rgba16_float = GL_RGBA16F , 
-        rgba32_float = GL_RGBA32F , 
+        r_int8       = GL_R8I     , 
+        r_int16      = GL_R16I    , 
+        r_int32      = GL_R32I    , 
+        r_uint8      = GL_R8UI    , 
+        r_uint8_n    = GL_R8      , 
+        r_uint16     = GL_R16UI   , 
+        r_uint16_n   = GL_R16     , 
+        r_uint32     = GL_R32UI   , 
+        r_float16    = GL_R16F    , 
+        r_float32    = GL_R32F    , 
+        
+        rg_int8      = GL_RG8I    , 
+        rg_int16     = GL_RG16I   , 
+        rg_int32     = GL_RG32I   , 
+        rg_uint8     = GL_RG8UI   , 
+        rg_uint8_n   = GL_RG8     , 
+        rg_uint16    = GL_RG16UI  , 
+        rg_uint16_n  = GL_RG16    , 
+        rg_uint32    = GL_RG32UI  , 
+        rg_float16   = GL_RG16F   , 
+        rg_float32   = GL_RG32F   , 
+        
+        rgb_int32    = GL_RGB32I  , 
+        rgb_uint32   = GL_RGB32UI , 
+        rgb_float32  = GL_RGB32F  , 
+        
+        rgba_int8    = GL_RGBA8I  , 
+        rgba_int16   = GL_RGBA16I , 
+        rgba_int16_n = GL_RGBA16  , 
+        rgba_int32   = GL_RGBA32I , 
+        rgba_uint8   = GL_RGBA8UI , 
+        rgba_uint8_n = GL_RGBA8   , 
+        rgba_uint16  = GL_RGBA16UI, 
+        rgba_uint32  = GL_RGBA32UI, 
+        rgba_float16 = GL_RGBA16F , 
+        rgba_float32 = GL_RGBA32F , 
     };
     enum class buffer_mask_e : gl::bitfield_t
     {
         color   = GL_COLOR_BUFFER_BIT    , 
         depth   = GL_DEPTH_BUFFER_BIT    , 
         stencil = GL_STENCIL_BUFFER_BIT  , 
+        
         all     = color | depth | stencil, 
     };
     enum class buffer_mapping_access_e : gl::enum_t
@@ -134,42 +138,48 @@ export namespace gl
     {
         read       = GL_READ_ONLY , 
         write      = GL_WRITE_ONLY, 
-        read_write = read | write , 
+        read_write = GL_READ_WRITE, 
     };
     enum class buffer_mapping_range_access_flags_e : gl::bitfield_t
     {
-        read              = GL_MAP_READ_BIT             , 
-        write             = GL_MAP_WRITE_BIT            , 
-        read_write        = read | write                , 
-        persistent        = GL_MAP_PERSISTENT_BIT       , 
-        coherent          = GL_MAP_COHERENT_BIT         , 
-        invalidate_buffer = GL_MAP_INVALIDATE_BUFFER_BIT, 
-        invalidate_range  = GL_MAP_INVALIDATE_RANGE_BIT , 
-        flush_explicit    = GL_MAP_FLUSH_EXPLICIT_BIT   , 
-        unsynchronized    = GL_MAP_UNSYNCHRONIZED_BIT   , 
+        read              = GL_MAP_READ_BIT                      , 
+        write             = GL_MAP_WRITE_BIT                     , 
+        persistent        = GL_MAP_PERSISTENT_BIT                , 
+        coherent          = GL_MAP_COHERENT_BIT                  , 
+        invalidate_buffer = GL_MAP_INVALIDATE_BUFFER_BIT         , 
+        invalidate_range  = GL_MAP_INVALIDATE_RANGE_BIT          , 
+        flush_explicit    = GL_MAP_FLUSH_EXPLICIT_BIT            , 
+        unsynchronized    = GL_MAP_UNSYNCHRONIZED_BIT            , 
+        
+        read_write        = read  | write                        , 
+        write_discard     = write | invalidate_buffer            , 
+        shared            = read  | write | persistent | coherent, 
     };
     enum class buffer_parameter_e : gl::enum_t
     {
         access        = GL_BUFFER_ACCESS           , 
         access_flags  = GL_BUFFER_ACCESS_FLAGS     , 
-        immutable     = GL_BUFFER_IMMUTABLE_STORAGE, 
+        is_immutable  = GL_BUFFER_IMMUTABLE_STORAGE, 
+        is_mapped     = GL_BUFFER_MAPPED           , 
         map_length    = GL_BUFFER_MAP_LENGTH       , 
         map_offset    = GL_BUFFER_MAP_OFFSET       , 
-        is_mapped     = GL_BUFFER_MAPPED           , 
         size          = GL_BUFFER_SIZE             , 
-        usage         = GL_BUFFER_USAGE            , 
         storage_flags = GL_BUFFER_STORAGE_FLAGS    , 
+        usage         = GL_BUFFER_USAGE            , 
     };
     enum class buffer_storage_flags_e : gl::bitfield_t
     {
-        static_storage  = GL_NONE               , 
-        dynamic_storage = GL_DYNAMIC_STORAGE_BIT,  
-        read            = GL_MAP_READ_BIT       , 
-        write           = GL_MAP_WRITE_BIT      , 
-        read_write      = read | write          , 
-        persistent      = GL_MAP_PERSISTENT_BIT , 
-        coherent        = GL_MAP_COHERENT_BIT   , 
-        client_storage  = GL_CLIENT_STORAGE_BIT , 
+        none            = GL_NONE                             , 
+        read            = GL_MAP_READ_BIT                     , 
+        write           = GL_MAP_WRITE_BIT                    , 
+        persistent      = GL_MAP_PERSISTENT_BIT               , 
+        coherent        = GL_MAP_COHERENT_BIT                 , 
+        dynamic_storage = GL_DYNAMIC_STORAGE_BIT              , 
+        client_storage  = GL_CLIENT_STORAGE_BIT               , 
+        
+        static_storage  = none                                , 
+        read_write      = read | write                        , 
+        shared          = read | write | persistent | coherent, 
     };
     enum class buffer_target_e : gl::enum_t
     {
@@ -247,14 +257,14 @@ export namespace gl
     };
     enum class cubemap_format_e : gl::enum_t
     {
-        rgb8_unorm   = GL_RGB8        , 
-        rgba8_unorm  = GL_RGBA8       , 
-        rgb8_srgb    = GL_SRGB8       , 
-        rgba8_srgb   = GL_SRGB8_ALPHA8,  
-        rgb16_float  = GL_RGB16F      , 
-        rgba16_float = GL_RGBA16F     , 
-        rgb32_float  = GL_RGB32F      , 
-        rgba32_float = GL_RGBA32F     , 
+        rgb_uint8_n  = GL_RGB8        , 
+        rgb_float16  = GL_RGB16F      , 
+        rgb_float32  = GL_RGB32F      , 
+        rgba_uint8_n = GL_RGBA8       , 
+        rgba_float16 = GL_RGBA16F     , 
+        rgba_float32 = GL_RGBA32F     , 
+        srgb_uint8   = GL_SRGB8       , 
+        srgba_uint8  = GL_SRGB8_ALPHA8,  
     };
     enum class culling_facet_e : gl::enum_t
     {
@@ -496,15 +506,17 @@ export namespace gl
     enum class data_type_e : gl::enum_t
     {
         int8    = GL_BYTE          , 
-        uint8   = GL_UNSIGNED_BYTE , 
         int16   = GL_SHORT         , 
-        uint16  = GL_UNSIGNED_SHORT, 
         int32   = GL_INT           , 
+        
+        uint8   = GL_UNSIGNED_BYTE , 
+        uint16  = GL_UNSIGNED_SHORT, 
         uint32  = GL_UNSIGNED_INT  , 
+        
         float32 = GL_FLOAT         , 
         float64 = GL_DOUBLE        , 
         
-        byte    = int8             , 
+        byte    = uint8            , 
     };
     enum class debug_severity_e : gl::enum_t 
     {
@@ -576,6 +588,7 @@ export namespace gl
     enum class error_flag_e : gl::enum_t
     {
         no_error                       = GL_NO_ERROR                     , 
+        
         invalid_enumeration            = GL_INVALID_ENUM                 , 
         invalid_value                  = GL_INVALID_VALUE                , 
         invalid_operation              = GL_INVALID_OPERATION            , 
@@ -645,15 +658,21 @@ export namespace gl
     };
     enum class frame_buffer_filter_e : gl::enum_t
     {
-        nearest = GL_NEAREST,  
+        nearest = GL_NEAREST, 
         linear  = GL_LINEAR , 
     };
     enum class frame_buffer_format_e : gl::enum_t
     {
-        r               = GL_RED            , g             = GL_GREEN        , b             = GL_BLUE           , 
-        rgb             = GL_RGB            , rgba          = GL_RGBA         ,
-        bgr             = GL_BGR            , bgra          = GL_BGRA         ,
-        depth_component = GL_DEPTH_COMPONENT, depth_stencil = GL_DEPTH_STENCIL, stencil_index = GL_STENCIL_INDEX  , 
+        r    = GL_RED            , 
+        g    = GL_GREEN          , 
+        b    = GL_BLUE           , 
+        rgb  = GL_RGB            , 
+        rgba = GL_RGBA           , 
+        bgr  = GL_BGR            , 
+        bgra = GL_BGRA           , 
+        d    = GL_DEPTH_COMPONENT, 
+        s    = GL_STENCIL_INDEX  , 
+        ds   = GL_DEPTH_STENCIL  , 
     };
     enum class frame_buffer_parameter_e : gl::enum_t
     {
@@ -671,26 +690,26 @@ export namespace gl
     };
     enum class frame_buffer_source_e : gl::enum_t
     {
-        none        = GL_NONE             , 
+        none           = GL_NONE             , 
         
-        front_left  = GL_FRONT_LEFT       , 
-        front_right = GL_FRONT_RIGHT      , 
-        back_left   = GL_BACK_LEFT        , 
-        back_right  = GL_BACK_RIGHT       , 
-        front       = GL_FRONT            , 
-        back        = GL_BACK             , 
-        left        = GL_LEFT             , 
-        right       = GL_RIGHT            , 
-        front_back  = GL_FRONT_AND_BACK   , 
+        front_left     = GL_FRONT_LEFT       , 
+        front_right    = GL_FRONT_RIGHT      , 
+        back_left      = GL_BACK_LEFT        , 
+        back_right     = GL_BACK_RIGHT       , 
+        front          = GL_FRONT            , 
+        back           = GL_BACK             , 
+        left           = GL_LEFT             , 
+        right          = GL_RIGHT            , 
+        front_and_back = GL_FRONT_AND_BACK   , 
         
-        color_0     = GL_COLOR_ATTACHMENT0, 
-        color_1     = GL_COLOR_ATTACHMENT1, 
-        color_2     = GL_COLOR_ATTACHMENT2, 
-        color_3     = GL_COLOR_ATTACHMENT3, 
-        color_4     = GL_COLOR_ATTACHMENT4, 
-        color_5     = GL_COLOR_ATTACHMENT5, 
-        color_6     = GL_COLOR_ATTACHMENT6, 
-        color_7     = GL_COLOR_ATTACHMENT7, 
+        color_0        = GL_COLOR_ATTACHMENT0, 
+        color_1        = GL_COLOR_ATTACHMENT1, 
+        color_2        = GL_COLOR_ATTACHMENT2, 
+        color_3        = GL_COLOR_ATTACHMENT3, 
+        color_4        = GL_COLOR_ATTACHMENT4, 
+        color_5        = GL_COLOR_ATTACHMENT5, 
+        color_6        = GL_COLOR_ATTACHMENT6, 
+        color_7        = GL_COLOR_ATTACHMENT7, 
     };
     enum class frame_buffer_status_e : gl::enum_t
     {
@@ -715,27 +734,30 @@ export namespace gl
     enum class frame_buffer_type_e : gl::enum_t
     {
         int8    = GL_BYTE          , 
-        uint8   = GL_UNSIGNED_BYTE , 
         int16   = GL_SHORT         , 
-        uint16  = GL_UNSIGNED_SHORT, 
         int32   = GL_INT           , 
+        
+        uint8   = GL_UNSIGNED_BYTE , 
+        uint16  = GL_UNSIGNED_SHORT, 
         uint32  = GL_UNSIGNED_INT  , 
+        
         float16 = GL_HALF_FLOAT    , 
         float32 = GL_FLOAT         , 
 
-        byte    = int8             , 
+        byte    = uint8            , 
     };
     enum class input_primitive_e : gl::enum_t
     {
         points                   = GL_POINTS                  , 
         lines                    = GL_LINES                   , 
+        line_loop                = GL_LINE_LOOP               , 
         line_strip               = GL_LINE_STRIP              , 
-        line_loop                = GL_LINE                    , 
-        lines_adjacency          = GL_LINES_ADJACENCY         , 
-        line_strip_adjacency     = GL_LINE_STRIP_ADJACENCY    , 
         triangles                = GL_TRIANGLES               , 
         triangle_strip           = GL_TRIANGLE_STRIP          , 
         triangle_fan             = GL_TRIANGLE_FAN            , 
+
+        lines_adjacency          = GL_LINES_ADJACENCY         , 
+        line_strip_adjacency     = GL_LINE_STRIP_ADJACENCY    , 
         triangles_adjacency      = GL_TRIANGLES_ADJACENCY     , 
         triangle_strip_adjacency = GL_TRIANGLE_STRIP_ADJACENCY, 
     };
@@ -793,7 +815,7 @@ export namespace gl
         rg_float16               = GL_RG16F         , 
         rg_float32               = GL_RG32F         , 
         
-        rgb_float32_11_11_10     = GL_R11F_G11F_B10F, //rgb_float32_11_11_10_
+        rgb_float32_11_11_10     = GL_R11F_G11F_B10F, 
         
         rgba_int8                = GL_RGBA8I        , 
         rgba_int8_n              = GL_RGBA8_SNORM   , 
@@ -804,8 +826,8 @@ export namespace gl
         rgba_uint8_n             = GL_RGBA8         , 
         rgba_uint16              = GL_RGBA16UI      , 
         rgba_uint16_n            = GL_RGBA16        , 
-        rgba_uint32              = GL_RGBA32UI      , //component_type_bits => rgba_unorm_8
-        rgba_uint32_10_10_10_2   = GL_RGB10_A2UI    , //rgba_
+        rgba_uint32              = GL_RGBA32UI      , 
+        rgba_uint32_10_10_10_2   = GL_RGB10_A2UI    , 
         rgba_uint32_10_10_10_2_n = GL_RGB10_A2      , 
         rgba_float16             = GL_RGBA16F       , 
         rgba_float32             = GL_RGBA32F       , 
@@ -831,36 +853,33 @@ export namespace gl
     };
     enum class memory_barrier_e : gl::bitfield_t
     {
-        vertex_attribute_array = GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT    , 
+        atomic_counter         = GL_ATOMIC_COUNTER_BARRIER_BIT         , 
+        buffer_update          = GL_BUFFER_UPDATE_BARRIER_BIT          , 
+        client_mapped_buffer   = GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT   , 
+        command                = GL_COMMAND_BARRIER_BIT                , 
         element_array          = GL_ELEMENT_ARRAY_BARRIER_BIT          , 
-        uniform                = GL_UNIFORM_BARRIER_BIT                , 
-        texture_fetch          = GL_TEXTURE_FETCH_BARRIER_BIT          , 
-        
+        frame_buffer           = GL_FRAMEBUFFER_BARRIER_BIT            , 
+        pixel_buffer           = GL_PIXEL_BUFFER_BARRIER_BIT           , 
+        query_buffer           = GL_QUERY_BUFFER_BARRIER_BIT           , 
         shader_global_access   = GL_SHADER_GLOBAL_ACCESS_BARRIER_BIT_NV, //extension
         shader_image_access    = GL_SHADER_IMAGE_ACCESS_BARRIER_BIT    , 
-        command                = GL_COMMAND_BARRIER_BIT                , 
-        pixel_buffer           = GL_PIXEL_BUFFER_BARRIER_BIT           , 
-        
-        texture_update         = GL_TEXTURE_UPDATE_BARRIER_BIT         , 
-        buffer_update          = GL_BUFFER_UPDATE_BARRIER_BIT          , 
-        frame_buffer           = GL_FRAMEBUFFER_BARRIER_BIT            , 
-        transform_feedback     = GL_TRANSFORM_FEEDBACK_BARRIER_BIT     , 
-        
-        atomic_counter         = GL_ATOMIC_COUNTER_BARRIER_BIT         , 
         shader_storage         = GL_SHADER_STORAGE_BARRIER_BIT         , 
-        client_mapped_buffer   = GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT   , 
-        query_buffer           = GL_QUERY_BUFFER_BARRIER_BIT           , 
+        texture_fetch          = GL_TEXTURE_FETCH_BARRIER_BIT          , 
+        texture_update         = GL_TEXTURE_UPDATE_BARRIER_BIT         , 
+        transform_feedback     = GL_TRANSFORM_FEEDBACK_BARRIER_BIT     , 
+        uniform                = GL_UNIFORM_BARRIER_BIT                , 
+        vertex_attribute_array = GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT    , 
         
         all                    = GL_ALL_BARRIER_BITS                   , 
     };
     enum class memory_regional_barrier_e : gl::bitfield_t
     {
-        uniform             = GL_UNIFORM_BARRIER_BIT            , 
-        texture_fetch       = GL_TEXTURE_FETCH_BARRIER_BIT      , 
-        shader_image_access = GL_SHADER_IMAGE_ACCESS_BARRIER_BIT, 
-        frame_buffer        = GL_FRAMEBUFFER_BARRIER_BIT        , 
         atomic_counter      = GL_ATOMIC_COUNTER_BARRIER_BIT_EXT , 
+        frame_buffer        = GL_FRAMEBUFFER_BARRIER_BIT        , 
+        shader_image_access = GL_SHADER_IMAGE_ACCESS_BARRIER_BIT, 
         shader_storage      = GL_SHADER_STORAGE_BARRIER_BIT     , 
+        texture_fetch       = GL_TEXTURE_FETCH_BARRIER_BIT      , 
+        uniform             = GL_UNIFORM_BARRIER_BIT            , 
         
         all                 = GL_ALL_BARRIER_BITS               , 
     };
@@ -889,30 +908,30 @@ export namespace gl
     };
     enum class packing_mode_e : gl::enum_t
     {
-        unpack_swap_bytes              = GL_UNPACK_SWAP_BYTES             , 
-        unpack_lsb_first               = GL_UNPACK_LSB_FIRST              , 
-        unpack_row_length              = GL_UNPACK_ROW_LENGTH             , 
-        unpack_skip_rows               = GL_UNPACK_SKIP_ROWS              , 
-        unpack_skip_pixels             = GL_UNPACK_SKIP_PIXELS            , 
-        unpack_alignment               = GL_UNPACK_ALIGNMENT              , 
-        unpack_skip_images             = GL_UNPACK_SKIP_IMAGES            , 
-        unpack_image_height            = GL_UNPACK_IMAGE_HEIGHT           , 
-        unpack_compressed_block_width  = GL_UNPACK_COMPRESSED_BLOCK_WIDTH , 
-        unpack_compressed_block_height = GL_UNPACK_COMPRESSED_BLOCK_HEIGHT, 
-        unpack_compressed_block_depth  = GL_UNPACK_COMPRESSED_BLOCK_DEPTH , 
-        unpack_compressed_block_size   = GL_UNPACK_COMPRESSED_BLOCK_SIZE  , 
-        pack_swap_bytes                = GL_PACK_SWAP_BYTES               , 
+        pack_alignment                 = GL_PACK_ALIGNMENT                , 
+        pack_compressed_block_depth    = GL_PACK_COMPRESSED_BLOCK_DEPTH   , 
+        pack_compressed_block_height   = GL_PACK_COMPRESSED_BLOCK_HEIGHT  , 
+        pack_compressed_block_size     = GL_PACK_COMPRESSED_BLOCK_SIZE    , 
+        pack_compressed_block_width    = GL_PACK_COMPRESSED_BLOCK_WIDTH   , 
+        pack_image_height              = GL_PACK_IMAGE_HEIGHT             , 
         pack_lsb_first                 = GL_PACK_LSB_FIRST                , 
         pack_row_length                = GL_PACK_ROW_LENGTH               , 
-        pack_skip_rows                 = GL_PACK_SKIP_ROWS                , 
-        pack_skip_pixels               = GL_PACK_SKIP_PIXELS              , 
-        pack_alignment                 = GL_PACK_ALIGNMENT                , 
         pack_skip_images               = GL_PACK_SKIP_IMAGES              , 
-        pack_image_height              = GL_PACK_IMAGE_HEIGHT             , 
-        pack_compressed_block_width    = GL_PACK_COMPRESSED_BLOCK_WIDTH   , 
-        pack_compressed_block_height   = GL_PACK_COMPRESSED_BLOCK_HEIGHT  , 
-        pack_compressed_block_depth    = GL_PACK_COMPRESSED_BLOCK_DEPTH   , 
-        pack_compressed_block_size     = GL_PACK_COMPRESSED_BLOCK_SIZE    , 
+        pack_skip_pixels               = GL_PACK_SKIP_PIXELS              , 
+        pack_skip_rows                 = GL_PACK_SKIP_ROWS                , 
+        pack_swap_bytes                = GL_PACK_SWAP_BYTES               , 
+        unpack_alignment               = GL_UNPACK_ALIGNMENT              , 
+        unpack_compressed_block_depth  = GL_UNPACK_COMPRESSED_BLOCK_DEPTH , 
+        unpack_compressed_block_height = GL_UNPACK_COMPRESSED_BLOCK_HEIGHT, 
+        unpack_compressed_block_size   = GL_UNPACK_COMPRESSED_BLOCK_SIZE  , 
+        unpack_compressed_block_width  = GL_UNPACK_COMPRESSED_BLOCK_WIDTH , 
+        unpack_image_height            = GL_UNPACK_IMAGE_HEIGHT           , 
+        unpack_lsb_first               = GL_UNPACK_LSB_FIRST              , 
+        unpack_row_length              = GL_UNPACK_ROW_LENGTH             , 
+        unpack_skip_images             = GL_UNPACK_SKIP_IMAGES            , 
+        unpack_skip_pixels             = GL_UNPACK_SKIP_PIXELS            , 
+        unpack_skip_rows               = GL_UNPACK_SKIP_ROWS              , 
+        unpack_swap_bytes              = GL_UNPACK_SWAP_BYTES             , 
     };
     enum class patch_parameter_e : gl::enum_t
     {
@@ -922,43 +941,47 @@ export namespace gl
     };
     enum class pixel_data_format_e : gl::enum_t
     {
-        r             = GL_RED          , g               = GL_GREEN          , b               = GL_BLUE         , 
-        rgb           = GL_RGB          , rgba            = GL_RGBA           , 
-        bgr           = GL_BGR          , bgra            = GL_BGRA           , 
-        stencil_index = GL_STENCIL_INDEX, depth_component = GL_DEPTH_COMPONENT, depth_stencil   = GL_DEPTH_STENCIL, 
+        r               = GL_RED            , 
+        g               = GL_GREEN          , 
+        b               = GL_BLUE           , 
+        rgb             = GL_RGB            , 
+        rgba            = GL_RGBA           , 
+        bgr             = GL_BGR            , 
+        bgra            = GL_BGRA           , 
+        d               = GL_DEPTH_COMPONENT, 
+        s               = GL_STENCIL_INDEX  , 
+        ds              = GL_DEPTH_STENCIL  , 
     };
     enum class pixel_data_type_e : gl::enum_t
     {
-        int8                    = GL_BYTE                          , 
-        int16                   = GL_SHORT                         , 
-        int32                   = GL_INT                           , 
+        int8                      = GL_BYTE                          , 
+        int16                     = GL_SHORT                         , 
+        int32                     = GL_INT                           , 
         
-        uint8                   = GL_UNSIGNED_BYTE                 , 
-        uint8_3_3_2             = GL_UNSIGNED_BYTE_3_3_2           , 
-        uint8_2_3_3_r           = GL_UNSIGNED_BYTE_2_3_3_REV       , 
+        uint8                     = GL_UNSIGNED_BYTE                 , 
+        uint8_3_3_2               = GL_UNSIGNED_BYTE_3_3_2           , 
+        uint8_2_3_3_r             = GL_UNSIGNED_BYTE_2_3_3_REV       , 
+        uint16                    = GL_UNSIGNED_SHORT                , 
+        uint16_4_4_4_4            = GL_UNSIGNED_SHORT_4_4_4_4        , 
+        uint16_4_4_4_4_r          = GL_UNSIGNED_SHORT_4_4_4_4_REV    , 
+        uint16_5_5_5_1            = GL_UNSIGNED_SHORT_5_5_5_1        , 
+        uint16_1_5_5_5_r          = GL_UNSIGNED_SHORT_1_5_5_5_REV    , 
+        uint16_5_6_5              = GL_UNSIGNED_SHORT_5_6_5          , 
+        uint16_5_6_5_r            = GL_UNSIGNED_SHORT_5_6_5_REV      , 
+        uint32                    = GL_UNSIGNED_INT                  , 
+        uint32_8_8_8_8            = GL_UNSIGNED_INT_8_8_8_8          , 
+        uint32_8_8_8_8_r          = GL_UNSIGNED_INT_8_8_8_8_REV      , 
+        uint32_10_10_10_2         = GL_UNSIGNED_INT_10_10_10_2       , 
+        uint32_2_10_10_10_r       = GL_UNSIGNED_INT_2_10_10_10_REV   , 
+        uint32_24_8               = GL_UNSIGNED_INT_24_8             , 
+        uint32_float32_10_11_11_r = GL_UNSIGNED_INT_10F_11F_11F_REV  , 
+        uint32_5_9_9_9_r          = GL_UNSIGNED_INT_5_9_9_9_REV      , 
         
-        uint16                  = GL_UNSIGNED_SHORT                , 
-        uint16_4_4_4_4          = GL_UNSIGNED_SHORT_4_4_4_4        , 
-        uint16_4_4_4_4_r        = GL_UNSIGNED_SHORT_4_4_4_4_REV    , 
-        uint16_5_5_5_1          = GL_UNSIGNED_SHORT_5_5_5_1        , 
-        uint16_1_5_5_5_r        = GL_UNSIGNED_SHORT_1_5_5_5_REV    , 
-        uint16_5_6_5            = GL_UNSIGNED_SHORT_5_6_5          , 
-        uint16_5_6_5_r          = GL_UNSIGNED_SHORT_5_6_5_REV      , 
+        float16                   = GL_HALF_FLOAT                    , 
+        float32                   = GL_FLOAT                         , 
+        float32_uint32_24_8_r     = GL_FLOAT_32_UNSIGNED_INT_24_8_REV, 
         
-        uint32                  = GL_UNSIGNED_INT                  , 
-        uint32_8_8_8_8          = GL_UNSIGNED_INT_8_8_8_8          , 
-        uint32_8_8_8_8_r        = GL_UNSIGNED_INT_8_8_8_8_REV      , 
-        uint32_10_10_10_2       = GL_UNSIGNED_INT_10_10_10_2       , 
-        uint32_2_10_10_10_r     = GL_UNSIGNED_INT_2_10_10_10_REV   , 
-        uint32_24_8             = GL_UNSIGNED_INT_24_8             , 
-        uint32_float_10_11_11_r = GL_UNSIGNED_INT_10F_11F_11F_REV  , 
-        uint32_5_9_9_9_r        = GL_UNSIGNED_INT_5_9_9_9_REV      , 
-        
-        float16                 = GL_HALF_FLOAT                    , 
-        float32                 = GL_FLOAT                         , 
-        float32_uint_24_8_r     = GL_FLOAT_32_UNSIGNED_INT_24_8_REV, 
-        
-        byte                    = int8                             , 
+        byte                      = uint8                            , 
     };
     enum class polygon_face_e : gl::enum_t
     {
@@ -983,127 +1006,109 @@ export namespace gl
     enum class pipeline_property_e : gl::enum_t
     {
         active_program                 = GL_ACTIVE_PROGRAM        , 
-        
-        vertex_shader                  = GL_VERTEX_SHADER         , 
+        compute_shader                 = GL_COMPUTE_SHADER        , 
         fragment_shader                = GL_FRAGMENT_SHADER       , 
         geometry_shader                = GL_GEOMETRY_SHADER       , 
+        info_log_length                = GL_INFO_LOG_LENGTH       , 
         tessellation_control_shader    = GL_TESS_CONTROL_SHADER   , 
         tessellation_evaluation_shader = GL_TESS_EVALUATION_SHADER, 
-        compute_shader                 = GL_COMPUTE_SHADER        , 
-        
         validate_status                = GL_VALIDATE_STATUS       , 
-        info_log_length                = GL_INFO_LOG_LENGTH       , 
+        vertex_shader                  = GL_VERTEX_SHADER         , 
     };
     enum class program_interface_e : gl::enum_t
     {
         atomic_counter_buffer                      = GL_ATOMIC_COUNTER_BUFFER             , 
-        
-        uniform                                    = GL_UNIFORM                           , 
-        uniform_block                              = GL_UNIFORM_BLOCK                     , 
+        buffer_variable                            = GL_BUFFER_VARIABLE                   , 
+        compute_subroutine                         = GL_COMPUTE_SUBROUTINE                , 
+        compute_subroutine_uniform                 = GL_COMPUTE_SUBROUTINE_UNIFORM        , 
+        fragment_subroutine                        = GL_FRAGMENT_SUBROUTINE               , 
+        fragment_subroutine_uniform                = GL_FRAGMENT_SUBROUTINE_UNIFORM       , 
+        geometry_subroutine                        = GL_GEOMETRY_SUBROUTINE               , 
+        geometry_subroutine_uniform                = GL_GEOMETRY_SUBROUTINE_UNIFORM       , 
         program_input                              = GL_PROGRAM_INPUT                     , 
         program_output                             = GL_PROGRAM_OUTPUT                    , 
-        buffer_variable                            = GL_BUFFER_VARIABLE                   , 
         shader_storage_block                       = GL_SHADER_STORAGE_BLOCK              , 
-        
-        vertex_subroutine                          = GL_VERTEX_SUBROUTINE                 , 
         tessellation_control_subroutine            = GL_TESS_CONTROL_SUBROUTINE           , 
-        tessellation_evaluation_subroutine         = GL_TESS_EVALUATION_SUBROUTINE        , 
-        geometry_subroutine                        = GL_GEOMETRY_SUBROUTINE               , 
-        fragment_subroutine                        = GL_FRAGMENT_SUBROUTINE               , 
-        compute_subroutine                         = GL_COMPUTE_SUBROUTINE                , 
-        vertex_subroutine_uniform                  = GL_VERTEX_SUBROUTINE_UNIFORM         , 
         tessellation_control_subroutine_uniform    = GL_TESS_CONTROL_SUBROUTINE_UNIFORM   , 
+        tessellation_evaluation_subroutine         = GL_TESS_EVALUATION_SUBROUTINE        , 
         tessellation_evaluation_subroutine_uniform = GL_TESS_EVALUATION_SUBROUTINE_UNIFORM, 
-        geometry_subroutine_uniform                = GL_GEOMETRY_SUBROUTINE_UNIFORM       , 
-        fragment_subroutine_uniform                = GL_FRAGMENT_SUBROUTINE_UNIFORM       , 
-        compute_subroutine_uniform                 = GL_COMPUTE_SUBROUTINE_UNIFORM        , 
-        
         transform_feedback_buffer                  = GL_TRANSFORM_FEEDBACK_BUFFER         , 
         transform_feedback_varying                 = GL_TRANSFORM_FEEDBACK_VARYING        , 
+        uniform                                    = GL_UNIFORM                           , 
+        uniform_block                              = GL_UNIFORM_BLOCK                     , 
+        vertex_subroutine                          = GL_VERTEX_SUBROUTINE                 , 
+        vertex_subroutine_uniform                  = GL_VERTEX_SUBROUTINE_UNIFORM         , 
     };
     enum class program_parameter_e : gl::enum_t
     {
-        is_binary_retrievable                     = GL_PROGRAM_BINARY_RETRIEVABLE_HINT      , 
-        is_separable                              = GL_PROGRAM_SEPARABLE                    , 
-
-        compute_work_group_size                   = GL_COMPUTE_WORK_GROUP_SIZE              , 
-        
-        binary_length                             = GL_PROGRAM_BINARY_LENGTH                , 
-        
-        geometry_shader_invocations               = GL_GEOMETRY_SHADER_INVOCATIONS          , 
-
-        geometry_vertices_out                     = GL_GEOMETRY_VERTICES_OUT                , 
-        geometry_input_type                       = GL_GEOMETRY_INPUT_TYPE                  , 
-        geometry_output_type                      = GL_GEOMETRY_OUTPUT_TYPE                 , 
-
+        active_atomic_counter_buffers             = GL_ACTIVE_ATOMIC_COUNTER_BUFFERS        , 
+        active_attribute_maximum_length           = GL_ACTIVE_ATTRIBUTE_MAX_LENGTH          , 
+        active_attributes                         = GL_ACTIVE_ATTRIBUTES                    , 
         active_uniform_block_maximum_name_length  = GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH , 
         active_uniform_blocks                     = GL_ACTIVE_UNIFORM_BLOCKS                , 
-
-        delete_status                             = GL_DELETE_STATUS                        , 
-        link_status                               = GL_LINK_STATUS                          , 
-        validate_status                           = GL_VALIDATE_STATUS                      , 
-        info_log_length                           = GL_INFO_LOG_LENGTH                      , 
-        attached_shaders                          = GL_ATTACHED_SHADERS                     , 
-        active_uniforms                           = GL_ACTIVE_UNIFORMS                      , 
         active_uniform_maximum_length             = GL_ACTIVE_UNIFORM_MAX_LENGTH            , 
-        active_attributes                         = GL_ACTIVE_ATTRIBUTES                    , 
-        active_attribute_maximum_length           = GL_ACTIVE_ATTRIBUTE_MAX_LENGTH          , 
-
-        transform_feedback_varying_maximum_length = GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH, 
-        transform_feedback_buffer_mode            = GL_TRANSFORM_FEEDBACK_BUFFER_MODE       , 
-        transform_feedback_varyings               = GL_TRANSFORM_FEEDBACK_VARYINGS          , 
-
+        active_uniforms                           = GL_ACTIVE_UNIFORMS                      , 
+        attached_shaders                          = GL_ATTACHED_SHADERS                     , 
+        binary_length                             = GL_PROGRAM_BINARY_LENGTH                , 
+        compute_work_group_size                   = GL_COMPUTE_WORK_GROUP_SIZE              , 
+        delete_status                             = GL_DELETE_STATUS                        , 
+        geometry_input_type                       = GL_GEOMETRY_INPUT_TYPE                  , 
+        geometry_output_type                      = GL_GEOMETRY_OUTPUT_TYPE                 , 
+        geometry_shader_invocations               = GL_GEOMETRY_SHADER_INVOCATIONS          , 
+        geometry_vertices_out                     = GL_GEOMETRY_VERTICES_OUT                , 
+        info_log_length                           = GL_INFO_LOG_LENGTH                      , 
+        is_binary_retrievable                     = GL_PROGRAM_BINARY_RETRIEVABLE_HINT      , 
+        is_separable                              = GL_PROGRAM_SEPARABLE                    , 
+        link_status                               = GL_LINK_STATUS                          , 
         tessellation_control_output_vertices      = GL_TESS_CONTROL_OUTPUT_VERTICES         , 
         tessellation_generation_mode              = GL_TESS_GEN_MODE                        , 
+        tessellation_generation_point_mode        = GL_TESS_GEN_POINT_MODE                  , 
         tessellation_generation_spacing           = GL_TESS_GEN_SPACING                     , 
         tessellation_generation_vertex_order      = GL_TESS_GEN_VERTEX_ORDER                , 
-        tessellation_generation_point_mode        = GL_TESS_GEN_POINT_MODE                  , 
-
-        active_atomic_counter_buffers             = GL_ACTIVE_ATOMIC_COUNTER_BUFFERS        , 
+        transform_feedback_buffer_mode            = GL_TRANSFORM_FEEDBACK_BUFFER_MODE       , 
+        transform_feedback_varying_maximum_length = GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH, 
+        transform_feedback_varyings               = GL_TRANSFORM_FEEDBACK_VARYINGS          , 
+        validate_status                           = GL_VALIDATE_STATUS                      , 
     };
     enum class program_property_e : gl::enum_t
     {
         active_resources               = GL_ACTIVE_RESOURCES              , 
-        maximum_name_length            = GL_MAX_NAME_LENGTH               , 
         maximum_active_variables       = GL_MAX_NUM_ACTIVE_VARIABLES      , 
         maximum_compatible_subroutines = GL_MAX_NUM_COMPATIBLE_SUBROUTINES, 
+        maximum_name_length            = GL_MAX_NAME_LENGTH               , 
     };
     enum class program_resource_e : gl::enum_t
     {
-        texture_buffer                               = GL_TEXTURE_BUFFER                      , 
-        
-        number_compatible_subroutines                = GL_NUM_COMPATIBLE_SUBROUTINES          , 
-        compatible_subroutines                       = GL_COMPATIBLE_SUBROUTINES              , 
-
-        is_per_patch                                 = GL_IS_PER_PATCH                        , 
-        
-        name_length                                  = GL_NAME_LENGTH                         , 
-        type                                         = GL_TYPE                                , 
+        active_variables                             = GL_ACTIVE_VARIABLES                    , 
         array_size                                   = GL_ARRAY_SIZE                          , 
-        offset                                       = GL_OFFSET                              , 
-        block_index                                  = GL_BLOCK_INDEX                         , 
         array_stride                                 = GL_ARRAY_STRIDE                        , 
-        matrix_stride                                = GL_MATRIX_STRIDE                       , 
-        is_row_major                                 = GL_IS_ROW_MAJOR                        , 
         atomic_counter_buffer_index                  = GL_ATOMIC_COUNTER_BUFFER_INDEX         , 
+        block_index                                  = GL_BLOCK_INDEX                         , 
         buffer_binding                               = GL_BUFFER_BINDING                      , 
         buffer_data_size                             = GL_BUFFER_DATA_SIZE                    , 
+        compatible_subroutines                       = GL_COMPATIBLE_SUBROUTINES              , 
+        is_per_patch                                 = GL_IS_PER_PATCH                        , 
+        is_row_major                                 = GL_IS_ROW_MAJOR                        , 
+        location                                     = GL_LOCATION                            , 
+        location_component                           = GL_LOCATION_COMPONENT                  , 
+        location_index                               = GL_LOCATION_INDEX                      , 
+        matrix_stride                                = GL_MATRIX_STRIDE                       , 
+        name_length                                  = GL_NAME_LENGTH                         , 
         number_active_variables                      = GL_NUM_ACTIVE_VARIABLES                , 
-        active_variables                             = GL_ACTIVE_VARIABLES                    , 
-        referenced_by_vertex_shader                  = GL_REFERENCED_BY_VERTEX_SHADER         , 
+        number_compatible_subroutines                = GL_NUM_COMPATIBLE_SUBROUTINES          , 
+        offset                                       = GL_OFFSET                              , 
+        referenced_by_compute_shader                 = GL_REFERENCED_BY_COMPUTE_SHADER        , 
+        referenced_by_fragment_shader                = GL_REFERENCED_BY_FRAGMENT_SHADER       , 
+        referenced_by_geometry_shader                = GL_REFERENCED_BY_GEOMETRY_SHADER       , 
         referenced_by_tessellation_control_shader    = GL_REFERENCED_BY_TESS_CONTROL_SHADER   , 
         referenced_by_tessellation_evaluation_shader = GL_REFERENCED_BY_TESS_EVALUATION_SHADER, 
-        referenced_by_geometry_shader                = GL_REFERENCED_BY_GEOMETRY_SHADER       , 
-        referenced_by_fragment_shader                = GL_REFERENCED_BY_FRAGMENT_SHADER       , 
-        referenced_by_compute_shader                 = GL_REFERENCED_BY_COMPUTE_SHADER        , 
+        referenced_by_vertex_shader                  = GL_REFERENCED_BY_VERTEX_SHADER         , 
+        texture_buffer                               = GL_TEXTURE_BUFFER                      , 
         top_level_array_size                         = GL_TOP_LEVEL_ARRAY_SIZE                , 
         top_level_array_stride                       = GL_TOP_LEVEL_ARRAY_STRIDE              , 
-        location                                     = GL_LOCATION                            , 
-        location_index                               = GL_LOCATION_INDEX                      , 
-        
-        location_component                           = GL_LOCATION_COMPONENT                  , 
         transform_feedback_buffer_index              = GL_TRANSFORM_FEEDBACK_BUFFER_INDEX     , 
         transform_feedback_buffer_stride             = GL_TRANSFORM_FEEDBACK_BUFFER_STRIDE    , 
+        type                                         = GL_TYPE                                , 
     };
     enum class program_specification_e : gl::enum_t
     {
@@ -1123,11 +1128,11 @@ export namespace gl
     };
     enum class program_stage_property_e : gl::enum_t
     {
-        active_subroutines                       = GL_ACTIVE_SUBROUTINES                  , 
-        active_subroutine_uniforms               = GL_ACTIVE_SUBROUTINE_UNIFORMS          , 
-        active_subroutine_uniform_locations      = GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS , 
         active_subroutine_maximum_length         = GL_ACTIVE_SUBROUTINE_MAX_LENGTH        , 
+        active_subroutine_uniform_locations      = GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS , 
         active_subroutine_uniform_maximum_length = GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH, 
+        active_subroutine_uniforms               = GL_ACTIVE_SUBROUTINE_UNIFORMS          , 
+        active_subroutines                       = GL_ACTIVE_SUBROUTINES                  , 
     };
     enum class provoking_vertex_convention_e : gl::enum_t
     {
@@ -1168,62 +1173,57 @@ export namespace gl
     };
     enum class query_target_e : gl::enum_t
     {
-        transform_feedback_overflow                = GL_TRANSFORM_FEEDBACK_OVERFLOW          , 
-        transform_feedback_stream_overflow         = GL_TRANSFORM_FEEDBACK_STREAM_OVERFLOW   , 
-        vertices_submitted                         = GL_VERTICES_SUBMITTED                   , 
-        primitives_submitted                       = GL_PRIMITIVES_SUBMITTED                 , 
-        vertex_shader_invocations                  = GL_VERTEX_SHADER_INVOCATIONS            , 
-        tessellation_control_shader_patches        = GL_TESS_CONTROL_SHADER_PATCHES          , 
-        tessellation_evaluation_shader_invocations = GL_TESS_EVALUATION_SHADER_INVOCATIONS   , 
-        geometry_shader_primitives_emitted         = GL_GEOMETRY_SHADER_PRIMITIVES_EMITTED   , 
-        fragment_shader_invocations                = GL_FRAGMENT_SHADER_INVOCATIONS          , 
-        compute_shader_invocations                 = GL_COMPUTE_SHADER_INVOCATIONS           , 
+        any_samples_passed                         = GL_ANY_SAMPLES_PASSED                   , 
+        any_samples_passed_conservative            = GL_ANY_SAMPLES_PASSED_CONSERVATIVE      , 
         clipping_input_primitives                  = GL_CLIPPING_INPUT_PRIMITIVES            , 
         clipping_output_primitives                 = GL_CLIPPING_OUTPUT_PRIMITIVES           , 
-
+        compute_shader_invocations                 = GL_COMPUTE_SHADER_INVOCATIONS           , 
+        fragment_shader_invocations                = GL_FRAGMENT_SHADER_INVOCATIONS          , 
         geometry_shader_invocations                = GL_GEOMETRY_SHADER_INVOCATIONS          , 
-        
-        time_elapsed                               = GL_TIME_ELAPSED                         , 
-        
-        samples_passed                             = GL_SAMPLES_PASSED                       , 
-        
-        any_samples_passed                         = GL_ANY_SAMPLES_PASSED                   , 
-        
+        geometry_shader_primitives_emitted         = GL_GEOMETRY_SHADER_PRIMITIVES_EMITTED   , 
         primitives_generated                       = GL_PRIMITIVES_GENERATED                 , 
-        transform_feedback_primitives_written      = GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, 
-        
+        primitives_submitted                       = GL_PRIMITIVES_SUBMITTED                 , 
+        samples_passed                             = GL_SAMPLES_PASSED                       , 
+        tessellation_control_shader_patches        = GL_TESS_CONTROL_SHADER_PATCHES          , 
+        tessellation_evaluation_shader_invocations = GL_TESS_EVALUATION_SHADER_INVOCATIONS   , 
+        time_elapsed                               = GL_TIME_ELAPSED                         , 
         timestamp                                  = GL_TIMESTAMP                            , 
-        
-        any_samples_passed_conservative            = GL_ANY_SAMPLES_PASSED_CONSERVATIVE      , 
+        transform_feedback_overflow                = GL_TRANSFORM_FEEDBACK_OVERFLOW          , 
+        transform_feedback_primitives_written      = GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, 
+        transform_feedback_stream_overflow         = GL_TRANSFORM_FEEDBACK_STREAM_OVERFLOW   , 
+        vertex_shader_invocations                  = GL_VERTEX_SHADER_INVOCATIONS            , 
+        vertices_submitted                         = GL_VERTICES_SUBMITTED                   , 
     };
     enum class render_buffer_format_e : gl::enum_t
     {
         r_uint8_n         = GL_R8               , 
+        
         rg_uint8_n        = GL_RG8              , 
+        
         rgb_uint8_n       = GL_RGB8             , 
+        
         rgba_uint8_n      = GL_RGBA8            , 
         rgba_uint8_s      = GL_SRGB8_ALPHA8     , 
+        
         d_uint16_n        = GL_DEPTH_COMPONENT16, 
         d_uint24_n        = GL_DEPTH_COMPONENT24, 
         d_float32         = GL_DEPTH_COMPONENT32, 
+        s_uint8           = GL_STENCIL_INDEX8   , 
         ds_uint32_24_8    = GL_DEPTH24_STENCIL8 , 
         ds_float32_uint8  = GL_DEPTH32F_STENCIL8, 
-        s_uint8           = GL_STENCIL_INDEX8   , 
     };
     enum class render_buffer_parameter_e : gl::enum_t
     {
-        samples         = GL_RENDERBUFFER_SAMPLES        , 
-        
-        width           = GL_RENDERBUFFER_WIDTH          , 
+        alpha_size      = GL_RENDERBUFFER_ALPHA_SIZE     , 
+        blue_size       = GL_RENDERBUFFER_BLUE_SIZE      , 
+        depth_size      = GL_RENDERBUFFER_DEPTH_SIZE     , 
+        green_size      = GL_RENDERBUFFER_GREEN_SIZE     , 
         height          = GL_RENDERBUFFER_HEIGHT         , 
         internal_format = GL_RENDERBUFFER_INTERNAL_FORMAT, 
-        
         red_size        = GL_RENDERBUFFER_RED_SIZE       , 
-        green_size      = GL_RENDERBUFFER_GREEN_SIZE     , 
-        blue_size       = GL_RENDERBUFFER_BLUE_SIZE      , 
-        alpha_size      = GL_RENDERBUFFER_ALPHA_SIZE     , 
-        depth_size      = GL_RENDERBUFFER_DEPTH_SIZE     , 
+        samples         = GL_RENDERBUFFER_SAMPLES        , 
         stencil_size    = GL_RENDERBUFFER_STENCIL_SIZE   , 
+        width           = GL_RENDERBUFFER_WIDTH          , 
     };
     enum class render_buffer_target_e : gl::enum_t
     {
@@ -1237,42 +1237,35 @@ export namespace gl
     enum class sampler_parameter_e : gl::enum_t
     {
         border_color         = GL_TEXTURE_BORDER_COLOR  , 
-
+        compare_function     = GL_TEXTURE_COMPARE_FUNC  , 
+        compare_mode         = GL_TEXTURE_COMPARE_MODE  , 
+        lod_bias             = GL_TEXTURE_LOD_BIAS      , 
         magnification_filter = GL_TEXTURE_MAG_FILTER    , 
+        maximum_anisotropy   = GL_TEXTURE_MAX_ANISOTROPY, 
+        maximum_lod          = GL_TEXTURE_MAX_LOD       , 
         minification_filter  = GL_TEXTURE_MIN_FILTER    , 
+        minimum_lod          = GL_TEXTURE_MIN_LOD       , 
+        wrapping_r           = GL_TEXTURE_WRAP_R        , 
         wrapping_s           = GL_TEXTURE_WRAP_S        , 
         wrapping_t           = GL_TEXTURE_WRAP_T        , 
-        wrapping_r           = GL_TEXTURE_WRAP_R        , 
-        
-        minimum_lod          = GL_TEXTURE_MIN_LOD       , 
-        maximum_lod          = GL_TEXTURE_MAX_LOD       , 
-        
-        maximum_anisotropy   = GL_TEXTURE_MAX_ANISOTROPY, 
-        
-        lod_bias             = GL_TEXTURE_LOD_BIAS      , 
-        
-        compare_mode         = GL_TEXTURE_COMPARE_MODE  , 
-        compare_function     = GL_TEXTURE_COMPARE_FUNC  , 
     };
     enum class shader_parameter_e : gl::enum_t
     {
-        type            = GL_SHADER_TYPE         , 
-
-        delete_status   = GL_DELETE_STATUS       , 
         compile_status  = GL_COMPILE_STATUS      , 
+        delete_status   = GL_DELETE_STATUS       , 
         info_log_length = GL_INFO_LOG_LENGTH     , 
         source_length   = GL_SHADER_SOURCE_LENGTH, 
-        
         spir_v_binary   = GL_SPIR_V_BINARY       , 
+        type            = GL_SHADER_TYPE         , 
     };
     enum class shader_precision_format_e : gl::enum_t
     {
-        low_float      = GL_LOW_FLOAT   , 
-        medium_float   = GL_MEDIUM_FLOAT, 
-        high_float     = GL_HIGH_FLOAT  , 
         low_integer    = GL_LOW_INT     , 
         medium_integer = GL_MEDIUM_INT  , 
         high_integer   = GL_HIGH_INT    , 
+        low_float      = GL_LOW_FLOAT   , 
+        medium_float   = GL_MEDIUM_FLOAT, 
+        high_float     = GL_HIGH_FLOAT  , 
     };
     enum class shader_type_e : gl::enum_t
     {
@@ -1335,16 +1328,16 @@ export namespace gl
     };
     enum class synchronization_property_e : gl::enum_t
     {
-        type      = GL_OBJECT_TYPE   , 
         condition = GL_SYNC_CONDITION, 
-        status    = GL_SYNC_STATUS   , 
         flags     = GL_SYNC_FLAGS    , 
+        status    = GL_SYNC_STATUS   , 
+        type      = GL_OBJECT_TYPE   , 
     };
     enum class synchronization_status_e : gl::enum_t
     {
         already_signaled    = GL_ALREADY_SIGNALED   , 
-        timeout_expired     = GL_TIMEOUT_EXPIRED    , 
         condition_satisfied = GL_CONDITION_SATISFIED, 
+        timeout_expired     = GL_TIMEOUT_EXPIRED    , 
         wait_failed         = GL_WAIT_FAILED        , 
     };
     enum class synchronization_timeout_e : gl::uint64_t
@@ -1378,61 +1371,54 @@ export namespace gl
     };
     enum class texture_compressed_format_e : gl::enum_t
     {
-        r_int11_eac          = GL_COMPRESSED_SIGNED_R11_EAC                , 
-        rg_int11_eac         = GL_COMPRESSED_SIGNED_RG11_EAC               , 
-        
-        r_uint11_eac         = GL_COMPRESSED_R11_EAC                       , 
-        rg_uint11_eac        = GL_COMPRESSED_RG11_EAC                      , 
-        rgb_uint8_etc2       = GL_COMPRESSED_RGB8_ETC2                     , 
-        rgba_uint8_etc2_p    = GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 , 
-        rgba_uint8_etc2_eac  = GL_COMPRESSED_RGBA8_ETC2_EAC                , 
-        srgb_uint8_etc2      = GL_COMPRESSED_SRGB8_ETC2                    , 
-        srgb_uint8_etc2_p    = GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, 
-        srgba_uint8_etc2_eac = GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC         , 
+        rgb_s3tc_dxt1   = GL_COMPRESSED_RGB_S3TC_DXT1_EXT       , 
+        rgba_s3tc_dxt1  = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT      , 
+        rgba_s3tc_dxt3  = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT      , 
+        rgba_s3tc_dxt5  = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT      , 
+        srgb_s3tc_dxt1  = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT      , 
+        srgba_s3tc_dxt1 = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, 
+        srgba_s3tc_dxt3 = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, 
+        srgba_s3tc_dxt5 = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, 
     };
     enum class texture_format_e : gl::enum_t
     {
-        r8_unorm          = GL_R8, 
-        rg8_unorm         = GL_RG8, 
-        rgb8_unorm        = GL_RGB8, 
-        rgba8_unorm       = GL_RGBA8, 
-
-        r16_unorm         = GL_R16, 
-        rg16_unorm        = GL_RG16, 
-        rgb16_unorm       = GL_RGB16, 
-        rgba16_unorm      = GL_RGBA16, 
-
-        r8_snorm          = GL_R8_SNORM, 
-        rg8_snorm         = GL_RG8_SNORM, 
-        rgb8_snorm        = GL_RGB8_SNORM, 
-        rgba8_snorm       = GL_RGBA8_SNORM, 
-
-        r16_snorm         = GL_R16_SNORM, 
-        rg16_snorm        = GL_RG16_SNORM, 
-        rgb16_snorm       = GL_RGB16_SNORM, 
-        rgba16_snorm      = GL_RGBA16_SNORM, 
-
-        rgb8_srgb         = GL_SRGB8, 
-        rgba8_srgb        = GL_SRGB8_ALPHA8, 
-
-        r16_float         = GL_R16F, 
-        rg16_float        = GL_RG16F, 
-        rgb16_float       = GL_RGB16F, 
-        rgba16_float      = GL_RGBA16F, 
-
-        r32_float         = GL_R32F, 
-        rg32_float        = GL_RG32F, 
-        rgb32_float       = GL_RGB32F, 
-        rgba32_float      = GL_RGBA32F, 
-
-        d16_unorm         = GL_DEPTH_COMPONENT16, 
-        d24_unorm         = GL_DEPTH_COMPONENT24, 
-        d32_float         = GL_DEPTH_COMPONENT32F, 
-
-        d24_unorm_s8_uint = GL_DEPTH24_STENCIL8, 
-        d32_float_s8_uint = GL_DEPTH32F_STENCIL8, 
-
-        s8_uint           = GL_STENCIL_INDEX8, 
+        r_int8_n          = GL_R8_SNORM          , 
+        r_int16_n         = GL_R16_SNORM         , 
+        r_uint8_n         = GL_R8                , 
+        r_uint16_n        = GL_R16               , 
+        r_float16         = GL_R16F              , 
+        r_float32         = GL_R32F              , 
+        
+        rg_int8_n         = GL_RG8_SNORM         , 
+        rg_int16_n        = GL_RG16_SNORM        , 
+        rg_uint8_n        = GL_RG8               , 
+        rg_uint16_n       = GL_RG16              , 
+        rg_float16        = GL_RG16F             , 
+        rg_float32        = GL_RG32F             , 
+        
+        rgb_int8_n        = GL_RGB8_SNORM        , 
+        rgb_int16_n       = GL_RGB16_SNORM       , 
+        rgb_uint8_n       = GL_RGB8              , 
+        rgb_uint16_n      = GL_RGB16             , 
+        rgb_float16       = GL_RGB16F            , 
+        rgb_float32       = GL_RGB32F            , 
+        
+        rgba_int8_n       = GL_RGBA8_SNORM       , 
+        rgba_int16_n      = GL_RGBA16_SNORM      , 
+        rgba_uint8_n      = GL_RGBA8             , 
+        rgba_uint16_n     = GL_RGBA16            , 
+        rgba_float16      = GL_RGBA16F           , 
+        rgba_float32      = GL_RGBA32F           , 
+        
+        srgb_uint8        = GL_SRGB8             , 
+        srgba_uint8       = GL_SRGB8_ALPHA8      , 
+        
+        d_uint16_n        = GL_DEPTH_COMPONENT16 , 
+        d_uint24_n        = GL_DEPTH_COMPONENT24 , 
+        d_float32         = GL_DEPTH_COMPONENT32F, 
+        s_uint8           = GL_STENCIL_INDEX8    , 
+        ds_uint24_n_uint8 = GL_DEPTH24_STENCIL8  , 
+        ds_float32_uint8  = GL_DEPTH32F_STENCIL8 , 
     };
     enum class texture_magnification_filter_e : gl::enum_t
     {
@@ -1442,7 +1428,7 @@ export namespace gl
     enum class texture_minification_filter_e : gl::enum_t
     {
         nearest                = GL_NEAREST               , 
-        linear                 = GL_LINEAR                , 
+        linear                 = GL_LINEAR                ,  
         
         nearest_mipmap_nearest = GL_NEAREST_MIPMAP_NEAREST, 
         linear_mipmap_nearest  = GL_LINEAR_MIPMAP_NEAREST , 
@@ -1451,28 +1437,26 @@ export namespace gl
     };
     enum class texture_parameter_e : gl::enum_t
     {
+        base_level           = GL_TEXTURE_BASE_LEVEL        , 
         border_color         = GL_TEXTURE_BORDER_COLOR      , 
+        compare_function     = GL_TEXTURE_COMPARE_FUNC      , 
+        compare_mode         = GL_TEXTURE_COMPARE_MODE      , 
+        depth_stencil_mode   = GL_DEPTH_STENCIL_TEXTURE_MODE, 
+        lod_bias             = GL_TEXTURE_LOD_BIAS          , 
         magnification_filter = GL_TEXTURE_MAG_FILTER        , 
+        maximum_anisotropy   = GL_TEXTURE_MAX_ANISOTROPY    , 
+        maximum_level        = GL_TEXTURE_MAX_LEVEL         , 
+        maximum_lod          = GL_TEXTURE_MAX_LOD           , 
         minification_filter  = GL_TEXTURE_MIN_FILTER        , 
+        minimum_lod          = GL_TEXTURE_MIN_LOD           , 
+        swizzle_a            = GL_TEXTURE_SWIZZLE_A         , 
+        swizzle_b            = GL_TEXTURE_SWIZZLE_B         , 
+        swizzle_g            = GL_TEXTURE_SWIZZLE_G         , 
+        swizzle_r            = GL_TEXTURE_SWIZZLE_R         , 
+        swizzle_rgba         = GL_TEXTURE_SWIZZLE_RGBA      , 
+        wrapping_r           = GL_TEXTURE_WRAP_R            , 
         wrapping_s           = GL_TEXTURE_WRAP_S            , 
         wrapping_t           = GL_TEXTURE_WRAP_T            , 
-        wrapping_r           = GL_TEXTURE_WRAP_R            , 
-        swizzle_r            = GL_TEXTURE_SWIZZLE_R         , 
-        swizzle_g            = GL_TEXTURE_SWIZZLE_G         , 
-        swizzle_b            = GL_TEXTURE_SWIZZLE_B         , 
-        swizzle_a            = GL_TEXTURE_SWIZZLE_A         , 
-        swizzle_rgba         = GL_TEXTURE_SWIZZLE_RGBA      , 
-        
-        minimum_lod          = GL_TEXTURE_MIN_LOD           , 
-        maximum_lod          = GL_TEXTURE_MAX_LOD           , 
-        base_level           = GL_TEXTURE_BASE_LEVEL        , 
-        maximum_level        = GL_TEXTURE_MAX_LEVEL         , 
-        
-        maximum_anisotropy   = GL_TEXTURE_MAX_ANISOTROPY    , 
-        lod_bias             = GL_TEXTURE_LOD_BIAS          , 
-        compare_mode         = GL_TEXTURE_COMPARE_MODE      , 
-        compare_function     = GL_TEXTURE_COMPARE_FUNC      , 
-        depth_stencil_mode   = GL_DEPTH_STENCIL_TEXTURE_MODE, 
     };
     enum class texture_swizzle_e : gl::enum_t
     {
@@ -1503,11 +1487,13 @@ export namespace gl
     enum class texture_type_e : gl::enum_t
     {
         int8    = GL_BYTE          , 
-        uint8   = GL_UNSIGNED_BYTE , 
         int16   = GL_SHORT         , 
-        uint16  = GL_UNSIGNED_SHORT, 
         int32   = GL_INT           , 
+        
+        uint8   = GL_UNSIGNED_BYTE , 
+        uint16  = GL_UNSIGNED_SHORT, 
         uint32  = GL_UNSIGNED_INT  , 
+        
         float32 = GL_FLOAT         , 
         
         byte    = uint8            , 
@@ -1550,148 +1536,152 @@ export namespace gl
     };
     enum class transform_feedback_property_e : gl::enum_t
     {
-        buffer_start   = GL_TRANSFORM_FEEDBACK_BUFFER_START  , 
-        buffer_size    = GL_TRANSFORM_FEEDBACK_BUFFER_SIZE   , 
-        buffer_binding = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, 
-        
-        paused         = GL_TRANSFORM_FEEDBACK_PAUSED        , 
         active         = GL_TRANSFORM_FEEDBACK_ACTIVE        , 
+        buffer_binding = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING, 
+        buffer_size    = GL_TRANSFORM_FEEDBACK_BUFFER_SIZE   , 
+        buffer_start   = GL_TRANSFORM_FEEDBACK_BUFFER_START  , 
+        paused         = GL_TRANSFORM_FEEDBACK_PAUSED        , 
     };
     enum class uniform_property_e : gl::enum_t
     {
-        type                        = GL_UNIFORM_TYPE                       , 
-        size                        = GL_UNIFORM_SIZE                       , 
-        name_length                 = GL_UNIFORM_NAME_LENGTH                , 
-        
-        block_index                 = GL_UNIFORM_BLOCK_INDEX                , 
-        offset                      = GL_UNIFORM_OFFSET                     , 
         array_stride                = GL_UNIFORM_ARRAY_STRIDE               , 
-        matrix_stride               = GL_UNIFORM_MATRIX_STRIDE              , 
-        is_row_major                = GL_UNIFORM_IS_ROW_MAJOR               , 
-        
         atomic_counter_buffer_index = GL_UNIFORM_ATOMIC_COUNTER_BUFFER_INDEX, 
+        block_index                 = GL_UNIFORM_BLOCK_INDEX                , 
+        is_row_major                = GL_UNIFORM_IS_ROW_MAJOR               , 
+        matrix_stride               = GL_UNIFORM_MATRIX_STRIDE              , 
+        name_length                 = GL_UNIFORM_NAME_LENGTH                , 
+        offset                      = GL_UNIFORM_OFFSET                     , 
+        size                        = GL_UNIFORM_SIZE                       , 
+        type                        = GL_UNIFORM_TYPE                       , 
     };
     enum class uniform_type_e : gl::enum_t
     {
-        float32                          = GL_FLOAT                                    , 
-        vector2f                         = GL_FLOAT_VEC2                               , 
-        vector3f                         = GL_FLOAT_VEC3                               , 
-        vector4f                         = GL_FLOAT_VEC4                               , 
-        float64                          = GL_DOUBLE                                   , 
-        vector2d                         = GL_DOUBLE_VEC2                              , 
-        vector3d                         = GL_DOUBLE_VEC3                              , 
-        vector4d                         = GL_DOUBLE_VEC4                              , 
-        int32                            = GL_INT                                      , 
-        vector2i                         = GL_INT_VEC2                                 , 
-        vector3i                         = GL_INT_VEC3                                 , 
-        vector4i                         = GL_INT_VEC4                                 , 
-        uint32                           = GL_UNSIGNED_INT                             , 
-        vector2u                         = GL_UNSIGNED_INT_VEC2                        , 
-        vector3u                         = GL_UNSIGNED_INT_VEC3                        , 
-        vector4u                         = GL_UNSIGNED_INT_VEC4                        , 
         bool_                            = GL_BOOL                                     , 
-        vector2b                         = GL_BOOL_VEC2                                , 
-        vector3b                         = GL_BOOL_VEC3                                , 
-        vector4b                         = GL_BOOL_VEC4                                , 
-        matrix2f                         = GL_FLOAT_MAT2                               , 
-        matrix3f                         = GL_FLOAT_MAT3                               , 
-        matrix4f                         = GL_FLOAT_MAT4                               , 
-        matrix2x3f                       = GL_FLOAT_MAT2x3                             , 
-        matrix2x4f                       = GL_FLOAT_MAT2x4                             , 
-        matrix3x2f                       = GL_FLOAT_MAT3x2                             , 
-        matrix3x4f                       = GL_FLOAT_MAT3x4                             , 
-        matrix4x2f                       = GL_FLOAT_MAT4x2                             , 
-        matrix4x3f                       = GL_FLOAT_MAT4x3                             , 
-        matrix2d                         = GL_DOUBLE_MAT2                              , 
-        matrix3d                         = GL_DOUBLE_MAT3                              , 
-        matrix4d                         = GL_DOUBLE_MAT4                              , 
-        matrix2x3d                       = GL_DOUBLE_MAT2x3                            , 
-        matrix2x4d                       = GL_DOUBLE_MAT2x4                            , 
-        matrix3x2d                       = GL_DOUBLE_MAT3x2                            , 
-        matrix3x4d                       = GL_DOUBLE_MAT3x4                            , 
-        matrix4x2d                       = GL_DOUBLE_MAT4x2                            , 
-        matrix4x3d                       = GL_DOUBLE_MAT4x3                            , 
-        sampler1d                        = GL_SAMPLER_1D                               , 
-        sampler2d                        = GL_SAMPLER_2D                               , 
-        sampler3d                        = GL_SAMPLER_3D                               , 
-        sampler_cube                     = GL_SAMPLER_CUBE                             , 
-        sampler1d_shadow                 = GL_SAMPLER_1D_SHADOW                        , 
-        sampler2d_shadow                 = GL_SAMPLER_2D_SHADOW                        , 
-        sampler1d_array                  = GL_SAMPLER_1D_ARRAY                         , 
-        sampler2d_array                  = GL_SAMPLER_2D_ARRAY                         , 
-        sampler1d_array_shadow           = GL_SAMPLER_1D_ARRAY_SHADOW                  , 
-        sampler2d_array_shadow           = GL_SAMPLER_2D_ARRAY_SHADOW                  , 
-        sampler2d_multisample            = GL_SAMPLER_2D_MULTISAMPLE                   , 
-        sampler2d_multisample_array      = GL_SAMPLER_2D_MULTISAMPLE_ARRAY             , 
-        sampler_cube_shadow              = GL_SAMPLER_CUBE_SHADOW                      , 
-        sampler_buffer                   = GL_SAMPLER_BUFFER                           , 
-        sampler2d_rectangle              = GL_SAMPLER_2D_RECT                          , 
-        sampler2d_rectangle_shadow       = GL_SAMPLER_2D_RECT_SHADOW                   , 
-        int_sampler1d                    = GL_INT_SAMPLER_1D                           , 
-        int_sampler2d                    = GL_INT_SAMPLER_2D                           , 
-        int_sampler3d                    = GL_INT_SAMPLER_3D                           , 
-        int_sampler_cube                 = GL_INT_SAMPLER_CUBE                         , 
-        int_sampler1d_array              = GL_INT_SAMPLER_1D_ARRAY                     , 
-        int_sampler2d_array              = GL_INT_SAMPLER_2D_ARRAY                     , 
-        int_sampler2d_multisample        = GL_INT_SAMPLER_2D_MULTISAMPLE               , 
-        int_sampler2d_multisample_array  = GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY         , 
-        int_sampler_buffer               = GL_INT_SAMPLER_BUFFER                       , 
-        int_sampler2d_rectangle          = GL_INT_SAMPLER_2D_RECT                      , 
-        uint_sampler1d                   = GL_UNSIGNED_INT_SAMPLER_1D                  , 
-        uint_sampler2d                   = GL_UNSIGNED_INT_SAMPLER_2D                  , 
-        uint_sampler3d                   = GL_UNSIGNED_INT_SAMPLER_3D                  , 
-        uint_sampler_cube                = GL_UNSIGNED_INT_SAMPLER_CUBE                , 
-        uint_sampler1d_array             = GL_UNSIGNED_INT_SAMPLER_1D_ARRAY            , 
-        uint_sampler2d_array             = GL_UNSIGNED_INT_SAMPLER_2D_ARRAY            , 
-        uint_sampler2d_multisample       = GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE      , 
-        uint_sampler2d_multisample_array = GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY, 
-        uint_sampler_buffer              = GL_UNSIGNED_INT_SAMPLER_BUFFER              , 
-        uint_sampler2d_rectangle         = GL_UNSIGNED_INT_SAMPLER_2D_RECT             , 
-        image1d                          = GL_IMAGE_1D                                 , 
-        image2d                          = GL_IMAGE_2D                                 , 
-        image3d                          = GL_IMAGE_3D                                 , 
-        image2d_rectangle                = GL_IMAGE_2D_RECT                            , 
-        image_cube                       = GL_IMAGE_CUBE                               , 
+        
+        float32                          = GL_FLOAT                                    , 
+        float64                          = GL_DOUBLE                                   , 
+        
         image_buffer                     = GL_IMAGE_BUFFER                             , 
+        image_cube                       = GL_IMAGE_CUBE                               , 
+        image1d                          = GL_IMAGE_1D                                 , 
         image1d_array                    = GL_IMAGE_1D_ARRAY                           , 
+        image2d                          = GL_IMAGE_2D                                 , 
         image2d_array                    = GL_IMAGE_2D_ARRAY                           , 
         image2d_multisample              = GL_IMAGE_2D_MULTISAMPLE                     , 
         image2d_multisample_array        = GL_IMAGE_2D_MULTISAMPLE_ARRAY               , 
-        int_image1d                      = GL_INT_IMAGE_1D                             , 
-        int_image2d                      = GL_INT_IMAGE_2D                             , 
-        int_image3d                      = GL_INT_IMAGE_3D                             , 
-        int_image2d_rectangle            = GL_INT_IMAGE_2D_RECT                        , 
-        int_image_cube                   = GL_INT_IMAGE_CUBE                           , 
+        image2d_rectangle                = GL_IMAGE_2D_RECT                            , 
+        image3d                          = GL_IMAGE_3D                                 , 
+        
         int_image_buffer                 = GL_INT_IMAGE_BUFFER                         , 
+        int_image_cube                   = GL_INT_IMAGE_CUBE                           , 
+        int_image1d                      = GL_INT_IMAGE_1D                             , 
         int_image1d_array                = GL_INT_IMAGE_1D_ARRAY                       , 
+        int_image2d                      = GL_INT_IMAGE_2D                             , 
         int_image2d_array                = GL_INT_IMAGE_2D_ARRAY                       , 
         int_image2d_multisample          = GL_INT_IMAGE_2D_MULTISAMPLE                 , 
         int_image2d_multisample_array    = GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY           , 
-        uint_image1d                     = GL_UNSIGNED_INT_IMAGE_1D                    , 
-        uint_image2d                     = GL_UNSIGNED_INT_IMAGE_2D                    , 
-        uint_image3d                     = GL_UNSIGNED_INT_IMAGE_3D                    , 
-        uint_image2d_rectangle           = GL_UNSIGNED_INT_IMAGE_2D_RECT               , 
-        uint_image_cube                  = GL_UNSIGNED_INT_IMAGE_CUBE                  , 
+        int_image2d_rectangle            = GL_INT_IMAGE_2D_RECT                        , 
+        int_image3d                      = GL_INT_IMAGE_3D                             , 
+        int_sampler_buffer               = GL_INT_SAMPLER_BUFFER                       , 
+        int_sampler_cube                 = GL_INT_SAMPLER_CUBE                         , 
+        int_sampler1d                    = GL_INT_SAMPLER_1D                           , 
+        int_sampler1d_array              = GL_INT_SAMPLER_1D_ARRAY                     , 
+        int_sampler2d                    = GL_INT_SAMPLER_2D                           , 
+        int_sampler2d_array              = GL_INT_SAMPLER_2D_ARRAY                     , 
+        int_sampler2d_multisample        = GL_INT_SAMPLER_2D_MULTISAMPLE               , 
+        int_sampler2d_multisample_array  = GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY         , 
+        int_sampler2d_rectangle          = GL_INT_SAMPLER_2D_RECT                      , 
+        int_sampler3d                    = GL_INT_SAMPLER_3D                           , 
+        int32                            = GL_INT                                      , 
+        
+        matrix2d                         = GL_DOUBLE_MAT2                              , 
+        matrix2f                         = GL_FLOAT_MAT2                               , 
+        matrix2x3d                       = GL_DOUBLE_MAT2x3                            , 
+        matrix2x3f                       = GL_FLOAT_MAT2x3                             , 
+        matrix2x4d                       = GL_DOUBLE_MAT2x4                            , 
+        matrix2x4f                       = GL_FLOAT_MAT2x4                             , 
+        matrix3d                         = GL_DOUBLE_MAT3                              , 
+        matrix3f                         = GL_FLOAT_MAT3                               , 
+        matrix3x2d                       = GL_DOUBLE_MAT3x2                            , 
+        matrix3x2f                       = GL_FLOAT_MAT3x2                             , 
+        matrix3x4d                       = GL_DOUBLE_MAT3x4                            , 
+        matrix3x4f                       = GL_FLOAT_MAT3x4                             , 
+        matrix4d                         = GL_DOUBLE_MAT4                              , 
+        matrix4f                         = GL_FLOAT_MAT4                               , 
+        matrix4x2d                       = GL_DOUBLE_MAT4x2                            , 
+        matrix4x2f                       = GL_FLOAT_MAT4x2                             , 
+        matrix4x3d                       = GL_DOUBLE_MAT4x3                            , 
+        matrix4x3f                       = GL_FLOAT_MAT4x3                             , 
+        
+        sampler_buffer                   = GL_SAMPLER_BUFFER                           , 
+        sampler_cube                     = GL_SAMPLER_CUBE                             , 
+        sampler_cube_shadow              = GL_SAMPLER_CUBE_SHADOW                      , 
+        sampler1d                        = GL_SAMPLER_1D                               , 
+        sampler1d_array                  = GL_SAMPLER_1D_ARRAY                         , 
+        sampler1d_array_shadow           = GL_SAMPLER_1D_ARRAY_SHADOW                  , 
+        sampler1d_shadow                 = GL_SAMPLER_1D_SHADOW                        , 
+        sampler2d                        = GL_SAMPLER_2D                               , 
+        sampler2d_array                  = GL_SAMPLER_2D_ARRAY                         , 
+        sampler2d_array_shadow           = GL_SAMPLER_2D_ARRAY_SHADOW                  , 
+        sampler2d_multisample            = GL_SAMPLER_2D_MULTISAMPLE                   , 
+        sampler2d_multisample_array      = GL_SAMPLER_2D_MULTISAMPLE_ARRAY             , 
+        sampler2d_rectangle              = GL_SAMPLER_2D_RECT                          , 
+        sampler2d_rectangle_shadow       = GL_SAMPLER_2D_RECT_SHADOW                   , 
+        sampler2d_shadow                 = GL_SAMPLER_2D_SHADOW                        , 
+        sampler3d                        = GL_SAMPLER_3D                               , 
+        
+        uint_atomic_counter              = GL_UNSIGNED_INT_ATOMIC_COUNTER              , 
         uint_image_buffer                = GL_UNSIGNED_INT_IMAGE_BUFFER                , 
+        uint_image_cube                  = GL_UNSIGNED_INT_IMAGE_CUBE                  , 
+        uint_image1d                     = GL_UNSIGNED_INT_IMAGE_1D                    , 
         uint_image1d_array               = GL_UNSIGNED_INT_IMAGE_1D_ARRAY              , 
+        uint_image2d                     = GL_UNSIGNED_INT_IMAGE_2D                    , 
         uint_image2d_array               = GL_UNSIGNED_INT_IMAGE_2D_ARRAY              , 
         uint_image2d_multisample         = GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE        , 
         uint_image2d_multisample_array   = GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY  , 
-        uint_atomic_counter              = GL_UNSIGNED_INT_ATOMIC_COUNTER              , 
+        uint_image2d_rectangle           = GL_UNSIGNED_INT_IMAGE_2D_RECT               , 
+        uint_image3d                     = GL_UNSIGNED_INT_IMAGE_3D                    , 
+        uint_sampler_buffer              = GL_UNSIGNED_INT_SAMPLER_BUFFER              , 
+        uint_sampler_cube                = GL_UNSIGNED_INT_SAMPLER_CUBE                , 
+        uint_sampler1d                   = GL_UNSIGNED_INT_SAMPLER_1D                  , 
+        uint_sampler1d_array             = GL_UNSIGNED_INT_SAMPLER_1D_ARRAY            , 
+        uint_sampler2d                   = GL_UNSIGNED_INT_SAMPLER_2D                  , 
+        uint_sampler2d_array             = GL_UNSIGNED_INT_SAMPLER_2D_ARRAY            , 
+        uint_sampler2d_multisample       = GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE      , 
+        uint_sampler2d_multisample_array = GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY, 
+        uint_sampler2d_rectangle         = GL_UNSIGNED_INT_SAMPLER_2D_RECT             , 
+        uint_sampler3d                   = GL_UNSIGNED_INT_SAMPLER_3D                  , 
+        uint32                           = GL_UNSIGNED_INT                             , 
+        
+        vector2b                         = GL_BOOL_VEC2                                , 
+        vector2d                         = GL_DOUBLE_VEC2                              , 
+        vector2f                         = GL_FLOAT_VEC2                               , 
+        vector2i                         = GL_INT_VEC2                                 , 
+        vector2u                         = GL_UNSIGNED_INT_VEC2                        , 
+        vector3b                         = GL_BOOL_VEC3                                , 
+        vector3d                         = GL_DOUBLE_VEC3                              , 
+        vector3f                         = GL_FLOAT_VEC3                               , 
+        vector3i                         = GL_INT_VEC3                                 , 
+        vector3u                         = GL_UNSIGNED_INT_VEC3                        , 
+        vector4b                         = GL_BOOL_VEC4                                , 
+        vector4d                         = GL_DOUBLE_VEC4                              , 
+        vector4f                         = GL_FLOAT_VEC4                               , 
+        vector4i                         = GL_INT_VEC4                                 , 
+        vector4u                         = GL_UNSIGNED_INT_VEC4                        , 
     };
     enum class uniform_block_info_e : gl::enum_t
     {
+        active_uniform_indices                       = GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES              , 
+        active_uniforms                              = GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS                     , 
         binding                                      = GL_UNIFORM_BLOCK_BINDING                             , 
         data_size                                    = GL_UNIFORM_BLOCK_DATA_SIZE                           , 
         name_length                                  = GL_UNIFORM_BLOCK_NAME_LENGTH                         , 
-        active_uniforms                              = GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS                     , 
-        active_uniform_indices                       = GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES              , 
-        referenced_by_vertex_shader                  = GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER         , 
+        referenced_by_compute_shader                 = GL_UNIFORM_BLOCK_REFERENCED_BY_COMPUTE_SHADER        , 
+        referenced_by_fragment_shader                = GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER       , 
         referenced_by_geometry_shader                = GL_UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER       , 
         referenced_by_tessellation_control_shader    = GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER   , 
         referenced_by_tessellation_evaluation_shader = GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER, 
-        referenced_by_fragment_shader                = GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER       , 
-        referenced_by_compute_shader                 = GL_UNIFORM_BLOCK_REFERENCED_BY_COMPUTE_SHADER        , 
+        referenced_by_vertex_shader                  = GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER         , 
     };
     enum class vertex_array_attribute_type_e : gl::enum_t
     {
@@ -1699,11 +1689,13 @@ export namespace gl
         int16                      = GL_SHORT                       , 
         int32                      = GL_INT                         , 
         int32_2_10_10_10_r         = GL_INT_2_10_10_10_REV          , 
+        
         uint8                      = GL_UNSIGNED_BYTE               , 
         uint16                     = GL_UNSIGNED_SHORT              , 
         uint32                     = GL_UNSIGNED_INT                , 
         uint32_2_10_10_10_r        = GL_UNSIGNED_INT_2_10_10_10_REV , 
         uint32_10_11_11_11_float_r = GL_UNSIGNED_INT_10F_11F_11F_REV,   
+        
         fixed                      = GL_FIXED                       , 
         float16                    = GL_HALF_FLOAT                  , 
         float32                    = GL_FLOAT                       , 
@@ -1711,20 +1703,17 @@ export namespace gl
     };
     enum class vertex_array_parameter_e : gl::enum_t
     {
-        relative_offset              = GL_VERTEX_ATTRIB_RELATIVE_OFFSET , 
         binding_offset               = GL_VERTEX_BINDING_OFFSET         , 
-        
+        divisor                      = GL_VERTEX_ATTRIB_ARRAY_DIVISOR   , 
+        element_array_buffer_binding = GL_ELEMENT_ARRAY_BUFFER_BINDING  , 
         enabled                      = GL_VERTEX_ATTRIB_ARRAY_ENABLED   , 
-        size                         = GL_VERTEX_ATTRIB_ARRAY_SIZE      , 
-        stride                       = GL_VERTEX_ATTRIB_ARRAY_STRIDE    , 
-        type                         = GL_VERTEX_ATTRIB_ARRAY_TYPE      , 
-        
         is_integer_data              = GL_VERTEX_ATTRIB_ARRAY_INTEGER   , 
         is_long_data                 = GL_VERTEX_ATTRIB_ARRAY_LONG      , 
         is_normalized                = GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, 
-        divisor                      = GL_VERTEX_ATTRIB_ARRAY_DIVISOR   , 
-        
-        element_array_buffer_binding = GL_ELEMENT_ARRAY_BUFFER_BINDING  , 
+        relative_offset              = GL_VERTEX_ATTRIB_RELATIVE_OFFSET , 
+        size                         = GL_VERTEX_ATTRIB_ARRAY_SIZE      , 
+        stride                       = GL_VERTEX_ATTRIB_ARRAY_STRIDE    , 
+        type                         = GL_VERTEX_ATTRIB_ARRAY_TYPE      , 
     };
     enum class vertex_attribute_address_e : gl::enum_t
     {
@@ -1734,18 +1723,16 @@ export namespace gl
     {
         binding         = GL_VERTEX_ATTRIB_BINDING             , 
         buffer_binding  = GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, 
-        relative_offset = GL_VERTEX_ATTRIB_RELATIVE_OFFSET     , 
-        
+        current         = GL_CURRENT_VERTEX_ATTRIB             , 
+        divisor         = GL_VERTEX_ATTRIB_ARRAY_DIVISOR       , 
         enabled         = GL_VERTEX_ATTRIB_ARRAY_ENABLED       , 
+        is_integer_data = GL_VERTEX_ATTRIB_ARRAY_INTEGER       , 
+        is_long_data    = GL_VERTEX_ATTRIB_ARRAY_LONG          , 
+        is_normalized   = GL_VERTEX_ATTRIB_ARRAY_NORMALIZED    , 
+        relative_offset = GL_VERTEX_ATTRIB_RELATIVE_OFFSET     , 
         size            = GL_VERTEX_ATTRIB_ARRAY_SIZE          , 
         stride          = GL_VERTEX_ATTRIB_ARRAY_STRIDE        , 
         type            = GL_VERTEX_ATTRIB_ARRAY_TYPE          , 
-        current         = GL_CURRENT_VERTEX_ATTRIB             , 
-        
-        is_long_data    = GL_VERTEX_ATTRIB_ARRAY_LONG          , 
-        is_integer_data = GL_VERTEX_ATTRIB_ARRAY_INTEGER       , 
-        is_normalized   = GL_VERTEX_ATTRIB_ARRAY_NORMALIZED    , 
-        divisor         = GL_VERTEX_ATTRIB_ARRAY_DIVISOR       , 
     };
     enum class vertex_attribute_pointer_e : gl::enum_t
     {
@@ -1756,38 +1743,72 @@ export namespace gl
 
 
 
+    enum class enum_operation_e : gl::uint32_t
+    {
+        none         = 0u << 0u                                             , 
+        
+        addition     = 1u << 0u                                             , 
+        subtraction  = 1u << 1u                                             , 
+        
+        bitwise_and  = 1u << 2u                                             , 
+        bitwise_or   = 1u << 3u                                             , 
+        bitwise_xor  = 1u << 4u                                             , 
+        bitwise_not  = 1u << 5u                                             , 
 
+        compare      = 1u << 6u                                             , 
 
+        arithmetic   = addition    | subtraction                            , 
+        bitwise      = bitwise_and | bitwise_or  | bitwise_xor | bitwise_not, 
+        all          = arithmetic  | bitwise                                , 
+    };
+    
+    constexpr auto operator&              (gl::enum_operation_e left   , gl::enum_operation_e right) -> gl::enum_operation_e { return std::bit_cast<gl::enum_operation_e>(std::to_underlying(left) & std::to_underlying(right)); }
+    constexpr auto operator|              (gl::enum_operation_e left   , gl::enum_operation_e right) -> gl::enum_operation_e { return std::bit_cast<gl::enum_operation_e>(std::to_underlying(left) | std::to_underlying(right)); }
+    constexpr auto supports_enum_operation(gl::enum_operation_e enabled, gl::enum_operation_e check) -> gl::bool_t           { return (enabled & check) == check; }
 
+    template<typename T> struct enum_operation { static constexpr auto value = gl::enum_operation_e::none; };
+    template<typename T> constexpr auto enum_operation_v = gl::enum_operation<T>::value;
 
-    template<typename T>
-    struct bit_mask_traits { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::false_ }; };
+    template<typename T> concept has_addition    = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::enum_operation_e::addition   );
+    template<typename T> concept has_subtraction = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::enum_operation_e::subtraction);
+    template<typename T> concept has_bitwise_and = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::enum_operation_e::bitwise_and);
+    template<typename T> concept has_bitwise_or  = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::enum_operation_e::bitwise_or );
+    template<typename T> concept has_bitwise_xor = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::enum_operation_e::bitwise_xor);
+    template<typename T> concept has_bitwise_not = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::enum_operation_e::bitwise_not);
+    template<typename T> concept has_compare     = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::enum_operation_e::compare    );
 
-    template<typename T> concept valid_bit_mask_enum_class_c = bit_mask_traits<T>::enable_bitmask_operations;
+    template<gl::has_addition    T                 > constexpr auto operator+ (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) +  std::to_underlying(right)); }
+    template<gl::has_addition    T, std::integral U> constexpr auto operator+ (T  left, U right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) + right); }
+    template<gl::has_subtraction T                 > constexpr auto operator- (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) -  std::to_underlying(right)); }
+    template<gl::has_subtraction T, std::integral U> constexpr auto operator- (T  left, U right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) - right); }
+    template<gl::has_bitwise_and T                 > constexpr auto operator& (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) &  std::to_underlying(right)); }
+    template<gl::has_bitwise_or  T                 > constexpr auto operator| (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) |  std::to_underlying(right)); }
+    template<gl::has_bitwise_xor T                 > constexpr auto operator^ (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) ^  std::to_underlying(right)); }
+    template<gl::has_bitwise_not T                 > constexpr auto operator~ (         T right) noexcept -> T          { return std::bit_cast<T>(                         ~  std::to_underlying(right)); }
+                                                   
+    template<gl::has_addition    T                 > constexpr auto operator+=(T& left, T right) noexcept -> T&         { return left = left + right; }
+    template<gl::has_addition    T, std::integral U> constexpr auto operator+=(T& left, U right) noexcept -> T&         { return left = left + right; }
+    template<gl::has_subtraction T                 > constexpr auto operator-=(T& left, T right) noexcept -> T&         { return left = left - right; }
+    template<gl::has_subtraction T, std::integral U> constexpr auto operator-=(T& left, U right) noexcept -> T&         { return left = left - right; }
+    template<gl::has_bitwise_and T                 > constexpr auto operator&=(T& left, T right) noexcept -> T&         { return left = left & right; }
+    template<gl::has_bitwise_or  T                 > constexpr auto operator|=(T& left, T right) noexcept -> T&         { return left = left | right; }
+    template<gl::has_bitwise_xor T                 > constexpr auto operator^=(T& left, T right) noexcept -> T&         { return left = left ^ right; }
+                                                   
+    template<gl::has_compare     T                 > constexpr auto operator< (T  left, T right) noexcept -> gl::bool_t { return                  std::to_underlying(left) <  std::to_underlying(right);  }
+    template<gl::has_compare     T                 > constexpr auto operator> (T  left, T right) noexcept -> gl::bool_t { return                  std::to_underlying(left) >  std::to_underlying(right);  }
+    template<gl::has_compare     T                 > constexpr auto operator<=(T  left, T right) noexcept -> gl::bool_t { return                  std::to_underlying(left) <= std::to_underlying(right);  }
+    template<gl::has_compare     T                 > constexpr auto operator>=(T  left, T right) noexcept -> gl::bool_t { return                  std::to_underlying(left) >= std::to_underlying(right);  }
 
-    template<valid_bit_mask_enum_class_c T>             constexpr T  operator+ (T  first, T second) { return static_cast<T>( gl::to_underlying(first) + gl::to_underlying(second)); }
-    template<valid_bit_mask_enum_class_c T, typename U> constexpr T  operator+ (T  first, U second) { return static_cast<T>( gl::to_underlying(first) +                   second ); }
-    template<valid_bit_mask_enum_class_c T, typename U> constexpr T  operator+ (U  first, T second) { return static_cast<T>(                   first  + gl::to_underlying(second)); }
-    template<valid_bit_mask_enum_class_c T>             constexpr T  operator- (T  first, T second) { return static_cast<T>( gl::to_underlying(first) - gl::to_underlying(second)); }
-    template<valid_bit_mask_enum_class_c T, typename U> constexpr T  operator- (T  first, U second) { return static_cast<T>( gl::to_underlying(first)                   - second ); }
-    template<valid_bit_mask_enum_class_c T, typename U> constexpr T  operator- (U  first, T second) { return static_cast<T>(                   first  + gl::to_underlying(second)); }
-    template<valid_bit_mask_enum_class_c T>             constexpr T  operator& (T  first, T second) { return static_cast<T>( gl::to_underlying(first) & gl::to_underlying(second)); }
-    template<valid_bit_mask_enum_class_c T>             constexpr T  operator| (T  first, T second) { return static_cast<T>( gl::to_underlying(first) | gl::to_underlying(second)); }
-    template<valid_bit_mask_enum_class_c T>             constexpr T  operator~ (T  value)           { return static_cast<T>(~gl::to_underlying(value)                            ); }
-    template<valid_bit_mask_enum_class_c T>             constexpr T& operator+=(T& first, T second) { return first = first + second; }
-    template<valid_bit_mask_enum_class_c T>             constexpr T& operator-=(T& first, T second) { return first = first - second; }
-    template<valid_bit_mask_enum_class_c T>             constexpr T& operator&=(T& first, T second) { return first = first & second; }
-    template<valid_bit_mask_enum_class_c T>             constexpr T& operator|=(T& first, T second) { return first = first | second; }
-
-    template<> struct bit_mask_traits<gl::buffer_mapping_range_access_flags_e> { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::buffer_mask_e>                       { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::buffer_storage_flags_e>              { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::context_flags_e>                     { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::context_profile_e>                   { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::feature_e>                           { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::frame_buffer_attachment_e>           { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::frame_buffer_source_e>               { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::memory_barrier_e>                    { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::memory_regional_barrier_e>           { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
-    template<> struct bit_mask_traits<gl::program_stage_e>                     { static constexpr auto enable_bitmask_operations = gl::bool_t{ gl::true_ }; };
+    template<> struct gl::enum_operation<gl::buffer_mapping_range_access_flags_e> { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::buffer_mask_e                      > { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::buffer_storage_flags_e             > { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::context_flags_e                    > { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::context_profile_e                  > { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::feature_e                          > { static constexpr auto value = gl::enum_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::frame_buffer_attachment_e          > { static constexpr auto value = gl::enum_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::frame_buffer_source_e              > { static constexpr auto value = gl::enum_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::memory_barrier_e                   > { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::memory_regional_barrier_e          > { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::program_stage_e                    > { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::synchronization_command_e          > { static constexpr auto value = gl::enum_operation_e::bitwise   ; };
 }

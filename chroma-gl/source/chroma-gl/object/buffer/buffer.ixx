@@ -18,9 +18,7 @@ export namespace gl
             gl::buffer_storage<T>(
                 handle()                                    , 
                 gl::buffer_storage_flags_e::dynamic_storage | 
-                gl::buffer_storage_flags_e::read_write      | 
-                gl::buffer_storage_flags_e::persistent      | 
-                gl::buffer_storage_flags_e::coherent        , 
+                gl::buffer_storage_flags_e::shared          ,  
                 count                                       );
         }
         explicit buffer(std::span<const T> data)
@@ -32,9 +30,7 @@ export namespace gl
             gl::buffer_storage<T>(
                 handle()                                    , 
                 gl::buffer_storage_flags_e::dynamic_storage | 
-                gl::buffer_storage_flags_e::read_write      | 
-                gl::buffer_storage_flags_e::persistent      | 
-                gl::buffer_storage_flags_e::coherent        , 
+                gl::buffer_storage_flags_e::shared          , 
                 data                                        );
         }
 
@@ -54,14 +50,12 @@ export namespace gl
             unmap();
 
             auto span = gl::map_buffer_range<T>(
-                handle()                                            , 
-                gl::buffer_mapping_range_access_flags_e::read_write | 
-                gl::buffer_mapping_range_access_flags_e::persistent | 
-                gl::buffer_mapping_range_access_flags_e::coherent   , 
-                count()                                             );
+                handle()                                       , 
+                gl::buffer_mapping_range_access_flags_e::shared, 
+                count()                                       );
 
-            data_  = std::shared_ptr<std::span<T>>{ span, [this](auto* _) { unmap(); } };
-            range_ = count();
+            data_     = std::shared_ptr<std::span<T>>{ span, [this](auto* _) { unmap(); } };
+            range_    = count();
 
             return data_;
         }
@@ -72,16 +66,14 @@ export namespace gl
             range.count = std::min(range.count, count()              );
             range.index = std::min(range.index, count() - range.count);
 
-            auto span = gl::map_buffer_range<T>(
-                handle()                                               , 
-                gl::buffer_mapping_range_access_flags_e::read_write    | 
-                gl::buffer_mapping_range_access_flags_e::persistent    | 
-                gl::buffer_mapping_range_access_flags_e::coherent      | 
-                gl::buffer_mapping_range_access_flags_e::flush_explicit, 
+            auto span   = gl::map_buffer_range<T>(
+                handle()                                                , 
+                gl::buffer_mapping_range_access_flags_e::flush_explicit | 
+                gl::buffer_mapping_range_access_flags_e::shared         ,  
                 range                                                  );
 
-            data_  = std::shared_ptr<std::span<T>>{ span, [this](const auto* _) { unmap(); } };
-            range_ = range;
+            data_       = std::shared_ptr<std::span<T>>{ span, [this](const auto* _) { unmap(); } };
+            range_      = range;
             
             return data_;
         }
@@ -91,7 +83,7 @@ export namespace gl
         }
         void unmap      ()
         {
-            if (!is_mapped())               return;
+            if (!is_mapped())                return;
             if (!gl::unmap_buffer(handle())) throw std::runtime_error{ "Data store is undefined!" };
 
             data_ .reset();
@@ -218,9 +210,7 @@ export namespace gl
             gl::buffer_storage<T>(
                 handle()                                    , 
                 gl::buffer_storage_flags_e::dynamic_storage | 
-                gl::buffer_storage_flags_e::read_write      | 
-                gl::buffer_storage_flags_e::persistent      | 
-                gl::buffer_storage_flags_e::coherent        , 
+                gl::buffer_storage_flags_e::shared          , 
                 gl::size_t{ N * sizeof(T) }                 );
         }
         explicit uniform_array_buffer(std::span<const T> data)
@@ -230,9 +220,7 @@ export namespace gl
             gl::buffer_storage<T>(
                 handle()                                    , 
                 gl::buffer_storage_flags_e::dynamic_storage | 
-                gl::buffer_storage_flags_e::read_write      | 
-                gl::buffer_storage_flags_e::persistent      | 
-                gl::buffer_storage_flags_e::coherent        , 
+                gl::buffer_storage_flags_e::shared          ,  
                 data                                        );
         }
 
@@ -263,14 +251,12 @@ export namespace gl
             unmap();
 
             auto span = gl::map_buffer_range<T>(
-                handle(), 
-                gl::buffer_mapping_range_access_flags_e::read_write |
-                gl::buffer_mapping_range_access_flags_e::persistent |
-                gl::buffer_mapping_range_access_flags_e::coherent   ,
-                count()                                             );
+                handle()                                       , 
+                gl::buffer_mapping_range_access_flags_e::shared, 
+                count()                                       );
 
-            data_  = std::shared_ptr<std::span<T>>{ span, [this](const auto* _) { unmap(); } };
-            range_ = count();
+            data_     = std::shared_ptr<std::span<T>>{ span, [this](const auto* _) { unmap(); } };
+            range_    = count();
 
             return data_;
         }
@@ -281,16 +267,14 @@ export namespace gl
             range.count = std::min(range.count, count()              );
             range.index = std::min(range.index, count() - range.count);
 
-            auto span = gl::map_buffer_range<T>(
-                handle()                                                ,
-                gl::buffer_mapping_range_access_flags_e::read_write    |
-                gl::buffer_mapping_range_access_flags_e::persistent    |
-                gl::buffer_mapping_range_access_flags_e::coherent      |
-                gl::buffer_mapping_range_access_flags_e::flush_explicit,
+            auto span   = gl::map_buffer_range<T>(
+                handle()                                                , 
+                gl::buffer_mapping_range_access_flags_e::flush_explicit | 
+                gl::buffer_mapping_range_access_flags_e::shared         , 
                 range                                                  );
 
-            data_  = std::shared_ptr<std::span<T>>{ span, [this](const auto* _) { unmap(); } };
-            range_ = range;
+            data_       = std::shared_ptr<std::span<T>>{ span, [this](const auto* _) { unmap(); } };
+            range_      = range;
 
             return data_;
         }
@@ -300,7 +284,7 @@ export namespace gl
         }
         void unmap     ()
         {
-            if (!is_mapped())               return;
+            if (!is_mapped())                return;
             if (!gl::unmap_buffer(handle())) throw std::runtime_error{ "Data store is undefined!" };
 
             data_ .reset();
