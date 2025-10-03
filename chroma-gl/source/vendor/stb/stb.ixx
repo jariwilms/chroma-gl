@@ -11,7 +11,7 @@ import opengl.utility;
     template<typename T>
     void write_function(gl::void_t* context, gl::void_t* data, gl::int32_t size)
     {
-        auto  vector  = std::bit_cast<std::vector<T>*>(context);
+        auto* vector  = std::bit_cast<std::vector<T>*>(context);
         auto* pointer = std::bit_cast<const T*>(data);
         auto  span    = std::span<const T>{ pointer, static_cast<gl::uint64_t>(size) };
 
