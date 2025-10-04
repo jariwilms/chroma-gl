@@ -43,54 +43,37 @@ export namespace stb
     template<typename T>
     auto load_from_memory            (gl::uint32_t required_channels, std::span<const gl::byte_t> data) -> stb::image_data
     {
-        auto dimensions = gl::vector2i{};
-        auto channels   = gl::int32_t {};
+        auto* pointer    = std::bit_cast<gl::byte_t*>(nullptr);
+        auto  size       = gl::uint64_t{};
+        auto  dimensions = gl::vector2i{};
+        auto  channels   = gl::int32_t {};
 
         if constexpr (std::is_same_v<T, gl::uint8_t  >)
         {
-                  auto* pointer    = std::bit_cast<gl::byte_t*>(::stbi_load_from_memory(data.data(), static_cast<gl::int32_t>(data.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
-            const auto  size       = sizeof(gl::uint8_t) * required_channels * dimensions.x * dimensions.y;
-            const auto  span       = std::span<const gl::byte_t>{ pointer, size };
-            const auto  image_data = stb::image_data
-            {
-                static_cast<gl::uint32_t>(channels  ), 
-                static_cast<gl::vector2u>(dimensions), 
-                std::vector<gl::byte_t>{ std::from_range, span }
-            };
-
-            stb::free_image(pointer);
-            return image_data;
+            pointer = std::bit_cast<gl::byte_t*>(::stbi_load_from_memory(data.data(), static_cast<gl::int32_t>(data.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
+            size    = sizeof(gl::uint8_t) * required_channels * dimensions.x * dimensions.y;
         }
         if constexpr (std::is_same_v<T, gl::uint16_t >)
         {
-                  auto* pointer    = std::bit_cast<gl::byte_t*>(::stbi_load_16_from_memory(data.data(), static_cast<gl::int32_t>(data.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
-            const auto  size       = sizeof(gl::uint16_t) * required_channels * dimensions.x * dimensions.y;
-            const auto  span       = std::span<const gl::byte_t>{ pointer, size };
-            const auto  image_data = stb::image_data
-            {
-                static_cast<gl::uint32_t>(channels  ), 
-                static_cast<gl::vector2u>(dimensions), 
-                std::vector<gl::byte_t>{ std::from_range, span }
-            };
-
-            stb::free_image(pointer);
-            return image_data;
+            pointer = std::bit_cast<gl::byte_t*>(::stbi_load_16_from_memory(data.data(), static_cast<gl::int32_t>(data.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
+            size    = sizeof(gl::uint16_t) * required_channels * dimensions.x * dimensions.y;
         }
         if constexpr (std::is_same_v<T, gl::float32_t>)
         {
-            const auto pointer    = std::bit_cast<gl::byte_t*>(::stbi_loadf_from_memory(data.data(), static_cast<gl::int32_t>(data.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
-            const auto size       = sizeof(gl::float32_t) * required_channels * dimensions.x * dimensions.y;
-            const auto span       = std::span<const gl::byte_t>{ pointer, size };
-            const auto image_data = stb::image_data
-            {
-                static_cast<gl::uint32_t>(channels  ), 
-                static_cast<gl::vector2u>(dimensions), 
-                std::vector<gl::byte_t>{ std::from_range, span }
-            };
-
-            stb::free_image(pointer);
-            return image_data;
+            pointer = std::bit_cast<gl::byte_t*>(::stbi_loadf_from_memory(data.data(), static_cast<gl::int32_t>(data.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
+            size    = sizeof(gl::float32_t) * required_channels * dimensions.x * dimensions.y;
         }
+
+        const auto span       = std::span<gl::byte_t>{ pointer, size };
+        const auto image_data = stb::image_data
+        {
+            .channels   = std::bit_cast<gl::uint32_t>(channels  )         , 
+            .dimensions = std::bit_cast<gl::vector2u>(dimensions)         , 
+            .data       = std::vector<gl::byte_t>{ std::from_range, span }, 
+        };
+
+        stb::free_image(pointer);
+        return image_data;
     }
 
     auto write_bmp_to_function       (std::span<const gl::byte_t> data, gl::uint32_t channels, const gl::vector2u& dimensions) -> std::vector<gl::byte_t>
