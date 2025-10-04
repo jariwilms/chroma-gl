@@ -1,11 +1,8 @@
-module;
-
-#include <glad/gl.h>
-#include <glfw/glfw3.h>
-
 export module vendor.glfw.types;
 
-export namespace vendor::glfw
+import <glfw/glfw3.h>;
+
+export namespace glfw
 {
     using window_t     = GLFWwindow;
     using monitor_t    = GLFWmonitor;

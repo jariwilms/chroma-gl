@@ -9,7 +9,7 @@ import vendor.glfw.functions;
 import vendor.glfw.input;
 import vendor.glfw.types;
 
-export namespace vendor::glfw
+export namespace glfw
 {
     class window
     {
@@ -29,8 +29,6 @@ export namespace vendor::glfw
         window(const std::string& title, const gl::vector2u& dimensions)
            : title_{ title }, dimensions_{ dimensions }, display_mode_{ display_mode_e::windowed }
         {
-            using namespace vendor;
-
             glfw::initialize();
             glfw::window_hint(glfw::hint_e::context_version_major, glfw::hint_value_e::opengl_version_major_4);
             glfw::window_hint(glfw::hint_e::context_version_minor, glfw::hint_value_e::opengl_version_minor_6);

@@ -4,10 +4,10 @@ import std;
 import <glad/gl.h>;
 import vendor.glfw.functions;
 
-export namespace vendor::glad
+export namespace glad
 {
     void initialize()
     {
-        if (!::gladLoadGL(vendor::glfw::function_address)) throw std::runtime_error{ "Failed to initialize GLAD!" };
+        if (!::gladLoadGL(glfw::function_address)) throw std::runtime_error{ "Failed to initialize GLAD!" };
     }
 }

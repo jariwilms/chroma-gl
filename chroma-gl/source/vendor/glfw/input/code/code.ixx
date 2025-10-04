@@ -3,32 +3,32 @@ export module vendor.glfw.input.code;
 import std;
 import opengl.types;
 
-export namespace vendor::glfw
+export namespace glfw
 {
     enum class button_e : gl::int32_t
     {
-        button1      = 0, 
-        button2      = 1, 
-        button3      = 2, 
-        button4      = 3, 
-        button5      = 4, 
-        button6      = 5,
-        button7      = 6,
-        button8      = 7,
+        button_1      = 0      , 
+        button_2      = 1      , 
+        button_3      = 2      , 
+        button_4      = 3      , 
+        button_5      = 4      , 
+        button_6      = 5      , 
+        button_7      = 6      , 
+        button_8      = 7      , 
 
-        left_mouse   = button1, 
-        right_mouse  = button2, 
-        middle_mouse = button3, 
-        back         = button4, 
-        forward      = button5, 
+        left_mouse   = button_1, 
+        right_mouse  = button_2, 
+        middle_mouse = button_3, 
+        back         = button_4, 
+        forward      = button_5, 
     };
     enum class controller_e : gl::int32_t
     {
-        hat_centered   = 0x0 << 0u, 
-        hat_up         = 0x1 << 0u, 
-        hat_right      = 0x1 << 1u, 
-        hat_down       = 0x1 << 2u, 
-        hat_left       = 0x1 << 3u, 
+        hat_centered   = 0x0 << 0u           , 
+        hat_up         = 0x1 << 0u           , 
+        hat_right      = 0x1 << 1u           , 
+        hat_down       = 0x1 << 2u           , 
+        hat_left       = 0x1 << 3u           , 
 
         hat_right_up   = hat_right | hat_up  , 
         hat_right_down = hat_right | hat_down, 
@@ -121,8 +121,8 @@ export namespace vendor::glfw
         num_lock  = 0x1 << 5u, 
     };
 
-    constexpr auto button_min     = glfw::button_e    ::button1;
-    constexpr auto button_max     = glfw::button_e    ::button8;
+    constexpr auto button_min     = glfw::button_e    ::button_1;
+    constexpr auto button_max     = glfw::button_e    ::button_8;
     constexpr auto controller_min = glfw::controller_e::hat_centered;
     constexpr auto controller_max = glfw::controller_e::hat_left;
     constexpr auto key_min        = glfw::key_e       ::space;

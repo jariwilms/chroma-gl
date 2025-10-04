@@ -5,7 +5,7 @@ import <glfw/glfw3.h>;
 import opengl.types;
 import vendor.glfw.types;
 
-export namespace vendor::glfw
+export namespace glfw
 {
     void initialize                    ()
     {

@@ -7,7 +7,7 @@ import opengl.utility;
 import vendor.glfw.types;
 import vendor.glfw.input.code;
 
-export namespace vendor::glfw
+export namespace glfw
 {
     class input
     {
