@@ -15,5 +15,5 @@ export import opengl.object.vertex_array;
 
 export namespace gl
 {
-    
+
 }

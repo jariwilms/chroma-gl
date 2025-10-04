@@ -1,8 +1,8 @@
 export module opengl.utility;
 
 import std;
-import opengl.types;
 import opengl.domain;
+import opengl.types;
 
 export namespace gl
 {
@@ -58,18 +58,24 @@ export namespace gl
         return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
     }
 
+    template<std::integral T, gl::uint32_t N>
+    constexpr auto mipmap_levels(const gl::vector_t<T, N>& vector) -> T
+    {
+        return glm::levels(vector);
+    }
+
     template<typename T, gl::size_t EXTENT = std::dynamic_extent>
     constexpr auto as_bytes(std::span<const T, EXTENT> span) -> std::span<const gl::byte_t>
     {
         return std::span{ reinterpret_cast<const gl::byte_t*>(span.data()), span.size_bytes() };
     }
-    template<typename T>
-    constexpr auto as_bytes(const T& container) -> std::span<const gl::byte_t>
+    template<std::ranges::range R>
+    constexpr auto as_bytes(const R& container) -> std::span<const gl::byte_t>
     {
         return as_bytes(std::span{ container });
     }
 
-    inline void todo()
+    void todo()
     {
         throw std::logic_error{ "The method or operation has not been implemented!" };
     }

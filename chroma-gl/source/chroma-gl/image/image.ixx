@@ -12,16 +12,28 @@ export namespace gl
     public:
         enum class format_e
         {
-            r8         , rg8         , rgb8       , rgba8       , 
-            r16        , rg16        , rgb16      , rgba16      , 
-            rgb16_float, rgba16_float, rgb32_float, rgba32_float, 
+            r_uint8     , 
+            r_uint16    , 
+            
+            rg_uint8    , 
+            rg_uint16   , 
+            
+            rgb_uint8   , 
+            rgb_uint16  , 
+            rgb_float16 , 
+            rgb_float32 , 
+            
+            rgba_uint8  , 
+            rgba_uint16 , 
+            rgba_float16, 
+            rgba_float32, 
         };
         enum class extension_e
         {
-            bmp,
-            hdr,
-            jpg,
-            png,
+            bmp, 
+            hdr, 
+            jpg, 
+            png, 
         };
 
         template<std::ranges::range R>
@@ -54,9 +66,9 @@ export namespace gl
                     {
                         using enum format_e;
 
-                        case r8         : case rg8         : case rgb8       : case rgba8       : return stb::load_from_memory<gl::uint8_t  >(channels, data);
-                        case r16        : case rg16        : case rgb16      : case rgba16      : return stb::load_from_memory<gl::uint16_t >(channels, data);
-                        case rgb16_float: case rgba16_float: case rgb32_float: case rgba32_float: return stb::load_from_memory<gl::float32_t>(channels, data);
+                        case r_uint8    : case rg_uint8    : case rgb_uint8  : case rgba_uint8  : return stb::load_from_memory<gl::uint8_t  >(channels, data);
+                        case r_uint16   : case rg_uint16   : case rgb_uint16 : case rgba_uint16 : return stb::load_from_memory<gl::uint16_t >(channels, data);
+                        case rgb_float16: case rgba_float16: case rgb_float32: case rgba_float32: return stb::load_from_memory<gl::float32_t>(channels, data);
 
                         default: throw std::invalid_argument{ "Invalid format!" };
                     };
@@ -85,10 +97,10 @@ export namespace gl
             {
                 using enum format_e;
                         
-                case r8   : case r16   :                                       return gl::uint32_t{ 1u };
-                case rg8  : case rg16  :                                       return gl::uint32_t{ 2u };
-                case rgb8 : case rgb16 : case rgb16_float : case rgb32_float : return gl::uint32_t{ 3u };
-                case rgba8: case rgba16: case rgba16_float: case rgba32_float: return gl::uint32_t{ 4u };
+                case r_uint8   : case r_uint16   :                                       return gl::uint32_t{ 1u };
+                case rg_uint8  : case rg_uint16  :                                       return gl::uint32_t{ 2u };
+                case rgb_uint8 : case rgb_uint16 : case rgb_float16 : case rgb_float32 : return gl::uint32_t{ 3u };
+                case rgba_uint8: case rgba_uint16: case rgba_float16: case rgba_float32: return gl::uint32_t{ 4u };
 
                 default: throw std::invalid_argument{ "Invalid format!" };
             }

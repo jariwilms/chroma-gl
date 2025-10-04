@@ -1,10 +1,9 @@
 export module opengl;
+export import opengl.constants;
 export import opengl.domain;
 export import opengl.flags;
 export import opengl.lock;
-export import opengl.mapping;
 export import opengl.meta;
-export import opengl.object;
 export import opengl.parameters;
 export import opengl.proxy;
 export import opengl.structures;
@@ -470,9 +469,9 @@ export namespace gl
         return ::glIsEnabledi(gl::to_underlying(F));
     }
     template<gl::callback_pointer_e P>
-    auto get_pointer_value                          () -> gl::pointer_t
+    auto get_pointer_value                          () -> gl::void_t*
     {
-        auto value = gl::pointer_t{};
+        auto value = static_cast<gl::void_t*>(nullptr);
         return ::glGetPointerv(gl::to_underlying(P), &value), value;
     }
     template<gl::context_property_e P>
@@ -1233,7 +1232,7 @@ export namespace gl
     {
         ::glShaderBinary(static_cast<gl::sizei_t>(shaders.size()), gl::to_underlying_pointer(shaders.data()), format, binary.data(), static_cast<gl::sizei_t>(binary.size_bytes()));
     }
-    template<gl::count_t N = 0>
+    template<gl::count_t N = 0u>
     void specialize_shader                          (gl::handle_t shader, const std::string& entry, std::span<const gl::uint32_t, N> indices = {}, std::span<const gl::uint32_t, N> values = {})
     {
         const auto* c_string = entry.c_str();
@@ -1558,7 +1557,7 @@ export namespace gl
     {
         ::glGenerateTextureMipmap(gl::to_underlying(texture));
     }
-    template<gl::texture_target_e T, gl::texture_target_e U> requires (valid_texture_view_c<T, U>)
+    template<gl::texture_target_e T, gl::texture_target_e U> requires (meta::is_valid_texture_view<T, U>())
     void texture_view                               (gl::handle_t source, gl::handle_t destination, gl::texture_format_e format, gl::uint32_t minimumLevel, gl::uint32_t levels, gl::uint32_t minimumLayer, gl::uint32_t layers)
     {
         ::glTextureView(gl::to_underlying(destination), gl::to_underlying(U), gl::to_underlying(source), gl::to_underlying(format), minimumLevel, levels, minimumLayer, layers);
@@ -1873,7 +1872,7 @@ export namespace gl
     void vertex_array_vertex_buffers                (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, std::span<const gl::byte_range> strides, gl::range range)
     {
         gl::todo();
-        //::glVertexArrayVertexBuffers(gl::to_underlying(vertex_array), range.index, range.count, gl::to_underlying_pointer(vertex_buffers.data()), );
+        ::glVertexArrayVertexBuffers(gl::to_underlying(vertex_array), range.index, range.count, gl::to_underlying_pointer(vertex_buffers.data()), {}, {});
     }
     void vertex_array_attribute_binding             (gl::handle_t vertex_array, gl::index_t attribute, gl::binding_t binding)
     {
@@ -2171,11 +2170,11 @@ export namespace gl
     }
     void clear_frame_buffer_value                   (gl::handle_t frame_buffer, glp::clear_v parameter)
     {
-        auto clear_frame_buffer_iv  = [](gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, const gl::int32_t* value)
+        auto clear_frame_buffer_iv  = [](gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, const gl::int32_t  * value)
             {
                 ::glClearNamedFramebufferiv(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), static_cast<gl::int32_t>(index), value);
             };
-        auto clear_frame_buffer_uiv = [](gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, const gl::uint32_t* value)
+        auto clear_frame_buffer_uiv = [](gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, const gl::uint32_t * value)
             {
                 ::glClearNamedFramebufferuiv(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), static_cast<gl::int32_t>(index), value);
             };
@@ -2190,7 +2189,7 @@ export namespace gl
 
         auto overload = gl::overload_t
         {
-            [=](glp::color_index  _)
+            [=](glp::color_index   _)
             {
                 auto overload = gl::overload_t
                 {
@@ -2201,7 +2200,7 @@ export namespace gl
 
                 std::visit(overload, _.color);
             }, 
-            [=](glp::depth        _)
+            [=](glp::depth         _)
             {
                 auto overload = gl::overload_t
                 {
@@ -2212,7 +2211,7 @@ export namespace gl
 
                 std::visit(overload, _.value);
             }, 
-            [=](glp::stencil      _)
+            [=](glp::stencil       _)
             {
                 auto overload = gl::overload_t
                 {
@@ -2223,7 +2222,7 @@ export namespace gl
 
                 std::visit(overload, _.value);
             },
-            [=](glp::depthstencil _)
+            [=](glp::depth_stencil _)
             {
                 clear_frame_buffer_fi(frame_buffer, gl::frame_buffer_attachment_e::depth_stencil, gl::uint32_t{ 0u }, _.depth, _.stencil);
             }, 
@@ -2330,7 +2329,7 @@ export namespace gl
 
 
     //Chapter 20 - Debug Output
-    void debug_message_callback                     (gl::debug_callback_t callback, const gl::pointer_t parameter = nullptr)
+    void debug_message_callback                     (gl::debug_callback_t callback, const gl::void_t* parameter = nullptr)
     {
         ::glDebugMessageCallback(callback, parameter);
     }

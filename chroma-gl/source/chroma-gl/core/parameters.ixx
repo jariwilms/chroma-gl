@@ -19,7 +19,7 @@ export namespace glp
     {
         std::variant<gl::int32_t, gl::uint32_t, gl::float32_t> value{};
     };
-    struct depthstencil
+    struct depth_stencil
     {
         gl::float32_t depth{};
         gl::int32_t   stencil{};
@@ -102,7 +102,7 @@ export namespace glp
     };
     struct swizzle_rgba
     {
-        std::array<gl::texture_swizzle_e, 4> value{};
+        std::array<gl::texture_swizzle_e, 4u> value{};
     };
     struct fade_threshold_size
     {
@@ -137,7 +137,7 @@ export namespace glp
                                     glp::wrapping_s          , glp::wrapping_t         , glp::wrapping_r, 
                                     glp::swizzle_r           , glp::swizzle_g          , glp::swizzle_b , glp::swizzle_a, glp::swizzle_rgba, 
                                     glp::maximum_lod         , glp::minimum_lod        , glp::lod_bias>;
-    using clear_v             = std::variant<glp::color_index, glp::depth, glp::stencil, glp::depthstencil>;
+    using clear_v             = std::variant<glp::color_index, glp::depth, glp::stencil, glp::depth_stencil>;
     using point_parameter_v   = std::variant<glp::fade_threshold_size, glp::sprite_coordinate_origin>;
     using sampler_parameter_v = std::variant<
                                     glp::magnification_filter, glp::minification_filter, 

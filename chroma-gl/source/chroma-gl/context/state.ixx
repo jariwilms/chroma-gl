@@ -1,6 +1,6 @@
 export module opengl.state;
 
-export namespace gl
+export namespace gl::state
 {
 
 }
