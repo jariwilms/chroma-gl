@@ -8,121 +8,100 @@ import <glad/gl.h>;
 
 export namespace gl::legacy
 {
-    auto get_boolean_value          (gl::data_e data) -> gl::bool_t
+    void get_boolean_value          (gl::data_e data,                    gl::boolean_t* value)
     {
-        auto value = gl::boolean_t{};
-        return ::glGetBooleanv(gl::to_underlying(data), &value), static_cast<gl::bool_t>(value);
+        ::glGetBooleanv(gl::to_underlying(data), value);
     }
-    auto get_integer_value          (gl::data_e data) -> gl::int32_t
+    void get_integer_value          (gl::data_e data,                    gl::int32_t  * value)
     {
-        auto value = gl::int32_t{};
-        return ::glGetIntegerv(gl::to_underlying(data), &value), value;
+        ::glGetIntegerv(gl::to_underlying(data), value);
     }
-    auto get_integer64_value        (gl::data_e data) -> gl::int64_t
+    void get_integer64_value        (gl::data_e data,                    gl::int64_t  * value)
     {
-        auto value = gl::int64_t{};
-        return ::glGetInteger64v(gl::to_underlying(data), &value), value;
+        ::glGetInteger64v(gl::to_underlying(data), value);
     }
-    auto get_float_value            (gl::data_e data) -> gl::float32_t
+    void get_float_value            (gl::data_e data,                    gl::float32_t* value)
     {
-        auto value = gl::float32_t{};
-        return ::glGetFloatv(gl::to_underlying(data), &value), value;
+        ::glGetFloatv(gl::to_underlying(data), value);
     }
-    auto get_float64_value          (gl::data_e data) -> gl::float64_t
+    void get_float64_value          (gl::data_e data,                    gl::float64_t* value)
     {
-        auto value = gl::float64_t{};
-        return ::glGetDoublev(gl::to_underlying(data), &value), value;
+        ::glGetDoublev(gl::to_underlying(data), value);
     }
-    auto get_indexed_boolean_value  (gl::data_e data, gl::index_t index) -> gl::bool_t
+    void get_indexed_boolean_value  (gl::data_e data, gl::index_t index, gl::boolean_t* value)
     {
-        auto value = gl::boolean_t{};
-        return ::glGetBooleani_v(gl::to_underlying(data), index, &value), static_cast<gl::bool_t>(value);
+        ::glGetBooleani_v(gl::to_underlying(data), index, value);
     }
-    auto get_indexed_integer_value  (gl::data_e data, gl::index_t index) -> gl::int32_t
+    void get_indexed_integer_value  (gl::data_e data, gl::index_t index, gl::int32_t  * value)
     {
-        auto value = gl::int32_t{};
-        return ::glGetIntegeri_v(gl::to_underlying(data), index, &value), value;
+        ::glGetIntegeri_v(gl::to_underlying(data), index, value);
     }
-    auto get_indexed_integer64_value(gl::data_e data, gl::index_t index) -> gl::int64_t
+    void get_indexed_integer64_value(gl::data_e data, gl::index_t index, gl::int64_t  * value)
     {
-        auto value = gl::int64_t{};
-        return ::glGetInteger64i_v(gl::to_underlying(data), index, &value), value;
+        ::glGetInteger64i_v(gl::to_underlying(data), index, value);
     }
-    auto get_indexed_float_value    (gl::data_e data, gl::index_t index) -> gl::float32_t
+    void get_indexed_float_value    (gl::data_e data, gl::index_t index, gl::float32_t* value)
     {
-        auto value = gl::float32_t{};
-        return ::glGetFloati_v(gl::to_underlying(data), index, &value), value;
+        ::glGetFloati_v(gl::to_underlying(data), index, value);
     }
-    auto get_indexed_float64_value  (gl::data_e data, gl::index_t index) -> gl::float64_t
+    void get_indexed_float64_value  (gl::data_e data, gl::index_t index, gl::float64_t* value)
     {
-        auto value = gl::float64_t{};
-        return ::glGetDoublei_v(gl::to_underlying(data), index, &value), value;
+        ::glGetDoublei_v(gl::to_underlying(data), index, value);
     }
     
     auto is_buffer                  (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsBuffer(std::to_underlying(handle)));
+        return ::glIsBuffer(std::to_underlying(handle));
     }
     auto is_framebuffer             (gl::handle_t handle) -> gl::bool_t
     {
-        return static_cast<gl::bool_t>(::glIsFramebuffer(std::to_underlying(handle)));
+        return ::glIsFramebuffer(std::to_underlying(handle));
     }
     auto is_program                 (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsProgram(std::to_underlying(handle)));
+        return ::glIsProgram(std::to_underlying(handle));
     }
     auto is_program_pipeline        (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsProgramPipeline(std::to_underlying(handle)));
+        return ::glIsProgramPipeline(std::to_underlying(handle));
     }
     auto is_query                   (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsQuery(std::to_underlying(handle)));
+        return ::glIsQuery(std::to_underlying(handle));
     }
     auto is_renderbuffer            (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsRenderbuffer(std::to_underlying(handle)));
+        return ::glIsRenderbuffer(std::to_underlying(handle));
     }
     auto is_sampler                 (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsSampler(std::to_underlying(handle)));
+        return ::glIsSampler(std::to_underlying(handle));
     }
     auto is_shader                  (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsShader(std::to_underlying(handle)));
+        return ::glIsShader(std::to_underlying(handle));
     }
     auto is_texture                 (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsTexture(std::to_underlying(handle)));
+        return ::glIsTexture(std::to_underlying(handle));
     }
     auto is_transform_feedback      (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsTransformFeedback(std::to_underlying(handle)));
+        return ::glIsTransformFeedback(std::to_underlying(handle));
     }
     auto is_vertex_array            (gl::handle_t handle) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsVertexArray(std::to_underlying(handle)));
+        return ::glIsVertexArray(std::to_underlying(handle));
     }
-    auto is_sync                    (gl::sync_t sync) -> gl::bool_t 
+    auto is_sync                    (gl::sync_t   sync  ) -> gl::bool_t 
     {
-        return static_cast<gl::bool_t>(::glIsSync(sync));
+        return ::glIsSync(sync);
     }
 
     auto get_error                  () -> gl::error_flag_e
     {
         return static_cast<gl::error_flag_e>(::glGetError());
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -242,12 +221,6 @@ export namespace gl::legacy
 //    {
 //      glDisableVertexAttribArray();
 //    }
-
-
-
-
-
-
 
 
 
