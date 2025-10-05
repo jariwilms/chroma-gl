@@ -1,22 +1,12 @@
 export module opengl.object;
 
 import std;
-import opengl.types;
+import opengl;
 
 export namespace gl
 {
-    constexpr auto null_object          = gl::handle_t{ 0u };
-    constexpr auto default_frame_buffer = gl::handle_t{ 0u };
-
     class object
     {
-    public:
-        //TODO -> protected?
-        auto handle() const -> gl::handle_t
-        {
-            return handle_;
-        }
-
     protected:
         explicit object(gl::handle_t handle)
             : handle_{ handle }, deleter_{} {}
@@ -26,6 +16,11 @@ export namespace gl
         explicit object(object&& other) noexcept
             : handle_ { std::exchange(other.handle_ , gl::null_object) }
             , deleter_{ std::exchange(other.deleter_, {}             ) } {}
+
+        auto handle() -> gl::handle_t
+        {
+            return handle_;
+        }
 
         auto operator=(object&& other) noexcept -> object&
         {
