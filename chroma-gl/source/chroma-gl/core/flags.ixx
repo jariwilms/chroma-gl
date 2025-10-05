@@ -1295,7 +1295,6 @@ export namespace gl
     };
     enum class synchronization_command_e : gl::bitfield_t
     {
-        none  = GL_NONE                   , 
         flush = GL_SYNC_FLUSH_COMMANDS_BIT, 
     };
     enum class synchronization_object_condition_e : gl::enum_t
