@@ -7,12 +7,12 @@ import vendor.glm;
 export namespace gl
 {
     using int8_t                        = GLbyte      ;
-    using uint8_t                       = GLubyte     ;
     using int16_t                       = GLshort     ;
-    using uint16_t                      = GLushort    ;
     using int32_t                       = GLint       ;
-    using uint32_t                      = GLuint      ;
     using int64_t                       = GLint64     ;
+    using uint8_t                       = GLubyte     ;
+    using uint16_t                      = GLushort    ;
+    using uint32_t                      = GLuint      ;
     using uint64_t                      = GLuint64    ;
     using float16_t                     = GLhalf      ;
     using float32_t                     = GLfloat     ;
@@ -23,15 +23,14 @@ export namespace gl
     using boolean_t                     = GLboolean   ; //Unsigned char
     using char_t                        = GLchar      ;
     using byte_t                        = gl::uint8_t ;
-                                        
     using enum_t                        = GLenum      ; //Enumeration constant
+    using bitfield_t                    = GLbitfield  ; //Combination of logical bits
     using sizei_t                       = GLsizei     ; //Sizes and dimensions (non-negative)
     using size_t                        = GLsizeiptr  ; //Number of bytes
     using offset_t                      = GLintptr    ; //Number of bytes offset
     using count_t                       = gl::uint32_t; //Number of elements
     using index_t                       = gl::uint32_t; //Number of elements offset
     using sync_t                        = GLsync      ; //Synchronization primitive
-    using bitfield_t                    = GLbitfield  ; //Combination of logical bits
     using time_t                        = gl::uint64_t; //Duration expressed in nanoseconds
 
     template<typename T, gl::uint32_t N>
