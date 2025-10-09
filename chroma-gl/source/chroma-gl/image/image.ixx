@@ -70,7 +70,7 @@ export namespace gl
                         case r_uint16   : case rg_uint16   : case rgb_uint16 : case rgba_uint16 : return stb::load_from_memory<gl::uint16_t >(channels, data);
                         case rgb_float16: case rgba_float16: case rgb_float32: case rgba_float32: return stb::load_from_memory<gl::float32_t>(channels, data);
 
-                        default: throw std::invalid_argument{ "Invalid format!" };
+                        default         : throw std::invalid_argument{ "invalid format" };
                     };
                 }, format);
 
@@ -102,7 +102,7 @@ export namespace gl
                 case rgb_uint8 : case rgb_uint16 : case rgb_float16 : case rgb_float32 : return gl::uint32_t{ 3u };
                 case rgba_uint8: case rgba_uint16: case rgba_float16: case rgba_float32: return gl::uint32_t{ 4u };
 
-                default: throw std::invalid_argument{ "Invalid format!" };
+                default        : throw std::invalid_argument{ "invalid format" };
             }
         }
 

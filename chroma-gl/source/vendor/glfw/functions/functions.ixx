@@ -9,7 +9,7 @@ export namespace glfw
 {
     void initialize                    ()
     {
-        if (!::glfwInit()) throw std::runtime_error{ "Failed to initialize GLFW!" };
+        if (!::glfwInit()) throw std::runtime_error{ "failed to initialize GLFW" };
     }
     void terminate                     ()
     {
@@ -36,7 +36,7 @@ export namespace glfw
             static_cast<gl::int32_t>(dimensions.y), 
             title.c_str(), nullptr, nullptr)      ;
 
-        if (!handle) throw std::runtime_error{ "Failed to create GLFW window!" };
+        if (!handle) throw std::runtime_error{ "failed to create GLFW window" };
         return handle;
     }
     void destroy_window                (glfw::window_t* window)

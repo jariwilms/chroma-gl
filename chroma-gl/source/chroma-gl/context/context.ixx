@@ -49,26 +49,30 @@ export namespace gl
                         {
                             switch (source)
                             {
-                                case gl::debug_source_e::api            : return "API";
-                                case gl::debug_source_e::window_system  : return "Window System";
-                                case gl::debug_source_e::shader_compiler: return "Shader Compiler";
-                                case gl::debug_source_e::third_party    : return "Third Party";
-                                case gl::debug_source_e::application    : return "Application";
-                                case gl::debug_source_e::other          : return "Other";
+                                using enum gl::debug_source_e;
 
-                                default: throw std::invalid_argument{ "Invalid source!" };
+                                case api            : return "API";
+                                case window_system  : return "Window System";
+                                case shader_compiler: return "Shader Compiler";
+                                case third_party    : return "Third Party";
+                                case application    : return "Application";
+                                case other          : return "Other";
+
+                                default             : throw std::invalid_argument{ "invalid source" };
                             }
                         };
                           auto map_severity_message   = [](gl::debug_severity_e severity  )
                         {
                             switch (severity)
                             {
-                                case gl::debug_severity_e::high        : return "High";
-                                case gl::debug_severity_e::medium      : return "Medium";
-                                case gl::debug_severity_e::low         : return "Low";
-                                case gl::debug_severity_e::notification: return "Notification";
+                                using enum gl::debug_severity_e;
 
-                                default: throw std::invalid_argument{ "Invalid severity!" };
+                                case high        : return "High";
+                                case medium      : return "Medium";
+                                case low         : return "Low";
+                                case notification: return "Notification";
+
+                                default          : throw std::invalid_argument{ "invalid severity" };
                             }
                         };
                           auto map_debug_type_message = [](gl::debug_type_e     debug_type)
@@ -86,7 +90,8 @@ export namespace gl
                                 case push_group         : return "Push Group";
                                 case pop_group          : return "Pop Group";
                                 case other              : return "Other";
-                                default: throw std::invalid_argument{ "Invalid type!" };
+                                
+                                default                 : throw std::invalid_argument{ "invalid type" };
                             }
                         };
 
