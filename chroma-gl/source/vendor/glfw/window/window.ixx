@@ -129,15 +129,14 @@ export namespace glfw
         {
             return title_;
         }
-        auto dimensions         () const -> const gl::vector2u&
-        {
-            return dimensions_;
-        }
         auto display_mode       () const -> display_mode_e
         {
             return display_mode_;
         }
-
+        auto dimensions         () const -> const gl::vector2u&
+        {
+            return dimensions_;
+        }
         auto input_handler      () const -> std::shared_ptr<const glfw::input>
         {
             return input_;
@@ -147,8 +146,8 @@ export namespace glfw
         std::unique_ptr<glfw::window_t, std::function<void(glfw::window_t*)>> window_;
         std::shared_ptr<glfw::input>                                          input_;
         std::string                                                           title_;
-        gl::vector2u                                                          dimensions_;
         display_mode_e                                                        display_mode_;
+        gl::vector2u                                                          dimensions_;
         user_data                                                             user_data_;
     };
 }
