@@ -3,218 +3,622 @@ export module opengl.object.buffer;
 import std;
 import opengl;
 import opengl.object;
+import opengl.object.fence;
+import opengl.object.lock;
 
-export namespace gl
+export namespace glx
 {
-    template<typename T>
-    class buffer : public gl::object
-    {
-    public:
-        explicit buffer(gl::count_t count)
-            : gl::object{ gl::create_buffer(), [](auto* handle) { gl::delete_buffer(*handle); } }
-            , size_{ static_cast<gl::sizei_t>(count * sizeof(T)) }, range_{}, sync_locks_{}, data_{}
-        {
-            if (gl::compare<std::equal_to>(count, gl::count_t{ 0u })) throw std::invalid_argument{ "Count must be greater than 0!" };
+    //template<typename T>
+    //class buffer : public gl::object
+    //{
+    //public:
+    //    using target_e = gl::buffer_base_target_e;
 
-            gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::dynamic_storage | gl::buffer_storage_flags_e::shared, count);
-        }
-        explicit buffer(std::span<const T> data)
-            : gl::object{ gl::create_buffer(), [](auto* handle) { gl::delete_buffer(*handle); } }
-            , size_{ static_cast<gl::sizei_t>(data.size_bytes()) }, range_{}, sync_locks_{}, data_{}
-        {
-            if (data.empty()) throw std::invalid_argument{ "Data may not be empty!" };
+    //    auto size () const -> gl::sizei_t
+    //    {
+    //        return size_;
+    //    }
+    //    auto count() const -> gl::count_t
+    //    {
+    //        return size_ / sizeof(T);
+    //    }
 
-            gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::dynamic_storage | gl::buffer_storage_flags_e::shared, data);
-        }
+    //protected:
+    //    buffer()
+    //        : gl::object{ gl::create_buffer() } {}
 
-        void copy     (                   std::span<const T> data)
-        {
-            copy(gl::index_t{ 0u }, data);
-        }
-        void copy     (gl::index_t index, std::span<const T> data)
-        {
-            if (is_mapped())                                     throw std::logic_error     { "Copying to a mapped buffer is not allowed!" };
-            if (gl::compare<std::greater_equal>(index, count())) throw std::invalid_argument{ "Index out of range!"                        };
-            
-            gl::buffer_data(handle(), index, data);
-        }
+    //private:
+    //    gl::sizei_t size_;
+    //};
 
-        auto map      () -> std::span<T>
-        {
-            if (!is_mapped())
-            {
-                range_ = count();
-                
-                await(range_);
+    //template<typename T>
+    //class static_buffer : public gl::object
+    //{
+    //public:
+    //    explicit 
+    //    static_buffer(std::span<const T> data)
+    //        : gl::object{ gl::create_buffer()                         }
+    //        , size_     { static_cast<gl::sizei_t>(data.size_bytes()) }
+    //    {
+    //        gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::static_, data);
+    //    }
+    //    static_buffer(static_buffer&&) = default;
+    //   ~static_buffer()
+    //    {
+    //        gl::delete_buffer(handle());
+    //    }
 
-                data_  = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::shared, count());
-            }
+    //    auto size() const -> gl::sizei_t
+    //    {
+    //        return size_;
+    //    }
+    //    auto count() const -> gl::count_t
+    //    {
+    //        return size_ / sizeof(T);
+    //    }
 
-            return data_;
-        }
-        auto map      (gl::range range) -> std::span<T>
-        {
-            if (range != range_)
-            {
-                range_ = gl::clamp_range(range, count());
+    //    auto operator=(static_buffer&&) -> static_buffer& = default;
 
-                await(range_);
-                
-                data_       = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::shared, range_);
-            }
-            
-            return data_;
-        }
-        void unmap    ()
-        {
-            if (!is_mapped())                return;
-            if (!gl::unmap_buffer(handle())) throw std::runtime_error{ "Data store is undefined!" };
+    //private:
+    //    gl::sizei_t size_;
+    //};
+    //template<typename T>
+    //class dynamic_buffer : public gl::object
+    //{
+    //public:
+    //    explicit
+    //    dynamic_buffer(std::span<const T> data)
+    //        : gl::object{ gl::create_buffer()                         }
+    //        , size_     { static_cast<gl::sizei_t>(data.size_bytes()) }
+    //    {
+    //        gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::shared, data);
+    //    }
+    //    explicit
+    //    dynamic_buffer(gl::count_t count)
+    //        : gl::object{ gl::create_buffer()                         }
+    //        , size_     { static_cast<gl::sizei_t>(count * sizeof(T)) }
+    //    {
+    //        gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::shared, count);
+    //    }
+    //    dynamic_buffer(dynamic_buffer&&) = default;
+    //   ~dynamic_buffer()
+    //    {
+    //        unmap(); 
+    //        gl::delete_buffer(handle());
+    //    }
 
-            std::ranges::for_each(sync_locks_, [](gl::sync_lock_t& sync_lock)
-                {
-                    const auto& [sync, lock] = sync_lock;
-                    gl::delete_sync(sync);
-                });
+    //    void map         ()
+    //    {
+    //        map(count());
+    //    }
+    //    void map         (gl::range range)
+    //    {
+    //        if (range = gl::clamp_range(range, count()); range != mapped_range_ && range.count > gl::count_t{ 0u })
+    //        {
+    //            unmap();
 
-            range_     = {};
-            sync_locks_.clear();
-            data_      .reset();
-        }
+    //            mapped_data_  = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::shared, range);
+    //            mapped_range_ = range;
+    //        }
+    //    }
+    //    void unmap       ()
+    //    {
+    //        if (!is_mapped())                return;
+    //        if (!gl::unmap_buffer(handle())) throw std::runtime_error{ "Data store is undefined!" };
 
-        void lock     (gl::range range)
-        {
-            sync_locks_.emplace_back(gl::fence_sync(), gl::clamp_range(range, count()));
-        }
-        void await    (gl::range range)
-        {
-            auto remaining_locks = std::vector<gl::sync_lock_t>{};
-            std::ranges::for_each(sync_locks_, [&](const gl::sync_lock_t& sync_lock)
-                {
-                    if (const auto& [sync, lock] = sync_lock; gl::range_overlaps(lock, range))
-                    {
-                        auto status  = gl::synchronization_status_e::timeout_expired;
-                        auto timeout = gl::time_t{ 0u };
+    //        locks_.clear();
+    //        mapped_range_ = {};
+    //        mapped_data_  = {};
+    //    }
 
-                        while (status == gl::synchronization_status_e::timeout_expired)
-                        {
-                            status  = gl::client_wait_sync(sync, gl::synchronization_command_e::flush, timeout);
-                            timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
-                            
-                            if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "Sync wait failed!" };
-                        }
+    //    void read        (std::span<      T> data)
+    //    {
+    //        const auto range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(data.size()) }, mapped_range_.count);
+    //        await(range), std::memcpy(data.data(), mapped_data_.data(), range.count * sizeof(T)), lock(range);
+    //    }
+    //    void write       (std::span<const T> data)
+    //    {
+    //        const auto range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(data.size()) }, mapped_range_.count);
+    //        await(range), std::memcpy(mapped_data_.data(), data.data(), range.count * sizeof(T)), lock(range);
+    //    }
 
-                        gl::delete_sync(sync);
-                    }
-                    else
-                    {
-                        remaining_locks.emplace_back(sync_lock);
-                    }
-                });
+    //    auto size        () const -> gl::sizei_t
+    //    {
+    //        return size_;
+    //    }
+    //    auto count       () const -> gl::count_t
+    //    {
+    //        return size_ / sizeof(T);
+    //    }
+    //    auto mapped_range() const -> gl::range
+    //    {
+    //        return mapped_range_;
+    //    }
+    //    auto is_mapped   () const -> gl::bool_t
+    //    {
+    //        return !mapped_data_.empty();
+    //    }
 
-            sync_locks_ = std::move(remaining_locks);
-        }
+    //private:
+    //    void lock        (gl::range range)
+    //    {
+    //        locks_.emplace_back(gl::fence{}, range);
+    //    }
+    //    void await       (gl::range range)
+    //    {
+    //        auto remaining_locks = std::vector<gl::lock_t>{};
+    //        std::ranges::for_each(locks_, [&](gl::lock_t& lock)
+    //            {
+    //                if (auto& [lock_fence, lock_range] = lock; gl::range_overlaps(lock_range, range))
+    //                {
+    //                    auto status  = gl::synchronization_status_e::timeout_expired;
+    //                    auto timeout = gl::time_t{ 0u };
 
-        auto size     () const -> gl::sizei_t
-        {
-            return size_;
-        }
-        auto count    () const -> gl::count_t
-        {
-            return static_cast<gl::count_t>(size() / sizeof(T));
-        }
-        auto is_mapped() const -> gl::bool_t
-        {
-            return !data_.empty();
-        }
-        auto data     () const -> std::span<const T>
-        {
-            return data_;
-        }
-        auto data     () -> std::span<T>
-        {
-            return data_.value();
-        }
+    //                    while (status == gl::synchronization_status_e::timeout_expired)
+    //                    {
+    //                        status  = gl::client_wait_sync(lock_fence, gl::synchronization_command_e::flush, timeout);
+    //                        timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
+    //                        
+    //                        if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "Sync wait failed!" };
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    remaining_locks.emplace_back(std::move(lock));
+    //                }
+    //            });
 
-        auto operator[](gl::sizei_t index) const -> const T&
-        {
-            return data_[index];
-        }
-        auto operator[](gl::sizei_t index) -> T&
-        {
-            return data_[index];
-        }
+    //        locks_ = std::move(remaining_locks);
+    //    }
 
-    private:
-        gl::sizei_t                  size_;
-        gl::range                    range_;
-        std::vector<gl::sync_lock_t> sync_locks_;
-        std::span<T>                 data_;
-    };
-    template<typename T>
-    class uniform_buffer : public gl::object
-    {
-    public:
-        explicit uniform_buffer(const T& data = {})
-            : gl::object{ gl::create_buffer(), [](auto* handle) { gl::delete_buffer(*handle); } }
-            , size_{ static_cast<gl::sizei_t>(sizeof(T)) }
-        {
-            gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::dynamic_storage, std::span<const T>{ &data, 1u });
-        }
+    //    gl ::sizei_t            size_;
+    //    std::vector<gl::lock_t> locks_;
+    //    std::span<T>            mapped_data_;
+    //    gl ::range              mapped_range_;
+    //};
 
-        void bind      (gl::binding_t binding) const
-        {
-            gl::bind_buffer_base(handle(), gl::buffer_base_target_e::uniform_buffer, binding);
-        }
+    //template<typename T>
+    //class uniform_buffer : public glx::buffer<T>
+    //{
+    //public:
+    //    uniform_buffer(const T& value)
+    //    {
+    //        gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::shared_write, std::span{ &value, 1u });
+    //    }
 
-        void copy      (const T& data)
-        {
-            gl::buffer_data(handle(), gl::index_t{ 0u }, std::span<const T>{ &data, 1u });
-        }
-        template<typename... U> requires (std::is_trivially_copyable_v<U> && ...)
-        void copy_slice(gl::offset_t offset, U... slice) 
-        {
-            static_assert(sizeof...(U) <= sizeof(T), "Slice may not be larger than its containing structure!");
+    //    void bind(gl::binding_t binding)
+    //    {
+    //        gl::bind_buffer_base(handle(), gl::buffer_base_target_e::uniform_buffer, binding);
+    //    }
 
-            auto array = std::array<gl::byte_t, sizeof...(U)>{};
-            std::apply([&array](const auto&... element)
-                {
-                    auto offset = gl::offset_t{};
-                    ((std::memcpy(array.data() + offset, &element, sizeof(element)), offset += sizeof(element)), ...);
-                }, std::tuple{ std::forward<U>(slice)... });
+    //private:
+    //    using gl::object::handle;
+    //};
+    //template<typename T>
+    //class uniform_array_buffer
+    //{
 
-            gl::buffer_data<gl::byte_t>(handle(), static_cast<gl::index_t>(offset), array);
-        }
+    //};
+}
+export namespace gly
+{
+    //class buffer : public gl::object
+    //{
+    //public:
+    //    enum class mapping_e
+    //    {
+    //        none      , 
+    //        read      , 
+    //        write     , 
+    //        read_write, 
+    //    };
 
-        auto size      () const -> gl::sizei_t
-        {
-            return size_;
-        }
+    //    buffer(buffer&& other) = default;
+    //   ~buffer()
+    //    {
+    //        gl::delete_buffer(handle());
+    //    }
 
-    private:
-        gl::sizei_t size_;
-    };
-    template<typename T>
-    class uniform_array_buffer : public gl::buffer<T>
-    {
-    public:
-        using gl::buffer<T>::buffer;
+    //    auto count() const -> gl::count_t
+    //    {
+    //        return count_;
+    //    }
+    //    auto size () const -> gl::sizei_t
+    //    {
+    //        return size_;
+    //    }
 
-        void bind(gl::binding_t binding                 ) const
-        {
-            gl::bind_buffer_base(handle(), gl::buffer_base_target_e::uniform_buffer, binding);
-        }
-        void bind(gl::binding_t binding, gl::range range) const
-        {
-            gl::bind_buffer_range<T>(handle(), gl::buffer_base_target_e::uniform_buffer, binding, range);
-        }
+    //    auto operator=(buffer&&) -> buffer& = default;
 
-        using gl::buffer<T>::copy;
-        void copy(gl::index_t index, const T& data)
-        {
-            gl::buffer<T>::copy(index, std::span{ &data, gl::uint64_t{ 1u } });
-        }
+    //protected:
+    //    template<typename T>
+    //    buffer(gl::count_t count)
+    //        : gl::object{ gl::create_buffer() }
+    //        , count_{ count }, size_{ static_cast<gl::sizei_t>(count_ * sizeof(T)) } {}
 
-    private:
-        using gl::buffer<T>::handle;
-    };
+    //private:
+    //    gl::count_t count_;
+    //    gl::sizei_t size_;
+    //};
+    //template<typename T>
+    //class static_buffer : public glz::buffer
+    //{
+    //public:
+    //    explicit
+    //    static_buffer(std::span<const T> source)
+    //        : glz::buffer<T>{ static_cast<gl::count_t>(source.size()) }
+    //    {
+    //        gl::buffer_storage(handle(), gl::buffer_storage_flags_e::static_, source);
+    //    }
+
+    //    using gl::object::handle;
+    //};
+    //template<typename T>
+    //class dynamic_buffer : public glz::buffer<T>
+    //{
+    //public:
+    //    explicit
+    //    dynamic_buffer(gl::count_t count)
+    //        : glz::buffer<T>{ count }
+    //    {
+    //        gl::buffer_storage(handle(), gl::buffer_storage_flags_e::shared, count);
+    //    }
+    //    explicit
+    //    dynamic_buffer(std::span<const T> source)
+    //        : glz::buffer<T>{ static_cast<gl::count_t>(source.size()) }
+    //    {
+    //        gl::buffer_storage(handle(), gl::buffer_storage_flags_e::shared, source);
+    //    }
+    //    dynamic_buffer(dynamic_buffer&&) noexcept = default;
+    //   ~dynamic_buffer()
+    //    {
+    //        unmap(); 
+    //    }
+
+    //    void map         ()
+    //    {
+    //        map(count());
+    //    }
+    //    void map         (gl::range range)
+    //    {
+    //        if (range = gl::clamp_range(range, count()); range != mapped_range_ && range.count > gl::count_t{ 0u })
+    //        {
+    //            unmap();
+
+    //            mapped_data_  = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::shared, range);
+    //            mapped_range_ = range;
+    //        }
+    //    }
+    //    void unmap       ()
+    //    {
+    //        if ( mapped_data_.empty())       return;
+    //        if (!gl::unmap_buffer(handle())) throw std::runtime_error{ "Data store may be corrupt." };
+
+    //        locks_.clear();
+    //        mapped_data_  = {};
+    //        mapped_range_ = {};
+    //    }
+
+    //    void read        (std::span<      T> destination)
+    //    {
+    //        const auto range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(destination.size()) }, mapped_range_.count);
+    //        wait(range), std::memcpy(destination.data(), mapped_data_.data(), range.count * sizeof(T)), lock(range);
+    //    }
+    //    void write       (std::span<const T> source     )
+    //    {
+    //        const auto range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(source.size()) }, mapped_range_.count);
+    //        wait(range), std::memcpy(mapped_data_.data(), source.data(), range.count * sizeof(T)), lock(range);
+    //    }
+
+    //    using gl ::object   ::handle;
+    //    using glz::buffer<T>::count;
+    //    using glz::buffer<T>::size;
+
+    //    auto operator=(dynamic_buffer&&) noexcept -> dynamic_buffer& = default;
+
+    //private:
+    //    void lock        (gl::range range)
+    //    {
+    //        locks_.emplace_back(gl::fence{}, range);
+    //    }
+    //    void wait        (gl::range range)
+    //    {
+    //        auto remaining_locks = std::vector<gl::lock_t>{};
+    //        std::ranges::for_each(locks_, [&](gl::lock_t& lock)
+    //            {
+    //                if (auto& [lock_fence, lock_range] = lock; gl::range_overlaps(lock_range, range))
+    //                {
+    //                    auto status  = gl::synchronization_status_e::timeout_expired;
+    //                    auto timeout = gl::time_t{ 0u };
+
+    //                    while (status == gl::synchronization_status_e::timeout_expired)
+    //                    {
+    //                        status  = gl::client_wait_sync(lock_fence, gl::synchronization_command_e::flush, timeout);
+    //                        timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
+    //                        
+    //                        if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "Sync wait failed!" };
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    remaining_locks.emplace_back(std::move(lock));
+    //                }
+    //            });
+
+    //        locks_ = std::move(remaining_locks);
+    //    }
+
+    //    std::vector<gl::lock_t> locks_;
+    //    std::span<T>            mapped_data_;
+    //    gl ::range              mapped_range_;
+    //};
+
+
+
+    //template<typename T>
+    //class uniform_buffer
+    //{
+    //public:
+    //};
+    //template<typename T>
+    //class uniform_array_buffer
+    //{
+    //public:
+    //    void write(                   std::span<const T > source)
+    //    {
+
+    //    }
+    //    void write(gl::index_t index,           const T&  value )
+    //    {
+    //        
+    //    }
+    //};
+
+    //
+    //
+    //template<typename T>
+    //class shader_storage_buffer : public glz::dynamic_buffer<T>
+    //{
+    //public:
+    //    using glz::dynamic_buffer<T>::dynamic_buffer;
+
+    //    void bind(gl::binding_t binding)
+    //    {
+    //        gl::bind_buffer_base(handle(), gl::buffer_base_target_e::shader_storage_buffer, binding);
+    //    }
+
+    //    using gl::object::handle;
+    //};
+    // 
+    // 
+    //class atomic_counter_buffer
+    //class indirect_draw_buffer
+}
+export namespace glz //mappable buffer with virtual inheritance
+{
+    //template<typename T>//, gl::buffer_mapping_range_access_flags_e RAF = gl::buffer_mapping_range_access_flags_e{}>
+    //class basic_mappable_buffer : public glz::buffer<T>
+    //{
+    //protected:
+    //    basic_mappable_buffer(gl::count_t count = 0u)
+    //        : glz::buffer<T>{ count } {}
+
+    //    void map         (                 gl::buffer_mapping_range_access_flags_e range_access_flags)
+    //    {
+    //        map(count(), range_access_flags);
+    //    }
+    //    void map         (gl::range range, gl::buffer_mapping_range_access_flags_e range_access_flags)
+    //    {
+    //        if (range = gl::clamp_range(range, count()); range != mapped_range_ && range.count > gl::count_t{ 0u })
+    //        {
+    //            unmap();
+
+    //            mapped_data_  = gl::map_buffer_range<T>(handle(), range_access_flags, range);
+    //            mapped_range_ = range;
+    //        }
+    //    }
+    //    void unmap       ()
+    //    {
+    //        if ( mapped_data_.empty())       return;
+    //        if (!gl::unmap_buffer(handle())) throw std::runtime_error{ "data store may be corrupt" };
+
+    //        locks_.clear();
+    //        mapped_data_  = {};
+    //        mapped_range_ = {};
+    //    }
+
+    //    void lock        (gl::range range)
+    //    {
+    //        locks_.emplace_back(gl::fence{}, range);
+    //    }
+    //    void wait        (gl::range range)
+    //    {
+    //        auto remaining_locks = std::vector<gl::lock_t>{};
+    //        std::ranges::for_each(locks_, [&](gl::lock_t& lock)
+    //            {
+    //                if (auto& [lock_fence, lock_range] = lock; gl::range_overlaps(lock_range, range))
+    //                {
+    //                    auto status  = gl::synchronization_status_e::timeout_expired;
+    //                    auto timeout = gl::time_t{ 0u };
+
+    //                    while (status == gl::synchronization_status_e::timeout_expired)
+    //                    {
+    //                        status  = gl::client_wait_sync(lock_fence, gl::synchronization_command_e::flush, timeout);
+    //                        timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
+    //                        
+    //                        if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "Sync wait failed!" };
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    remaining_locks.emplace_back(std::move(lock));
+    //                }
+    //            });
+
+    //        locks_ = std::move(remaining_locks);
+    //    }
+
+    //    auto mapped_range() const -> gl::range
+    //    {
+    //        return mapped_range_;
+    //    }
+    //    auto mapped_data () -> std::span<T>
+    //    {
+    //        return mapped_data_;
+    //    }
+
+    //private:
+    //    using gl::object::handle;
+    //    using glz::buffer<T>::count;
+
+    //    std::vector<gl::lock_t> locks_;
+    //    std::span<T>            mapped_data_;
+    //    gl::range               mapped_range_;
+    //};
+    //template<typename T>
+    //class mappable_read_buffer : virtual public peer::basic_mappable_buffer<T> 
+    //{
+    //public:
+    //    void read(std::span<T> destination)
+    //    {
+    //        const auto range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(destination.size()) }, mapped_range().count);
+    //        wait(range), std::memcpy(destination.data(), mapped_data().data(), range.count * sizeof(T)), lock(range);
+    //    }
+
+    //protected:
+    //    mappable_read_buffer() = default;
+
+    //private:
+    //    using peer::basic_mappable_buffer<T>::lock;
+    //    using peer::basic_mappable_buffer<T>::wait;
+    //    using peer::basic_mappable_buffer<T>::mapped_data;
+    //    using peer::basic_mappable_buffer<T>::mapped_range;
+    //};
+    //template<typename T>
+    //class mappable_write_buffer : virtual public peer::basic_mappable_buffer<T> 
+    //{
+    //public:
+    //    void write(std::span<const T> source)
+    //    {
+    //        const auto range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(source.size()) }, mapped_range().count);
+    //        wait(range), std::memcpy(mapped_data().data(), source.data(), range.count * sizeof(T)), lock(range);
+    //    }
+
+    //protected:
+    //    mappable_write_buffer() = default;
+
+    //private:
+    //    using peer::basic_mappable_buffer<T>::lock;
+    //    using peer::basic_mappable_buffer<T>::wait;
+    //    using peer::basic_mappable_buffer<T>::mapped_data;
+    //    using peer::basic_mappable_buffer<T>::mapped_range;
+    //};
+    //template<typename T, gl::bool_t R, gl::bool_t W>
+    //class mappable_buffer :
+    //    public std::conditional_t<R, mappable_read_buffer <T>, std::monostate>, 
+    //    public std::conditional_t<W, mappable_write_buffer<T>, std::monostate>
+    //{
+    //public:
+    //    mappable_buffer(gl::count_t count) 
+    //        : peer::basic_mappable_buffer<T>{ count }
+    //    {
+    //        auto storage_flags = gl::buffer_storage_flags_e::persistent | gl::buffer_storage_flags_e::coherent;
+    //        if constexpr (R) storage_flags |= gl::buffer_storage_flags_e::read;
+    //        if constexpr (W) storage_flags |= gl::buffer_storage_flags_e::write;
+
+    //        gl::buffer_storage<T>(this->handle(), storage_flags, count);
+    //    }
+
+    //    void map()
+    //    {
+    //        peer::mappable_buffer<T>::map();
+    //    }
+    //    void map(gl::range range)
+    //    {
+    //        auto range_access_flags = gl::buffer_mapping_range_access_flags_e::persistent | gl::buffer_mapping_range_access_flags_e::coherent;
+    //        if constexpr (R) range_access_flags |= gl::buffer_mapping_range_access_flags_e::read;
+    //        if constexpr (W) range_access_flags |= gl::buffer_mapping_range_access_flags_e::write;
+
+    //        peer::mappable_buffer<T>::map(range, range_access_flags);
+    //    }
+    //    void unmap()
+    //    {
+    //        peer::mappable_buffer<T>::unmap();
+    //    }
+
+    //private:
+    //    using gl::object::handle;
+    //    using glz::buffer<T>::count;
+    //    using peer::basic_mappable_buffer<T>::lock;
+    //    using peer::basic_mappable_buffer<T>::wait;
+    //    using peer::basic_mappable_buffer<T>::mapped_data;
+    //    using peer::basic_mappable_buffer<T>::mapped_range;
+    //};
+
+    //template<typename T, gl::bool_t R = gl::true_, gl::bool_t W = gl::true_>
+    //class shader_storage_buffer : public peer::mappable_buffer<T, R, W>
+    //{
+    //public:
+    //    shader_storage_buffer(gl::count_t count)
+    //        : peer::mappable_buffer<T, R, W>{ count }
+    //    {
+
+    //    }
+
+    //    void bind(gl::binding_t binding)
+    //    {
+    //        gl::bind_buffer_base(this->handle(), gl::buffer_base_target_e::shader_storage_buffer, binding);
+    //    }
+    //};
+}
+
+export namespace gla
+{
+    //class buffer : public gl::object
+    //{
+    //public:
+    //    enum class mapping_e
+    //    {
+    //        none      , 
+    //        read      , 
+    //        write     , 
+    //        read_write, 
+    //    };
+
+    //    buffer(buffer&& other) = default;
+    //   ~buffer()
+    //    {
+    //        gl::delete_buffer(handle());
+    //    }
+
+    //    auto count() const -> gl::count_t
+    //    {
+    //        return count_;
+    //    }
+    //    auto size () const -> gl::sizei_t
+    //    {
+    //        return size_;
+    //    }
+
+    //    auto operator=(buffer&&) -> buffer& = default;
+
+    //protected:
+    //    buffer(gl::count_t count, gl::sizei_t element_size)
+    //        : gl::object{ gl::create_buffer() }
+    //        , count_{ count }, size_{ static_cast<gl::sizei_t>(count_ * element_size) } {}
+
+    //private:
+    //    gl::count_t count_;
+    //    gl::sizei_t size_;
+    //};
+    //template<typename T>
+    //class static_buffer : gla::buffer
+    //{
+    //public:
+    //    static_buffer(gl::count_t count)
+    //        : gla::buffer<T>{ count }
+    //    {
+
+    //    }
+    //};
 }
