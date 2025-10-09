@@ -573,7 +573,7 @@ export namespace gl
 
         if constexpr (P == gl::buffer_parameter_e::access       ) return static_cast<gl::buffer_mapping_access_e>      (get_buffer_parameter_iv  (buffer, P));
         if constexpr (P == gl::buffer_parameter_e::access_flags ) return static_cast<gl::buffer_mapping_access_flags_e>(get_buffer_parameter_iv  (buffer, P));
-        if constexpr (P == gl::buffer_parameter_e::immutable    ) return static_cast<gl::bool_t>                       (get_buffer_parameter_iv  (buffer, P));
+        if constexpr (P == gl::buffer_parameter_e::is_immutable ) return static_cast<gl::bool_t>                       (get_buffer_parameter_iv  (buffer, P));
         if constexpr (P == gl::buffer_parameter_e::is_mapped    ) return static_cast<gl::bool_t>                       (get_buffer_parameter_iv  (buffer, P));
         if constexpr (P == gl::buffer_parameter_e::map_length   ) return static_cast<gl::uint64_t>                     (get_buffer_parameter_i64v(buffer, P));
         if constexpr (P == gl::buffer_parameter_e::map_offset   ) return static_cast<gl::uint64_t>                     (get_buffer_parameter_i64v(buffer, P));
