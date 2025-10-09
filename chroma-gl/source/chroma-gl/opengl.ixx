@@ -2,7 +2,6 @@ export module opengl;
 export import opengl.constants;
 export import opengl.domain;
 export import opengl.flags;
-export import opengl.lock;
 export import opengl.meta;
 export import opengl.parameters;
 export import opengl.proxy;
@@ -111,14 +110,14 @@ export namespace gl
                 ::glGetIntegerv(gl::to_underlying(gl::data_e::number_program_binary_formats), &program_binary_format_count);
 
                 auto program_binary_formats      = std::vector<gl::enum_t>(static_cast<gl::count_t>(program_binary_format_count));
-                ::glGetIntegerv(gl::to_underlying(data), reinterpret_cast<gl::int32_t*>(program_binary_formats.data()));
+                ::glGetIntegerv(gl::to_underlying(data), std::bit_cast<gl::int32_t*>(program_binary_formats.data()));
 
                 return program_binary_formats;
             };
         auto get_area           = [](gl::data_e data) -> gl::area_t
             {
                 auto value = gl::vector4u{};
-                ::glGetIntegerv(gl::to_underlying(data), reinterpret_cast<gl::int32_t*>(gl::value_pointer(value)));
+                ::glGetIntegerv(gl::to_underlying(data), std::bit_cast<gl::int32_t*>(gl::value_pointer(value)));
 
                 return gl::area_t{ gl::vector2u{ value.z, value.w }, gl::vector2u{ value.x, value.y } };
             };
@@ -477,7 +476,7 @@ export namespace gl
     template<gl::context_property_e P>
     auto get_string                                 () -> std::string
     {
-        return std::string{ reinterpret_cast<const gl::char_t*>(::glGetString(gl::to_underlying(P))) };
+        return std::string{ std::bit_cast<const gl::char_t*>(::glGetString(gl::to_underlying(P))) };
     }
     template<gl::context_property_e P>
     auto get_string_index                           (gl::index_t index) -> std::string
@@ -549,10 +548,10 @@ export namespace gl
                 ::glGetQueryBufferObjectuiv(gl::to_underlying(query), gl::to_underlying(buffer), gl::to_underlying(parameter), offset);
             };
 
-        if constexpr (P == gl::query_parameter_e::result          ) get_query_buffer_object_uiv(query, buffer, P, offset);
-        if constexpr (P == gl::query_parameter_e::result_no_wait  ) get_query_buffer_object_uiv(query, buffer, P, offset);
-        if constexpr (P == gl::query_parameter_e::result_available) get_query_buffer_object_iv (query, buffer, P, offset);
-        if constexpr (P == gl::query_parameter_e::target          ) get_query_buffer_object_iv (query, buffer, P, offset);
+        if constexpr (P == gl::query_parameter_e::result          ) return                                 get_query_buffer_object_uiv(query, buffer, P, offset) ;
+        if constexpr (P == gl::query_parameter_e::result_no_wait  ) return                                 get_query_buffer_object_uiv(query, buffer, P, offset) ;
+        if constexpr (P == gl::query_parameter_e::result_available) return static_cast<gl::bool_t>        (get_query_buffer_object_iv (query, buffer, P, offset));
+        if constexpr (P == gl::query_parameter_e::target          ) return static_cast<gl::query_target_e>(get_query_buffer_object_iv (query, buffer, P, offset));
     }
 
 
@@ -872,7 +871,7 @@ export namespace gl
         if constexpr (P == gl::frame_buffer_parameter_e::default_samples               ) return static_cast<gl::uint32_t>           (get_frame_buffer_parameter_iv(frame_buffer, P));
         if constexpr (P == gl::frame_buffer_parameter_e::default_fixed_sample_locations) return static_cast<gl::bool_t>             (get_frame_buffer_parameter_iv(frame_buffer, P));
 
-        if (frame_buffer == gl::default_frame_buffer) throw std::invalid_argument{ "Operation may not be called on the default framebuffer!" };
+        if (frame_buffer == gl::default_frame_buffer) throw std::invalid_argument{ "parameter may not be queried on the default framebuffer" };
 
         if constexpr (P == gl::frame_buffer_parameter_e::color_read_format             ) return static_cast<gl::pixel_data_format_e>(get_frame_buffer_parameter_iv(frame_buffer, P));
         if constexpr (P == gl::frame_buffer_parameter_e::color_read_type               ) return static_cast<gl::pixel_data_type_e>  (get_frame_buffer_parameter_iv(frame_buffer, P));
@@ -940,7 +939,7 @@ export namespace gl
             };
         
         const auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
-        if (gl::compare<std::greater>(index, maximum_vertex_attributes - gl::uint32_t{ 1u })) throw std::out_of_range{ "The given index is out of range!" };
+        if (gl::compare<std::greater>(index, maximum_vertex_attributes - gl::uint32_t{ 1u })) throw std::out_of_range{ "index out of range" };
         
         if constexpr (P == gl::vertex_array_parameter_e::binding_offset ) return static_cast<gl::uint64_t                     >(get_vertex_array_indexed64_iv(vertex_array, P, index));
         if constexpr (P == gl::vertex_array_parameter_e::divisor        ) return static_cast<gl::uint32_t                     >(get_vertex_array_indexed32_iv(vertex_array, P, index));
@@ -1164,13 +1163,13 @@ export namespace gl
     template<typename T>
     auto map_buffer                                 (gl::handle_t buffer, gl::buffer_mapping_access_flags_e access, gl::count_t count) -> std::span<T>
     {
-        return std::span{ reinterpret_cast<T*>(::glMapNamedBuffer(gl::to_underlying(buffer), gl::to_underlying(access))), count };
+        return std::span{ std::bit_cast<T*>(::glMapNamedBuffer(gl::to_underlying(buffer), gl::to_underlying(access))), count };
     }
     template<typename T>
     auto map_buffer_range                           (gl::handle_t buffer, gl::buffer_mapping_range_access_flags_e access, gl::range range) -> std::span<T>
     {
         const auto byte_range = gl::convert_range<T>(range);
-        return std::span{ reinterpret_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), byte_range.offset, byte_range.size, gl::to_underlying(access))), range.count };
+        return std::span<T>{ std::bit_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), byte_range.offset, byte_range.size, gl::to_underlying(access))), range.count };
     }
     template<typename T>
     void flush_buffer_range                         (gl::handle_t buffer, gl::range range)
@@ -1759,7 +1758,7 @@ export namespace gl
     void vertex_attribute                           (gl::index_t index, const gl::vector_t<T, N>& value)
     {
         const auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
-        if (gl::compare<std::greater>(index, maximum_vertex_attributes)) throw std::invalid_argument{ "Index exceeds the maximum amount of vertex attributes!" };
+        if (gl::compare<std::greater>(index, maximum_vertex_attributes)) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
         
         if   constexpr (std::is_same_v<T, gl::uint8_t  >)
         {
@@ -1844,7 +1843,7 @@ export namespace gl
             };
 
         auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
-        if (gl::compare<std::greater>(attribute, maximum_vertex_attributes)) throw std::invalid_argument{ "Index exceeds the maximum amount of vertex attributes!" };
+        if (gl::compare<std::greater>(attribute, maximum_vertex_attributes)) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
         
         switch (type)
         {
@@ -2035,9 +2034,9 @@ export namespace gl
     void scissor_array                              (gl::index_t index, std::span<const gl::uint32_t, 4u> values)
     {
         ::glScissorArrayv(
-            index                                               , 
-            static_cast     <      gl::sizei_t >(values.size()) , 
-            reinterpret_cast<const gl::int32_t*>(values.data()));
+            index                                            , 
+            static_cast  <      gl::sizei_t >(values.size()) , 
+            std::bit_cast<const gl::int32_t*>(values.data())); 
     }
     void scissor_indexed                            (gl::index_t index, gl::area_t region)
     {
