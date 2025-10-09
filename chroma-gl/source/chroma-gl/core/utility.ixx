@@ -44,8 +44,8 @@ export namespace gl
 
     constexpr auto clamp_range          (gl::range      range     , gl::count_t limit) -> gl::range
     {
-        range.count = std::min(range.count, limit);
-        range.index = std::min(range.index, limit - range.count);
+        range.index = std::min(range.index, limit              );
+        range.count = std::min(range.count, limit - range.index);
 
         return range;
     }
@@ -102,6 +102,6 @@ export namespace gl
 
     void todo                           ()
     {
-        throw std::logic_error{ "The method or operation has not been implemented!" };
+        throw std::logic_error{ "the method or operation has not been implemented" };
     }
 }
