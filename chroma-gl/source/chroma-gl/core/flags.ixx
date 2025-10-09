@@ -142,18 +142,17 @@ export namespace gl
     };
     enum class buffer_mapping_range_access_flags_e : gl::bitfield_t
     {
-        read              = GL_MAP_READ_BIT                      , 
-        write             = GL_MAP_WRITE_BIT                     , 
-        persistent        = GL_MAP_PERSISTENT_BIT                , 
-        coherent          = GL_MAP_COHERENT_BIT                  , 
-        invalidate_buffer = GL_MAP_INVALIDATE_BUFFER_BIT         , 
-        invalidate_range  = GL_MAP_INVALIDATE_RANGE_BIT          , 
-        flush_explicit    = GL_MAP_FLUSH_EXPLICIT_BIT            , 
-        unsynchronized    = GL_MAP_UNSYNCHRONIZED_BIT            , 
-        
-        read_write        = read  | write                        , 
-        write_discard     = write | invalidate_buffer            , 
-        shared            = read  | write | persistent | coherent, 
+        read              = GL_MAP_READ_BIT                     , 
+        write             = GL_MAP_WRITE_BIT                    , 
+        persistent        = GL_MAP_PERSISTENT_BIT               , 
+        coherent          = GL_MAP_COHERENT_BIT                 , 
+        invalidate_buffer = GL_MAP_INVALIDATE_BUFFER_BIT        , 
+        invalidate_range  = GL_MAP_INVALIDATE_RANGE_BIT         , 
+        flush_explicit    = GL_MAP_FLUSH_EXPLICIT_BIT           , 
+        unsynchronized    = GL_MAP_UNSYNCHRONIZED_BIT           , 
+
+        stream            =        write | invalidate_buffer    , 
+        shared            = read | write | persistent | coherent, 
     };
     enum class buffer_parameter_e : gl::enum_t
     {
@@ -169,16 +168,15 @@ export namespace gl
     };
     enum class buffer_storage_flags_e : gl::bitfield_t
     {
-        none            = GL_NONE                             , 
+        static_         = GL_NONE                             , 
         read            = GL_MAP_READ_BIT                     , 
         write           = GL_MAP_WRITE_BIT                    , 
         persistent      = GL_MAP_PERSISTENT_BIT               , 
         coherent        = GL_MAP_COHERENT_BIT                 , 
-        dynamic_storage = GL_DYNAMIC_STORAGE_BIT              , 
-        client_storage  = GL_CLIENT_STORAGE_BIT               , 
-        
-        static_storage  = none                                , 
-        read_write      = read | write                        , 
+        dynamic         = GL_DYNAMIC_STORAGE_BIT              , 
+        client          = GL_CLIENT_STORAGE_BIT               , 
+
+        stream          =        write                        , 
         shared          = read | write | persistent | coherent, 
     };
     enum class buffer_target_e : gl::enum_t
