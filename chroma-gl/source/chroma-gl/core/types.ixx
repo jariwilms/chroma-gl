@@ -6,6 +6,12 @@ import vendor.glm;
 
 export namespace gl
 {
+    using void_t                        = GLvoid      ;
+    using bool_t                        = bool        ;
+    using boolean_t                     = GLboolean   ;
+    using byte_t                        = GLubyte     ;
+    using char_t                        = GLchar      ;
+
     using int8_t                        = GLbyte      ;
     using int16_t                       = GLshort     ;
     using int32_t                       = GLint       ;
@@ -18,18 +24,20 @@ export namespace gl
     using float32_t                     = GLfloat     ;
     using float64_t                     = GLdouble    ;
 
-    using void_t                        = GLvoid      ;
-    using bool_t                        = bool        ; //Fundamental
-    using boolean_t                     = GLboolean   ; //Unsigned char
-    using char_t                        = GLchar      ;
-    using byte_t                        = gl::uint8_t ;
-    using enum_t                        = GLenum      ; //Enumeration constant
-    using bitfield_t                    = GLbitfield  ; //Combination of logical bits
-    using sizei_t                       = GLsizei     ; //Sizes and dimensions (non-negative)
+    //usize_t  : uint32_t  ;
+    //ssize_t  : GLsizei   ;
+    //size_t   : uint64_t  ;
+    //intptr_t : GLsizeiptr;
+    //ptrdiff_t: GLintptr  ;
+
+    using ssize_t                       = GLsizei     ; 
     using size_t                        = GLsizeiptr  ; //Number of bytes
     using offset_t                      = GLintptr    ; //Number of bytes offset
     using count_t                       = gl::uint32_t; //Number of elements
     using index_t                       = gl::uint32_t; //Number of elements offset
+
+    using enum_t                        = GLenum      ; //Enumeration constant
+    using bitfield_t                    = GLbitfield  ; //Combination of logical bits
     using sync_t                        = GLsync      ; //Synchronization primitive
     using time_t                        = gl::uint64_t; //Duration expressed in nanoseconds
 
@@ -94,6 +102,6 @@ export namespace gl
         return glm::value_ptr(value);
     }
 
-    void _debug_callback(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::sizei_t, gl::c_string, const gl::void_t*);
+    void _debug_callback(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::ssize_t, gl::c_string, const gl::void_t*);
     using debug_callback_t = decltype(_debug_callback);
 }

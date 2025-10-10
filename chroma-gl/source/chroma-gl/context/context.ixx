@@ -43,7 +43,7 @@ export namespace gl
             gl::enable<gl::feature_e::debug_output_synchronous>();
 
             gl::debug_message_control (gl::debug_source_e::dont_care, gl::debug_type_e::dont_care, gl::debug_severity_e::dont_care, gl::true_);
-            gl::debug_message_callback([](gl::enum_t source, gl::enum_t type, gl::uint32_t id, gl::enum_t severity, gl::sizei_t, const gl::char_t* message, const gl::void_t* const)
+            gl::debug_message_callback([](gl::enum_t source, gl::enum_t type, gl::uint32_t id, gl::enum_t severity, gl::ssize_t, const gl::char_t* message, const gl::void_t* const)
                 {
                           auto map_source_message     = [](gl::debug_source_e   source    )
                         {

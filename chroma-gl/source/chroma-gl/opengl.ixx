@@ -497,7 +497,7 @@ export namespace gl
         auto get_sync_iv = [](gl::sync_t sync, gl::synchronization_property_e property) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetSynciv(sync, gl::to_underlying(property), gl::sizei_t{ 1 }, nullptr, &value), value;
+                return ::glGetSynciv(sync, gl::to_underlying(property), gl::ssize_t{ 1 }, nullptr, &value), value;
             };
 
         if constexpr (P == gl::synchronization_property_e::type     ) return static_cast<gl::synchronization_object_type_e>     (get_sync_iv(sync, P));
@@ -782,7 +782,7 @@ export namespace gl
                 gl::to_underlying       (texture)                       , 
                 static_cast<gl::int32_t>(level)                         , 
                 gl::to_underlying       (gl::buffer_base_format_e::rgba), gl::to_underlying(gl::pixel_data_type_e::uint8_t), 
-                static_cast<gl::sizei_t>(value.size())                  , value.data());
+                static_cast<gl::ssize_t>(value.size())                  , value.data());
 
             return value;
         }
@@ -803,9 +803,9 @@ export namespace gl
                 gl::to_underlying       (texture)                       , 
                 static_cast<gl::int32_t>(level)                         , 
                 static_cast<gl::int32_t>(region.origin.x)               , static_cast<gl::int32_t>(region.origin.y)               , static_cast<gl::int32_t>(region.origin.z), 
-                static_cast<gl::sizei_t>(region.extent.x)               , static_cast<gl::sizei_t>(region.extent.y)               , static_cast<gl::sizei_t>(region.extent.z), 
+                static_cast<gl::ssize_t>(region.extent.x)               , static_cast<gl::ssize_t>(region.extent.y)               , static_cast<gl::ssize_t>(region.extent.z), 
                 gl::to_underlying       (gl::buffer_base_format_e::rgba), gl::to_underlying(gl::pixel_data_type_e::uint8_t), 
-                static_cast<gl::sizei_t>(value.size())                  , value.data());
+                static_cast<gl::ssize_t>(value.size())                  , value.data());
 
             return value;
         }
@@ -823,7 +823,7 @@ export namespace gl
             ::glGetCompressedTextureImage(
                 gl::to_underlying       (texture)     , 
                 static_cast<gl::int32_t>(level)       , 
-                static_cast<gl::sizei_t>(value.size()), value.data());
+                static_cast<gl::ssize_t>(value.size()), value.data());
 
             return value;
         }
@@ -842,8 +842,8 @@ export namespace gl
                 gl::to_underlying       (texture)        , 
                 static_cast<gl::int32_t>(level)          , 
                 static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
-                static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z), 
-                static_cast<gl::sizei_t>(value.size())   , value.data());
+                static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z), 
+                static_cast<gl::ssize_t>(value.size())   , value.data());
 
             return value;
         }
@@ -958,13 +958,13 @@ export namespace gl
     //Chapter 20 - Debug Output
     auto get_debug_message_log                      (gl::count_t count) -> std::vector<gl::message_log>
     {
-        auto get_debug_message_log = [](gl::count_t count, std::span<gl::debug_source_e> sources, std::span<gl::debug_type_e> types, std::span<gl::uint32_t> ids, std::span<gl::debug_severity_e> severities, std::span<gl::sizei_t> lengths, std::string& message_log) -> gl::uint32_t
+        auto get_debug_message_log = [](gl::count_t count, std::span<gl::debug_source_e> sources, std::span<gl::debug_type_e> types, std::span<gl::uint32_t> ids, std::span<gl::debug_severity_e> severities, std::span<gl::ssize_t> lengths, std::string& message_log) -> gl::uint32_t
             {
                 const auto maximum_debug_message_length = gl::get_value<gl::data_e::maximum_debug_message_length>();
                 message_log                             = std::string(count * maximum_debug_message_length, '\0');
 
                 return ::glGetDebugMessageLog(
-                    count, static_cast<gl::sizei_t>(maximum_debug_message_length), 
+                    count, static_cast<gl::ssize_t>(maximum_debug_message_length), 
                     gl::to_underlying_pointer(sources    .data()), 
                     gl::to_underlying_pointer(types      .data()), 
                                               ids        .data() , 
@@ -977,7 +977,7 @@ export namespace gl
               auto types        = std::vector<gl::debug_type_e>    (count);
               auto ids          = std::vector<gl::uint32_t>        (count);
               auto severities   = std::vector<gl::debug_severity_e>(count);
-              auto lengths      = std::vector<gl::sizei_t>         (count);
+              auto lengths      = std::vector<gl::ssize_t>         (count);
               auto message_log  = std::string{};
 
         const auto message_log_count = get_debug_message_log(count, sources, types, ids, severities, lengths, message_log);
@@ -1043,20 +1043,20 @@ export namespace gl
     auto create_query                               (gl::query_target_e target) -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateQueries(gl::to_underlying(target), gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        return ::glCreateQueries(gl::to_underlying(target), gl::ssize_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_queries                             (gl::query_target_e target, gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateQueries(gl::to_underlying(target), static_cast<gl::sizei_t>(count), gl::to_underlying_pointer(handles.data())), handles;
+        return ::glCreateQueries(gl::to_underlying(target), static_cast<gl::ssize_t>(count), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_query                               (gl::handle_t query)
     {
-        ::glDeleteQueries(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&query));
+        ::glDeleteQueries(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&query));
     }
     void delete_queries                             (std::span<const gl::handle_t> queries)
     {
-        ::glDeleteQueries(static_cast<gl::sizei_t>(queries.size()), gl::to_underlying_pointer(queries.data()));
+        ::glDeleteQueries(static_cast<gl::ssize_t>(queries.size()), gl::to_underlying_pointer(queries.data()));
     }
     void begin_query                                (gl::handle_t query, gl::query_target_e target)
     {
@@ -1085,20 +1085,20 @@ export namespace gl
     auto create_buffer                              () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateBuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        return ::glCreateBuffers(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_buffers                             (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateBuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        return ::glCreateBuffers(static_cast<gl::ssize_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_buffer                              (gl::handle_t buffer)
     {
-        ::glDeleteBuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&buffer));
+        ::glDeleteBuffers(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&buffer));
     }
     void delete_buffers                             (std::span<const gl::handle_t> buffers)
     {
-        ::glDeleteBuffers(static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
+        ::glDeleteBuffers(static_cast<gl::ssize_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
     }
     void bind_buffer_base                           (gl::handle_t buffer, gl::buffer_base_target_e target, gl::binding_t binding)
     {
@@ -1106,7 +1106,7 @@ export namespace gl
     }
     void bind_buffers_base                          (std::span<const gl::handle_t> buffers, gl::buffer_base_target_e target, gl::binding_t binding)
     {
-        ::glBindBuffersBase(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
+        ::glBindBuffersBase(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::ssize_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
     }
     template<typename T>
     void bind_buffer_range                          (gl::handle_t buffer, gl::buffer_base_target_e target, gl::binding_t binding, gl::range range)
@@ -1128,7 +1128,7 @@ export namespace gl
                 offsets.emplace_back(byte_range.offset);
             });
 
-        ::glBindBuffersRange(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()), offsets.data(), sizes.data());
+        ::glBindBuffersRange(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::ssize_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()), offsets.data(), sizes.data());
     }
     template<typename T>
     void buffer_storage                             (gl::handle_t buffer, gl::buffer_storage_flags_e flags, gl::count_t count)
@@ -1209,7 +1209,7 @@ export namespace gl
     void shader_source                              (gl::handle_t shader, const std::string& source)
     {
         const auto* c_string = source.c_str();
-        ::glShaderSource(gl::to_underlying(shader), gl::sizei_t{ 1 }, &c_string, nullptr);
+        ::glShaderSource(gl::to_underlying(shader), gl::ssize_t{ 1 }, &c_string, nullptr);
     }
     void compile_shader                             (gl::handle_t shader)
     {
@@ -1225,11 +1225,11 @@ export namespace gl
     }
     void shader_binary                              (gl::handle_t shader, gl::enum_t format, std::span<const gl::byte_t> binary)
     {
-        ::glShaderBinary(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&shader), format, binary.data(), static_cast<gl::sizei_t>(binary.size_bytes()));
+        ::glShaderBinary(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&shader), format, binary.data(), static_cast<gl::ssize_t>(binary.size_bytes()));
     }
     void shader_binaries                            (std::span<const gl::handle_t> shaders, gl::enum_t format, std::span<const gl::byte_t> binary)
     {
-        ::glShaderBinary(static_cast<gl::sizei_t>(shaders.size()), gl::to_underlying_pointer(shaders.data()), format, binary.data(), static_cast<gl::sizei_t>(binary.size_bytes()));
+        ::glShaderBinary(static_cast<gl::ssize_t>(shaders.size()), gl::to_underlying_pointer(shaders.data()), format, binary.data(), static_cast<gl::ssize_t>(binary.size_bytes()));
     }
     template<gl::count_t N = 0u>
     void specialize_shader                          (gl::handle_t shader, const std::string& entry, std::span<const gl::uint32_t, N> indices = {}, std::span<const gl::uint32_t, N> values = {})
@@ -1265,25 +1265,25 @@ export namespace gl
     auto create_shader_program                      (gl::shader_type_e type, const std::string& source) -> gl::handle_t
     {
         const auto* c_string = source.c_str();
-        return static_cast<gl::handle_t>(::glCreateShaderProgramv(gl::to_underlying(type), gl::sizei_t{ 1 }, &c_string));
+        return static_cast<gl::handle_t>(::glCreateShaderProgramv(gl::to_underlying(type), gl::ssize_t{ 1 }, &c_string));
     }
     auto create_program_pipeline                    () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateProgramPipelines(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        return ::glCreateProgramPipelines(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_program_pipelines                   (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateProgramPipelines(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        return ::glCreateProgramPipelines(static_cast<gl::ssize_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_program_pipeline                    (gl::handle_t pipeline)
     {
-        ::glDeleteProgramPipelines(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&pipeline));
+        ::glDeleteProgramPipelines(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&pipeline));
     }
     void delete_program_pipelines                   (std::span<const gl::handle_t> pipeline)
     {
-        ::glDeleteProgramPipelines(static_cast<gl::sizei_t>(pipeline.size()), gl::to_underlying_pointer(pipeline.data()));
+        ::glDeleteProgramPipelines(static_cast<gl::ssize_t>(pipeline.size()), gl::to_underlying_pointer(pipeline.data()));
     }
     void bind_program_pipeline                      (gl::handle_t pipeline)
     {
@@ -1301,7 +1301,7 @@ export namespace gl
     }
     void program_binary                             (gl::handle_t program, gl::enum_t format, std::span<const gl::byte_t> binary)
     {
-        ::glProgramBinary(gl::to_underlying(program), format, binary.data(), static_cast<gl::sizei_t>(binary.size()));
+        ::glProgramBinary(gl::to_underlying(program), format, binary.data(), static_cast<gl::ssize_t>(binary.size()));
     }
     void memory_barrier                             (gl::memory_barrier_e         barrier)
     {
@@ -1318,20 +1318,20 @@ export namespace gl
     auto create_texture                             (gl::texture_target_e target) -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateTextures(gl::to_underlying(target), gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        return ::glCreateTextures(gl::to_underlying(target), gl::ssize_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_textures                            (gl::texture_target_e target, gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateTextures(gl::to_underlying(target), static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        return ::glCreateTextures(gl::to_underlying(target), static_cast<gl::ssize_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_texture                             (gl::handle_t texture)
     {
-        ::glDeleteTextures(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&texture));
+        ::glDeleteTextures(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&texture));
     }
     void delete_textures                            (std::span<const gl::handle_t> textures)
     {
-        ::glDeleteTextures(static_cast<gl::sizei_t>(textures.size()), gl::to_underlying_pointer(textures.data()));
+        ::glDeleteTextures(static_cast<gl::ssize_t>(textures.size()), gl::to_underlying_pointer(textures.data()));
     }
     void bind_texture_unit                          (gl::handle_t texture, gl::binding_t binding)
     {
@@ -1340,20 +1340,20 @@ export namespace gl
     auto create_sampler                             () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateSamplers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        return ::glCreateSamplers(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_samplers                            (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateSamplers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        return ::glCreateSamplers(static_cast<gl::ssize_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_sampler                             (gl::handle_t sampler)
     {
-        ::glDeleteSamplers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&sampler));
+        ::glDeleteSamplers(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&sampler));
     }
     void delete_samplers                            (std::span<const gl::handle_t> samplers)
     {
-        ::glDeleteSamplers(static_cast<gl::sizei_t>(samplers.size()), gl::to_underlying_pointer(samplers.data()));
+        ::glDeleteSamplers(static_cast<gl::ssize_t>(samplers.size()), gl::to_underlying_pointer(samplers.data()));
     }
     void bind_sampler                               (gl::handle_t sampler, gl::binding_t binding)
     {
@@ -1414,7 +1414,7 @@ export namespace gl
         ::glTextureSubImage1D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level), 
             static_cast<gl::int32_t>(region.origin.x), 
-            static_cast<gl::sizei_t>(region.extent.x), 
+            static_cast<gl::ssize_t>(region.extent.x), 
             gl::to_underlying       (format)         , gl::to_underlying(type)        , 
             data.data());
     }
@@ -1423,7 +1423,7 @@ export namespace gl
         ::glTextureSubImage2D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), 
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), 
             gl::to_underlying       (format)         , gl::to_underlying(type)                  , 
             data.data());
     }
@@ -1432,7 +1432,7 @@ export namespace gl
         ::glTextureSubImage3D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z), 
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z), 
             gl::to_underlying       (format)         , gl::to_underlying(type)                  , 
             data.data());
     }
@@ -1442,7 +1442,7 @@ export namespace gl
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)        , 
             static_cast<gl::int32_t>(region.origin.x), 
             static_cast<gl::int32_t>(coordinates  .x), static_cast<gl::int32_t>(coordinates.y), 
-            static_cast<gl::sizei_t>(region.extent.x));
+            static_cast<gl::ssize_t>(region.extent.x));
     }
     void copy_texture_sub_image_2d                  (gl::handle_t texture, gl::uint32_t level, gl::area_t   region, const gl::vector2u& coordinates)
     {
@@ -1450,7 +1450,7 @@ export namespace gl
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
             static_cast<gl::int32_t>(coordinates  .x), static_cast<gl::int32_t>(coordinates  .y), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y));
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y));
     }
     void copy_texture_sub_image_3d                  (gl::handle_t texture, gl::uint32_t level, gl::volume_t region, const gl::vector2u& coordinates)
     {
@@ -1458,34 +1458,34 @@ export namespace gl
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
             static_cast<gl::int32_t>(coordinates  .x), static_cast<gl::int32_t>(coordinates  .y), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y));
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y));
     }
     void compressed_texture_sub_image_1d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::length_t region, std::span<const gl::byte_t> data)
     {
         ::glCompressedTextureSubImage1D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level), 
             static_cast<gl::int32_t>(region.origin.x), 
-            static_cast<gl::sizei_t>(region.extent.x), 
+            static_cast<gl::ssize_t>(region.extent.x), 
             gl::to_underlying       (format)         , 
-            static_cast<gl::sizei_t>(data.size())    , data.data());
+            static_cast<gl::ssize_t>(data.size())    , data.data());
     }
     void compressed_texture_sub_image_2d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::area_t   region, std::span<const gl::byte_t> data)
     {
         ::glCompressedTextureSubImage2D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), 
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), 
             gl::to_underlying       (format)         , 
-            static_cast<gl::sizei_t>(data.size())    , data.data());
+            static_cast<gl::ssize_t>(data.size())    , data.data());
     }
     void compressed_texture_sub_image_3d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> data)
     {
         ::glCompressedTextureSubImage3D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z), 
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z), 
             gl::to_underlying       (format)         , 
-            static_cast<gl::sizei_t>(data.size())    , data.data());
+            static_cast<gl::ssize_t>(data.size())    , data.data());
     }
     void texture_buffer                             (gl::handle_t texture, gl::handle_t buffer, gl::buffer_format_e format)
     {
@@ -1565,40 +1565,40 @@ export namespace gl
     {
         ::glTextureStorage1D(
             gl::to_underlying       (texture)      , 
-            static_cast<gl::sizei_t>(levels)       , 
+            static_cast<gl::ssize_t>(levels)       , 
             gl::to_underlying       (format)       , 
-            static_cast<gl::sizei_t>(dimensions.x));
+            static_cast<gl::ssize_t>(dimensions.x));
     }
     void texture_storage_2d                         (gl::handle_t texture, gl::texture_format_e format, const gl::vector2u& dimensions, gl::uint32_t levels)
     {
         ::glTextureStorage2D(
             gl::to_underlying       (texture)     , 
-            static_cast<gl::sizei_t>(levels)      , 
+            static_cast<gl::ssize_t>(levels)      , 
             gl::to_underlying       (format)      , 
-            static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y));
+            static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y));
     }
     void texture_storage_3d                         (gl::handle_t texture, gl::texture_format_e format, const gl::vector3u& dimensions, gl::uint32_t levels)
     {
         ::glTextureStorage3D(
             gl::to_underlying       (texture)     , 
-            static_cast<gl::sizei_t>(levels)      , 
+            static_cast<gl::ssize_t>(levels)      , 
             gl::to_underlying       (format)      , 
-            static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y), static_cast<gl::sizei_t>(dimensions.z));
+            static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y), static_cast<gl::ssize_t>(dimensions.z));
     }
     void texture_storage_2d_multisample             (gl::handle_t texture, gl::texture_format_e format, const gl::vector2u& dimensions, gl::uint32_t samples, gl::bool_t fixed = gl::true_)
     {
         ::glTextureStorage2DMultisample(
             gl::to_underlying       (texture)     , 
-            static_cast<gl::sizei_t>(samples)     , gl::to_underlying       (format)      , 
-            static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y), 
+            static_cast<gl::ssize_t>(samples)     , gl::to_underlying       (format)      , 
+            static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y), 
             fixed);
     }
     void texture_storage_3d_multisample             (gl::handle_t texture, gl::texture_format_e format, const gl::vector3u& dimensions, gl::uint32_t samples, gl::bool_t fixed = gl::true_)
     {
         ::glTextureStorage3DMultisample(
             gl::to_underlying       (texture)     , 
-            static_cast<gl::sizei_t>(samples)     , gl::to_underlying       (format)      , 
-            static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y), static_cast<gl::sizei_t>(dimensions.z), 
+            static_cast<gl::ssize_t>(samples)     , gl::to_underlying       (format)      , 
+            static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y), static_cast<gl::ssize_t>(dimensions.z), 
             fixed);
     }
     void invalidate_texture_image                   (gl::handle_t texture, gl::uint32_t level)
@@ -1612,7 +1612,7 @@ export namespace gl
         ::glInvalidateTexSubImage(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z) , 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z));
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z));
     }
     void clear_texture_image                        (gl::handle_t texture, gl::texture_base_format_e format, gl::texture_type_e type, gl::uint32_t level, std::span<const gl::byte_t> data)
     {
@@ -1625,7 +1625,7 @@ export namespace gl
         ::glClearTexSubImage(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z), 
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z), 
             gl::to_underlying       (format)         , gl::to_underlying       (type)           , data.data());
     }
 
@@ -1635,20 +1635,20 @@ export namespace gl
     auto create_frame_buffer                        () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateFramebuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        return ::glCreateFramebuffers(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_frame_buffer                        (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateFramebuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        return ::glCreateFramebuffers(static_cast<gl::ssize_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_frame_buffer                        (gl::handle_t frame_buffer)
     {
-        ::glDeleteFramebuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&frame_buffer));
+        ::glDeleteFramebuffers(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&frame_buffer));
     }
     void delete_frame_buffers                       (std::span<const gl::handle_t> frame_buffers)
     {
-        ::glDeleteFramebuffers(static_cast<gl::sizei_t>(frame_buffers.size()), gl::to_underlying_pointer(frame_buffers.data()));
+        ::glDeleteFramebuffers(static_cast<gl::ssize_t>(frame_buffers.size()), gl::to_underlying_pointer(frame_buffers.data()));
     }
     void bind_frame_buffer                          (gl::handle_t frame_buffer, gl::frame_buffer_target_e target)
     {
@@ -1674,35 +1674,35 @@ export namespace gl
     auto create_render_buffer                       () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateRenderbuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        return ::glCreateRenderbuffers(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_render_buffers                      (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateRenderbuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        return ::glCreateRenderbuffers(static_cast<gl::ssize_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_render_buffer                       (gl::handle_t render_buffer)
     {
-        ::glDeleteRenderbuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&render_buffer));
+        ::glDeleteRenderbuffers(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&render_buffer));
     }
     void delete_render_buffers                      (std::span<const gl::handle_t> render_buffers)
     {
-        ::glDeleteRenderbuffers(static_cast<gl::sizei_t>(render_buffers.size()), gl::to_underlying_pointer(render_buffers.data()));
+        ::glDeleteRenderbuffers(static_cast<gl::ssize_t>(render_buffers.size()), gl::to_underlying_pointer(render_buffers.data()));
     }
     void render_buffer_storage                      (gl::handle_t render_buffer, gl::render_buffer_format_e format, const gl::vector2u& dimensions)
     {
         ::glNamedRenderbufferStorage(
             gl::to_underlying       (render_buffer),
             gl::to_underlying       (format)       ,
-            static_cast<gl::sizei_t>(dimensions.x) , static_cast<gl::sizei_t>(dimensions.y));
+            static_cast<gl::ssize_t>(dimensions.x) , static_cast<gl::ssize_t>(dimensions.y));
     }
     void render_buffer_storage_multisample          (gl::handle_t render_buffer, gl::render_buffer_format_e format, const gl::vector2u& dimensions, gl::uint32_t samples)
     {
         ::glNamedRenderbufferStorageMultisample(
             gl::to_underlying       (render_buffer),
-            static_cast<gl::sizei_t>(samples)      ,
+            static_cast<gl::ssize_t>(samples)      ,
             gl::to_underlying       (format)       ,
-            static_cast<gl::sizei_t>(dimensions.x) , static_cast<gl::sizei_t>(dimensions.y));
+            static_cast<gl::ssize_t>(dimensions.x) , static_cast<gl::ssize_t>(dimensions.y));
     }
     void frame_buffer_render_buffer                 (gl::handle_t frame_buffer, gl::handle_t render_buffer, gl::frame_buffer_attachment_e attachment)
     {
@@ -1804,20 +1804,20 @@ export namespace gl
     auto create_vertex_array                        () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateVertexArrays(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        return ::glCreateVertexArrays(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
     }
     auto create_vertex_arrays                       (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateVertexArrays(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        return ::glCreateVertexArrays(static_cast<gl::ssize_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
     }
     void delete_vertex_array                        (gl::handle_t vertex_array)
     {
-        ::glDeleteVertexArrays(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&vertex_array));
+        ::glDeleteVertexArrays(gl::ssize_t{ 1 }, gl::to_underlying_pointer(&vertex_array));
     }
     void delete_vertex_arrays                       (std::span<const gl::handle_t> vertex_arrays)
     {
-        ::glDeleteVertexArrays(static_cast<gl::sizei_t>(vertex_arrays.size()), gl::to_underlying_pointer(vertex_arrays.data()));
+        ::glDeleteVertexArrays(static_cast<gl::ssize_t>(vertex_arrays.size()), gl::to_underlying_pointer(vertex_arrays.data()));
     }
     void bind_vertex_array                          (gl::handle_t vertex_array)
     {
@@ -1866,7 +1866,7 @@ export namespace gl
     }
     void vertex_array_vertex_buffer                 (gl::handle_t vertex_array, gl::handle_t vertex_buffer, gl::binding_t binding, gl::size_t stride, gl::index_t index)
     {
-        ::glVertexArrayVertexBuffer(gl::to_underlying(vertex_array), gl::to_underlying(binding), gl::to_underlying(vertex_buffer), static_cast<gl::offset_t>(index), static_cast<gl::sizei_t>(stride));
+        ::glVertexArrayVertexBuffer(gl::to_underlying(vertex_array), gl::to_underlying(binding), gl::to_underlying(vertex_buffer), static_cast<gl::offset_t>(index), static_cast<gl::ssize_t>(stride));
     }
     void vertex_array_vertex_buffers                (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, std::span<const gl::byte_range> strides, gl::range range)
     {
@@ -1895,27 +1895,27 @@ export namespace gl
     }
     void draw_arrays                                (gl::draw_mode_e mode, gl::range range)
     {
-        ::glDrawArrays(gl::to_underlying(mode), static_cast<gl::int32_t>(range.index), static_cast<gl::sizei_t>(range.count));
+        ::glDrawArrays(gl::to_underlying(mode), static_cast<gl::int32_t>(range.index), static_cast<gl::ssize_t>(range.count));
     }
     void draw_arrays_instanced                      (gl::draw_mode_e mode, gl::range range, gl::count_t instances)
     {
-        ::glDrawArraysInstanced(gl::to_underlying(mode), static_cast<gl::int32_t>(range.index), static_cast<gl::sizei_t>(range.count), static_cast<gl::sizei_t>(instances));
+        ::glDrawArraysInstanced(gl::to_underlying(mode), static_cast<gl::int32_t>(range.index), static_cast<gl::ssize_t>(range.count), static_cast<gl::ssize_t>(instances));
     }
     void draw_arrays_instanced_base_instance        (gl::draw_mode_e mode, gl::range range, gl::count_t instances, gl::index_t base)
     {
-        ::glDrawArraysInstancedBaseInstance(gl::to_underlying(mode), static_cast<gl::int32_t>(range.index), static_cast<gl::sizei_t>(range.count), static_cast<gl::sizei_t>(instances), base);
+        ::glDrawArraysInstancedBaseInstance(gl::to_underlying(mode), static_cast<gl::int32_t>(range.index), static_cast<gl::ssize_t>(range.count), static_cast<gl::ssize_t>(instances), base);
     }
     void draw_elements                              (gl::draw_mode_e mode, gl::draw_type_e type, gl::count_t count)
     {
-        ::glDrawElements(gl::to_underlying(mode), static_cast<gl::sizei_t>(count), gl::to_underlying(type), nullptr);
+        ::glDrawElements(gl::to_underlying(mode), static_cast<gl::ssize_t>(count), gl::to_underlying(type), nullptr);
     }
     void draw_elements_instanced                    (gl::draw_mode_e mode, gl::draw_type_e type, gl::count_t count, gl::count_t instances)
     {
-        ::glDrawElementsInstanced(gl::to_underlying(mode), static_cast<gl::sizei_t>(count), gl::to_underlying(type), nullptr, static_cast<gl::sizei_t>(instances));
+        ::glDrawElementsInstanced(gl::to_underlying(mode), static_cast<gl::ssize_t>(count), gl::to_underlying(type), nullptr, static_cast<gl::ssize_t>(instances));
     }
     void draw_elements_instanced_base_instance      (gl::draw_mode_e mode, gl::draw_type_e type, gl::count_t count, gl::count_t instances, gl::index_t base)
     {
-        ::glDrawElementsInstancedBaseInstance(gl::to_underlying(mode), static_cast<gl::sizei_t>(count), gl::to_underlying(type), nullptr, static_cast<gl::sizei_t>(instances), base);
+        ::glDrawElementsInstancedBaseInstance(gl::to_underlying(mode), static_cast<gl::ssize_t>(count), gl::to_underlying(type), nullptr, static_cast<gl::ssize_t>(instances), base);
     }
     void begin_conditional_render                   (gl::handle_t query, gl::query_mode_e mode)
     {
@@ -1951,7 +1951,7 @@ export namespace gl
     }
     void depth_range_array_value                    (gl::index_t index, std::span<const gl::vector2d> ranges)
     {
-        ::glDepthRangeArrayv(index, static_cast<gl::sizei_t>(ranges.size()), gl::value_pointer(*ranges.data()));
+        ::glDepthRangeArrayv(index, static_cast<gl::ssize_t>(ranges.size()), gl::value_pointer(*ranges.data()));
     }
     void depth_range_indexed                        (gl::index_t index, const gl::vector2d& range)
     {
@@ -1963,7 +1963,7 @@ export namespace gl
     }
     void viewport_array_value                       (gl::index_t index, std::span<const gl::vector2f> ranges)
     {
-        ::glViewportArrayv(index, static_cast<gl::sizei_t>(ranges.size()), gl::value_pointer(*ranges.data()));
+        ::glViewportArrayv(index, static_cast<gl::ssize_t>(ranges.size()), gl::value_pointer(*ranges.data()));
     }
     void viewport_indexed                           (gl::index_t index, const gl::region<gl::float32_t, 2u> region)
     {
@@ -1973,7 +1973,7 @@ export namespace gl
     {
         ::glViewport(
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y));
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y));
     }
 
 
@@ -2035,7 +2035,7 @@ export namespace gl
     {
         ::glScissorArrayv(
             index                                            , 
-            static_cast  <      gl::sizei_t >(values.size()) , 
+            static_cast  <      gl::ssize_t >(values.size()) , 
             std::bit_cast<const gl::int32_t*>(values.data())); 
     }
     void scissor_indexed                            (gl::index_t index, gl::area_t region)
@@ -2043,13 +2043,13 @@ export namespace gl
         ::glScissorIndexed(
             index                                                                                , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y) ,  
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y));
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y));
     }
     void scissor                                    (gl::area_t region)
     {
         ::glScissor(
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y) , 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y));
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y));
     }
     void sample_coverage                            (gl::float32_t value, gl::bool_t invert)
     {
@@ -2129,7 +2129,7 @@ export namespace gl
     }
     void frame_buffer_draw_buffers                  (gl::handle_t frame_buffer, std::span<const gl::frame_buffer_source_e> sources)
     {
-        ::glNamedFramebufferDrawBuffers(gl::to_underlying(frame_buffer), static_cast<gl::sizei_t>(sources.size()), gl::to_underlying_pointer(sources.data()));
+        ::glNamedFramebufferDrawBuffers(gl::to_underlying(frame_buffer), static_cast<gl::ssize_t>(sources.size()), gl::to_underlying_pointer(sources.data()));
     }
     void color_mask                                 (const gl::vector4b& mask)
     {
@@ -2233,16 +2233,16 @@ export namespace gl
     {
         ::glInvalidateNamedFramebufferData(
             gl::to_underlying        (frame_buffer)       , 
-            static_cast<gl::sizei_t> (attachments.size()) , 
+            static_cast<gl::ssize_t> (attachments.size()) , 
             gl::to_underlying_pointer(attachments.data()));
     }
     void invalidate_frame_buffer_sub_data           (gl::handle_t frame_buffer, std::span<const gl::frame_buffer_attachment_e> attachments, gl::area_t region)
     {
         ::glInvalidateNamedFramebufferSubData(
             gl::to_underlying       (frame_buffer)      , 
-            static_cast<gl::sizei_t>(attachments.size()), gl::to_underlying_pointer(attachments.data()), 
+            static_cast<gl::ssize_t>(attachments.size()), gl::to_underlying_pointer(attachments.data()), 
             static_cast<gl::int32_t>(region.origin.x)   , static_cast<gl::int32_t> (region.origin.y)   , 
-            static_cast<gl::sizei_t>(region.extent.x)   , static_cast<gl::sizei_t> (region.extent.y)  );
+            static_cast<gl::ssize_t>(region.extent.x)   , static_cast<gl::ssize_t> (region.extent.y)  );
     }
 
 
@@ -2280,9 +2280,9 @@ export namespace gl
 
         //    glReadnPixels(
         //        static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
-        //        static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), 
+        //        static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), 
         //        gl::to_underlying       (format)         , gl::to_underlying       (type)           , 
-        //        static_cast<gl::sizei_t>(value.size())   , 
+        //        static_cast<gl::ssize_t>(value.size())   , 
         //        value.data()                            );
 
         //    return value;
@@ -2308,7 +2308,7 @@ export namespace gl
             static_cast<gl::int32_t>(source_region     .origin.x), static_cast<gl::int32_t>(source_region     .origin.y), static_cast<gl::int32_t>(source_region     .origin.z), 
             gl::to_underlying       (destination                ), gl::to_underlying       (destination_target         ), static_cast<gl::int32_t>(destination_region.extent.w), 
             static_cast<gl::int32_t>(destination_region.origin.x), static_cast<gl::int32_t>(destination_region.origin.y), static_cast<gl::int32_t>(destination_region.origin.z), 
-            static_cast<gl::sizei_t>(source_region     .extent.x), static_cast<gl::sizei_t>(source_region     .extent.y), static_cast<gl::sizei_t>(source_region     .extent.z));
+            static_cast<gl::ssize_t>(source_region     .extent.x), static_cast<gl::ssize_t>(source_region     .extent.y), static_cast<gl::ssize_t>(source_region     .extent.z));
     }
 
 
@@ -2334,19 +2334,19 @@ export namespace gl
     }
     void debug_message_control                      (gl::debug_source_e source, gl::debug_type_e type, gl::debug_severity_e severity, gl::bool_t state)
     {
-        ::glDebugMessageControl(gl::to_underlying(source), gl::to_underlying(type), gl::to_underlying(severity), gl::sizei_t{ 0 }, nullptr, state);
+        ::glDebugMessageControl(gl::to_underlying(source), gl::to_underlying(type), gl::to_underlying(severity), gl::ssize_t{ 0 }, nullptr, state);
     }
     void debug_message_insert                       (gl::handle_t identifier, gl::debug_type_e type, gl::debug_severity_e severity, const std::string& message)
     {
         ::glDebugMessageInsert(
             gl::to_underlying(gl::debug_source_e::application), 
             gl::to_underlying(type)                           , gl::to_underlying(identifier), gl::to_underlying(severity),
-            static_cast<gl::sizei_t>(message.length())        , message.data()              );
+            static_cast<gl::ssize_t>(message.length())        , message.data()              );
     }
     void push_debug_group                           (gl::handle_t identifier, const std::string& message)
     {
         const auto* c_string = message.c_str();
-        ::glPushDebugGroup(gl::to_underlying(gl::debug_source_e::application), gl::to_underlying(identifier), gl::sizei_t{ -1 }, c_string);
+        ::glPushDebugGroup(gl::to_underlying(gl::debug_source_e::application), gl::to_underlying(identifier), gl::ssize_t{ -1 }, c_string);
     }
     void pop_debug_group                            ()
     {
@@ -2355,12 +2355,12 @@ export namespace gl
     void object_label                               (gl::handle_t identifier, gl::object_type_e type, const std::string& label)
     {
         const auto* c_string = label.c_str();
-        ::glObjectLabel(gl::to_underlying(type), gl::to_underlying(identifier), gl::sizei_t{ -1 }, c_string);
+        ::glObjectLabel(gl::to_underlying(type), gl::to_underlying(identifier), gl::ssize_t{ -1 }, c_string);
     }
     void object_pointer_label                       (gl::sync_t sync, const std::string& identifier)
     {
         const auto* c_string = identifier.c_str();
-        ::glObjectPtrLabel(sync, gl::sizei_t{ -1 }, c_string);
+        ::glObjectPtrLabel(sync, gl::ssize_t{ -1 }, c_string);
     }
     
 
