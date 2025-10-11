@@ -1,4 +1,4 @@
-export module opengl.object.mapping;
+export module opengl.mapping;
 
 import std;
 import opengl.flags;
@@ -18,6 +18,70 @@ export namespace gl
         if constexpr (std::is_same_v<T, gl::uint32_t >) return gl::vertex_array_attribute_type_e::uint32 ;
         if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
         if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;        
+    }
+
+    auto map_buffer_base_format(gl::buffer_format_e format)
+    {
+        //gl::buffer_base_format_e;
+        //r       
+        //g       
+        //b       
+        //rg      
+        //rgb     
+        //rgba    
+        //bgr     
+        //bgra    
+        //r_int   
+        //g_int   
+        //b_int   
+        //rg_int  
+        //rgb_int 
+        //rgba_int
+        //bgr_int 
+        //bgra_int
+        //d       
+        //s       
+        //ds      
+
+
+
+        //r_int8      
+        //r_int16     
+        //r_int32     
+        //r_uint8     
+        //r_uint8_n   
+        //r_uint16    
+        //r_uint16_n  
+        //r_uint32    
+        //r_float16   
+        //r_float32   
+       
+        //rg_int8     
+        //rg_int16    
+        //rg_int32    
+        //rg_uint8    
+        //rg_uint8_n  
+        //rg_uint16   
+        //rg_uint16_n 
+        //rg_uint32   
+        //rg_float16  
+        //rg_float32  
+       
+        //rgb_int32   
+        //rgb_uint32  
+        //rgb_float32 
+       
+        //rgba_int8   
+        //rgba_int16  
+        //rgba_int16_n
+        //rgba_int32  
+        //rgba_uint8  
+        //rgba_uint8_n
+        //rgba_uint16 
+        //rgba_uint32 
+        //rgba_float16
+        //rgba_float32
+
     }
 
     auto map_texture_attachment      (gl::texture_format_e     format) -> gl::frame_buffer_attachment_e
