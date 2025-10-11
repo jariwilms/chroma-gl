@@ -51,8 +51,8 @@ export namespace gl
     }
     constexpr auto clamp_range          (gl::byte_range byte_range, gl::size_t  limit) -> gl::byte_range
     {
-        byte_range.size   = std::min(byte_range.size  , limit                  );
-        byte_range.offset = std::min(byte_range.offset, limit - byte_range.size);
+        byte_range.offset = std::min(byte_range.offset, limit                    );
+        byte_range.size   = std::min(byte_range.size  , limit - byte_range.offset);
 
         return byte_range;
     }
@@ -60,7 +60,7 @@ export namespace gl
     template<typename T>
     constexpr auto convert_range        (gl::range      range) -> gl::byte_range
     {
-        return gl::byte_range{ static_cast<gl::size_t>(range.count * sizeof(T)), static_cast<gl::offset_t>(range.index * sizeof(T)) };
+        return gl::byte_range{ static_cast<gl::size_t>(range.count * sizeof(T)), static_cast<gl::size_t>(range.index * sizeof(T)) };
     }
     template<typename T>
     constexpr auto convert_range        (gl::byte_range range) -> gl::range
@@ -77,6 +77,17 @@ export namespace gl
         return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
     }
 
+    constexpr auto range_intersection(gl::byte_range first, gl::byte_range second) -> gl::byte_range
+    {
+        const auto first_end  = gl::size_t{ first .offset + first .size };
+        const auto second_end = gl::size_t{ second.offset + second.size };
+        const auto start      = gl::size_t{ (first.offset > second.offset) ? first.offset : second.offset };
+        const auto end        = gl::size_t{ (first_end < second_end) ? first_end : second_end };
+
+        if   (start < end) return gl::byte_range{ end - start, start };
+        else               return gl::byte_range{};
+    }
+
 
 
     template<std::integral T, gl::uint32_t N>
@@ -87,7 +98,7 @@ export namespace gl
 
 
 
-    template<typename T, gl::size_t EXTENT = std::dynamic_extent>
+    template<typename T, gl::ptrdiff_t EXTENT = std::dynamic_extent>
     constexpr auto as_bytes             (std::span<const T, EXTENT> span) -> std::span<const gl::byte_t>
     {
         return std::span{ reinterpret_cast<const gl::byte_t*>(span.data()), span.size_bytes() };
