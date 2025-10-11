@@ -21,20 +21,30 @@ export namespace gl
         constexpr range(gl::count_t count = {}, gl::index_t index = {})
             : count{ count }, index{ index } {}
 
-        auto operator==(const range&) const -> gl::bool_t = default;
+        constexpr auto operator==(const range&) const -> gl::bool_t = default;
+
+        auto empty() const -> gl::bool_t
+        {
+            return count == gl::count_t{ 0u };
+        }
 
         gl::count_t count{};
         gl::index_t index{};
     };
     struct byte_range
     {
-        constexpr byte_range(gl::size_t size = {}, gl::offset_t offset = {})
+        constexpr byte_range(gl::size_t size = {}, gl::size_t offset = {})
             : size{ size }, offset{ offset } {}
 
-        auto operator==(const byte_range&) const -> gl::bool_t = default;
+        constexpr auto operator==(const byte_range&) const -> gl::bool_t = default;
 
-        gl::size_t   size  {};
-        gl::offset_t offset{};
+        auto empty() const -> gl::bool_t
+        {
+            return size == gl::size_t{ 0u };
+        }
+
+        gl::size_t size  {};
+        gl::size_t offset{};
     };
 
     using length_t      = gl::region<gl::uint32_t, 1u>;
