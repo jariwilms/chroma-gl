@@ -66,7 +66,7 @@ export namespace glp
     };
     struct depth_stencil_mode
     {
-        gl::texture_base_format_e value{};
+        gl::depth_stencil_texture_mode_e value{};
     };
     struct base_level
     {
@@ -127,7 +127,7 @@ export namespace glp
 
 
 
-    using dispatch_v          = std::variant<gl::vector3u, gl::offset_t>;
+    using dispatch_v          = std::variant<gl::vector3u, gl::intptr_t>;
     using texture_parameter_v = std::variant<
                                     glp::compare_function    , glp::compare_mode, 
                                     glp::base_level          , glp::maximum_level, 
