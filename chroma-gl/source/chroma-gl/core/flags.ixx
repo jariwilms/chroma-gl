@@ -55,20 +55,20 @@ export namespace gl
     enum class buffer_base_format_e : gl::enum_t
     {
         r        = GL_RED            , 
-        g        = GL_GREEN          , 
-        b        = GL_BLUE           , 
-        rg       = GL_RG             , 
-        rgb      = GL_RGB            , 
-        rgba     = GL_RGBA           , 
-        bgr      = GL_BGR            , 
-        bgra     = GL_BGRA           , 
         r_int    = GL_RED_INTEGER    , 
+        g        = GL_GREEN          , 
         g_int    = GL_GREEN_INTEGER  , 
+        b        = GL_BLUE           , 
         b_int    = GL_BLUE_INTEGER   , 
+        rg       = GL_RG             , 
         rg_int   = GL_RG_INTEGER     , 
+        rgb      = GL_RGB            , 
         rgb_int  = GL_RGB_INTEGER    , 
+        rgba     = GL_RGBA           , 
         rgba_int = GL_RGBA_INTEGER   , 
+        bgr      = GL_BGR            , 
         bgr_int  = GL_BGR_INTEGER    , 
+        bgra     = GL_BGRA           , 
         bgra_int = GL_BGRA_INTEGER   , 
         d        = GL_DEPTH_COMPONENT, 
         s        = GL_STENCIL_INDEX  , 
@@ -227,6 +227,11 @@ export namespace gl
         lower_left = GL_LOWER_LEFT, 
         upper_left = GL_UPPER_LEFT, 
     };
+    enum class color_encoding_e : gl::enum_t
+    {
+        linear = GL_LINEAR, 
+        srgb   = GL_SRGB  , 
+    };
     enum class context_flags_e : gl::bitfield_t
     {
         forward_compatible = GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT,  
@@ -252,6 +257,15 @@ export namespace gl
     {
         no_notification = GL_NO_RESET_NOTIFICATION, 
         lose_context    = GL_LOSE_CONTEXT_ON_RESET, 
+    };
+    enum class cubemap_face_e : gl::enum_t
+    {
+        positive_x = GL_TEXTURE_CUBE_MAP_POSITIVE_X, 
+        negative_x = GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 
+        positive_y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 
+        negative_y = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 
+        positive_z = GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 
+        negative_z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 
     };
     enum class culling_facet_e : gl::enum_t
     {
@@ -293,6 +307,7 @@ export namespace gl
         image_binding_access                                  = GL_IMAGE_BINDING_ACCESS                     , 
         image_binding_format                                  = GL_IMAGE_BINDING_FORMAT                     , 
         image_binding_layer                                   = GL_IMAGE_BINDING_LAYER                      , 
+        image_binding_layered                                 = GL_IMAGE_BINDING_LAYERED                    , 
         image_binding_level                                   = GL_IMAGE_BINDING_LEVEL                      , 
         image_binding_name                                    = GL_IMAGE_BINDING_NAME                       , 
         implementation_color_read_format                      = GL_IMPLEMENTATION_COLOR_READ_FORMAT         , 
@@ -551,6 +566,11 @@ export namespace gl
         greater_equal = GL_GEQUAL  , 
         always        = GL_ALWAYS  , 
     };
+    enum class depth_stencil_texture_mode_e : gl::enum_t
+    {
+        depth_component = GL_DEPTH_COMPONENT, 
+        stencil_index   = GL_STENCIL_INDEX  , 
+    };
     enum class draw_mode_e : gl::enum_t
     {
         points                   = GL_POINTS                  , 
@@ -637,6 +657,41 @@ export namespace gl
         stencil        = GL_STENCIL_ATTACHMENT      , 
         depth_stencil  = GL_DEPTH_STENCIL_ATTACHMENT,  
     };
+    enum class frame_buffer_attachment_component_type_e : gl::enum_t
+    {
+        none     = GL_NONE               , 
+
+        int32    = GL_INT                , 
+        int32_n  = GL_SIGNED_NORMALIZED  , 
+        uint     = GL_UNSIGNED_INT       , 
+        uint32_n = GL_UNSIGNED_NORMALIZED, 
+        float32  = GL_FLOAT              , 
+    };
+    enum class frame_buffer_attachment_object_type_e : gl::enum_t
+    {
+        none                 = GL_NONE               , 
+
+        default_frame_buffer = GL_FRAMEBUFFER_DEFAULT, 
+        texture              = GL_TEXTURE            , 
+        render_buffer        = GL_RENDERBUFFER       , 
+    };
+    enum class frame_buffer_attachment_parameter_e : gl::enum_t
+    {
+        alpha_size           = GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE           , 
+        blue_size            = GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE            , 
+        color_encoding       = GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING       , 
+        component_type       = GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE       , 
+        depth_size           = GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE           , 
+        green_size           = GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE           , 
+        is_layered           = GL_FRAMEBUFFER_ATTACHMENT_LAYERED              , 
+        object_name          = GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME          , 
+        object_type          = GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE          , 
+        red_size             = GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE             , 
+        stencil_size         = GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE         , 
+        texture_cubemap_face = GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, 
+        texture_layer        = GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER        , 
+        texture_level        = GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL        , 
+    };
     enum class frame_buffer_buffer_e : gl::enum_t
     {
         color   = GL_COLOR  , 
@@ -663,17 +718,17 @@ export namespace gl
     };
     enum class frame_buffer_parameter_e : gl::enum_t
     {
-        color_read_format              = GL_IMPLEMENTATION_COLOR_READ_FORMAT          , 
-        color_read_type                = GL_IMPLEMENTATION_COLOR_READ_TYPE            , 
-        default_fixed_sample_locations = GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS, 
-        default_height                 = GL_FRAMEBUFFER_DEFAULT_HEIGHT                , 
-        default_layers                 = GL_FRAMEBUFFER_DEFAULT_LAYERS                , 
-        default_samples                = GL_FRAMEBUFFER_DEFAULT_SAMPLES               , 
-        default_width                  = GL_FRAMEBUFFER_DEFAULT_WIDTH                 , 
-        doublebuffer                   = GL_DOUBLEBUFFER                              , 
-        samplebuffers                  = GL_SAMPLE_BUFFERS                            , 
-        samples                        = GL_SAMPLES                                   , 
-        stereo                         = GL_STEREO                                    , 
+        color_read_format                  = GL_IMPLEMENTATION_COLOR_READ_FORMAT          , 
+        color_read_type                    = GL_IMPLEMENTATION_COLOR_READ_TYPE            , 
+        has_default_fixed_sample_locations = GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS, 
+        default_height                     = GL_FRAMEBUFFER_DEFAULT_HEIGHT                , 
+        default_layers                     = GL_FRAMEBUFFER_DEFAULT_LAYERS                , 
+        default_samples                    = GL_FRAMEBUFFER_DEFAULT_SAMPLES               , 
+        default_width                      = GL_FRAMEBUFFER_DEFAULT_WIDTH                 , 
+        is_double_buffered                 = GL_DOUBLEBUFFER                              , 
+        sample_buffers                     = GL_SAMPLE_BUFFERS                            , 
+        samples                            = GL_SAMPLES                                   , 
+        stereo                             = GL_STEREO                                    , 
     };
     enum class frame_buffer_source_e : gl::enum_t
     {
@@ -732,6 +787,96 @@ export namespace gl
         float32 = GL_FLOAT         , 
 
         byte    = uint8            , 
+    };
+    enum class internal_format_target_e : gl::enum_t
+    {
+        texture_1d                   = GL_TEXTURE_1D                  , 
+        texture_1d_array             = GL_TEXTURE_1D_ARRAY            , 
+        texture_2d                   = GL_TEXTURE_2D                  , 
+        texture_2d_array             = GL_TEXTURE_2D_ARRAY            , 
+        texture_2d_multisample       = GL_TEXTURE_2D_MULTISAMPLE      , 
+        texture_2d_multisample_array = GL_TEXTURE_2D_MULTISAMPLE_ARRAY,  
+        texture_3d                   = GL_TEXTURE_3D                  , 
+        texture_buffer               = GL_TEXTURE_BUFFER              , 
+        texture_cube_map             = GL_TEXTURE_CUBE_MAP            , 
+        texture_cube_map_array       = GL_TEXTURE_CUBE_MAP_ARRAY      , 
+        texture_rectangle            = GL_TEXTURE_RECTANGLE           , 
+        renderbuffer                 = GL_RENDERBUFFER                , 
+    };
+    enum class internal_format_parameter_e : gl::enum_t
+    {
+        auto_generate_mipmap                   = GL_AUTO_GENERATE_MIPMAP                  , 
+        clear_buffer                           = GL_CLEAR_BUFFER                          , 
+        clear_texture                          = GL_CLEAR_TEXTURE                         , 
+        color_components                       = GL_COLOR_COMPONENTS                      , 
+        color_encoding                         = GL_COLOR_ENCODING                        , 
+        is_color_renderable                    = GL_COLOR_RENDERABLE                      , 
+        compute_texture                        = GL_COMPUTE_TEXTURE                       , 
+        depth_components                       = GL_DEPTH_COMPONENTS                      , 
+        is_depth_renderable                    = GL_DEPTH_RENDERABLE                      , 
+        supports_filter                        = GL_FILTER                                , 
+        fragment_texture                       = GL_FRAGMENT_TEXTURE                      , 
+        supports_frame_buffer_blend            = GL_FRAMEBUFFER_BLEND                     , 
+        frame_buffer_renderable                = GL_FRAMEBUFFER_RENDERABLE                , 
+        frame_buffer_renderable_layered        = GL_FRAMEBUFFER_RENDERABLE_LAYERED        , 
+        geometry_texture                       = GL_GEOMETRY_TEXTURE                      , 
+        get_texture_image_format               = GL_GET_TEXTURE_IMAGE_FORMAT              , 
+        get_texture_image_type                 = GL_GET_TEXTURE_IMAGE_TYPE                , 
+        image_compatibility_class              = GL_IMAGE_COMPATIBILITY_CLASS             , 
+        image_format_compatibility_type        = GL_IMAGE_FORMAT_COMPATIBILITY_TYPE       , 
+        image_pixel_format                     = GL_IMAGE_PIXEL_FORMAT                    , 
+        image_pixel_type                       = GL_IMAGE_PIXEL_TYPE                      , 
+        internal_format_alpha_size             = GL_INTERNALFORMAT_ALPHA_SIZE             , 
+        internal_format_alpha_type             = GL_INTERNALFORMAT_ALPHA_TYPE             , 
+        internal_format_blue_size              = GL_INTERNALFORMAT_BLUE_SIZE              , 
+        internal_format_blue_type              = GL_INTERNALFORMAT_BLUE_TYPE              , 
+        internal_format_depth_size             = GL_INTERNALFORMAT_DEPTH_SIZE             , 
+        internal_format_depth_type             = GL_INTERNALFORMAT_DEPTH_TYPE             , 
+        internal_format_green_size             = GL_INTERNALFORMAT_GREEN_SIZE             , 
+        internal_format_green_type             = GL_INTERNALFORMAT_GREEN_TYPE             , 
+        internal_format_preferred              = GL_INTERNALFORMAT_PREFERRED              , 
+        internal_format_red_size               = GL_INTERNALFORMAT_RED_SIZE               , 
+        internal_format_red_type               = GL_INTERNALFORMAT_RED_TYPE               , 
+        internal_format_shared_size            = GL_INTERNALFORMAT_SHARED_SIZE            , 
+        internal_format_stencil_size           = GL_INTERNALFORMAT_STENCIL_SIZE           , 
+        internal_format_stencil_type           = GL_INTERNALFORMAT_STENCIL_TYPE           , 
+        is_supported                           = GL_INTERNALFORMAT_SUPPORTED              , 
+        maximum_combined_dimensions            = GL_MAX_COMBINED_DIMENSIONS               , 
+        maximum_depth                          = GL_MAX_DEPTH                             , 
+        maximum_height                         = GL_MAX_HEIGHT                            , 
+        maximum_layers                         = GL_MAX_LAYERS                            , 
+        maximum_width                          = GL_MAX_WIDTH                             , 
+        supports_mipmap                        = GL_MIPMAP                                , 
+        number_sample_counts                   = GL_NUM_SAMPLE_COUNTS                     , 
+        read_pixels                            = GL_READ_PIXELS                           , 
+        read_pixels_format                     = GL_READ_PIXELS_FORMAT                    , 
+        read_pixels_type                       = GL_READ_PIXELS_TYPE                      , 
+        samples                                = GL_SAMPLES                               , 
+        shader_image_atomic                    = GL_SHADER_IMAGE_ATOMIC                   , 
+        shader_image_load                      = GL_SHADER_IMAGE_LOAD                     , 
+        shader_image_store                     = GL_SHADER_IMAGE_STORE                    , 
+        simultaneous_texture_and_depth_test    = GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_TEST   , 
+        simultaneous_texture_and_depth_write   = GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE  , 
+        simultaneous_texture_and_stencil_test  = GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST , 
+        simultaneous_texture_and_stencil_write = GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE, 
+        srgb_read                              = GL_SRGB_READ                             , 
+        srgb_write                             = GL_SRGB_WRITE                            , 
+        stencil_components                     = GL_STENCIL_COMPONENTS                    , 
+        is_stencil_renderable                  = GL_STENCIL_RENDERABLE                    , 
+        tessellation_control_texture           = GL_TESS_CONTROL_TEXTURE                  , 
+        tessellation_evaluation_texture        = GL_TESS_EVALUATION_TEXTURE               , 
+        is_texture_compressed                  = GL_TEXTURE_COMPRESSED                    , 
+        texture_compressed_block_height        = GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT       , 
+        texture_compressed_block_size          = GL_TEXTURE_COMPRESSED_BLOCK_SIZE         , 
+        texture_compressed_block_width         = GL_TEXTURE_COMPRESSED_BLOCK_WIDTH        , 
+        texture_gather                         = GL_TEXTURE_GATHER                        , 
+        texture_gather_shadow                  = GL_TEXTURE_GATHER_SHADOW                 , 
+        texture_image_format                   = GL_TEXTURE_IMAGE_FORMAT                  , 
+        texture_image_type                     = GL_TEXTURE_IMAGE_TYPE                    , 
+        texture_shadow                         = GL_TEXTURE_SHADOW                        , 
+        texture_view                           = GL_TEXTURE_VIEW                          , 
+        vertex_texture                         = GL_VERTEX_TEXTURE                        , 
+        view_compatibility_class               = GL_VIEW_COMPATIBILITY_CLASS              , 
     };
     enum class input_primitive_e : gl::enum_t
     {
@@ -922,9 +1067,9 @@ export namespace gl
     };
     enum class patch_parameter_e : gl::enum_t
     {
-        patch_vertices            = GL_PATCH_VERTICES           , 
         patch_default_inner_level = GL_PATCH_DEFAULT_INNER_LEVEL, 
         patch_default_outer_level = GL_PATCH_DEFAULT_OUTER_LEVEL, 
+        patch_vertices            = GL_PATCH_VERTICES           , 
     };
     enum class pixel_data_format_e : gl::enum_t
     {
@@ -1148,7 +1293,6 @@ export namespace gl
     enum class query_parameter_e : gl::enum_t
     {
         target           = GL_QUERY_TARGET          , 
-        
         result           = GL_QUERY_RESULT          , 
         result_available = GL_QUERY_RESULT_AVAILABLE, 
         result_no_wait   = GL_QUERY_RESULT_NO_WAIT  , 
@@ -1291,6 +1435,12 @@ export namespace gl
         greater_equal = GL_GEQUAL  , 
         always        = GL_ALWAYS  , 
     };
+    enum class support_level_e : gl::enum_t
+    {
+        full   = GL_FULL_SUPPORT  , 
+        caveat = GL_CAVEAT_SUPPORT, 
+        none   = GL_NONE          , 
+    };
     enum class synchronization_command_e : gl::bitfield_t
     {
         flush = GL_SYNC_FLUSH_COMMANDS_BIT, 
@@ -1355,6 +1505,15 @@ export namespace gl
         none      = GL_NONE                  , 
         reference = GL_COMPARE_REF_TO_TEXTURE, 
     };
+    enum class texture_component_type_e : gl::enum_t
+    {
+        none     = GL_NONE               , 
+        int32    = GL_INT                , 
+        int32_n  = GL_SIGNED_NORMALIZED  , 
+        uint32   = GL_UNSIGNED_INT       , 
+        uint32_n = GL_UNSIGNED_NORMALIZED, 
+        float32  = GL_FLOAT              , 
+    };
     enum class texture_compressed_format_e : gl::enum_t
     {
         rgb_s3tc_dxt1   = GL_COMPRESSED_RGB_S3TC_DXT1_EXT       , 
@@ -1406,6 +1565,27 @@ export namespace gl
         ds_uint24_n_uint8 = GL_DEPTH24_STENCIL8  , 
         ds_float32_uint8  = GL_DEPTH32F_STENCIL8 , 
     };
+    enum class texture_level_parameter_e : gl::enum_t
+    {
+        alpha_size            = GL_TEXTURE_ALPHA_SIZE           , 
+        alpha_type            = GL_TEXTURE_ALPHA_TYPE           , 
+        blue_size             = GL_TEXTURE_BLUE_SIZE            , 
+        blue_type             = GL_TEXTURE_BLUE_TYPE            , 
+        buffer_offset         = GL_TEXTURE_BUFFER_OFFSET        , 
+        buffer_size           = GL_TEXTURE_BUFFER_SIZE          , 
+        compressed_image_size = GL_TEXTURE_COMPRESSED_IMAGE_SIZE, 
+        depth                 = GL_TEXTURE_DEPTH                , 
+        depth_size            = GL_TEXTURE_DEPTH_SIZE           , 
+        depth_type            = GL_TEXTURE_DEPTH_TYPE           , 
+        green_size            = GL_TEXTURE_GREEN_SIZE           , 
+        green_type            = GL_TEXTURE_GREEN_TYPE           , 
+        height                = GL_TEXTURE_HEIGHT               , 
+        internal_format       = GL_TEXTURE_INTERNAL_FORMAT      , 
+        is_compressed         = GL_TEXTURE_COMPRESSED           , 
+        red_size              = GL_TEXTURE_RED_SIZE             , 
+        red_type              = GL_TEXTURE_RED_TYPE             , 
+        width                 = GL_TEXTURE_WIDTH                , 
+    };
     enum class texture_magnification_filter_e : gl::enum_t
     {
         nearest = GL_NEAREST, 
@@ -1440,6 +1620,7 @@ export namespace gl
         swizzle_g            = GL_TEXTURE_SWIZZLE_G         , 
         swizzle_r            = GL_TEXTURE_SWIZZLE_R         , 
         swizzle_rgba         = GL_TEXTURE_SWIZZLE_RGBA      , 
+        target               = GL_TEXTURE_TARGET            , 
         wrapping_r           = GL_TEXTURE_WRAP_R            , 
         wrapping_s           = GL_TEXTURE_WRAP_S            , 
         wrapping_t           = GL_TEXTURE_WRAP_T            , 
@@ -1692,7 +1873,7 @@ export namespace gl
         binding_offset               = GL_VERTEX_BINDING_OFFSET         , 
         divisor                      = GL_VERTEX_ATTRIB_ARRAY_DIVISOR   , 
         element_array_buffer_binding = GL_ELEMENT_ARRAY_BUFFER_BINDING  , 
-        enabled                      = GL_VERTEX_ATTRIB_ARRAY_ENABLED   , 
+        is_enabled                   = GL_VERTEX_ATTRIB_ARRAY_ENABLED   , 
         is_integer_data              = GL_VERTEX_ATTRIB_ARRAY_INTEGER   , 
         is_long_data                 = GL_VERTEX_ATTRIB_ARRAY_LONG      , 
         is_normalized                = GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, 
