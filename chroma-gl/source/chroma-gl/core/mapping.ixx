@@ -20,71 +20,80 @@ export namespace gl
         if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;        
     }
 
-    auto map_buffer_base_format(gl::buffer_format_e format)
+    auto map_texture_base_format_components(gl::texture_base_format_e texture_base_format) -> gl::uint32_t
     {
-        //gl::buffer_base_format_e;
-        //r       
-        //g       
-        //b       
-        //rg      
-        //rgb     
-        //rgba    
-        //bgr     
-        //bgra    
-        //r_int   
-        //g_int   
-        //b_int   
-        //rg_int  
-        //rgb_int 
-        //rgba_int
-        //bgr_int 
-        //bgra_int
-        //d       
-        //s       
-        //ds      
+        switch (texture_base_format)
+        {
+            using enum gl::texture_base_format_e;
 
+            case r   : return 1u;
+            case rg  : return 2u;
+            case rgb : return 3u;
+            case rgba: return 4u;
+            case d   : return 1u;
+            case s   : return 1u;
 
+            default  : throw std::invalid_argument{ "invalid texture base format" };
+        }
+    }
+    auto map_pixel_data_format_components  (gl::pixel_data_format_e pixel_data_format) -> gl::uint32_t
+    {
+        switch (pixel_data_format)
+        {
+            using enum gl::pixel_data_format_e;
 
-        //r_int8      
-        //r_int16     
-        //r_int32     
-        //r_uint8     
-        //r_uint8_n   
-        //r_uint16    
-        //r_uint16_n  
-        //r_uint32    
-        //r_float16   
-        //r_float32   
-       
-        //rg_int8     
-        //rg_int16    
-        //rg_int32    
-        //rg_uint8    
-        //rg_uint8_n  
-        //rg_uint16   
-        //rg_uint16_n 
-        //rg_uint32   
-        //rg_float16  
-        //rg_float32  
-       
-        //rgb_int32   
-        //rgb_uint32  
-        //rgb_float32 
-       
-        //rgba_int8   
-        //rgba_int16  
-        //rgba_int16_n
-        //rgba_int32  
-        //rgba_uint8  
-        //rgba_uint8_n
-        //rgba_uint16 
-        //rgba_uint32 
-        //rgba_float16
-        //rgba_float32
+            case r   : return 1u;
+            case g   : return 1u;
+            case b   : return 1u;
+            case rgb : return 3u;
+            case bgr : return 3u;
+            case rgba: return 4u;
+            case bgra: return 4u;
+            case d   : return 1u;
+            case s   : return 1u;
+            case ds  : return 2u;
+            
+            default  : throw std::invalid_argument{ "invalid pixel data format" };
+        }
+    }
+    auto map_pixel_data_bytes_per_component(gl::pixel_data_type_e pixel_data_type) -> gl::uint32_t
+    {
+        switch (pixel_data_type)
+        {
+            using enum gl::pixel_data_type_e;
 
+            case int8                     : return 1u;
+            case int16                    : return 2u;
+            case int32                    : return 4u;
+
+            case uint8                    : return 1u;
+            case uint8_3_3_2              : return 1u;
+            case uint8_2_3_3_r            : return 1u;
+            case uint16                   : return 2u;
+            case uint16_4_4_4_4           : return 2u;
+            case uint16_4_4_4_4_r         : return 2u;
+            case uint16_5_5_5_1           : return 2u;
+            case uint16_1_5_5_5_r         : return 2u;
+            case uint16_5_6_5             : return 2u;
+            case uint16_5_6_5_r           : return 2u;
+            case uint32                   : return 4u;
+            case uint32_8_8_8_8           : return 4u;
+            case uint32_8_8_8_8_r         : return 4u;
+            case uint32_10_10_10_2        : return 4u;
+            case uint32_2_10_10_10_r      : return 4u;
+            case uint32_24_8              : return 4u;
+            case uint32_float32_10_11_11_r: return 4u;
+            case uint32_5_9_9_9_r         : return 4u;
+
+            case float16                  : return 2u;
+            case float32                  : return 4u;
+            case float32_uint32_24_8_r    : return 4u;
+
+            default                       : throw std::invalid_argument{ "invalid pixel data type" };
+        }
     }
 
-    auto map_texture_attachment      (gl::texture_format_e     format) -> gl::frame_buffer_attachment_e
+    auto map_texture_attachment            (gl::texture_format_e format) -> gl::frame_buffer_attachment_e
     {
         switch (format)
         {
@@ -100,7 +109,7 @@ export namespace gl
             default               : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
-    auto map_render_buffer_attachment(gl::render_buffer_format_e format) -> gl::frame_buffer_attachment_e
+    auto map_render_buffer_attachment      (gl::render_buffer_format_e format) -> gl::frame_buffer_attachment_e
     {
         switch (format)
         {
@@ -116,7 +125,7 @@ export namespace gl
             default              : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
-    auto map_program_stage           (gl::shader_type_e type) -> gl::program_stage_e
+    auto map_program_stage                 (gl::shader_type_e type) -> gl::program_stage_e
     {
         switch (type)
         {
@@ -133,7 +142,7 @@ export namespace gl
         }
     }
 
-    auto map_texture_format_base     (gl::texture_format_e format) -> gl::texture_base_format_e
+    auto map_texture_format_base           (gl::texture_format_e format) -> gl::texture_base_format_e
     {
         switch (format)
         {
@@ -149,7 +158,7 @@ export namespace gl
             default          : throw std::invalid_argument{ "invalid format" };
         }
     }
-    auto map_texture_format_type     (gl::texture_format_e format) -> gl::pixel_data_type_e
+    auto map_texture_format_type           (gl::texture_format_e format) -> gl::pixel_data_type_e
     {
         switch (format)
         {
