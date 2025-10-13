@@ -112,6 +112,12 @@ export namespace gl
         return as_bytes(std::span{ container });
     }
 
+    template<typename S, typename T> requires std::is_standard_layout_v<S>
+    constexpr auto offset_of(T S::* member) -> std::size_t
+    {
+        return reinterpret_cast<std::size_t>(&(static_cast<S*>(nullptr)->*member));
+    }
+
     template<typename T>
     constexpr auto ternary(gl::bool_t condition, T true_type, T false_type) -> T
     {
