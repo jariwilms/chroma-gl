@@ -16,7 +16,7 @@ export namespace gl
         gl::vector_t<T, N> extent{};
         gl::vector_t<T, N> origin{};
     };
-    struct range
+    struct      range
     {
         constexpr range(gl::count_t count = {}, gl::index_t index = {})
             : count{ count }, index{ index } {}
