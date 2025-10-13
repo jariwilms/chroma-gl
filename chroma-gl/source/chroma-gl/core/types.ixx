@@ -24,17 +24,13 @@ export namespace gl
     using float32_t                     = GLfloat     ;
     using float64_t                     = GLdouble    ;
 
-    //usize_t  : uint32_t  ;
-    //ssize_t  : GLsizei   ;
-    //size_t   : uint64_t  ;
-    //intptr_t : GLsizeiptr;
-    //ptrdiff_t: GLintptr  ;
-
-    using ssize_t                       = GLsizei     ; 
-    using size_t                        = GLsizeiptr  ; //Number of bytes
-    using offset_t                      = GLintptr    ; //Number of bytes offset
+    using usize_t                       = gl::uint32_t;
+    using ssize_t                       = GLsizei     ;
+    using ptrdiff_t                     = GLsizeiptr  ; //Address pointer
+    using intptr_t                      = GLintptr    ; //Address pointer offset
     using count_t                       = gl::uint32_t; //Number of elements
     using index_t                       = gl::uint32_t; //Number of elements offset
+    using size_t                        = gl::uint64_t;
 
     using enum_t                        = GLenum      ; //Enumeration constant
     using bitfield_t                    = GLbitfield  ; //Combination of logical bits
@@ -102,6 +98,5 @@ export namespace gl
         return glm::value_ptr(value);
     }
 
-    void _debug_callback(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::ssize_t, gl::c_string, const gl::void_t*);
-    using debug_callback_t = decltype(_debug_callback);
+    using debug_callback_t = gl::void_t(*)(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::ssize_t, gl::c_string, const gl::void_t*);
 }

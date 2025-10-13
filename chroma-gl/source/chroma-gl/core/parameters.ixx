@@ -4,146 +4,94 @@ import std;
 import opengl.flags;
 import opengl.types;
 
-export namespace glp
+export namespace gl
 {
-    struct color_index
-    {
-        gl::uint32_t                                           index{};
-        std::variant<gl::vector4i, gl::vector4u, gl::vector4f> color{};
-    };
-    struct depth
-    {
-        std::variant<gl::int32_t, gl::uint32_t, gl::float32_t> value{};
-    };
-    struct stencil
-    {
-        std::variant<gl::int32_t, gl::uint32_t, gl::float32_t> value{};
-    };
-    struct depth_stencil
-    {
-        gl::float32_t depth{};
-        gl::int32_t   stencil{};
-    };
-    struct compare_mode
-    { 
-        gl::texture_compare_mode_e value{}; 
-    };
-    struct compare_function     
-    { 
-        gl::texture_compare_function_e value{}; 
-    };
-    struct magnification_filter 
-    { 
-        gl::texture_magnification_filter_e value{}; 
-    };
-    struct minification_filter  
-    { 
-        gl::texture_minification_filter_e value{}; 
-    };
-    struct wrapping_s           
-    { 
-        gl::texture_wrapping_e value{}; 
-    };
-    struct wrapping_t           
-    { 
-        gl::texture_wrapping_e value{}; 
-    };
-    struct wrapping_r           
-    { 
-        gl::texture_wrapping_e value{}; 
-    };
-    struct border_color         
-    { 
-        std::variant<gl::vector4i, gl::vector4u, gl::vector4f> value{};
-    };
-    struct minimum_lod
-    { 
-        gl::float32_t value{}; 
-    };
-    struct maximum_lod
-    { 
-        gl::float32_t value{}; 
-    };
-    struct depth_stencil_mode
-    {
-        gl::depth_stencil_texture_mode_e value{};
-    };
-    struct base_level
-    {
-        gl::uint32_t value{};
-    };
-    struct lod_bias
-    {
-        gl::float32_t value{};
-    };
-    struct maximum_anisotropy
-    {
-        gl::float32_t value{};
-    };
-    struct maximum_level
-    {
-        gl::uint32_t value{};
-    };
-    struct swizzle_r
-    {
-        gl::texture_swizzle_e value{};
-    };
-    struct swizzle_g
-    {
-        gl::texture_swizzle_e value{};
-    };
-    struct swizzle_b
-    {
-        gl::texture_swizzle_e value{};
-    };
-    struct swizzle_a
-    {
-        gl::texture_swizzle_e value{};
-    };
-    struct swizzle_rgba
-    {
-        std::array<gl::texture_swizzle_e, 4u> value{};
-    };
-    struct fade_threshold_size
-    {
-        gl::float32_t value{};
-    };
-    struct sprite_coordinate_origin
-    {
-        gl::point_origin_e value{};
-    };
-    struct patch_vertices
-    {
-        gl::uint32_t value{};
-    };
-    struct patch_default_outer_level
-    {
-        std::array<gl::float32_t, 4u> value{};
-    };
-    struct patch_default_inner_level
-    {
-        std::array<gl::float32_t, 4u> value{};
-    };
+    template<gl::sampler_parameter_e P>
+    struct sampler_parameter_argument;
+
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::border_color        > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f>; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::compare_function    > { using type = gl::texture_compare_function_e                        ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::compare_mode        > { using type = gl::texture_compare_mode_e                            ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::magnification_filter> { using type = gl::texture_magnification_filter_e                    ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::maximum_lod         > { using type = gl::float32_t                                         ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::minification_filter > { using type = gl::texture_minification_filter_e                     ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::minimum_lod         > { using type = gl::float32_t                                         ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::wrapping_r          > { using type = gl::texture_wrapping_e                                ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::wrapping_s          > { using type = gl::texture_wrapping_e                                ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::wrapping_t          > { using type = gl::texture_wrapping_e                                ; };
+
+    template<gl::sampler_parameter_e P>
+    using sampler_parameter_argument_t = gl::sampler_parameter_argument<P>::type;
+
+    
+
+    template<gl::texture_parameter_e P>
+    struct texture_parameter_argument;
+
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::base_level          > { using type = gl::uint32_t                                          ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::border_color        > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f>; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::compare_function    > { using type = gl::texture_compare_function_e                        ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::compare_mode        > { using type = gl::texture_compare_mode_e                            ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::depth_stencil_mode  > { using type = gl::depth_stencil_texture_mode_e                      ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::lod_bias            > { using type = gl::float32_t                                         ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::magnification_filter> { using type = gl::texture_magnification_filter_e                    ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::maximum_anisotropy  > { using type = gl::uint32_t                                          ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::maximum_level       > { using type = gl::uint32_t                                          ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::maximum_lod         > { using type = gl::float32_t                                         ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::minification_filter > { using type = gl::texture_minification_filter_e                     ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::minimum_lod         > { using type = gl::float32_t                                         ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::swizzle_a           > { using type = gl::texture_swizzle_e                                 ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::swizzle_b           > { using type = gl::texture_swizzle_e                                 ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::swizzle_g           > { using type = gl::texture_swizzle_e                                 ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::swizzle_r           > { using type = gl::texture_swizzle_e                                 ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::swizzle_rgba        > { using type = gl::texture_swizzle_e                                 ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::wrapping_r          > { using type = gl::texture_wrapping_e                                ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::wrapping_s          > { using type = gl::texture_wrapping_e                                ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::wrapping_t          > { using type = gl::texture_wrapping_e                                ; };
+    
+    template<gl::texture_parameter_e P>
+    using texture_parameter_argument_t = gl::texture_parameter_argument<P>::type;
 
 
 
-    using dispatch_v          = std::variant<gl::vector3u, gl::intptr_t>;
-    using texture_parameter_v = std::variant<
-                                    glp::compare_function    , glp::compare_mode, 
-                                    glp::base_level          , glp::maximum_level, 
-                                    glp::border_color        , 
-                                    glp::depth_stencil_mode  , 
-                                    glp::magnification_filter, glp::minification_filter, glp::maximum_anisotropy, 
-                                    glp::wrapping_s          , glp::wrapping_t         , glp::wrapping_r, 
-                                    glp::swizzle_r           , glp::swizzle_g          , glp::swizzle_b , glp::swizzle_a, glp::swizzle_rgba, 
-                                    glp::maximum_lod         , glp::minimum_lod        , glp::lod_bias>;
-    using clear_v             = std::variant<glp::color_index, glp::depth, glp::stencil, glp::depth_stencil>;
-    using point_parameter_v   = std::variant<glp::fade_threshold_size, glp::sprite_coordinate_origin>;
-    using sampler_parameter_v = std::variant<
-                                    glp::magnification_filter, glp::minification_filter, 
-                                    glp::maximum_lod         , glp::minimum_lod        , 
-                                    glp::wrapping_s          , glp::wrapping_t         , glp::wrapping_r, 
-                                    glp::border_color        , 
-                                    glp::compare_mode        , glp::compare_function>;
-    using patch_parameter_v   = std::variant<glp::patch_vertices, glp::patch_default_outer_level, glp::patch_default_inner_level>;
+    template<gl::patch_parameter_e P>
+    struct patch_parameter_argument;
+
+    template<> struct gl::patch_parameter_argument<gl::patch_parameter_e::patch_default_inner_level> { using type = std::array<gl::float32_t, 4u>; };
+    template<> struct gl::patch_parameter_argument<gl::patch_parameter_e::patch_default_outer_level> { using type = std::array<gl::float32_t, 4u>; };
+    template<> struct gl::patch_parameter_argument<gl::patch_parameter_e::patch_vertices           > { using type = gl::uint32_t                 ; };
+
+    template<gl::patch_parameter_e P>
+    using patch_parameter_argument_t = gl::patch_parameter_argument<P>::type;
+
+
+
+    template<gl::point_parameter_e P>
+    struct point_parameter_argument;
+
+    template<> struct gl::point_parameter_argument<gl::point_parameter_e::fade_threshold_size     > { using type = float32_t         ; };
+    template<> struct gl::point_parameter_argument<gl::point_parameter_e::sprite_coordinate_origin> { using type = gl::point_origin_e; };
+
+    template<gl::point_parameter_e P>
+    using point_parameter_argument_t = gl::point_parameter_argument<P>::type;
+
+
+
+    template<gl::frame_buffer_attachment_e A>
+    struct frame_buffer_attachment_argument;
+
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::color_0      > { using type = std::variant<gl::vector4i , gl::vector4u, gl::vector4f >; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::color_1      > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f  >; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::color_2      > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f  >; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::color_3      > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f  >; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::color_4      > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f  >; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::color_5      > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f  >; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::color_6      > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f  >; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::color_7      > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f  >; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::depth        > { using type = std::variant<gl::int32_t  , gl::uint32_t, gl::float32_t>; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::stencil      > { using type = std::variant<gl::int32_t  , gl::uint32_t, gl::float32_t>; };
+    template<> struct gl::frame_buffer_attachment_argument<gl::frame_buffer_attachment_e::depth_stencil> { using type = std::tuple  <gl::float32_t, gl::int32_t                >; };
+
+    template<gl::frame_buffer_attachment_e A>
+    using frame_buffer_attachment_argument_t = gl::frame_buffer_attachment_argument<A>::type;
 }

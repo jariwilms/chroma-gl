@@ -339,8 +339,6 @@ export namespace gl
     template<gl::data_e D>             requires (meta::is_indexed_data<D>())
     auto get_value_index                            (gl::index_t index) -> auto
     {
-        gl::todo();
-
         auto get_uint32                = [](gl::data_e data, gl::index_t index) -> gl::uint32_t
             {
                 auto value = gl::int32_t{};
@@ -415,38 +413,39 @@ export namespace gl
             };
 
         using enum gl::data_e;
-        //if constexpr (D == atomic_counter_buffer_binding    ) return get_handle               (D, index);
-        //if constexpr (D == blending_equation_alpha          ) return get_blending_equation    (D, index);
-        //if constexpr (D == blending_equation_rgb            ) return get_blending_equation    (D, index);
-        //if constexpr (D == blending_source_alpha            ) return get_blending_factor      (D, index);
-        //if constexpr (D == blending_source_rgb              ) return get_blending_factor      (D, index);
-        //if constexpr (D == blending_destination_alpha       ) return get_blending_factor      (D, index);
-        //if constexpr (D == blending_destination_rgb         ) return get_blending_factor      (D, index);
-        //if constexpr (D == image_binding_access             ) return get_image_binding_access (D, index);
-        //if constexpr (D == image_binding_format             ) return get_image_binding_format (D, index);
-        //if constexpr (D == image_binding_layer              ) return get_image_binding_layer  (D, index);
-        //if constexpr (D == image_binding_layered            ) return get_image_binding_layered(D, index);
-        //if constexpr (D == image_binding_level              ) return get_image_binding_level  (D, index);
-        //if constexpr (D == image_binding_name               ) return get_image_binding_name   (D, index);
-        //if constexpr (D == maximum_compute_work_group_count ) return get_vector3u             (D, index);
-        //if constexpr (D == maximum_compute_work_group_size  ) return get_vector3u             (D, index);
-        //if constexpr (D == query_buffer_binding             ) return get_handle               (D, index);
-        //if constexpr (D == scissor_box                      ) return get_scissor_box          (D, index);
-        //if constexpr (D == sample_mask_value                ) return get_uint32               (D, index);
-        //if constexpr (D == shader_storage_buffer_binding    ) return get_handle               (D, index);
-        //if constexpr (D == shader_storage_buffer_size       ) return get_uint64               (D, index);
-        //if constexpr (D == shader_storage_buffer_start      ) return get_uint64               (D, index);
-        //if constexpr (D == transform_feedback_buffer_binding) return get_handle               (D, index);
-        //if constexpr (D == transform_feedback_buffer_size   ) return get_uint64               (D, index);
-        //if constexpr (D == transform_feedback_buffer_start  ) return get_uint64               (D, index);
-        //if constexpr (D == uniform_buffer_binding           ) return get_handle               (D, index);
-        //if constexpr (D == uniform_buffer_size              ) return get_uint64               (D, index);
-        //if constexpr (D == uniform_buffer_start             ) return get_uint64               (D, index);
-        //if constexpr (D == vertex_binding_buffer            ) return get_handle               (D, index);
-        //if constexpr (D == vertex_binding_divisor           ) return get_uint32               (D, index);
-        //if constexpr (D == vertex_binding_offset            ) return get_uint32               (D, index);
-        //if constexpr (D == vertex_binding_stride            ) return get_uint32               (D, index);
-        //if constexpr (D == viewport                         ) return get_area                 (D, index);
+
+        if constexpr (D == atomic_counter_buffer_binding    ) return get_handle               (D, index);
+        if constexpr (D == blending_equation_alpha          ) return get_blending_equation    (D, index);
+        if constexpr (D == blending_equation_rgb            ) return get_blending_equation    (D, index);
+        if constexpr (D == blending_source_alpha            ) return get_blending_factor      (D, index);
+        if constexpr (D == blending_source_rgb              ) return get_blending_factor      (D, index);
+        if constexpr (D == blending_destination_alpha       ) return get_blending_factor      (D, index);
+        if constexpr (D == blending_destination_rgb         ) return get_blending_factor      (D, index);
+        if constexpr (D == image_binding_access             ) return get_image_binding_access (D, index);
+        if constexpr (D == image_binding_format             ) return get_image_binding_format (D, index);
+        if constexpr (D == image_binding_layer              ) return get_image_binding_layer  (D, index);
+        if constexpr (D == image_binding_layered            ) return get_image_binding_layered(D, index);
+        if constexpr (D == image_binding_level              ) return get_image_binding_level  (D, index);
+        if constexpr (D == image_binding_name               ) return get_image_binding_name   (D, index);
+        if constexpr (D == maximum_compute_work_group_count ) return get_vector3u             (D, index);
+        if constexpr (D == maximum_compute_work_group_size  ) return get_vector3u             (D, index);
+        if constexpr (D == query_buffer_binding             ) return get_handle               (D, index);
+        if constexpr (D == scissor_box                      ) return get_scissor_box          (D, index);
+        if constexpr (D == sample_mask_value                ) return get_uint32               (D, index);
+        if constexpr (D == shader_storage_buffer_binding    ) return get_handle               (D, index);
+        if constexpr (D == shader_storage_buffer_size       ) return get_uint64               (D, index);
+        if constexpr (D == shader_storage_buffer_start      ) return get_uint64               (D, index);
+        if constexpr (D == transform_feedback_buffer_binding) return get_handle               (D, index);
+        if constexpr (D == transform_feedback_buffer_size   ) return get_uint64               (D, index);
+        if constexpr (D == transform_feedback_buffer_start  ) return get_uint64               (D, index);
+        if constexpr (D == uniform_buffer_binding           ) return get_handle               (D, index);
+        if constexpr (D == uniform_buffer_size              ) return get_uint64               (D, index);
+        if constexpr (D == uniform_buffer_start             ) return get_uint64               (D, index);
+        if constexpr (D == vertex_binding_buffer            ) return get_handle               (D, index);
+        if constexpr (D == vertex_binding_divisor           ) return get_uint32               (D, index);
+        if constexpr (D == vertex_binding_offset            ) return get_uint32               (D, index);
+        if constexpr (D == vertex_binding_stride            ) return get_uint32               (D, index);
+        if constexpr (D == viewport                         ) return get_area                 (D, index);
     }
     template<gl::feature_e F>
     void enable                                     ()
@@ -508,82 +507,81 @@ export namespace gl
                 return ::glGetInternalformati64v(gl::to_underlying(target), internal_format, gl::to_underlying(parameter), static_cast<gl::ssize_t>(sizeof(gl::int64_t)), &value), value;
             };
 
-        //TODO: missing values
-        //TODO: alphabetical sorting
-        
+        //Queries marked with "//" might be erroneous
         using enum gl::internal_format_parameter_e;
-        if constexpr (P == number_sample_counts                  ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == samples                               ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_supported             ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_preferred             ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_red_size              ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_green_size            ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_blue_size             ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_alpha_size            ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_depth_size            ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_stencil_size          ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == internal_format_shared_size           ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == internal_format_red_type              ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == internal_format_green_type            ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == internal_format_blue_type             ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == internal_format_alpha_type            ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == internal_format_depth_type            ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == internal_format_stencil_type          ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == maximum_width                         ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == maximum_height                        ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == maximum_depth                         ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == maximum_layers                        ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == maximum_combined_dimensions           ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == color_components                      ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == depth_components                      ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == stencil_components                    ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == color_renderable                      ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == depth_renderable                      ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == stencil_renderable                    ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == frame_buffer_renderable               ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == frame_buffer_renderable_layered       ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == frame_buffer_blend                    ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == read_pixels                           ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == read_pixels_format                    ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == read_pixels_type                      ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == texture_image_format                  ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == texture_image_type                    ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == get_texture_image_format              ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == get_texture_image_type                ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == mipmap                                ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == auto_generate_mipmap                  ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == color_encoding                        ) return static_cast<gl::color_encoding_e>(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == srgb_read                             ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == srgb_write                            ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == filter                                ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == vertex_texture                        ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == tessellation_control_texture          ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == tessellation_evaluation_texture       ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == geometry_texture                      ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == fragment_texture                      ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == compute_texture                       ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == texture_shadow                        ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == texture_gather                        ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == texture_gather_shadow                 ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == shader_image_load                     ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == shader_image_store                    ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == shader_image_atomic                   ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == image_compatibility_class             ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == image_pixel_format                    ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == image_pixel_type                      ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == image_format_compatibility_type       ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == simultaneous_texture_and_depth_test   ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == simultaneous_texture_and_stencil_test ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == simultaneous_texture_and_depth_write  ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == simultaneous_texture_and_stencil_write) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == texture_compressed                    ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == texture_compressed_block_width        ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == texture_compressed_block_height       ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == texture_compressed_block_size         ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == clear_buffer                          ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == texture_view                          ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
-        //if constexpr (P == view_compatibility_class              ) return static_cast<gl::uint32_t>(get_internal_format_iv(target, internal_format, P));
-        if constexpr (P == clear_texture                         ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+
+             if constexpr (P == auto_generate_mipmap                  ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == clear_buffer                          ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == clear_texture                         ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == color_components                      ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == color_encoding                        ) return static_cast<gl::color_encoding_e>(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == is_color_renderable                   ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == compute_texture                       ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == depth_components                      ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == is_depth_renderable                   ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == supports_filter                       ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == fragment_texture                      ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == supports_frame_buffer_blend           ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == frame_buffer_renderable               ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == frame_buffer_renderable_layered       ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == geometry_texture                      ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == get_texture_image_format              ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == get_texture_image_type                ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == image_compatibility_class             ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == image_format_compatibility_type       ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == image_pixel_format                    ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == image_pixel_type                      ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == internal_format_alpha_size            ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == internal_format_alpha_type            ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == internal_format_blue_size             ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == internal_format_blue_type             ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == internal_format_depth_size            ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == internal_format_depth_type            ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == internal_format_green_size            ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == internal_format_green_type            ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == internal_format_preferred             ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == internal_format_red_size              ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == internal_format_red_type              ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == internal_format_shared_size           ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == internal_format_stencil_size          ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == internal_format_stencil_type          ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == is_supported                          ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == maximum_combined_dimensions           ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == maximum_depth                         ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == maximum_height                        ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == maximum_layers                        ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == maximum_width                         ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == supports_mipmap                       ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == number_sample_counts                  ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == read_pixels                           ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == read_pixels_format                    ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == read_pixels_type                      ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == samples                               ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == shader_image_atomic                   ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == shader_image_load                     ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == shader_image_store                    ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == simultaneous_texture_and_depth_test   ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == simultaneous_texture_and_depth_write  ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == simultaneous_texture_and_stencil_test ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == simultaneous_texture_and_stencil_write) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == srgb_read                             ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == srgb_write                            ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == stencil_components                    ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == is_stencil_renderable                 ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == tessellation_control_texture          ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == tessellation_evaluation_texture       ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == is_texture_compressed                 ) return static_cast<gl::bool_t          >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == texture_compressed_block_height       ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == texture_compressed_block_size         ) return static_cast<gl::usize_t         >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == texture_compressed_block_width        ) return static_cast<gl::uint32_t        >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == texture_gather                        ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == texture_gather_shadow                 ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == texture_image_format                  ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == texture_image_type                    ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
+        else if constexpr (P == texture_shadow                        ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == texture_view                          ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == vertex_texture                        ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
+        else if constexpr (P == view_compatibility_class              ) return static_cast<gl::enum_t          >(get_internal_format_iv(target, internal_format, P)); //
     }
 
 
@@ -925,7 +923,7 @@ export namespace gl
     template<gl::texture_level_parameter_e P>
     auto get_texture_level_parameter                (gl::handle_t texture, gl::uint32_t level)
     {
-        auto get_texture_level_parameter_iv = [](gl::handle_t texture, gl::uint32_t level, gl::texture_parameter_e parameter) -> gl::int32_t
+        auto get_texture_level_parameter_iv = [](gl::handle_t texture, gl::uint32_t level, gl::texture_level_parameter_e parameter) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
                 return ::glGetTextureLevelParameteriv(gl::to_underlying(texture), static_cast<gl::int32_t>(level), gl::to_underlying(parameter), &value), value;
@@ -1338,7 +1336,7 @@ export namespace gl
     {
         const auto buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
         const auto buffer_range = gl::byte_range{ buffer_size };
-        const auto intersection = gl::range_intersection(gl::convert_range(range), buffer_range);
+        const auto intersection = gl::range_intersection(gl::convert_range<T>(range), buffer_range);
         if (intersection.empty()) return std::span<T>{};
         
               auto pointer      = ::glMapNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::intptr_t>(intersection.offset), static_cast<gl::ptrdiff_t>(intersection.size), gl::to_underlying(access));
@@ -1349,7 +1347,7 @@ export namespace gl
     {
         const auto buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
         const auto buffer_range = gl::byte_range{ buffer_size };
-        const auto intersection = gl::range_intersection(gl::convert_range(range), buffer_range);
+        const auto intersection = gl::range_intersection(gl::convert_range<T>(range), buffer_range);
         if (!intersection.empty()) ::glFlushMappedNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::intptr_t>(intersection.offset), static_cast<gl::ptrdiff_t>(intersection.size));
     }
     auto unmap_buffer                               (gl::handle_t buffer) -> gl::bool_t
@@ -1365,26 +1363,32 @@ export namespace gl
     {
         const auto buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
         const auto buffer_range = gl::byte_range{ buffer_size };
-        const auto intersection = gl::range_intersection(gl::convert_range(range), buffer_range);
+        const auto intersection = gl::range_intersection(gl::convert_range<T>(range), buffer_range);
         if (!intersection.empty()) ::glInvalidateBufferSubData(gl::to_underlying(buffer), static_cast<gl::intptr_t>(intersection.offset), static_cast<gl::ptrdiff_t>(intersection.size));
     }
     template<typename T>
     void copy_buffer_sub_data                       (gl::handle_t source_buffer, gl::handle_t destination_buffer, gl::range source_range, gl::range destination_range)
     {
+        destination_range.count = source_range.count;
+
         const auto source_buffer_size       = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(source_buffer);
         const auto source_buffer_range      = gl::byte_range{ source_buffer_size };
-        const auto source_intersection      = gl::range_intersection(gl::convert_range(source_range), source_buffer_range);
+        const auto source_intersection      = gl::range_intersection(gl::convert_range<T>(source_range), source_buffer_range);
         if (source_intersection     .empty()) return;
 
         const auto destination_buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(destination_buffer);
         const auto destination_buffer_range = gl::byte_range{ destination_buffer_size };
-        const auto destination_intersection = gl::range_intersection(gl::convert_range(destination_range), destination_buffer_range);
+        const auto destination_intersection = gl::range_intersection(gl::convert_range<T>(destination_range), destination_buffer_range);
         if (destination_intersection.empty()) return;
 
-        ::glCopyNamedBufferSubData(
-            gl::to_underlying(source_buffer)                      , gl::to_underlying(destination_buffer)                     , 
-            static_cast<gl::intptr_t >(source_intersection.offset), static_cast<gl::intptr_t>(destination_intersection.offset), 
-            static_cast<gl::ptrdiff_t>(source_intersection.size) );
+        const auto copy_size                = std::min(source_intersection.size, destination_intersection.size);
+        if (copy_size)
+        {
+            ::glCopyNamedBufferSubData(
+                gl::to_underlying         (source_buffer)             , gl::to_underlying        (destination_buffer)             , 
+                static_cast<gl::intptr_t >(source_intersection.offset), static_cast<gl::intptr_t>(destination_intersection.offset),
+                static_cast<gl::ptrdiff_t>(copy_size)                );
+        }
     }
     
 
@@ -1491,7 +1495,7 @@ export namespace gl
     {
         ::glProgramBinary(gl::to_underlying(program), format, binary.data(), static_cast<gl::ssize_t>(binary.size()));
     }
-    void memory_barrier                             (gl::memory_barrier_e         barrier)
+    void memory_barrier                             (gl::memory_barrier_e          barrier)
     {
         ::glMemoryBarrier(gl::to_underlying(barrier));
     }
@@ -1549,9 +1553,10 @@ export namespace gl
     }
     void bind_samplers                              (std::span<const gl::handle_t> samplers, gl::range range)
     {
-        ::glBindSamplers(range.index, range.count, gl::to_underlying_pointer(samplers.data()));
+        ::glBindSamplers(range.index, static_cast<gl::ssize_t>(range.count), gl::to_underlying_pointer(samplers.data()));
     }
-    auto sampler_parameter                          (gl::handle_t sampler, glp::sampler_parameter_v parameter) -> auto
+    template<gl::sampler_parameter_e P>
+    auto sampler_parameter                          (gl::handle_t sampler, gl::sampler_parameter_argument_t<P> value) -> auto
     {
         auto sampler_parameter_iv  = [](gl::handle_t sampler, gl::sampler_parameter_e parameter, gl::int32_t   value)
             {
@@ -1566,66 +1571,80 @@ export namespace gl
                 ::glSamplerParameterfv(gl::to_underlying(sampler), gl::to_underlying(parameter), &value);
             };
 
-        const auto overload = gl::overload_t
+        using enum gl::sampler_parameter_e;
+
+             if constexpr (P == border_color        ) 
         {
-            [=](glp::compare_mode         _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::compare_mode        , gl::to_underlying(_.value)); }, 
-            [=](glp::compare_function     _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::compare_function    , gl::to_underlying(_.value)); },
-            [=](glp::magnification_filter _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::magnification_filter, gl::to_underlying(_.value)); },
-            [=](glp::minification_filter  _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::minification_filter , gl::to_underlying(_.value)); },
-            [=](glp::wrapping_r           _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::wrapping_r          , gl::to_underlying(_.value)); },
-            [=](glp::wrapping_s           _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::wrapping_s          , gl::to_underlying(_.value)); },
-            [=](glp::wrapping_t           _) { sampler_parameter_uiv(sampler, gl::sampler_parameter_e::wrapping_t          , gl::to_underlying(_.value)); },
-            [=](glp::border_color         _) 
-                {
-                    const auto overload = gl::overload_t
-                    {
-                        [=](gl::vector4i _) { ::glSamplerParameterIiv (gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
-                        [=](gl::vector4u _) { ::glSamplerParameterIuiv(gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
-                        [=](gl::vector4f _) { ::glSamplerParameterfv  (gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(_)); }, 
-                    };
+            auto overload = gl::overload_t
+            {
+                [=](gl::vector4i vector) { ::glSamplerParameterIiv (gl::to_underlying(sampler), gl::to_underlying(P), gl::value_pointer(vector)); },
+                [=](gl::vector4u vector) { ::glSamplerParameterIuiv(gl::to_underlying(sampler), gl::to_underlying(P), gl::value_pointer(vector)); },
+                [=](gl::vector4f vector) { ::glSamplerParameterfv  (gl::to_underlying(sampler), gl::to_underlying(P), gl::value_pointer(vector)); },
+            };
 
-                    std::visit(overload, _.value);
-                }, 
-            [=](glp::maximum_lod          _) { sampler_parameter_fv (sampler, gl::sampler_parameter_e::maximum_lod         ,                   _.value ); }, 
-            [=](glp::minimum_lod          _) { sampler_parameter_fv (sampler, gl::sampler_parameter_e::minimum_lod         ,                   _.value ); }, 
-        };
-
-        std::visit(overload, parameter);
+            std::visit(overload, value);
+        }
+        else if constexpr (P == compare_function    ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
+        else if constexpr (P == compare_mode        ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
+        else if constexpr (P == magnification_filter) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
+        else if constexpr (P == maximum_lod         ) sampler_parameter_fv (sampler, P, gl::to_underlying(value));
+        else if constexpr (P == minification_filter ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
+        else if constexpr (P == minimum_lod         ) sampler_parameter_fv (sampler, P, gl::to_underlying(value));
+        else if constexpr (P == wrapping_r          ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
+        else if constexpr (P == wrapping_s          ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
+        else if constexpr (P == wrapping_t          ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
     }
     template<gl::packing_mode_e P>
     void pixel_store                                (gl::int32_t parameter)
     {
         ::glPixelStorei(gl::to_underlying(P), parameter);
     }
-    void texture_sub_image_1d                       (gl::handle_t texture, gl::texture_base_format_e format, gl::pixel_data_type_e type, gl::uint32_t level, gl::length_t region, std::span<const gl::byte_t> data)
+    void texture_sub_image_1d                       (gl::handle_t texture, gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, gl::uint32_t level, gl::length_t region, std::span<const gl::byte_t> source)
     {
+        const auto width = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width" };
+
         ::glTextureSubImage1D(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level), 
-            static_cast<gl::int32_t>(region.origin.x), 
-            static_cast<gl::ssize_t>(region.extent.x), 
-            gl::to_underlying       (format)         , gl::to_underlying(type)        , 
-            data.data());
+            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
+            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::ssize_t>(region.extent.x), 
+            gl::to_underlying       (base_format)    , gl::to_underlying(pixel_data_type)       , 
+            source.data()                           );
     }
-    void texture_sub_image_2d                       (gl::handle_t texture, gl::texture_base_format_e format, gl::pixel_data_type_e type, gl::uint32_t level, gl::area_t   region, std::span<const gl::byte_t> data)
+    void texture_sub_image_2d                       (gl::handle_t texture, gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, gl::uint32_t level, gl::area_t   region, std::span<const gl::byte_t> source)
     {
+        const auto width  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        const auto height = gl::get_texture_level_parameter<gl::texture_level_parameter_e::height>(texture, level);
+        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
+        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
+
         ::glTextureSubImage2D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
             static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), 
-            gl::to_underlying       (format)         , gl::to_underlying(type)                  , 
-            data.data());
+            gl::to_underlying       (base_format)    , gl::to_underlying(pixel_data_type)       , 
+            source.data()                           );
     }
-    void texture_sub_image_3d                       (gl::handle_t texture, gl::texture_base_format_e format, gl::pixel_data_type_e type, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> data)
+    void texture_sub_image_3d                       (gl::handle_t texture, gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> source)
     {
+        const auto width  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        const auto height = gl::get_texture_level_parameter<gl::texture_level_parameter_e::height>(texture, level);
+        const auto depth  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::depth >(texture, level);
+        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
+        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
+        if (region.origin.z + region.extent.z > depth ) throw std::invalid_argument{ "invalid region depth"  };
+
         ::glTextureSubImage3D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
             static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z), 
-            gl::to_underlying       (format)         , gl::to_underlying(type)                  , 
-            data.data());
+            gl::to_underlying       (base_format)    , gl::to_underlying(pixel_data_type)       , 
+            source.data()                           );
     }
     void copy_texture_sub_image_1d                  (gl::handle_t texture, gl::uint32_t level, gl::length_t region, const gl::vector2u& coordinates)
     {
+        const auto width = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        if (region.origin.x + region.extent.x > width) throw std::invalid_argument{ "invalid region width"  };
+        
         ::glCopyTextureSubImage1D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)        , 
             static_cast<gl::int32_t>(region.origin.x), 
@@ -1634,6 +1653,11 @@ export namespace gl
     }
     void copy_texture_sub_image_2d                  (gl::handle_t texture, gl::uint32_t level, gl::area_t   region, const gl::vector2u& coordinates)
     {
+        const auto width  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        const auto height = gl::get_texture_level_parameter<gl::texture_level_parameter_e::height>(texture, level);
+        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
+        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
+
         ::glCopyTextureSubImage2D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
@@ -1642,38 +1666,59 @@ export namespace gl
     }
     void copy_texture_sub_image_3d                  (gl::handle_t texture, gl::uint32_t level, gl::volume_t region, const gl::vector2u& coordinates)
     {
+        const auto width  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        const auto height = gl::get_texture_level_parameter<gl::texture_level_parameter_e::height>(texture, level);
+        const auto depth  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::depth >(texture, level);
+        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
+        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
+        if (region.origin.z + region.extent.z > depth ) throw std::invalid_argument{ "invalid region depth"  };
+
         ::glCopyTextureSubImage3D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
             static_cast<gl::int32_t>(coordinates  .x), static_cast<gl::int32_t>(coordinates  .y), 
             static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y));
     }
-    void compressed_texture_sub_image_1d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::length_t region, std::span<const gl::byte_t> data)
+    void compressed_texture_sub_image_1d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::length_t region, std::span<const gl::byte_t> source)
     {
+        const auto width = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        if (region.origin.x + region.extent.x > width) throw std::invalid_argument{ "invalid region width"  };
+
         ::glCompressedTextureSubImage1D(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level), 
-            static_cast<gl::int32_t>(region.origin.x), 
-            static_cast<gl::ssize_t>(region.extent.x), 
+            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
+            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::ssize_t>(region.extent.x), 
             gl::to_underlying       (format)         , 
-            static_cast<gl::ssize_t>(data.size())    , data.data());
+            static_cast<gl::ssize_t>(source.size())  , source.data()                             );
     }
-    void compressed_texture_sub_image_2d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::area_t   region, std::span<const gl::byte_t> data)
+    void compressed_texture_sub_image_2d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::area_t   region, std::span<const gl::byte_t> source)
     {
+        const auto width  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        const auto height = gl::get_texture_level_parameter<gl::texture_level_parameter_e::height>(texture, level);
+        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
+        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
+
         ::glCompressedTextureSubImage2D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
             static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), 
             gl::to_underlying       (format)         , 
-            static_cast<gl::ssize_t>(data.size())    , data.data());
+            static_cast<gl::ssize_t>(source.size())  , source.data()                             );
     }
-    void compressed_texture_sub_image_3d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> data)
+    void compressed_texture_sub_image_3d            (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> source)
     {
+        const auto width  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::width >(texture, level);
+        const auto height = gl::get_texture_level_parameter<gl::texture_level_parameter_e::height>(texture, level);
+        const auto depth  = gl::get_texture_level_parameter<gl::texture_level_parameter_e::depth >(texture, level);
+        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
+        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
+        if (region.origin.z + region.extent.z > depth ) throw std::invalid_argument{ "invalid region depth"  };
+        
         ::glCompressedTextureSubImage3D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
             static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z), 
             gl::to_underlying       (format)         , 
-            static_cast<gl::ssize_t>(data.size())    , data.data());
+            static_cast<gl::ssize_t>(source.size())  , source.data()                             );
     }
     void texture_buffer                             (gl::handle_t texture, gl::handle_t buffer, gl::buffer_format_e format)
     {
@@ -1683,63 +1728,61 @@ export namespace gl
     void texture_buffer_range                       (gl::handle_t texture, gl::handle_t buffer, gl::buffer_format_e format, gl::range range)
     {
         const auto byte_range = gl::convert_range<T>(range);
-        ::glTextureBufferRange(gl::to_underlying(texture), gl::to_underlying(format), gl::to_underlying(buffer), byte_range.offset, byte_range.size);
+        ::glTextureBufferRange(gl::to_underlying(texture), gl::to_underlying(format), gl::to_underlying(buffer), static_cast<gl::intptr_t>(byte_range.offset), static_cast<gl::ptrdiff_t>(byte_range.size));
     }
-    void texture_parameter                          (gl::handle_t texture, glp::texture_parameter_v parameter)
+    template<gl::texture_parameter_e P>
+    void texture_parameter                          (gl::handle_t texture, gl::texture_parameter_argument_t<P> value)
     {
-        auto texture_parameter_iv  = [](gl::handle_t texture, gl::texture_parameter_e parameter, gl::int32_t   value) -> gl::void_t
+        auto texture_parameter_iv  = [](gl::handle_t texture, gl::texture_parameter_e parameter, gl::int32_t                            value) -> gl::void_t
             {
                 ::glTextureParameteri(gl::to_underlying(texture), gl::to_underlying(parameter), value);
             };
-        auto texture_parameter_uiv = [](gl::handle_t texture, gl::texture_parameter_e parameter, gl::uint32_t  value) -> gl::void_t
+        auto texture_parameter_uiv = [](gl::handle_t texture, gl::texture_parameter_e parameter, gl::uint32_t                           value) -> gl::void_t
             {
                 ::glTextureParameteri(gl::to_underlying(texture), gl::to_underlying(parameter), static_cast<gl::int32_t>(value));
             };
-        auto texture_parameter_fv  = [](gl::handle_t texture, gl::texture_parameter_e parameter, gl::float32_t value) -> gl::void_t
+        auto texture_parameter_fv  = [](gl::handle_t texture, gl::texture_parameter_e parameter, gl::float32_t                          value) -> gl::void_t
             {
                 ::glTextureParameterfv(gl::to_underlying(texture), gl::to_underlying(parameter), &value);
             };
-        auto get_swizzle_rgba      = [](gl::handle_t texture, gl::texture_parameter_e parameter, std::array<gl::texture_swizzle_e, 4u>& value) -> gl::void_t
+        auto set_swizzle_rgba      = [](gl::handle_t texture, gl::texture_parameter_e parameter, std::array<gl::texture_swizzle_e, 4u>& value) -> gl::void_t
             {
                 ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(parameter), gl::to_underlying_pointer(value.data()));
             };
 
-        auto overload = gl::overload_t
-        {
-            //todo: parameter for texture_parameter_e::target
-            [=](glp::compare_function     _) { texture_parameter_uiv(texture, gl::texture_parameter_e::compare_function    , gl::to_underlying(_.value)); }, 
-            [=](glp::compare_mode         _) { texture_parameter_uiv(texture, gl::texture_parameter_e::compare_mode        , gl::to_underlying(_.value)); },
-            [=](glp::base_level           _) { texture_parameter_uiv(texture, gl::texture_parameter_e::base_level          ,                   _.value ); },
-            [=](glp::maximum_level        _) { texture_parameter_uiv(texture, gl::texture_parameter_e::maximum_level       ,                   _.value ); },
-            [=](glp::border_color         _)
-            {
+        using enum gl::texture_parameter_e;
+
+             if constexpr (P == base_level          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == border_color        )
+             {
                 auto overload = gl::overload_t
                 {
-                    [=](gl::vector4i __) { ::glTextureParameterIiv (gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
-                    [=](gl::vector4u __) { ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
-                    [=](gl::vector4f __) { ::glTextureParameterfv  (gl::to_underlying(texture), gl::to_underlying(gl::texture_parameter_e::border_color), gl::value_pointer(__)); }, 
+                    [=](gl::vector4i vector) { ::glTextureParameterIiv (gl::to_underlying(texture), gl::to_underlying(P), gl::value_pointer(vector)); },
+                    [=](gl::vector4u vector) { ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(P), gl::value_pointer(vector)); },
+                    [=](gl::vector4f vector) { ::glTextureParameterfv  (gl::to_underlying(texture), gl::to_underlying(P), gl::value_pointer(vector)); },
                 };
 
-                std::visit(overload, _.value);
-            }, 
-            [=](glp::depth_stencil_mode   _) { texture_parameter_uiv(texture, gl::texture_parameter_e::depth_stencil_mode  , gl::to_underlying(_.value)); },
-            [=](glp::magnification_filter _) { texture_parameter_uiv(texture, gl::texture_parameter_e::magnification_filter, gl::to_underlying(_.value)); },
-            [=](glp::minification_filter  _) { texture_parameter_uiv(texture, gl::texture_parameter_e::minification_filter , gl::to_underlying(_.value)); },
-            [=](glp::maximum_anisotropy   _) { texture_parameter_fv (texture, gl::texture_parameter_e::maximum_anisotropy  ,                   _.value ); },
-            [=](glp::wrapping_s           _) { texture_parameter_uiv(texture, gl::texture_parameter_e::wrapping_s          , gl::to_underlying(_.value)); },
-            [=](glp::wrapping_t           _) { texture_parameter_uiv(texture, gl::texture_parameter_e::wrapping_t          , gl::to_underlying(_.value)); },
-            [=](glp::wrapping_r           _) { texture_parameter_uiv(texture, gl::texture_parameter_e::wrapping_r          , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_r            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_r           , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_g            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_g           , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_b            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_b           , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_a            _) { texture_parameter_uiv(texture, gl::texture_parameter_e::swizzle_a           , gl::to_underlying(_.value)); },
-            [=](glp::swizzle_rgba         _) { get_swizzle_rgba     (texture, gl::texture_parameter_e::swizzle_rgba        ,                   _.value ); },
-            [=](glp::maximum_lod          _) { texture_parameter_fv (texture, gl::texture_parameter_e::maximum_lod         ,                   _.value ); },
-            [=](glp::minimum_lod          _) { texture_parameter_fv (texture, gl::texture_parameter_e::minimum_lod         ,                   _.value ); },
-            [=](glp::lod_bias             _) { texture_parameter_fv (texture, gl::texture_parameter_e::lod_bias            ,                   _.value ); },
-        };
-
-        std::visit(overload, parameter);
+                std::visit(overload, value);
+             }
+        else if constexpr (P == compare_function    ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == compare_mode        ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == depth_stencil_mode  ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == lod_bias            ) texture_parameter_fv (texture, P, gl::to_underlying(value));
+        else if constexpr (P == magnification_filter) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == maximum_anisotropy  ) texture_parameter_fv (texture, P, gl::to_underlying(value));
+        else if constexpr (P == maximum_level       ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == maximum_lod         ) texture_parameter_fv (texture, P, gl::to_underlying(value));
+        else if constexpr (P == minification_filter ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == minimum_lod         ) texture_parameter_fv (texture, P, gl::to_underlying(value));
+        else if constexpr (P == swizzle_a           ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == swizzle_b           ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == swizzle_g           ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == swizzle_r           ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == swizzle_rgba        ) set_swizzle_rgba     (texture, P, gl::to_underlying(value));
+        else if constexpr (P == target              ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == wrapping_r          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == wrapping_s          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        else if constexpr (P == wrapping_t          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
     }
     void generate_texture_mipmap                    (gl::handle_t texture)
     {
@@ -1753,25 +1796,19 @@ export namespace gl
     void texture_storage_1d                         (gl::handle_t texture, gl::texture_format_e format, const gl::vector1u& dimensions, gl::uint32_t levels)
     {
         ::glTextureStorage1D(
-            gl::to_underlying       (texture)      , 
-            static_cast<gl::ssize_t>(levels)       , 
-            gl::to_underlying       (format)       , 
+            gl::to_underlying       (texture)      , static_cast<gl::ssize_t>(levels), gl::to_underlying(format), 
             static_cast<gl::ssize_t>(dimensions.x));
     }
     void texture_storage_2d                         (gl::handle_t texture, gl::texture_format_e format, const gl::vector2u& dimensions, gl::uint32_t levels)
     {
         ::glTextureStorage2D(
-            gl::to_underlying       (texture)     , 
-            static_cast<gl::ssize_t>(levels)      , 
-            gl::to_underlying       (format)      , 
+            gl::to_underlying       (texture)     , static_cast<gl::ssize_t>(levels)       , gl::to_underlying(format), 
             static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y));
     }
     void texture_storage_3d                         (gl::handle_t texture, gl::texture_format_e format, const gl::vector3u& dimensions, gl::uint32_t levels)
     {
         ::glTextureStorage3D(
-            gl::to_underlying       (texture)     , 
-            static_cast<gl::ssize_t>(levels)      , 
-            gl::to_underlying       (format)      , 
+            gl::to_underlying       (texture)     , static_cast<gl::ssize_t>(levels)      , gl::to_underlying       (format)       , 
             static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y), static_cast<gl::ssize_t>(dimensions.z));
     }
     void texture_storage_2d_multisample             (gl::handle_t texture, gl::texture_format_e format, const gl::vector2u& dimensions, gl::uint32_t samples, gl::bool_t fixed = gl::true_)
@@ -1779,22 +1816,18 @@ export namespace gl
         ::glTextureStorage2DMultisample(
             gl::to_underlying       (texture)     , 
             static_cast<gl::ssize_t>(samples)     , gl::to_underlying       (format)      , 
-            static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y), 
-            fixed);
+            static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y), fixed);
     }
     void texture_storage_3d_multisample             (gl::handle_t texture, gl::texture_format_e format, const gl::vector3u& dimensions, gl::uint32_t samples, gl::bool_t fixed = gl::true_)
     {
         ::glTextureStorage3DMultisample(
             gl::to_underlying       (texture)     , 
             static_cast<gl::ssize_t>(samples)     , gl::to_underlying       (format)      , 
-            static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y), static_cast<gl::ssize_t>(dimensions.z), 
-            fixed);
+            static_cast<gl::ssize_t>(dimensions.x), static_cast<gl::ssize_t>(dimensions.y), static_cast<gl::ssize_t>(dimensions.z), fixed);
     }
     void invalidate_texture_image                   (gl::handle_t texture, gl::uint32_t level)
     {
-        ::glInvalidateTexImage(
-            gl::to_underlying       (texture), 
-            static_cast<gl::int32_t>(level) );
+        ::glInvalidateTexImage(gl::to_underlying(texture), static_cast<gl::int32_t>(level));
     }
     void invalidate_texture_sub_image               (gl::handle_t texture, gl::uint32_t level, gl::volume_t region)
     {
@@ -1803,19 +1836,19 @@ export namespace gl
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z) , 
             static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z));
     }
-    void clear_texture_image                        (gl::handle_t texture, gl::texture_base_format_e format, gl::texture_type_e type, gl::uint32_t level, std::span<const gl::byte_t> data)
+    void clear_texture_image                        (gl::handle_t texture, gl::texture_base_format_e format, gl::texture_type_e type, gl::uint32_t level, std::span<const gl::byte_t> source)
     {
         ::glClearTexImage(
             gl::to_underlying(texture), static_cast<gl::int32_t>(level), 
-            gl::to_underlying(format) , gl::to_underlying       (type) , data.data());
+            gl::to_underlying(format) , gl::to_underlying       (type) , source.data());
     }
-    void clear_texture_sub_image                    (gl::handle_t texture, gl::texture_base_format_e format, gl::texture_type_e type, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> data)
+    void clear_texture_sub_image                    (gl::handle_t texture, gl::texture_base_format_e format, gl::texture_type_e type, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> source)
     {
         ::glClearTexSubImage(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
             static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
             static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), static_cast<gl::ssize_t>(region.extent.z), 
-            gl::to_underlying       (format)         , gl::to_underlying       (type)           , data.data());
+            gl::to_underlying       (format)         , gl::to_underlying       (type)           , source.data()                           );
     }
 
 
@@ -1856,9 +1889,9 @@ export namespace gl
             || P == gl::frame_buffer_parameter_e::default_height
             || P == gl::frame_buffer_parameter_e::default_layers
             || P == gl::frame_buffer_parameter_e::default_samples
-            || P == gl::frame_buffer_parameter_e::default_fixed_sample_locations
-            || P == gl::frame_buffer_parameter_e::default_width                 ) frame_buffer_parameter_i(frame_buffer, P, value);
-        else static_assert(gl::false_, "Invalid frame buffer parameter!");
+            || P == gl::frame_buffer_parameter_e::has_default_fixed_sample_locations
+            || P == gl::frame_buffer_parameter_e::default_width                     ) frame_buffer_parameter_i(frame_buffer, P, value);
+        else static_assert(gl::false_, "invalid frame buffer parameter");
     }
     auto create_render_buffer                       () -> gl::handle_t
     {
@@ -1881,34 +1914,31 @@ export namespace gl
     void render_buffer_storage                      (gl::handle_t render_buffer, gl::render_buffer_format_e format, const gl::vector2u& dimensions)
     {
         ::glNamedRenderbufferStorage(
-            gl::to_underlying       (render_buffer),
-            gl::to_underlying       (format)       ,
+            gl::to_underlying       (render_buffer), gl::to_underlying       (format)       , 
             static_cast<gl::ssize_t>(dimensions.x) , static_cast<gl::ssize_t>(dimensions.y));
     }
     void render_buffer_storage_multisample          (gl::handle_t render_buffer, gl::render_buffer_format_e format, const gl::vector2u& dimensions, gl::uint32_t samples)
     {
         ::glNamedRenderbufferStorageMultisample(
-            gl::to_underlying       (render_buffer),
-            static_cast<gl::ssize_t>(samples)      ,
-            gl::to_underlying       (format)       ,
+            gl::to_underlying       (render_buffer), static_cast<gl::ssize_t>(samples)      , gl::to_underlying(format), 
             static_cast<gl::ssize_t>(dimensions.x) , static_cast<gl::ssize_t>(dimensions.y));
     }
     void frame_buffer_render_buffer                 (gl::handle_t frame_buffer, gl::handle_t render_buffer, gl::frame_buffer_attachment_e attachment)
     {
-        ::glNamedFramebufferRenderbuffer(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), gl::to_underlying(gl::render_buffer_target_e::render_buffer), gl::to_underlying(render_buffer));
+        ::glNamedFramebufferRenderbuffer(
+            gl::to_underlying(frame_buffer)                             , gl::to_underlying(attachment)    , 
+            gl::to_underlying(gl::render_buffer_target_e::render_buffer), gl::to_underlying(render_buffer));
     }
     void frame_buffer_texture                       (gl::handle_t frame_buffer, gl::handle_t texture, gl::frame_buffer_attachment_e attachment, gl::uint32_t level)
     {
         ::glNamedFramebufferTexture(
-            gl::to_underlying       (frame_buffer), gl::to_underlying(attachment), 
-            gl::to_underlying       (texture)     , 
-            static_cast<gl::int32_t>(level)       );
+            gl::to_underlying(frame_buffer) , gl::to_underlying(attachment), gl::to_underlying(texture), 
+            static_cast<gl::int32_t>(level));
     }
     void frame_buffer_texture_layer                 (gl::handle_t frame_buffer, gl::handle_t texture, gl::frame_buffer_attachment_e attachment, gl::uint32_t level, gl::uint32_t layer)
     {
         ::glNamedFramebufferTextureLayer(
-            gl::to_underlying       (frame_buffer), gl::to_underlying(attachment)      , 
-            gl::to_underlying       (texture)     , 
+            gl::to_underlying       (frame_buffer), gl::to_underlying       (attachment), gl::to_underlying(texture), 
             static_cast<gl::int32_t>(level)       , static_cast<gl::int32_t>(layer)    );
     }
     void texture_barrier                            ()
@@ -1923,7 +1953,8 @@ export namespace gl
 
 
     //Chapter 10 - Vertex Specification and Drawing Commands
-    void patch_parameter                            (glp::patch_parameter_v parameter)
+    template<gl::patch_parameter_e P>
+    void patch_parameter                            (gl::patch_parameter_argument_t<P> value)
     {
         auto patch_parameter_i = [](gl::patch_parameter_e parameter, gl::int32_t   value)
             {
@@ -1934,61 +1965,58 @@ export namespace gl
                 ::glPatchParameterfv(gl::to_underlying(parameter), &value);
             };
 
-        auto overload = gl::overload_t
-        {
-            [=](glp::patch_vertices            _) { patch_parameter_i (                    gl::patch_parameter_e::patch_vertices            , _.value)       ; }, 
-            [=](glp::patch_default_outer_level _) { ::glPatchParameterfv(gl::to_underlying(gl::patch_parameter_e::patch_default_outer_level), _.value.data()); },
-            [=](glp::patch_default_inner_level _) { ::glPatchParameterfv(gl::to_underlying(gl::patch_parameter_e::patch_default_inner_level), _.value.data()); },
-        };
+        using enum gl::patch_parameter_e;
 
-        std::visit(overload, parameter);
+        if constexpr (P == patch_default_inner_level) ::glPatchParameterfv(gl::to_underlying(gl::patch_parameter_e::patch_default_inner_level), value.data());
+        if constexpr (P == patch_default_outer_level) ::glPatchParameterfv(gl::to_underlying(gl::patch_parameter_e::patch_default_outer_level), value.data());
+        if constexpr (P == patch_vertices           ) patch_parameter_i (                    gl::patch_parameter_e::patch_vertices            , value       );
     }
     template<typename T, gl::uint32_t N, gl::bool_t NORM = gl::false_>
     void vertex_attribute                           (gl::index_t index, const gl::vector_t<T, N>& value)
     {
         const auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
-        if (gl::compare<std::greater>(index, maximum_vertex_attributes)) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
+        if (index > maximum_vertex_attributes) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
         
-        if   constexpr (std::is_same_v<T, gl::uint8_t  >)
+             if constexpr (std::is_same_v<T, gl::uint8_t  >)
         {
             if constexpr (N == 4 && NORM == gl::true_ ) ::glVertexAttrib4Nub(index, value.x, value.y, value.z, value.w);
         }
-        if   constexpr (std::is_same_v<T, gl::int16_t  >)
+        else if constexpr (std::is_same_v<T, gl::int16_t  >)
         {
             if constexpr (N == 1 && NORM == gl::false_) ::glVertexAttrib1s  (index, value.x                           );
             if constexpr (N == 2 && NORM == gl::false_) ::glVertexAttrib2s  (index, value.x, value.y                  );
             if constexpr (N == 3 && NORM == gl::false_) ::glVertexAttrib3s  (index, value.x, value.y, value.z         );
             if constexpr (N == 4 && NORM == gl::false_) ::glVertexAttrib4s  (index, value.x, value.y, value.z, value.w);
         }
-        if   constexpr (std::is_same_v<T, gl::int32_t  >)
+        else if constexpr (std::is_same_v<T, gl::int32_t  >)
         {
             if constexpr (N == 1 && NORM == gl::false_) ::glVertexAttribI1i (index, value.x                           );
             if constexpr (N == 2 && NORM == gl::false_) ::glVertexAttribI2i (index, value.x, value.y                  );
             if constexpr (N == 3 && NORM == gl::false_) ::glVertexAttribI3i (index, value.x, value.y, value.z         );
             if constexpr (N == 4 && NORM == gl::false_) ::glVertexAttribI4i (index, value.x, value.y, value.z, value.w);
         }
-        if   constexpr (std::is_same_v<T, gl::uint32_t >)
+        else if constexpr (std::is_same_v<T, gl::uint32_t >)
         {
             if constexpr (N == 1 && NORM == gl::false_) ::glVertexAttribI1ui(index, value.x                           );
             if constexpr (N == 2 && NORM == gl::false_) ::glVertexAttribI2ui(index, value.x, value.y                  );
             if constexpr (N == 3 && NORM == gl::false_) ::glVertexAttribI3ui(index, value.x, value.y, value.z         );
             if constexpr (N == 4 && NORM == gl::false_) ::glVertexAttribI4ui(index, value.x, value.y, value.z, value.w);
         }
-        if   constexpr (std::is_same_v<T, gl::float32_t>)
+        else if constexpr (std::is_same_v<T, gl::float32_t>)
         {
             if constexpr (N == 1 && NORM == gl::false_) ::glVertexAttrib1f  (index, value.x                           );
             if constexpr (N == 2 && NORM == gl::false_) ::glVertexAttrib2f  (index, value.x, value.y                  );
             if constexpr (N == 3 && NORM == gl::false_) ::glVertexAttrib3f  (index, value.x, value.y, value.z         );
             if constexpr (N == 4 && NORM == gl::false_) ::glVertexAttrib4f  (index, value.x, value.y, value.z, value.w);
         }
-        if   constexpr (std::is_same_v<T, gl::float64_t>)
+        else if constexpr (std::is_same_v<T, gl::float64_t>)
         {
             if constexpr (N == 1 && NORM == gl::false_) ::glVertexAttribL1d (index, value.x                           );
             if constexpr (N == 2 && NORM == gl::false_) ::glVertexAttribL2d (index, value.x, value.y                  );
             if constexpr (N == 3 && NORM == gl::false_) ::glVertexAttribL3d (index, value.x, value.y, value.z         );
             if constexpr (N == 4 && NORM == gl::false_) ::glVertexAttribL4d (index, value.x, value.y, value.z, value.w);
         }
-        else static_assert(gl::false_, "The given input does not match a valid vertex attribute function!");
+        else              static_assert(gl::false_ && sizeof(T), "parameters do not match a valid vertex attribute function");
     }
     auto create_vertex_array                        () -> gl::handle_t
     {
@@ -2018,7 +2046,7 @@ export namespace gl
     }
     void vertex_array_attribute_format              (gl::handle_t vertex_array, gl::index_t attribute, gl::intptr_t offset, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::bool_t is_normalized = gl::false_)
     {
-        auto vertex_array_attribute_format_i = [](gl::handle_t vertex_array, gl::index_t attribute, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::intptr_t offset) -> gl::void_t
+        auto vertex_array_attribute_format_i = [](gl::handle_t vertex_array, gl::index_t attribute, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::intptr_t offset                       ) -> gl::void_t
             {
                 ::glVertexArrayAttribIFormat(gl::to_underlying(vertex_array), attribute, static_cast<gl::int32_t>(count), gl::to_underlying(type), static_cast<gl::uint32_t>(offset));
             };
@@ -2026,13 +2054,13 @@ export namespace gl
             {
                 ::glVertexArrayAttribFormat(gl::to_underlying(vertex_array), attribute, static_cast<gl::int32_t>(count), gl::to_underlying(type), normalized, static_cast<gl::uint32_t>(offset));
             };
-        auto vertex_array_attribute_format_l = [](gl::handle_t vertex_array, gl::index_t attribute, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::intptr_t offset)
+        auto vertex_array_attribute_format_l = [](gl::handle_t vertex_array, gl::index_t attribute, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::intptr_t offset                       )
             {
                 ::glVertexArrayAttribLFormat(gl::to_underlying(vertex_array), attribute, static_cast<gl::int32_t>(count), gl::to_underlying(type), static_cast<gl::uint32_t>(offset));
             };
 
-        auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
-        if (gl::compare<std::greater>(attribute, maximum_vertex_attributes)) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
+        const auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
+        if (attribute > maximum_vertex_attributes) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
         
         switch (type)
         {
@@ -2046,21 +2074,25 @@ export namespace gl
             case uint32                    : 
             case int32_2_10_10_10_r        : 
             case uint32_2_10_10_10_r       : 
-            case uint32_10_11_11_11_float_r: return vertex_array_attribute_format_i(vertex_array, attribute, type, count, offset);
+            case uint32_10_11_11_11_float_r: return vertex_array_attribute_format_i(vertex_array, attribute, type, count, offset               );
             case fixed                     : return vertex_array_attribute_format_f(vertex_array, attribute, type, count, offset, is_normalized);
             case float16                   : 
             case float32                   : 
-            case float64                   : return vertex_array_attribute_format_l(vertex_array, attribute, type, count, offset);
+            case float64                   : return vertex_array_attribute_format_l(vertex_array, attribute, type, count, offset               );
         }
     }
     void vertex_array_vertex_buffer                 (gl::handle_t vertex_array, gl::handle_t vertex_buffer, gl::binding_t binding, gl::ptrdiff_t stride, gl::index_t index)
     {
         ::glVertexArrayVertexBuffer(gl::to_underlying(vertex_array), gl::to_underlying(binding), gl::to_underlying(vertex_buffer), static_cast<gl::intptr_t>(index), static_cast<gl::ssize_t>(stride));
     }
-    void vertex_array_vertex_buffers                (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, std::span<const gl::byte_range> strides, gl::range range)
+    void vertex_array_vertex_buffers                (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, std::span<const gl::usize_t> strides, std::span<const gl::usize_t> offsets, gl::range range)
     {
-        gl::todo();
-        ::glVertexArrayVertexBuffers(gl::to_underlying(vertex_array), range.index, range.count, gl::to_underlying_pointer(vertex_buffers.data()), {}, {});
+        if (vertex_buffers.size() != strides.size()) throw std::invalid_argument{ "vertex buffer size does not match stride size" };
+
+        ::glVertexArrayVertexBuffers(
+            gl::to_underlying        (vertex_array)         , 
+            static_cast<gl::uint32_t>(range.index)          , static_cast<gl::ssize_t>          (range.count)   , 
+            gl::to_underlying_pointer(vertex_buffers.data()), std::bit_cast<const gl::intptr_t*>(offsets.data()), std::bit_cast<const gl::ssize_t*>(strides.data()));
     }
     void vertex_array_attribute_binding             (gl::handle_t vertex_array, gl::index_t attribute, gl::binding_t binding)
     {
@@ -2181,9 +2213,10 @@ export namespace gl
     {
         ::glPointSize(size);
     }
-    void point_parameter                            (glp::point_parameter_v parameter)
+    template<gl::point_parameter_e P>
+    void point_parameter                            (gl::point_parameter_argument_t<P> value)
     {
-        auto point_parameter_i = [](gl::point_parameter_e parameter, gl::int32_t value) -> gl::void_t
+        auto point_parameter_i = [](gl::point_parameter_e parameter, gl::int32_t   value) -> gl::void_t
             {
                 ::glPointParameteri(gl::to_underlying(parameter), value);
             };
@@ -2192,13 +2225,10 @@ export namespace gl
                 ::glPointParameterf(gl::to_underlying(parameter), value);
             };
 
-        auto overload = gl::overload_t
-        {
-            [=](glp::fade_threshold_size      _) { point_parameter_f(gl::point_parameter_e::fade_threshold_size     ,                   _.value ); }, 
-            [=](glp::sprite_coordinate_origin _) { point_parameter_i(gl::point_parameter_e::sprite_coordinate_origin, gl::to_underlying(_.value)); }, 
-        };
+        using enum gl::point_parameter_e;
 
-        std::visit(overload, parameter);
+        if constexpr (P == fade_threshold_size     ) point_parameter_f(P,                   value );
+        if constexpr (P == sprite_coordinate_origin) point_parameter_i(P, gl::to_underlying(value));
     }
     void line_width                                 (gl::float32_t value)
     {
@@ -2356,7 +2386,8 @@ export namespace gl
     {
         ::glClearStencil(static_cast<gl::int32_t>(index));
     }
-    void clear_frame_buffer_value                   (gl::handle_t frame_buffer, glp::clear_v parameter)
+    template<gl::frame_buffer_attachment_e A>
+    void clear_frame_buffer_value                   (gl::handle_t frame_buffer, gl::frame_buffer_attachment_argument_t<A> value)
     {
         auto clear_frame_buffer_iv  = [](gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, const gl::int32_t  * value)
             {
@@ -2375,48 +2406,54 @@ export namespace gl
                 ::glClearNamedFramebufferfi(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), static_cast<gl::int32_t>(index), depth, stencil);
             };
 
-        auto overload = gl::overload_t
+        using enum gl::frame_buffer_attachment_e;
+
+        if constexpr (
+                      A == color_0      ||
+                      A == color_1      ||
+                      A == color_2      ||
+                      A == color_3      ||
+                      A == color_4      ||
+                      A == color_5      ||
+                      A == color_6      ||
+                      A == color_7       )
         {
-            [=](glp::color_index   _)
+            auto overload = gl::overload_t
             {
-                auto overload = gl::overload_t
-                {
-                    [=](gl::vector4i __) { clear_frame_buffer_iv (frame_buffer, gl::frame_buffer_attachment_e::color_0, _.index, gl::value_pointer(__)); }, 
-                    [=](gl::vector4u __) { clear_frame_buffer_uiv(frame_buffer, gl::frame_buffer_attachment_e::color_0, _.index, gl::value_pointer(__)); }, 
-                    [=](gl::vector4f __) { clear_frame_buffer_fv (frame_buffer, gl::frame_buffer_attachment_e::color_0, _.index, gl::value_pointer(__)); }, 
-                };
+                [=](gl::vector4i vector) { clear_frame_buffer_iv (frame_buffer, A, static_cast<gl::index_t>(A - color_0), gl::value_pointer(vector)); }, 
+                [=](gl::vector4u vector) { clear_frame_buffer_uiv(frame_buffer, A, static_cast<gl::index_t>(A - color_0), gl::value_pointer(vector)); }, 
+                [=](gl::vector4f vector) { clear_frame_buffer_fv (frame_buffer, A, static_cast<gl::index_t>(A - color_0), gl::value_pointer(vector)); }, 
+            };
 
-                std::visit(overload, _.color);
-            }, 
-            [=](glp::depth         _)
+            std::visit(overload, value);
+        }
+        if constexpr (A == depth         )
+        {
+            auto overload = gl::overload_t
             {
-                auto overload = gl::overload_t
-                {
-                    [=](gl::int32_t   __) { clear_frame_buffer_iv (frame_buffer, gl::frame_buffer_attachment_e::depth, gl::uint32_t{ 0u }, &__); }, 
-                    [=](gl::uint32_t  __) { clear_frame_buffer_uiv(frame_buffer, gl::frame_buffer_attachment_e::depth, gl::uint32_t{ 0u }, &__); }, 
-                    [=](gl::float32_t __) { clear_frame_buffer_fv (frame_buffer, gl::frame_buffer_attachment_e::depth, gl::uint32_t{ 0u }, &__); }, 
-                };
+                [=](gl::int32_t   _) { clear_frame_buffer_iv (frame_buffer, A, gl::index_t{ 0u }, &_); }, 
+                [=](gl::uint32_t  _) { clear_frame_buffer_uiv(frame_buffer, A, gl::index_t{ 0u }, &_); }, 
+                [=](gl::float32_t _) { clear_frame_buffer_fv (frame_buffer, A, gl::index_t{ 0u }, &_); }, 
+            };
 
-                std::visit(overload, _.value);
-            }, 
-            [=](glp::stencil       _)
+            std::visit(overload, value);
+        }
+        if constexpr (A == stencil       )
+        {
+            auto overload = gl::overload_t
             {
-                auto overload = gl::overload_t
-                {
-                    [=](gl::int32_t   __) { clear_frame_buffer_iv (frame_buffer, gl::frame_buffer_attachment_e::stencil, gl::uint32_t{ 0u }, &__); }, 
-                    [=](gl::uint32_t  __) { clear_frame_buffer_uiv(frame_buffer, gl::frame_buffer_attachment_e::stencil, gl::uint32_t{ 0u }, &__); }, 
-                    [=](gl::float32_t __) { clear_frame_buffer_fv (frame_buffer, gl::frame_buffer_attachment_e::stencil, gl::uint32_t{ 0u }, &__); }, 
-                };
+                [=](gl::int32_t   _) { clear_frame_buffer_iv (frame_buffer, A, gl::index_t{ 0u }, &_); }, 
+                [=](gl::uint32_t  _) { clear_frame_buffer_uiv(frame_buffer, A, gl::index_t{ 0u }, &_); }, 
+                [=](gl::float32_t _) { clear_frame_buffer_fv (frame_buffer, A, gl::index_t{ 0u }, &_); }, 
+            };
 
-                std::visit(overload, _.value);
-            },
-            [=](glp::depth_stencil _)
-            {
-                clear_frame_buffer_fi(frame_buffer, gl::frame_buffer_attachment_e::depth_stencil, gl::uint32_t{ 0u }, _.depth, _.stencil);
-            }, 
-        };
-
-        std::visit(overload, parameter);
+            std::visit(overload, value);
+        }
+        if constexpr (A == depth_stencil )
+        {
+            const auto [depth, stencil] = value;
+            clear_frame_buffer_fi(frame_buffer, A, gl::index_t{ 0u }, depth, stencil);
+        }
     }
     void invalidate_frame_buffer_data               (gl::handle_t frame_buffer, std::span<const gl::frame_buffer_attachment_e> attachments)
     {
@@ -2441,41 +2478,20 @@ export namespace gl
     {
         ::glNamedFramebufferReadBuffer(gl::to_underlying(frame_buffer), gl::to_underlying(source));
     }
-    template<gl::pixel_data_format_e F, gl::pixel_data_type_e T>
-    void read_pixels                                (gl::area_t region)
+    template<typename T>
+    auto read_pixels                                (gl::area_t region, gl::pixel_data_format_e format, gl::pixel_data_type_e type) -> std::vector<T>
     {
-        gl::todo();
+        const auto bytes_per_pixel = map_pixel_data_format_components(format) * map_pixel_data_bytes_per_component(type);
+        const auto required_size   = region.extent.x * region.extent.y * bytes_per_pixel;
+              auto vector          = std::vector<T>(required_size / sizeof(T));
 
-        //const auto& map_format_size = []<gl::pixel_data_format_e F>() constexpr
-        //    {
-        //        if (F == gl::pixel_data_format_e::r   ) return 0;
-        //        if (F == gl::pixel_data_format_e::g   ) return 0;
-        //        if (F == gl::pixel_data_format_e::b   ) return 0;
-        //        if (F == gl::pixel_data_format_e::rgb ) return 0;
-        //        if (F == gl::pixel_data_format_e::rgba) return 0;
-        //        if (F == gl::pixel_data_format_e::bgr ) return 0;
-        //        if (F == gl::pixel_data_format_e::bgra) return 0;
-        //        if (F == gl::pixel_data_format_e::s   ) return 0;
-        //        if (F == gl::pixel_data_format_e::d   ) return 0;
-        //        if (F == gl::pixel_data_format_e::ds  ) return 0;
-        //    };
-
-        //const auto& binding = gl::get_value<gl::data_e::pixel_pack_buffer_binding>();
-
-        //if (binding == gl::null_object)
-        //{
-        //    const auto& size = region.extent.x * region.extent.y;
-        //    std::vector<T> value(size);
-
-        //    glReadnPixels(
-        //        static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
-        //        static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), 
-        //        gl::to_underlying       (format)         , gl::to_underlying       (type)           , 
-        //        static_cast<gl::ssize_t>(value.size())   , 
-        //        value.data()                            );
-
-        //    return value;
-        //}
+        glReadnPixels(
+            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
+            static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y), 
+            gl::to_underlying       (format)         , gl::to_underlying       (type)           , 
+            static_cast<gl::ssize_t>(required_size)  , vector.data()                           );
+        
+        return vector;
     }
     void clamp_color                                (gl::bool_t value)
     {
@@ -2484,34 +2500,32 @@ export namespace gl
     void blit_frame_buffer                          (gl::handle_t source, gl::handle_t destination, gl::buffer_mask_e mask, gl::frame_buffer_filter_e filter, gl::area_t source_region, gl::area_t destination_region)
     {
         ::glBlitNamedFramebuffer(
-            gl::to_underlying       (source)                     ,
-            gl::to_underlying       (destination)                ,
-            static_cast<gl::int32_t>(source_region     .origin.x), static_cast<gl::int32_t>(source_region     .origin.y), static_cast<gl::int32_t>(source_region     .extent.x), static_cast<gl::int32_t>(source_region     .extent.y),
-            static_cast<gl::int32_t>(destination_region.origin.x), static_cast<gl::int32_t>(destination_region.origin.y), static_cast<gl::int32_t>(destination_region.extent.x), static_cast<gl::int32_t>(destination_region.extent.y),
+            gl::to_underlying       (source)                     , 
+            gl::to_underlying       (destination)                , 
+            static_cast<gl::int32_t>(source_region     .origin.x), static_cast<gl::int32_t>(source_region     .origin.y), static_cast<gl::int32_t>(source_region     .extent.x), static_cast<gl::int32_t>(source_region     .extent.y), 
+            static_cast<gl::int32_t>(destination_region.origin.x), static_cast<gl::int32_t>(destination_region.origin.y), static_cast<gl::int32_t>(destination_region.extent.x), static_cast<gl::int32_t>(destination_region.extent.y), 
             gl::to_underlying       (mask)                       , gl::to_underlying       (filter)                    );
     }
     void copy_image_sub_data                        (gl::handle_t source, gl::handle_t destination, gl::texture_target_e source_target, gl::texture_target_e destination_target, gl::hypervolume_t source_region, gl::hypervolume_t destination_region)
     {
         ::glCopyImageSubData(
-            gl::to_underlying       (source                     ), gl::to_underlying       (source_target              ), static_cast<gl::int32_t>(source_region     .extent.w), 
-            static_cast<gl::int32_t>(source_region     .origin.x), static_cast<gl::int32_t>(source_region     .origin.y), static_cast<gl::int32_t>(source_region     .origin.z), 
-            gl::to_underlying       (destination                ), gl::to_underlying       (destination_target         ), static_cast<gl::int32_t>(destination_region.extent.w), 
-            static_cast<gl::int32_t>(destination_region.origin.x), static_cast<gl::int32_t>(destination_region.origin.y), static_cast<gl::int32_t>(destination_region.origin.z), 
+            gl::to_underlying       (source                     ), gl::to_underlying       (source_target              ), static_cast<gl::int32_t>(source_region     .extent.w) , 
+            static_cast<gl::int32_t>(source_region     .origin.x), static_cast<gl::int32_t>(source_region     .origin.y), static_cast<gl::int32_t>(source_region     .origin.z) , 
+            gl::to_underlying       (destination                ), gl::to_underlying       (destination_target         ), static_cast<gl::int32_t>(destination_region.extent.w) , 
+            static_cast<gl::int32_t>(destination_region.origin.x), static_cast<gl::int32_t>(destination_region.origin.y), static_cast<gl::int32_t>(destination_region.origin.z) , 
             static_cast<gl::ssize_t>(source_region     .extent.x), static_cast<gl::ssize_t>(source_region     .extent.y), static_cast<gl::ssize_t>(source_region     .extent.z));
     }
 
 
 
     //Chapter 19 - Compute Shaders
-    void dispatch_compute                           (glp::dispatch_v parameter)
+    void dispatch_compute                           (gl::vector3u work_groups)
     {
-        auto overload = gl::overload_t
-        {
-            [=](gl::vector3u  _) { ::glDispatchCompute        (_.x, _.y, _.z); }, 
-            [=](gl::intptr_t _) { ::glDispatchComputeIndirect(_            ); }, 
-        };
-        
-        std::visit(overload, parameter);
+        ::glDispatchCompute(work_groups.x, work_groups.y, work_groups.z);
+    }
+    void dispatch_compute_indirect                  (gl::size_t offset)
+    {
+        ::glDispatchComputeIndirect(static_cast<gl::intptr_t>(offset));
     }
 
 
