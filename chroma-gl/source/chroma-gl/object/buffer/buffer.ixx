@@ -14,7 +14,7 @@ export namespace glx
     //public:
     //    using target_e = gl::buffer_base_target_e;
 
-    //    auto size () const -> gl::sizei_t
+    //    auto size () const -> gl::ssize_t
     //    {
     //        return size_;
     //    }
@@ -28,7 +28,7 @@ export namespace glx
     //        : gl::object{ gl::create_buffer() } {}
 
     //private:
-    //    gl::sizei_t size_;
+    //    gl::ssize_t size_;
     //};
 
     //template<typename T>
@@ -38,7 +38,7 @@ export namespace glx
     //    explicit 
     //    static_buffer(std::span<const T> data)
     //        : gl::object{ gl::create_buffer()                         }
-    //        , size_     { static_cast<gl::sizei_t>(data.size_bytes()) }
+    //        , size_     { static_cast<gl::ssize_t>(data.size_bytes()) }
     //    {
     //        gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::static_, data);
     //    }
@@ -48,7 +48,7 @@ export namespace glx
     //        gl::delete_buffer(handle());
     //    }
 
-    //    auto size() const -> gl::sizei_t
+    //    auto size() const -> gl::ssize_t
     //    {
     //        return size_;
     //    }
@@ -60,7 +60,7 @@ export namespace glx
     //    auto operator=(static_buffer&&) -> static_buffer& = default;
 
     //private:
-    //    gl::sizei_t size_;
+    //    gl::ssize_t size_;
     //};
     //template<typename T>
     //class dynamic_buffer : public gl::object
@@ -69,14 +69,14 @@ export namespace glx
     //    explicit
     //    dynamic_buffer(std::span<const T> data)
     //        : gl::object{ gl::create_buffer()                         }
-    //        , size_     { static_cast<gl::sizei_t>(data.size_bytes()) }
+    //        , size_     { static_cast<gl::ssize_t>(data.size_bytes()) }
     //    {
     //        gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::shared, data);
     //    }
     //    explicit
     //    dynamic_buffer(gl::count_t count)
     //        : gl::object{ gl::create_buffer()                         }
-    //        , size_     { static_cast<gl::sizei_t>(count * sizeof(T)) }
+    //        , size_     { static_cast<gl::ssize_t>(count * sizeof(T)) }
     //    {
     //        gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::shared, count);
     //    }
@@ -122,7 +122,7 @@ export namespace glx
     //        await(range), std::memcpy(mapped_data_.data(), data.data(), range.count * sizeof(T)), lock(range);
     //    }
 
-    //    auto size        () const -> gl::sizei_t
+    //    auto size        () const -> gl::ssize_t
     //    {
     //        return size_;
     //    }
@@ -223,7 +223,7 @@ export namespace gly
     //    {
     //        return count_;
     //    }
-    //    auto size () const -> gl::sizei_t
+    //    auto size () const -> gl::ssize_t
     //    {
     //        return size_;
     //    }
@@ -234,11 +234,11 @@ export namespace gly
     //    template<typename T>
     //    buffer(gl::count_t count)
     //        : gl::object{ gl::create_buffer() }
-    //        , count_{ count }, size_{ static_cast<gl::sizei_t>(count_ * sizeof(T)) } {}
+    //        , count_{ count }, size_{ static_cast<gl::ssize_t>(count_ * sizeof(T)) } {}
 
     //private:
     //    gl::count_t count_;
-    //    gl::sizei_t size_;
+    //    gl::ssize_t size_;
     //};
     //template<typename T>
     //class static_buffer : public glz::buffer
@@ -574,51 +574,163 @@ export namespace glz //mappable buffer with virtual inheritance
 
 export namespace gla
 {
-    //class buffer : public gl::object
-    //{
-    //public:
-    //    enum class mapping_e
-    //    {
-    //        none      , 
-    //        read      , 
-    //        write     , 
-    //        read_write, 
-    //    };
+    class buffer : public gl::object
+    {
+    public:
+        buffer(buffer&& other) = default;
+       ~buffer()
+        {
+            gl::delete_buffer(handle());
+        }
 
-    //    buffer(buffer&& other) = default;
-    //   ~buffer()
-    //    {
-    //        gl::delete_buffer(handle());
-    //    }
+        auto count() const -> gl::count_t
+        {
+            return count_;
+        }
+        auto size () const -> gl::size_t
+        {
+            return size_;
+        }
 
-    //    auto count() const -> gl::count_t
-    //    {
-    //        return count_;
-    //    }
-    //    auto size () const -> gl::sizei_t
-    //    {
-    //        return size_;
-    //    }
+        auto operator=(buffer&&) -> buffer& = default;
 
-    //    auto operator=(buffer&&) -> buffer& = default;
+    protected:
+        buffer(gl::count_t count, gl::size_t element_size)
+            : gl::object{ gl::create_buffer() }
+            , count_{ count }, size_{ count_ * element_size } {}
 
-    //protected:
-    //    buffer(gl::count_t count, gl::sizei_t element_size)
-    //        : gl::object{ gl::create_buffer() }
-    //        , count_{ count }, size_{ static_cast<gl::sizei_t>(count_ * element_size) } {}
+    private:
+        gl::count_t count_;
+        gl::size_t  size_;
+    };
 
-    //private:
-    //    gl::count_t count_;
-    //    gl::sizei_t size_;
-    //};
-    //template<typename T>
-    //class static_buffer : gla::buffer
-    //{
-    //public:
-    //    static_buffer(gl::count_t count)
-    //        : gla::buffer<T>{ count }
-    //    {
+    template<typename T, gl::bool_t Read, gl::bool_t Write>
+    class mappable_buffer : public gla::buffer
+    {
+    public:
+        void map          ()
+        {
+            map(count());
+        }
+        void map          (gl::range range)
+        {
+            if (range = gl::clamp_range(range, count()); range != mapped_range_ && range.count > gl::count_t{ 0u })
+            {
+                unmap();
 
-    //    }
-    //};
+                mapped_data_ = gl::map_buffer_range<T>(handle(), access_flags(), range);
+                mapped_range_ = range;
+            }
+        }
+        void unmap        ()
+        {
+            if ( mapped_data_.empty()      ) return;
+            if (!gl::unmap_buffer(handle())) throw std::runtime_error{ "data store may be corrupt" };
+
+            locks_.clear();
+            mapped_data_ = {};
+            mapped_range_ = {};
+        }
+
+        void read         (std::span<      T> destination) requires (Read )
+        {
+            const auto range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(destination.size()) }, mapped_range_.count);
+            wait(range), std::memcpy(destination.data(), mapped_data_.data(), range.count * sizeof(T)), lock(range);
+        }
+        void write        (std::span<const T> source     ) requires (Write)
+        {
+            const auto range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(source.size()) }, mapped_range_.count);
+            wait(range), std::memcpy(mapped_data_.data(), source.data(), range.count * sizeof(T)), lock(range);
+        }
+
+    protected:
+        mappable_buffer(std::span<const T> source)
+            : gla::buffer{ static_cast<gl::count_t>(source.size()), sizeof(T) }
+            , locks_{}, mapped_data_{}, mapped_range_{}
+        {
+            gl::buffer_storage<T>(handle(), storage_flags(), source);
+        }
+        mappable_buffer(gl::count_t count)
+            : gla::buffer{ count, sizeof(T) }
+            , locks_{}, mapped_data_{}, mapped_range_{}
+        {
+            gl::buffer_storage<T>(handle(), storage_flags(), count);
+        }
+
+    private:
+        void lock         (gl::range range)
+        {
+            locks_.emplace_back(gl::fence{}, range);
+        }
+        void wait         (gl::range range)
+        {
+            auto remaining_locks = std::vector<gl::lock_t>{};
+            std::ranges::for_each(locks_, [&](gl::lock_t& lock)
+                {
+                    if (auto& [lock_fence, lock_range] = lock; gl::range_overlaps(lock_range, range))
+                    {
+                        auto status = gl::synchronization_status_e::timeout_expired;
+                        auto timeout = gl::time_t{ 0u };
+
+                        while (status == gl::synchronization_status_e::timeout_expired)
+                        {
+                            status = gl::client_wait_sync(lock_fence, gl::synchronization_command_e::flush, timeout);
+                            timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
+
+                            if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "Sync wait failed!" };
+                        }
+                    }
+                    else
+                    {
+                        remaining_locks.emplace_back(std::move(lock));
+                    }
+                });
+
+            locks_ = std::move(remaining_locks);
+        }
+        auto storage_flags() const -> gl::buffer_storage_flags_e
+        {
+            auto storage_flags = gl::buffer_storage_flags_e::persistent | gl::buffer_storage_flags_e::coherent;
+            if constexpr (Read ) storage_flags |= gl::buffer_storage_flags_e::read ;
+            if constexpr (Write) storage_flags |= gl::buffer_storage_flags_e::write;
+
+            return storage_flags;
+        }
+        auto access_flags () const -> gl::buffer_mapping_range_access_flags_e
+        {
+            auto access_flags = gl::buffer_mapping_range_access_flags_e::persistent | gl::buffer_mapping_range_access_flags_e::coherent;
+            if constexpr (Read ) access_flags |= gl::buffer_mapping_range_access_flags_e::read ;
+            if constexpr (Write) access_flags |= gl::buffer_mapping_range_access_flags_e::write;
+
+            return access_flags;
+        }
+
+        std::vector<gl::lock_t> locks_;
+        std::span<T>            mapped_data_;
+        gl::range               mapped_range_;
+    };
+
+    template<typename T>
+    class static_buffer : public gla::buffer
+    {
+    public:
+        static_buffer(std::span<const T> source)
+            : gla::buffer{ static_cast<gl::count_t>(source.size()), sizeof(T) }
+        {
+            gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::static_, source);
+        }
+    };
+    template<typename T, gl::bool_t Read, gl::bool_t Write>
+    class dynamic_buffer : public gla::mappable_buffer<T, Read, Write>
+    {
+    public:
+        dynamic_buffer(std::span<const T> source)
+            : gla::mappable_buffer<T, Read, Write>{ source } {}
+        dynamic_buffer(gl::count_t count)
+            : gla::mappable_buffer<T, Read, Write>{ count  } {}
+    };
+
+    template<typename T>
+    using vertex_buffer = gla::static_buffer<T          >;
+    using index_buffer  = gla::static_buffer<gl::index_t>;
 }
