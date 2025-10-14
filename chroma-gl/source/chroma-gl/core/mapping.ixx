@@ -8,7 +8,7 @@ import opengl.utility;
 export namespace gl
 {
     template<typename T>
-    constexpr auto map_attribute_type() -> gl::vertex_array_attribute_type_e
+    auto map_attribute_type() -> gl::vertex_array_attribute_type_e
     {
         if constexpr (std::is_same_v<T, gl::int8_t   >) return gl::vertex_array_attribute_type_e::int8   ;          
         if constexpr (std::is_same_v<T, gl::uint8_t  >) return gl::vertex_array_attribute_type_e::uint8  ;  
@@ -18,6 +18,20 @@ export namespace gl
         if constexpr (std::is_same_v<T, gl::uint32_t >) return gl::vertex_array_attribute_type_e::uint32 ;
         if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
         if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;        
+    }
+
+    auto map_draw_type_size(gl::draw_type_e draw_type) -> gl::size_t
+    {
+        switch (draw_type)
+        {
+            using enum gl::draw_type_e;
+
+            case uint8 : return sizeof(gl::uint8_t );
+            case uint16: return sizeof(gl::uint16_t);
+            case uint32: return sizeof(gl::uint32_t);
+
+            default    : throw std::invalid_argument{ "invalid draw type" };
+        }
     }
 
     auto map_texture_base_format_components(gl::texture_base_format_e texture_base_format) -> gl::uint32_t
