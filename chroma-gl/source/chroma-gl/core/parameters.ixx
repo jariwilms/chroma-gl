@@ -32,7 +32,7 @@ export namespace gl
     template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::depth_stencil_mode  > { using type = gl::depth_stencil_texture_mode_e                      ; };
     template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::lod_bias            > { using type = gl::float32_t                                         ; };
     template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::magnification_filter> { using type = gl::texture_magnification_filter_e                    ; };
-    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::maximum_anisotropy  > { using type = gl::uint32_t                                          ; };
+    template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::maximum_anisotropy  > { using type = gl::float32_t                                         ; };
     template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::maximum_level       > { using type = gl::uint32_t                                          ; };
     template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::maximum_lod         > { using type = gl::float32_t                                         ; };
     template<> struct gl::texture_parameter_argument<gl::texture_parameter_e::minification_filter > { using type = gl::texture_minification_filter_e                     ; };
