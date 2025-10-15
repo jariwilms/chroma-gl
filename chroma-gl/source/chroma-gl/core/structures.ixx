@@ -37,4 +37,10 @@ export namespace gl
         gl::index_t first_index    = {};
         gl::index_t base_instance  = {};
     };
+    struct dispatch_indirect_command
+    {
+        gl::count_t groups_x;
+        gl::count_t groups_y;
+        gl::count_t groups_z;
+    };
 }
