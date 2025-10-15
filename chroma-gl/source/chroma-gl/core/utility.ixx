@@ -81,11 +81,11 @@ export namespace gl
         else               return gl::byte_range{};
     }
 
-    template<typename T, gl::uint32_t N>
-    constexpr auto clamp_region         (const gl::region<T, N>& region, const gl::vector_t<T, N>& boundary) -> gl::region<T, N>
+    template<typename T, gl::uint32_t Count>
+    constexpr auto clamp_region         (const gl::region<T, Count>& region, const gl::vector_t<T, Count>& boundary) -> gl::region<T, Count>
     {
-        auto result = gl::region<T, N>{};
-        std::ranges::for_each(std::views::iota(0u, N), [&](auto index)
+        auto result = gl::region<T, Count>{};
+        std::ranges::for_each(std::views::iota(0u, Count), [&](auto index)
             {
                 const auto maximum_extent = T{ boundary[index] - std::clamp(region.origin[index], T{ 0 }, boundary[index]) };
                 result.origin[index]      = std::clamp(region.origin[index], T{ 0 }, boundary[index]);
@@ -95,14 +95,14 @@ export namespace gl
         return result;
     }
 
-    template<std::integral T, gl::uint32_t N>
-    constexpr auto mipmap_levels        (const gl::vector_t<T, N>& vector) -> T
+    template<std::integral T, gl::uint32_t Count>
+    constexpr auto mipmap_levels        (const gl::vector_t<T, Count>& vector) -> T
     {
         return glm::levels(vector);
     }
 
-    template<typename T, gl::ptrdiff_t EXTENT = std::dynamic_extent>
-    constexpr auto as_bytes             (std::span<const T, EXTENT> span) -> std::span<const gl::byte_t>
+    template<typename T, gl::size_t Extent = std::dynamic_extent>
+    constexpr auto as_bytes             (std::span<const T, Extent> span) -> std::span<const gl::byte_t>
     {
         return std::span{ reinterpret_cast<const gl::byte_t*>(span.data()), span.size_bytes() };
     }
