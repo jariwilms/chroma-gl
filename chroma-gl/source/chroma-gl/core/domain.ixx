@@ -5,16 +5,16 @@ import opengl.types;
 
 export namespace gl
 {
-    template<typename T, gl::uint32_t N>
+    template<typename T, gl::uint32_t Count>
     struct region
     {
-        constexpr region(const gl::vector_t<T, N>& extent = {}, const gl::vector_t<T, N>& origin = {})
+        constexpr region(const gl::vector_t<T, Count>& extent = {}, const gl::vector_t<T, Count>& origin = {})
             : extent{ extent }, origin{ origin } {}
 
         auto operator==(const region&) const -> gl::bool_t = default;
 
-        gl::vector_t<T, N> extent{};
-        gl::vector_t<T, N> origin{};
+        gl::vector_t<T, Count> extent{};
+        gl::vector_t<T, Count> origin{};
     };
     struct      range
     {

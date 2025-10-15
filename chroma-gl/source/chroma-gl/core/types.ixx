@@ -37,10 +37,10 @@ export namespace gl
     using sync_t                        = GLsync      ; //Synchronization primitive
     using time_t                        = gl::uint64_t; //Duration expressed in nanoseconds
 
-    template<typename T, gl::uint32_t N>
-    using vector_t                      = glm::vec<N, T, glm::packed_highp>;
-    template<typename T, gl::uint32_t R, gl::uint32_t C = R>
-    using matrix_t                      = glm::mat<R, C, T>;
+    template<typename T, gl::uint32_t Count>
+    using vector_t                      = glm::vec<Count, T, glm::packed_highp>;
+    template<typename T, gl::uint32_t Rows, gl::uint32_t Columns = Rows>
+    using matrix_t                      = glm::mat<Rows, Columns, T>;
     template<typename T>
     using quaternion_t                  = glm::qua<T, glm::packed_highp>;
 
