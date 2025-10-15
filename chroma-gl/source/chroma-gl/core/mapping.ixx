@@ -7,20 +7,7 @@ import opengl.utility;
 
 export namespace gl
 {
-    template<typename T>
-    auto map_attribute_type() -> gl::vertex_array_attribute_type_e
-    {
-        if constexpr (std::is_same_v<T, gl::int8_t   >) return gl::vertex_array_attribute_type_e::int8   ;          
-        if constexpr (std::is_same_v<T, gl::uint8_t  >) return gl::vertex_array_attribute_type_e::uint8  ;  
-        if constexpr (std::is_same_v<T, gl::int16_t  >) return gl::vertex_array_attribute_type_e::int16  ;         
-        if constexpr (std::is_same_v<T, gl::uint16_t >) return gl::vertex_array_attribute_type_e::uint16 ;  
-        if constexpr (std::is_same_v<T, gl::int32_t  >) return gl::vertex_array_attribute_type_e::int32  ;        
-        if constexpr (std::is_same_v<T, gl::uint32_t >) return gl::vertex_array_attribute_type_e::uint32 ;
-        if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
-        if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;        
-    }
-
-    auto map_draw_type_size(gl::draw_type_e draw_type) -> gl::size_t
+    auto map_draw_type_size                (gl::draw_type_e            draw_type) -> gl::size_t
     {
         switch (draw_type)
         {
@@ -34,7 +21,7 @@ export namespace gl
         }
     }
 
-    auto map_texture_base_format_components(gl::texture_base_format_e texture_base_format) -> gl::uint32_t
+    auto map_texture_base_format_components(gl::texture_base_format_e  texture_base_format) -> gl::uint32_t
     {
         switch (texture_base_format)
         {
@@ -50,7 +37,7 @@ export namespace gl
             default  : throw std::invalid_argument{ "invalid texture base format" };
         }
     }
-    auto map_pixel_data_format_components  (gl::pixel_data_format_e pixel_data_format) -> gl::uint32_t
+    auto map_pixel_data_format_components  (gl::pixel_data_format_e    pixel_data_format) -> gl::uint32_t
     {
         switch (pixel_data_format)
         {
@@ -70,7 +57,7 @@ export namespace gl
             default  : throw std::invalid_argument{ "invalid pixel data format" };
         }
     }
-    auto map_pixel_data_bytes_per_component(gl::pixel_data_type_e pixel_data_type) -> gl::uint32_t
+    auto map_pixel_data_bytes_per_component(gl::pixel_data_type_e      pixel_data_type) -> gl::uint32_t
     {
         switch (pixel_data_type)
         {
@@ -107,9 +94,9 @@ export namespace gl
         }
     }
 
-    auto map_texture_attachment            (gl::texture_format_e format) -> gl::frame_buffer_attachment_e
+    auto map_texture_attachment            (gl::texture_format_e       texture_format) -> gl::frame_buffer_attachment_e
     {
-        switch (format)
+        switch (texture_format)
         {
             using enum gl::texture_format_e;
 
@@ -123,9 +110,9 @@ export namespace gl
             default               : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
-    auto map_render_buffer_attachment      (gl::render_buffer_format_e format) -> gl::frame_buffer_attachment_e
+    auto map_render_buffer_attachment      (gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
     {
-        switch (format)
+        switch (render_buffer_format)
         {
             using enum gl::render_buffer_format_e;
 
@@ -139,9 +126,9 @@ export namespace gl
             default              : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
-    auto map_program_stage                 (gl::shader_type_e type) -> gl::program_stage_e
+    auto map_program_stage                 (gl::shader_type_e          shader_type) -> gl::program_stage_e
     {
-        switch (type)
+        switch (shader_type)
         {
             using enum gl::shader_type_e;
 
@@ -156,9 +143,9 @@ export namespace gl
         }
     }
 
-    auto map_texture_format_base           (gl::texture_format_e format) -> gl::texture_base_format_e
+    auto map_texture_format_base           (gl::texture_format_e       texture_format) -> gl::texture_base_format_e
     {
-        switch (format)
+        switch (texture_format)
         {
             using enum gl::texture_format_e;
 
@@ -172,9 +159,9 @@ export namespace gl
             default          : throw std::invalid_argument{ "invalid format" };
         }
     }
-    auto map_texture_format_type           (gl::texture_format_e format) -> gl::pixel_data_type_e
+    auto map_texture_format_type           (gl::texture_format_e       texture_format) -> gl::pixel_data_type_e
     {
-        switch (format)
+        switch (texture_format)
         {
             using enum gl::texture_format_e;
 
