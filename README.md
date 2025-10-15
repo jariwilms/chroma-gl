@@ -9,8 +9,6 @@ Its primary goals are to:
 * Implement state caching in order to eliminate redundant API calls
 * Ensure compile-and runtime safety through input validation
 
-Despite OpenGL showing its age, it is still the go-to interface for aspiring graphics programmers or those who want a simple rendering API.
-
 ## Prerequisites
 * C++23 Compiler
   * Visual Studio 2026 Insiders is heavily recommended.
