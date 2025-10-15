@@ -50,13 +50,12 @@ export namespace glfw
             glfw::set_window_monitor  (window_.get(), nullptr, dimensions_);
             glfw::show_window         (window_.get());
            
-            glad::initialize    ();
-            gl  ::create_context();
-
+            glad::initialize();
+            context_   = std::make_shared<gl::context>();
             input_     = std::make_shared<glfw::input>();
             user_data_ = window::user_data{ input_, &dimensions_ };
-            glfw::set_window_user_pointer(window_.get(), &user_data_);
 
+            glfw::set_window_user_pointer       (window_.get(), &user_data_);
             glfw::set_error_callback            (         [](                               gl::int32_t   error , const gl::char_t* description)
                 {
                     std::print("[GLFW_ERROR] {}: {}\n", error, description);
@@ -141,9 +140,14 @@ export namespace glfw
         {
             return input_;
         }
+        auto context            () const -> const gl::context&
+        {
+            return *context_;
+        }
 
     private:
         std::unique_ptr<glfw::window_t, std::function<void(glfw::window_t*)>> window_;
+        std::shared_ptr<gl::context>                                          context_;
         std::shared_ptr<glfw::input>                                          input_;
         std::string                                                           title_;
         display_mode_e                                                        display_mode_;
