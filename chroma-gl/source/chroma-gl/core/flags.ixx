@@ -54,25 +54,25 @@ export namespace gl
     };
     enum class buffer_base_format_e : gl::enum_t
     {
-        r        = GL_RED            , 
-        r_int    = GL_RED_INTEGER    , 
-        g        = GL_GREEN          , 
-        g_int    = GL_GREEN_INTEGER  , 
-        b        = GL_BLUE           , 
-        b_int    = GL_BLUE_INTEGER   , 
-        rg       = GL_RG             , 
-        rg_int   = GL_RG_INTEGER     , 
-        rgb      = GL_RGB            , 
-        rgb_int  = GL_RGB_INTEGER    , 
-        rgba     = GL_RGBA           , 
-        rgba_int = GL_RGBA_INTEGER   , 
-        bgr      = GL_BGR            , 
-        bgr_int  = GL_BGR_INTEGER    , 
-        bgra     = GL_BGRA           , 
-        bgra_int = GL_BGRA_INTEGER   , 
-        d        = GL_DEPTH_COMPONENT, 
-        s        = GL_STENCIL_INDEX  , 
-        ds       = GL_DEPTH_STENCIL  , 
+        r             = GL_RED            , 
+        r_int         = GL_RED_INTEGER    , 
+        g             = GL_GREEN          , 
+        g_int         = GL_GREEN_INTEGER  , 
+        b             = GL_BLUE           , 
+        b_int         = GL_BLUE_INTEGER   , 
+        rg            = GL_RG             , 
+        rg_int        = GL_RG_INTEGER     , 
+        rgb           = GL_RGB            , 
+        rgb_int       = GL_RGB_INTEGER    , 
+        rgba          = GL_RGBA           , 
+        rgba_int      = GL_RGBA_INTEGER   , 
+        bgr           = GL_BGR            , 
+        bgr_int       = GL_BGR_INTEGER    , 
+        bgra          = GL_BGRA           , 
+        bgra_int      = GL_BGRA_INTEGER   , 
+        depth         = GL_DEPTH_COMPONENT, 
+        stencil       = GL_STENCIL_INDEX  , 
+        depth_stencil = GL_DEPTH_STENCIL  , 
     };
     enum class buffer_base_target_e : gl::enum_t
     {
@@ -151,7 +151,8 @@ export namespace gl
         flush_explicit    = GL_MAP_FLUSH_EXPLICIT_BIT           , 
         unsynchronized    = GL_MAP_UNSYNCHRONIZED_BIT           , 
 
-        stream            =        write | invalidate_buffer    , 
+        result            = read |         persistent | coherent, 
+        stream            =        write | persistent | coherent, 
         shared            = read | write | persistent | coherent, 
     };
     enum class buffer_parameter_e : gl::enum_t
@@ -176,7 +177,8 @@ export namespace gl
         dynamic         = GL_DYNAMIC_STORAGE_BIT              , 
         client          = GL_CLIENT_STORAGE_BIT               , 
 
-        stream          =        write                        , 
+        result          = read |         persistent | coherent, 
+        stream          =        write | persistent | coherent, 
         shared          = read | write | persistent | coherent, 
     };
     enum class buffer_target_e : gl::enum_t
@@ -568,8 +570,8 @@ export namespace gl
     };
     enum class depth_stencil_texture_mode_e : gl::enum_t
     {
-        depth_component = GL_DEPTH_COMPONENT, 
-        stencil_index   = GL_STENCIL_INDEX  , 
+        depth   = GL_DEPTH_COMPONENT, 
+        stencil = GL_STENCIL_INDEX  , 
     };
     enum class draw_mode_e : gl::enum_t
     {
@@ -705,16 +707,16 @@ export namespace gl
     };
     enum class frame_buffer_format_e : gl::enum_t
     {
-        r    = GL_RED            , 
-        g    = GL_GREEN          , 
-        b    = GL_BLUE           , 
-        rgb  = GL_RGB            , 
-        rgba = GL_RGBA           , 
-        bgr  = GL_BGR            , 
-        bgra = GL_BGRA           , 
-        d    = GL_DEPTH_COMPONENT, 
-        s    = GL_STENCIL_INDEX  , 
-        ds   = GL_DEPTH_STENCIL  , 
+        r             = GL_RED            , 
+        g             = GL_GREEN          , 
+        b             = GL_BLUE           , 
+        rgb           = GL_RGB            , 
+        bgr           = GL_BGR            , 
+        rgba          = GL_RGBA           , 
+        bgra          = GL_BGRA           , 
+        depth         = GL_DEPTH_COMPONENT, 
+        stencil       = GL_STENCIL_INDEX  , 
+        depth_stencil = GL_DEPTH_STENCIL  , 
     };
     enum class frame_buffer_parameter_e : gl::enum_t
     {
@@ -1073,16 +1075,16 @@ export namespace gl
     };
     enum class pixel_data_format_e : gl::enum_t
     {
-        r               = GL_RED            , 
-        g               = GL_GREEN          , 
-        b               = GL_BLUE           , 
-        rgb             = GL_RGB            , 
-        rgba            = GL_RGBA           , 
-        bgr             = GL_BGR            , 
-        bgra            = GL_BGRA           , 
-        d               = GL_DEPTH_COMPONENT, 
-        s               = GL_STENCIL_INDEX  , 
-        ds              = GL_DEPTH_STENCIL  , 
+        r             = GL_RED            , 
+        g             = GL_GREEN          , 
+        b             = GL_BLUE           , 
+        rgb           = GL_RGB            , 
+        bgr           = GL_BGR            , 
+        rgba          = GL_RGBA           , 
+        bgra          = GL_BGRA           , 
+        depth         = GL_DEPTH_COMPONENT, 
+        stencil       = GL_STENCIL_INDEX  , 
+        depth_stencil = GL_DEPTH_STENCIL  , 
     };
     enum class pixel_data_type_e : gl::enum_t
     {
@@ -1485,9 +1487,11 @@ export namespace gl
         r       = GL_RED            , 
         rg      = GL_RG             , 
         rgb     = GL_RGB            , 
+        bgr     = GL_BGR            , 
         rgba    = GL_RGBA           , 
-        d       = GL_DEPTH_COMPONENT, 
-        s       = GL_STENCIL_INDEX  , 
+        bgra    = GL_BGRA           , 
+        depth   = GL_DEPTH_COMPONENT, 
+        stencil = GL_STENCIL_INDEX  , 
     };
     enum class texture_compare_function_e : gl::enum_t
     {
@@ -1527,43 +1531,43 @@ export namespace gl
     };
     enum class texture_format_e : gl::enum_t
     {
-        r_int8_n          = GL_R8_SNORM          , 
-        r_int16_n         = GL_R16_SNORM         , 
-        r_uint8_n         = GL_R8                , 
-        r_uint16_n        = GL_R16               , 
-        r_float16         = GL_R16F              , 
-        r_float32         = GL_R32F              , 
+        r_int8_n                     = GL_R8_SNORM          , 
+        r_int16_n                    = GL_R16_SNORM         , 
+        r_uint8_n                    = GL_R8                , 
+        r_uint16_n                   = GL_R16               , 
+        r_float16                    = GL_R16F              , 
+        r_float32                    = GL_R32F              , 
         
-        rg_int8_n         = GL_RG8_SNORM         , 
-        rg_int16_n        = GL_RG16_SNORM        , 
-        rg_uint8_n        = GL_RG8               , 
-        rg_uint16_n       = GL_RG16              , 
-        rg_float16        = GL_RG16F             , 
-        rg_float32        = GL_RG32F             , 
+        rg_int8_n                    = GL_RG8_SNORM         , 
+        rg_int16_n                   = GL_RG16_SNORM        , 
+        rg_uint8_n                   = GL_RG8               , 
+        rg_uint16_n                  = GL_RG16              , 
+        rg_float16                   = GL_RG16F             , 
+        rg_float32                   = GL_RG32F             , 
         
-        rgb_int8_n        = GL_RGB8_SNORM        , 
-        rgb_int16_n       = GL_RGB16_SNORM       , 
-        rgb_uint8_n       = GL_RGB8              , 
-        rgb_uint16_n      = GL_RGB16             , 
-        rgb_float16       = GL_RGB16F            , 
-        rgb_float32       = GL_RGB32F            , 
+        rgb_int8_n                   = GL_RGB8_SNORM        , 
+        rgb_int16_n                  = GL_RGB16_SNORM       , 
+        rgb_uint8_n                  = GL_RGB8              , //recommended for normal textures
+        rgb_uint16_n                 = GL_RGB16             , 
+        rgb_float16                  = GL_RGB16F            , 
+        rgb_float32                  = GL_RGB32F            , 
         
-        rgba_int8_n       = GL_RGBA8_SNORM       , 
-        rgba_int16_n      = GL_RGBA16_SNORM      , 
-        rgba_uint8_n      = GL_RGBA8             , 
-        rgba_uint16_n     = GL_RGBA16            , 
-        rgba_float16      = GL_RGBA16F           , 
-        rgba_float32      = GL_RGBA32F           , 
+        rgba_int8_n                  = GL_RGBA8_SNORM       , 
+        rgba_int16_n                 = GL_RGBA16_SNORM      , 
+        rgba_uint8_n                 = GL_RGBA8             , //recommended for albedo textures
+        rgba_uint16_n                = GL_RGBA16            , 
+        rgba_float16                 = GL_RGBA16F           , 
+        rgba_float32                 = GL_RGBA32F           , //recommended for high dynamic range textures
         
-        srgb_uint8        = GL_SRGB8             , 
-        srgba_uint8       = GL_SRGB8_ALPHA8      , 
+        srgb_uint8                   = GL_SRGB8             , 
+        srgba_uint8                  = GL_SRGB8_ALPHA8      , 
         
-        d_uint16_n        = GL_DEPTH_COMPONENT16 , 
-        d_uint24_n        = GL_DEPTH_COMPONENT24 , 
-        d_float32         = GL_DEPTH_COMPONENT32F, 
-        s_uint8           = GL_STENCIL_INDEX8    , 
-        ds_uint24_n_uint8 = GL_DEPTH24_STENCIL8  , 
-        ds_float32_uint8  = GL_DEPTH32F_STENCIL8 , 
+        depth_uint16_n               = GL_DEPTH_COMPONENT16 , 
+        depth_uint24_n               = GL_DEPTH_COMPONENT24 , 
+        depth_float32                = GL_DEPTH_COMPONENT32F, 
+        stencil_uint8                = GL_STENCIL_INDEX8    , 
+        depth_stencil_uint24_n_uint8 = GL_DEPTH24_STENCIL8  , 
+        depth_stencil_float32_uint8  = GL_DEPTH32F_STENCIL8 , 
     };
     enum class texture_level_parameter_e : gl::enum_t
     {

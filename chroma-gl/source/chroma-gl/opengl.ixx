@@ -950,7 +950,7 @@ export namespace gl
         if constexpr (P == width                ) return static_cast<gl::uint32_t                >(get_texture_level_parameter_iv(texture, level, P));
     }
     template<typename T, gl::pixel_data_type_e D, gl::buffer_base_format_e B>
-    auto get_texture_image                                (gl::handle_t texture, gl::uint32_t level, gl::size_t size) -> std::vector<T>
+    auto get_texture_image                                (gl::handle_t texture, gl::uint32_t level,                      gl::size_t size) -> std::vector<T>
     {
         auto vector = std::vector<T>(size);
         ::glGetTextureImage(
@@ -976,7 +976,7 @@ export namespace gl
         return vector;
     }
     template<typename T>
-    auto get_compressed_texture_image                     (gl::handle_t texture, gl::uint32_t level, gl::size_t size) -> std::vector<T>
+    auto get_compressed_texture_image                     (gl::handle_t texture, gl::uint32_t level,                      gl::size_t size) -> std::vector<T>
     {
             auto vector = std::vector<T>(size);
             ::glGetCompressedTextureImage(
@@ -1299,9 +1299,10 @@ export namespace gl
 
         ::glBindBuffersRange(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::ssize_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()), offsets.data(), sizes.data());
     }
-    void buffer_storage                                   (gl::handle_t buffer, gl::buffer_storage_flags_e flags, gl::size_t size)
+    template<typename T>
+    void buffer_storage                                   (gl::handle_t buffer, gl::buffer_storage_flags_e flags, gl::count_t element_count)
     {
-        ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(size), nullptr, gl::to_underlying(flags));
+        ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(element_count * sizeof(T)), nullptr, gl::to_underlying(flags));
     }
     template<typename T>                  
     void buffer_storage                                   (gl::handle_t buffer, gl::buffer_storage_flags_e flags, std::span<const T> data)
