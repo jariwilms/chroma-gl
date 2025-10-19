@@ -1078,6 +1078,7 @@ export namespace gl
         r             = GL_RED            , 
         g             = GL_GREEN          , 
         b             = GL_BLUE           , 
+        rg            = GL_RG             , 
         rgb           = GL_RGB            , 
         bgr           = GL_BGR            , 
         rgba          = GL_RGBA           , 
@@ -1492,6 +1493,15 @@ export namespace gl
         bgra    = GL_BGRA           , 
         depth   = GL_DEPTH_COMPONENT, 
         stencil = GL_STENCIL_INDEX  , 
+    };
+    enum class texture_compressed_base_format_e : gl::enum_t
+    {
+        r     = GL_COMPRESSED_RED       , 
+        rg    = GL_COMPRESSED_RG        , 
+        rgb   = GL_COMPRESSED_RGB       , 
+        rgba  = GL_COMPRESSED_RGBA      , 
+        srgb  = GL_COMPRESSED_SRGB      , 
+        srgba = GL_COMPRESSED_SRGB_ALPHA, 
     };
     enum class texture_compare_function_e : gl::enum_t
     {
