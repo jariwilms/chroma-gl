@@ -87,7 +87,7 @@ export namespace glfw
 
         void input_key_callback        (glfw::window_t*, glfw::key_e    key   , gl::int32_t, gl::int32_t action, glfw::modifier_e)
         {
-            if (gl::compare_enum<std::less>(key, key_min) || gl::compare_enum<std::greater>(key, key_max)) return;
+            if ((key < key_min) || (key > key_max)) return;
 
             switch (glfw::input_action_e{ action })
             {
@@ -98,7 +98,7 @@ export namespace glfw
         }
         void input_button_callback     (glfw::window_t*, glfw::button_e button,              gl::int32_t action, glfw::modifier_e)
         {
-            if (gl::compare_enum<std::less>(button, button_min) || gl::compare_enum<std::greater>(button, button_max)) return;
+            if ((button < button_min) || (button > button_max)) return;
 
             switch (glfw::input_action_e{ action })
             {

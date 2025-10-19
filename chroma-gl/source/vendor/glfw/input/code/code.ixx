@@ -2,6 +2,7 @@ export module vendor.glfw.input.code;
 
 import std;
 import opengl.types;
+import opengl.utility;
 
 export namespace glfw
 {
@@ -121,6 +122,8 @@ export namespace glfw
         num_lock  = 0x1 << 5u, 
     };
 
+
+
     constexpr auto button_min     = glfw::button_e    ::button_1;
     constexpr auto button_max     = glfw::button_e    ::button_8;
     constexpr auto controller_min = glfw::controller_e::hat_centered;
@@ -129,4 +132,74 @@ export namespace glfw
     constexpr auto key_max        = glfw::key_e       ::menu;
     constexpr auto modifier_min   = glfw::modifier_e  ::shift;
     constexpr auto modifier_max   = glfw::modifier_e  ::num_lock;
+
+
+
+    constexpr auto operator< (glfw::button_e     first, glfw::button_e     second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) < gl::to_underlying(second);
+    }
+    constexpr auto operator> (glfw::button_e     first, glfw::button_e     second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) > gl::to_underlying(second);
+    }
+    constexpr auto operator<=(glfw::button_e     first, glfw::button_e     second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) <= gl::to_underlying(second);
+    }
+    constexpr auto operator>=(glfw::button_e     first, glfw::button_e     second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) >= gl::to_underlying(second);
+    }
+    
+    constexpr auto operator< (glfw::controller_e first, glfw::controller_e second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) < gl::to_underlying(second);
+    }
+    constexpr auto operator> (glfw::controller_e first, glfw::controller_e second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) > gl::to_underlying(second);
+    }
+    constexpr auto operator<=(glfw::controller_e first, glfw::controller_e second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) <= gl::to_underlying(second);
+    }
+    constexpr auto operator>=(glfw::controller_e first, glfw::controller_e second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) >= gl::to_underlying(second);
+    }
+
+    constexpr auto operator< (glfw::key_e        first, glfw::key_e        second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) < gl::to_underlying(second);
+    }
+    constexpr auto operator> (glfw::key_e        first, glfw::key_e        second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) > gl::to_underlying(second);
+    }
+    constexpr auto operator<=(glfw::key_e        first, glfw::key_e        second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) <= gl::to_underlying(second);
+    }
+    constexpr auto operator>=(glfw::key_e        first, glfw::key_e        second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) >= gl::to_underlying(second);
+    }
+
+    constexpr auto operator< (glfw::modifier_e   first, glfw::modifier_e   second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) < gl::to_underlying(second);
+    }
+    constexpr auto operator> (glfw::modifier_e   first, glfw::modifier_e   second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) > gl::to_underlying(second);
+    }
+    constexpr auto operator<=(glfw::modifier_e   first, glfw::modifier_e   second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) <= gl::to_underlying(second);
+    }
+    constexpr auto operator>=(glfw::modifier_e   first, glfw::modifier_e   second) noexcept -> gl::bool_t
+    {
+        return gl::to_underlying(first) >= gl::to_underlying(second);
+    }
 }
