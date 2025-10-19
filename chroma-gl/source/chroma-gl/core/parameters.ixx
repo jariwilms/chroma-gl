@@ -11,7 +11,9 @@ export namespace gl
     template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::border_color        > { using type = std::variant<gl::vector4i, gl::vector4u, gl::vector4f>; };
     template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::compare_function    > { using type = gl::texture_compare_function_e                        ; };
     template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::compare_mode        > { using type = gl::texture_compare_mode_e                            ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::lod_bias            > { using type = gl::float32_t                                         ; };
     template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::magnification_filter> { using type = gl::texture_magnification_filter_e                    ; };
+    template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::maximum_anisotropy  > { using type = gl::float32_t                                         ; };
     template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::maximum_lod         > { using type = gl::float32_t                                         ; };
     template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::minification_filter > { using type = gl::texture_minification_filter_e                     ; };
     template<> struct gl::sampler_parameter_argument<gl::sampler_parameter_e::minimum_lod         > { using type = gl::float32_t                                         ; };
