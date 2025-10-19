@@ -37,8 +37,8 @@ export namespace gl
         };
 
         template<std::ranges::range R>
-        explicit image(format_e format, const gl::vector2u& dimensions, R&& range)
-            : format_{ format }, dimensions_{ dimensions }, data_{ std::from_range, std::forward<R>(range) } {}
+        explicit image(format_e format, const gl::vector2u& dimensions, R&& source)
+            : format_{ format }, dimensions_{ dimensions }, data_{ std::from_range, std::forward<R>(source) } {}
 
         template<extension_e E>
         static auto encode(const gl::image& image) -> auto
