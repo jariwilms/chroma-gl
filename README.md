@@ -1,5 +1,5 @@
 # Chroma-gl
-An OpenGL wrapper
+An OpenGL wrapper library
 
 ## Introduction
 Chroma-gl is a C++23 library that provides a modern, robust, and user-friendly interface for OpenGL.
