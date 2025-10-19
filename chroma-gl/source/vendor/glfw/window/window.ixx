@@ -144,6 +144,10 @@ export namespace glfw
         {
             return *context_;
         }
+        auto native_handle      () -> glfw::window_t*
+        {
+            return window_.get();
+        }
 
     private:
         std::unique_ptr<glfw::window_t, std::function<void(glfw::window_t*)>> window_;
