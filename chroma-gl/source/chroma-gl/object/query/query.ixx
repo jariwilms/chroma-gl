@@ -3,7 +3,7 @@ export module opengl.object.query;
 import std;
 import opengl;
 import opengl.object;
-import opengl.state;
+import opengl.context.state;
 
 export namespace gl
 {
@@ -24,17 +24,17 @@ export namespace gl
         
         void begin    ()
         {
-            if (state::query_target.at(target_)) throw std::runtime_error{ "target query already in progress" };
+            if (gl::query_target_state.at(target_)) throw std::runtime_error{ "target query already in progress" };
 
             gl::begin_query(handle(), target_);
-            state::query_target.at(target_) = gl::true_;
+            gl::query_target_state.at(target_) = gl::true_;
         }
         void end      ()
         {
-            if (!state::query_target.at(target_)) throw std::runtime_error{ "target query not in progress" };
+            if (!gl::query_target_state.at(target_)) throw std::runtime_error{ "target query not in progress" };
 
             gl::end_query(target_);
-            state::query_target.at(target_) = gl::false_;
+            gl::query_target_state.at(target_) = gl::false_;
         }
         
         auto available() const -> gl::bool_t
