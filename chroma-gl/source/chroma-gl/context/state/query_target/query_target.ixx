@@ -1,17 +1,11 @@
-export module opengl.state;
+export module opengl.context.state.query_target;
 
 import std;
 import opengl;
 
-export namespace gl::state
+export namespace gl
 {
-    //std::unordered_map<std::string, gl::handle_t> bound_targets
-    //{
-    //    //TODO: enum instead of string for object types
-    //    { "texture", gl::null_object }, 
-    //};
-
-    std::unordered_map<gl::query_target_e, gl::bool_t> query_target
+    std::unordered_map<gl::query_target_e, gl::bool_t> query_target_state
     {
         { gl::query_target_e::any_samples_passed                        , gl::false_ }, 
         { gl::query_target_e::any_samples_passed_conservative           , gl::false_ }, 
