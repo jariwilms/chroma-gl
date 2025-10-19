@@ -1102,7 +1102,7 @@ export namespace gl
             };
         
         const auto maximum_vertex_attributes     = gl::get_value<gl::data_e::maximum_vertex_attributes>();
-        if (gl::compare<std::greater>(index, maximum_vertex_attributes - gl::uint32_t{ 1u })) throw std::out_of_range{ "index out of range" };
+        if (index > maximum_vertex_attributes - gl::uint32_t{ 1u }) throw std::out_of_range{ "index out of range" };
         
         using enum gl::vertex_array_parameter_e;
         if constexpr (P == binding_offset ) return static_cast<gl::intptr_t                     >(get_vertex_array_indexed64_iv(vertex_array, P, index));
@@ -1590,10 +1590,12 @@ export namespace gl
         }
         else if constexpr (P == compare_function    ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
         else if constexpr (P == compare_mode        ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
+        else if constexpr (P == lod_bias            ) sampler_parameter_fv (sampler, P,                   value );
         else if constexpr (P == magnification_filter) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
-        else if constexpr (P == maximum_lod         ) sampler_parameter_fv (sampler, P, gl::to_underlying(value));
+        else if constexpr (P == maximum_anisotropy  ) sampler_parameter_fv (sampler, P,                   value );
+        else if constexpr (P == maximum_lod         ) sampler_parameter_fv (sampler, P,                   value );
         else if constexpr (P == minification_filter ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
-        else if constexpr (P == minimum_lod         ) sampler_parameter_fv (sampler, P, gl::to_underlying(value));
+        else if constexpr (P == minimum_lod         ) sampler_parameter_fv (sampler, P,                   value );
         else if constexpr (P == wrapping_r          ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
         else if constexpr (P == wrapping_s          ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
         else if constexpr (P == wrapping_t          ) sampler_parameter_uiv(sampler, P, gl::to_underlying(value));
@@ -1683,10 +1685,10 @@ export namespace gl
             static_cast<gl::int32_t>(coordinates  .x), static_cast<gl::int32_t>(coordinates  .y), 
             static_cast<gl::ssize_t>(region.extent.x), static_cast<gl::ssize_t>(region.extent.y));
     }
-    void compressed_texture_sub_image_1d                  (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::length_t region, std::span<const gl::byte_t> source)
+    void compressed_texture_sub_image_1d                  (gl::handle_t texture, gl::texture_compressed_base_format_e format, gl::uint32_t level, gl::length_t region, std::span<const gl::byte_t> source)
     {
         const auto width = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
-        if (region.origin.x + region.extent.x > width) throw std::invalid_argument{ "invalid region width"  };
+        if (region.origin.x + region.extent.x > width) throw std::invalid_argument{ "invalid region width" };
 
         ::glCompressedTextureSubImage1D(
             gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
@@ -1694,7 +1696,7 @@ export namespace gl
             gl::to_underlying       (format)         , 
             static_cast<gl::ssize_t>(source.size())  , source.data()                             );
     }
-    void compressed_texture_sub_image_2d                  (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::area_t   region, std::span<const gl::byte_t> source)
+    void compressed_texture_sub_image_2d                  (gl::handle_t texture, gl::texture_compressed_base_format_e format, gl::uint32_t level, gl::area_t   region, std::span<const gl::byte_t> source)
     {
         const auto width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
         const auto height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, level);
@@ -1708,7 +1710,7 @@ export namespace gl
             gl::to_underlying       (format)         , 
             static_cast<gl::ssize_t>(source.size())  , source.data()                             );
     }
-    void compressed_texture_sub_image_3d                  (gl::handle_t texture, gl::texture_compressed_format_e format, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> source)
+    void compressed_texture_sub_image_3d                  (gl::handle_t texture, gl::texture_compressed_base_format_e format, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> source)
     {
         const auto width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
         const auto height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, level);
