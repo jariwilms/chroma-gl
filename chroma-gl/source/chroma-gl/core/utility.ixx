@@ -22,22 +22,24 @@ export namespace gl
         return std::bit_cast<const std::underlying_type_t<T>* const>(value);
     }
 
-    template<template<typename> typename C, typename T, typename U>
-    constexpr auto compare              (const T left, const U right) -> gl::bool_t
+    template<std::ranges::range Range>
+    constexpr auto as_bytes             (Range source) -> std::span<const gl::byte_t>
     {
-        if constexpr (std::is_same_v<C<T>, std::equal_to     <T>>) return std::cmp_equal        (left, right);
-        if constexpr (std::is_same_v<C<T>, std::not_equal_to <T>>) return std::cmp_not_equal    (left, right);
-        if constexpr (std::is_same_v<C<T>, std::less         <T>>) return std::cmp_less         (left, right);
-        if constexpr (std::is_same_v<C<T>, std::greater      <T>>) return std::cmp_greater      (left, right);
-        if constexpr (std::is_same_v<C<T>, std::less_equal   <T>>) return std::cmp_less_equal   (left, right);
-        if constexpr (std::is_same_v<C<T>, std::greater_equal<T>>) return std::cmp_greater_equal(left, right);
+        using value_t = typename Range::value_type;
+        return std::span{ std::bit_cast<const gl::byte_t*>(source.data()), source.size() * sizeof(value_t) };
     }
-    template<template<typename> typename C, typename T, typename U> requires (std::is_enum_v<T> && std::is_enum_v<U>)
-    constexpr auto compare_enum         (const T left, const U right) -> gl::bool_t
+    template<typename S, typename T> requires std::is_standard_layout_v<S>
+    constexpr auto offset_of            (T S::* member) -> std::size_t
     {
-        return gl::compare<C>(gl::to_underlying(left), gl::to_underlying(right));
+        return reinterpret_cast<std::size_t>(&(static_cast<S*>(nullptr)->*member));
     }
-
+    template<typename T>
+    constexpr auto ternary              (gl::bool_t condition, T true_type, T false_type) -> T
+    {
+        if   (condition) return true_type ;
+        else             return false_type;
+    }
+    
     constexpr auto clamp_range          (gl::range      range     , gl::count_t boundary) -> gl::range
     {
         range.index = std::min(range.index, boundary              );
@@ -80,7 +82,6 @@ export namespace gl
         if   (start < end) return gl::byte_range{ end - start, start };
         else               return gl::byte_range{};
     }
-
     template<typename T, gl::uint32_t Count>
     constexpr auto clamp_region         (const gl::region<T, Count>& region, const gl::vector_t<T, Count>& boundary) -> gl::region<T, Count>
     {
@@ -101,31 +102,7 @@ export namespace gl
         return glm::levels(vector);
     }
 
-    template<typename T, gl::size_t Extent = std::dynamic_extent>
-    constexpr auto as_bytes             (std::span<const T, Extent> span) -> std::span<const gl::byte_t>
-    {
-        return std::span{ reinterpret_cast<const gl::byte_t*>(span.data()), span.size_bytes() };
-    }
-    template<std::ranges::range R>
-    constexpr auto as_bytes             (const R& container) -> std::span<const gl::byte_t>
-    {
-        return as_bytes(std::span{ container });
-    }
-
-    template<typename S, typename T> requires std::is_standard_layout_v<S>
-    constexpr auto offset_of(T S::* member) -> std::size_t
-    {
-        return reinterpret_cast<std::size_t>(&(static_cast<S*>(nullptr)->*member));
-    }
-
-    template<typename T>
-    constexpr auto ternary(gl::bool_t condition, T true_type, T false_type) -> T
-    {
-        if   (condition) return true_type ;
-        else             return false_type;
-    }
-
-    void todo                           ()
+              void todo                 ()
     {
         throw std::logic_error{ "the method or operation has not been implemented" };
     }
