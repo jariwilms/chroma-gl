@@ -1,5 +1,5 @@
 # Chroma-gl
-A modern OpenGL wrapper
+An OpenGL wrapper
 
 ## Introduction
 Chroma-gl is a C++23 library that provides a modern, robust, and user-friendly interface for OpenGL.
@@ -20,7 +20,7 @@ Note: The C++ module ecosystem is still maturing. Tooling support can be inconsi
 1. Generate Project Files
 Run the generate.bat script in the root directory. This will use Premake to create a Visual Studio solution (.sln) and project files.
 2. Configure Project in Visual Studio (Important!)
-Due to how Visual Studio currently handles C++ module dependencies when they are not part of the same project, you must manually adjust a few project settings:
+Due to how Visual Studio currently handles C++ module dependencies, you must manually adjust a few project settings:
    1. Open the generated .sln file in Visual Studio.
    2. In the Solution Explorer, right-click the chroma-gl project and select Properties.
    3. Navigate to Configuration Properties -> C/C++ -> Output Files.
