@@ -30,23 +30,23 @@ export namespace gl::legacy
     }
     void get_indexed_boolean_value  (gl::data_e data, gl::index_t index, gl::boolean_t* value)
     {
-        ::glGetBooleani_v(gl::to_underlying(data), index, value);
+        ::glGetBooleani_v(gl::to_underlying(data), static_cast<gl::uint32_t>(index), value);
     }
     void get_indexed_integer_value  (gl::data_e data, gl::index_t index, gl::int32_t  * value)
     {
-        ::glGetIntegeri_v(gl::to_underlying(data), index, value);
+        ::glGetIntegeri_v(gl::to_underlying(data), static_cast<gl::uint32_t>(index), value);
     }
     void get_indexed_integer64_value(gl::data_e data, gl::index_t index, gl::int64_t  * value)
     {
-        ::glGetInteger64i_v(gl::to_underlying(data), index, value);
+        ::glGetInteger64i_v(gl::to_underlying(data), static_cast<gl::uint32_t>(index), value);
     }
     void get_indexed_float_value    (gl::data_e data, gl::index_t index, gl::float32_t* value)
     {
-        ::glGetFloati_v(gl::to_underlying(data), index, value);
+        ::glGetFloati_v(gl::to_underlying(data), static_cast<gl::uint32_t>(index), value);
     }
     void get_indexed_float64_value  (gl::data_e data, gl::index_t index, gl::float64_t* value)
     {
-        ::glGetDoublei_v(gl::to_underlying(data), index, value);
+        ::glGetDoublei_v(gl::to_underlying(data), static_cast<gl::uint32_t>(index), value);
     }
     
     auto is_buffer                  (gl::handle_t handle) -> gl::bool_t 
