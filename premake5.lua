@@ -1,6 +1,5 @@
 workspace "chroma-gl"
 	startproject "chroma-gl"
-	architecture "x64"
 	
 	configurations { 
 		"Debug", 
@@ -16,10 +15,6 @@ workspace "chroma-gl"
 		
 		targetdir "%{wks.location}/bin/debug/windows/%{prj.name}"
 		objdir    "%{wks.location}/build/debug/windows/%{prj.name}"
-		
-		defines {
-			'BUILD_CONFIGURATION="debug"', 
-		}
 	
 	filter "configurations:Release"
 		runtime   "Release"
@@ -81,7 +76,7 @@ group "Application"
 		local m     = premake.vstudio.vc2010
 		local calls = base(prj)
 		
-		if premake.project.iscpp(prj) then --and string.find(prj.filename, "chroma-gl") then
+		if premake.project.iscpp(prj) then 
 			table.insertafter(calls, premake.xmlDeclaration,  function()
 				premake.w('<ModuleDependenciesFile>$(IntDir)\\%%(RelativeDir)</ModuleDependenciesFile>')
 				premake.w('<ModuleOutputFile>$(IntDir)\\%%(RelativeDir)</ModuleOutputFile>')
@@ -96,6 +91,5 @@ group "Vendor"
 	include "vendor/glad"
 	include "vendor/glfw"
 	include "vendor/glm"
-	include "vendor/imgui"
 	include "vendor/stb"
 group ""
