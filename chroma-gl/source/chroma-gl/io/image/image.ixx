@@ -59,8 +59,8 @@ export namespace gl
         {
             stb::set_flip_vertically_on_load(gl::config::flip_images_vertically);
             
-            const auto channels  = map_channels(format);
-            const auto stb_image = std::invoke([&](format_e format)
+            const auto channels   = map_channels(format);
+            const auto stb_image  = std::invoke([&](format_e format)
                 {
                     switch (format)
                     {
@@ -73,8 +73,9 @@ export namespace gl
                         default         : throw std::invalid_argument{ "invalid format" };
                     };
                 }, format);
+            const auto dimensions = gl::vector2u{ stb_image.dimensions[0u], stb_image.dimensions[1u] };
 
-            return gl::image{ format, stb_image.dimensions, std::move(stb_image.data) };
+            return gl::image{ format, dimensions, std::move(stb_image.data) };
         }
 
         auto format    () const -> format_e
