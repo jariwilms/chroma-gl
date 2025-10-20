@@ -147,7 +147,7 @@
 //    //    using wrapping_e = gl::texture_wrapping_e;
 //    //    using wrapping_t = gl::proxy<wrapping_e, wrapping_e>;
 //    //     
-//    //    texture2d(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector2u& dimensions)
+//    //    texture2d(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector_2u& dimensions)
 //    //        : gl::object{ gl::create_texture(gl::texture_target_e::_2d), [](auto* handle) { gl::delete_texture(*handle); } }
 //    //        , format_{ format }, filter_{ filter }, wrapping_{ wrapping }, dimensions_{ dimensions }, mipmap_levels_{ 1u }
 //    //    {
@@ -166,13 +166,13 @@
 //
 //    //        gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
 //    //    }
-//    //    texture2d(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector2u& dimensions, std::span<const gl::byte_t> data)
+//    //    texture2d(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector_2u& dimensions, std::span<const gl::byte_t> data)
 //    //        : texture2d{ format, filter, wrapping, dimensions }
 //    //    {
 //    //        copy(format, data);
 //    //        generate_mipmap();
 //    //    }
-//    //    texture2d(format_e format,                                       const gl::vector2u& dimensions, std::span<const gl::byte_t> data)
+//    //    texture2d(format_e format,                                       const gl::vector_2u& dimensions, std::span<const gl::byte_t> data)
 //    //        : texture2d{ format, filter_e::trilinear, wrapping_e::repeat, dimensions, data } {}
 //
 //    //    void bind(gl::binding_t binding) const
@@ -205,7 +205,7 @@
 //    //        if (filter_ != filter_e::none) gl::generate_texture_mipmap(handle());
 //    //    }
 //
-//    //    void resize(const gl::vector2u& dimensions)
+//    //    void resize(const gl::vector_2u& dimensions)
 //    //    {
 //    //        gl::todo();
 //    //        if (dimensions != dimensions_) gl::texture2d::operator=(gl::texture2d{ format_, filter_, wrapping_, dimensions });
@@ -223,7 +223,7 @@
 //    //    {
 //    //        return wrapping_.pack;
 //    //    }
-//    //    auto dimensions   () const -> const gl::vector2u&
+//    //    auto dimensions   () const -> const gl::vector_2u&
 //    //    {
 //    //        return dimensions_;
 //    //    }
@@ -236,7 +236,7 @@
 //    //    format_e     format_;
 //    //    filter_e     filter_;
 //    //    wrapping_t   wrapping_;
-//    //    gl::vector2u dimensions_;
+//    //    gl::vector_2u dimensions_;
 //    //    gl::uint32_t mipmap_levels_;
 //    //};
 //    //class texture3d : public gl::object
@@ -346,7 +346,7 @@
 //    //public:
 //    //    using format_e = api::texture::format_e;
 //
-//    //    texture2d_ms(format_e format, const gl::vector2u& dimensions, gl::uint32_t samples)
+//    //    texture2d_ms(format_e format, const gl::vector_2u& dimensions, gl::uint32_t samples)
 //    //        : gl::object{ gl::create_texture(gl::texture_target_e::_2d_multisample), [](auto* handle) { gl::delete_texture(*handle); } }
 //    //        , format_{ format }, dimensions_{ dimensions }, samples_{ samples }
 //    //    {
@@ -358,7 +358,7 @@
 //    //        gl::bind_texture_unit(handle(), binding);
 //    //    }
 //    //    
-//    //    void resize(const gl::vector2u& dimensions)
+//    //    void resize(const gl::vector_2u& dimensions)
 //    //    {
 //    //        gl::todo();
 //    //    }
@@ -367,7 +367,7 @@
 //    //    {
 //    //        return format_;
 //    //    }
-//    //    auto dimensions() const -> const gl::vector2u&
+//    //    auto dimensions() const -> const gl::vector_2u&
 //    //    {
 //    //        return dimensions_;
 //    //    }
@@ -378,7 +378,7 @@
 //
 //    //private:
 //    //    format_e     format_;
-//    //    gl::vector2u dimensions_;
+//    //    gl::vector_2u dimensions_;
 //    //    gl::uint32_t samples_;
 //    //};
 //    //class texture3d_ms : public gl::object

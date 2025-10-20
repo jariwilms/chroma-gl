@@ -37,7 +37,7 @@ export namespace gl
         };
 
         template<std::ranges::range R>
-        explicit image(format_e format, const gl::vector2u& dimensions, R&& source)
+        explicit image(format_e format, const gl::vector_2u& dimensions, R&& source)
             : format_{ format }, dimensions_{ dimensions }, data_{ std::from_range, std::forward<R>(source) } {}
 
         template<extension_e E>
@@ -73,7 +73,7 @@ export namespace gl
                         default         : throw std::invalid_argument{ "invalid format" };
                     };
                 }, format);
-            const auto dimensions = gl::vector2u{ stb_image.dimensions[0u], stb_image.dimensions[1u] };
+            const auto dimensions = gl::vector_2u{ stb_image.dimensions[0u], stb_image.dimensions[1u] };
 
             return gl::image{ format, dimensions, std::move(stb_image.data) };
         }
@@ -82,7 +82,7 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions() const -> const gl::vector2u&
+        auto dimensions() const -> const gl::vector_2u&
         {
             return dimensions_;
         }
@@ -108,7 +108,7 @@ export namespace gl
         }
 
         format_e                format_;
-        gl::vector2u            dimensions_;
+        gl::vector_2u           dimensions_;
         std::vector<gl::byte_t> data_;
     };
 }

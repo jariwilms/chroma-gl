@@ -67,20 +67,20 @@ export namespace glfw
             return !active_buttons_.test(std::to_underlying(code)) && last_active_buttons_.test(std::to_underlying(code));
         }
 
-        auto cursor_position           ()                    const -> gl::vector2f
+        auto cursor_position           ()                    const -> gl::vector_2f
         {
             return cursor_position_;
         }
-        auto cursor_position_delta     ()                    const -> gl::vector2f
+        auto cursor_position_delta     ()                    const -> gl::vector_2f
         {
             return cursor_position_ - last_cursor_position_;
         }
 
-        auto scroll_wheel              ()                    const -> gl::vector2f
+        auto scroll_wheel              ()                    const -> gl::vector_2f
         {
             return scroll_wheel_;
         }
-        auto scroll_wheel_delta        ()                    const -> gl::vector2f
+        auto scroll_wheel_delta        ()                    const -> gl::vector_2f
         {
             return last_scroll_wheel_ - scroll_wheel_;
         }
@@ -109,11 +109,11 @@ export namespace glfw
         }
         void input_cursor_callback     (glfw::window_t*, gl::float64_t  x, gl::float64_t y)
         {
-            cursor_position_ = gl::vector2f{ static_cast<gl::float32_t>(x), static_cast<gl::float32_t>(y) };
+            cursor_position_ = gl::vector_2f{ static_cast<gl::float32_t>(x), static_cast<gl::float32_t>(y) };
         }
         void input_scroll_callback     (glfw::window_t*, gl::float64_t  x, gl::float64_t y)
         {
-            scroll_wheel_ = gl::vector2f{ static_cast<gl::float32_t>(x), static_cast<gl::float32_t>(y) };
+            scroll_wheel_ = gl::vector_2f{ static_cast<gl::float32_t>(x), static_cast<gl::float32_t>(y) };
         }
 
     private:
@@ -121,9 +121,9 @@ export namespace glfw
         std::bitset<std::to_underlying(key_max   )> last_active_keys_;
         std::bitset<std::to_underlying(button_max)> active_buttons_;
         std::bitset<std::to_underlying(button_max)> last_active_buttons_;
-        gl::vector2f                                cursor_position_;
-        gl::vector2f                                last_cursor_position_;
-        gl::vector2f                                scroll_wheel_;
-        gl::vector2f                                last_scroll_wheel_;
+        gl::vector_2f                                cursor_position_;
+        gl::vector_2f                                last_cursor_position_;
+        gl::vector_2f                                scroll_wheel_;
+        gl::vector_2f                                last_scroll_wheel_;
     };
 }

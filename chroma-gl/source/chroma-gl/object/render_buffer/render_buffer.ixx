@@ -11,14 +11,14 @@ export module opengl.object.render_buffer;
 //    public:
 //        using format_e = gl::render_buffer_format_e;
 //
-//        render_buffer(format_e format, const gl::vector2u& dimensions)
+//        render_buffer(format_e format, const gl::vector_2u& dimensions)
 //            : gl::object{ gl::create_render_buffer(), [](auto* handle) { gl::delete_render_buffer(*handle); }}
 //            , format_{ format }, dimensions_{ dimensions }
 //        {
 //            gl::render_buffer_storage(handle(), format, dimensions_);
 //        }
 //
-//        void resize(const gl::vector2u& dimensions)
+//        void resize(const gl::vector_2u& dimensions)
 //        {
 //            gl::todo();
 //            if (dimensions != dimensions_) gl::render_buffer::operator=(render_buffer{ format_, dimensions });
@@ -28,28 +28,28 @@ export module opengl.object.render_buffer;
 //        {
 //            return format_;
 //        }
-//        auto dimensions() const -> const gl::vector2u&
+//        auto dimensions() const -> const gl::vector_2u&
 //        {
 //            return dimensions_;
 //        }
 //
 //    private:
 //        format_e     format_;
-//        gl::vector2u dimensions_;
+//        gl::vector_2u dimensions_;
 //    };
 //    class render_buffer_ms : public gl::object
 //    {
 //    public:
 //        using format_e = gl::render_buffer_format_e;
 //
-//        render_buffer_ms(format_e format, const gl::vector2u& dimensions, gl::uint32_t samples)
+//        render_buffer_ms(format_e format, const gl::vector_2u& dimensions, gl::uint32_t samples)
 //            : gl::object{ gl::create_render_buffer(), [](auto* handle) { gl::delete_render_buffer(*handle); }}
 //            , format_{ format }, dimensions_{ dimensions }, samples_{ samples }
 //        {
 //            gl::render_buffer_storage_multisample(handle(), format, dimensions_, samples_);
 //        }
 //
-//        void resize(const gl::vector2u& dimensions)
+//        void resize(const gl::vector_2u& dimensions)
 //        {
 //            gl::todo();
 //            if (dimensions != dimensions_) gl::render_buffer_ms::operator=(render_buffer_ms{ format_, dimensions, samples_ });
@@ -59,7 +59,7 @@ export module opengl.object.render_buffer;
 //        {
 //            return format_;
 //        }
-//        auto dimensions() const -> const gl::vector2u&
+//        auto dimensions() const -> const gl::vector_2u&
 //        {
 //            return dimensions_;
 //        }
@@ -70,7 +70,7 @@ export module opengl.object.render_buffer;
 //
 //    private:
 //        format_e     format_;
-//        gl::vector2u dimensions_;
+//        gl::vector_2u dimensions_;
 //        gl::uint32_t samples_;
 //    };
 //}

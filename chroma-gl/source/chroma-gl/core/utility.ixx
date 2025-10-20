@@ -40,14 +40,14 @@ export namespace gl
         else             return false_type;
     }
     
-    constexpr auto clamp_range          (gl::range      range     , gl::count_t boundary) -> gl::range
+    constexpr auto clamp_range          (gl::range_t      range     , gl::size_t boundary) -> gl::range_t
     {
         range.index = std::min(range.index, boundary              );
         range.count = std::min(range.count, boundary - range.index);
 
         return range;
     }
-    constexpr auto clamp_range          (gl::byte_range byte_range, gl::size_t  boundary) -> gl::byte_range
+    constexpr auto clamp_range          (gl::byte_range_t byte_range, gl::size_t  boundary) -> gl::byte_range_t
     {
         byte_range.offset = std::min(byte_range.offset, boundary                    );
         byte_range.size   = std::min(byte_range.size  , boundary - byte_range.offset);
@@ -55,37 +55,37 @@ export namespace gl
         return byte_range;
     }
     template<typename T>
-    constexpr auto convert_range        (gl::range      range) -> gl::byte_range
+    constexpr auto convert_range        (gl::range_t      range) -> gl::byte_range_t
     {
-        return gl::byte_range{ static_cast<gl::size_t>(range.count * sizeof(T)), static_cast<gl::size_t>(range.index * sizeof(T)) };
+        return gl::byte_range_t{ range.count * sizeof(T), range.index * sizeof(T) };
     }
     template<typename T>
-    constexpr auto convert_range        (gl::byte_range range) -> gl::range
+    constexpr auto convert_range        (gl::byte_range_t range) -> gl::range_t
     {
-        return gl::range{ static_cast<gl::count_t>(range.size / sizeof(T)), static_cast<gl::index_t>(range.offset / sizeof(T)) };
+        return gl::range_t{ range.size / sizeof(T), range.offset / sizeof(T) };
     }
-    constexpr auto range_overlaps       (gl::range      first, gl::range      second) -> gl::bool_t
+    constexpr auto range_overlaps       (gl::range_t      first, gl::range_t      second) -> gl::bool_t
     {
         return (first.index < second.index + second.count) && (second.index < first.index + second.count);
     }
-    constexpr auto range_overlaps       (gl::byte_range first, gl::byte_range second) -> gl::bool_t
+    constexpr auto range_overlaps       (gl::byte_range_t first, gl::byte_range_t second) -> gl::bool_t
     {
         return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
     }
-    constexpr auto range_intersection   (gl::byte_range first, gl::byte_range second) -> gl::byte_range
+    constexpr auto range_intersection   (gl::byte_range_t first, gl::byte_range_t second) -> gl::byte_range_t
     {
         const auto first_end  = gl::size_t{ first .offset + first .size };
         const auto second_end = gl::size_t{ second.offset + second.size };
         const auto start      = gl::size_t{ (first.offset > second.offset) ? first.offset : second.offset };
         const auto end        = gl::size_t{ (first_end < second_end) ? first_end : second_end };
 
-        if   (start < end) return gl::byte_range{ end - start, start };
-        else               return gl::byte_range{};
+        if   (start < end) return gl::byte_range_t{ end - start, start };
+        else               return gl::byte_range_t{};
     }
     template<typename T, gl::uint32_t Count>
-    constexpr auto clamp_region         (const gl::region<T, Count>& region, const gl::vector_t<T, Count>& boundary) -> gl::region<T, Count>
+    constexpr auto clamp_region         (const gl::region_t<T, Count>& region, const gl::vector_t<T, Count>& boundary) -> gl::region_t<T, Count>
     {
-        auto result = gl::region<T, Count>{};
+        auto result = gl::region_t<T, Count>{};
         std::ranges::for_each(std::views::iota(0u, Count), [&](auto index)
             {
                 const auto maximum_extent = T{ boundary[index] - std::clamp(region.origin[index], T{ 0 }, boundary[index]) };

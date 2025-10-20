@@ -111,7 +111,7 @@ export namespace gl
     public:
         using format_e = gl::texture_format_e;
         using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
-        using region_t = gl::region<gl::uint32_t, Dimensions>;
+        using region_t = gl::region_t<gl::uint32_t, Dimensions>;
 
         texture_n(format_e format, const vector_t& dimensions,                              gl::bool_t allocate_mipmaps = gl::true_)
             : gl::object{ gl::create_texture(gl::map_texture_target(Dimensions)) }
@@ -192,7 +192,7 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions     () const -> const gl::vector3u&
+        auto dimensions     () const -> const gl::vector_3u&
         {
             return dimensions_;
         }

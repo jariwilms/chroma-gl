@@ -25,7 +25,7 @@ export module opengl.object.cubemap;
 //            back  , 
 //        };
 //
-//         cubemap(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector2u& dimensions)
+//         cubemap(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector_2u& dimensions)
 //            : gl::object{ gl::create_texture(gl::texture_target_e::cubemap), [](auto* handle) { gl::delete_texture(*handle); } }
 //            , format_{ format }, filter_{ filter }, wrapping_{ wrapping }, dimensions_{ dimensions }, mipmap_levels_{ 1u }
 //        {
@@ -44,13 +44,13 @@ export module opengl.object.cubemap;
 //            
 //            gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
 //        }
-//         cubemap(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector2u& dimensions, std::span<const gl::image> faces)
+//         cubemap(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector_2u& dimensions, std::span<const gl::image> faces)
 //            : cubemap{ format, filter, wrapping, dimensions }
 //        {
 //            attach_faces(faces, format_);
 //            generate_mipmap();
 //        }
-//         cubemap(format_e format,                                        const gl::vector2u& dimensions, std::span<const gl::image> faces)
+//         cubemap(format_e format,                                        const gl::vector_2u& dimensions, std::span<const gl::image> faces)
 //            : cubemap{ format, filter_e::trilinear, wrapping_e::repeat, dimensions, faces } {}
 //
 //        void bind(gl::binding_t binding) const
@@ -101,7 +101,7 @@ export module opengl.object.cubemap;
 //        {
 //            return wrapping_.pack;
 //        }
-//        auto dimensions   () const -> const gl::vector2u&
+//        auto dimensions   () const -> const gl::vector_2u&
 //        {
 //            return dimensions_;
 //        }
@@ -127,7 +127,7 @@ export module opengl.object.cubemap;
 //        format_e     format_;
 //        filter_e     filter_;
 //        wrapping_t   wrapping_;
-//        gl::vector2u dimensions_;
+//        gl::vector_2u dimensions_;
 //        gl::uint32_t mipmap_levels_;
 //    };
 //}

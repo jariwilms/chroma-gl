@@ -12,16 +12,16 @@ export namespace gl
     struct mapping
     {
         std::span<T> memory;
-        gl::range    range;
+        gl::range_t    range;
     };
     class  memory_locker
     {
     public:
-        void lock          (gl::range range)
+        void lock          (gl::range_t range)
         {
             locks_.emplace_back(gl::fence{}, range);
         }
-        void wait          (gl::range range)
+        void wait          (gl::range_t range)
         {
             auto remaining_locks = std::vector<gl::memory_lock_t>{};
             std::ranges::for_each(locks_, [&](gl::memory_lock_t& lock)
@@ -63,7 +63,7 @@ export namespace gl
             gl::delete_buffer(handle());
         }
 
-        auto count() const -> gl::count_t
+        auto count() const -> gl::size_t
         {
             return element_count_;
         }
@@ -75,13 +75,13 @@ export namespace gl
         auto operator=(buffer&&) noexcept -> buffer & = default;
 
     protected:
-        buffer(gl::count_t element_count, gl::size_t element_size)
+        buffer(gl::size_t element_count, gl::size_t element_size)
             : gl::object{ gl::create_buffer() }
             , element_count_{ element_count }, element_size_{ element_size } {}
 
     private:
-        gl::count_t element_count_;
-        gl::size_t  element_size_;
+        gl::size_t element_count_;
+        gl::size_t element_size_;
     };
     template<typename T>
     class static_buffer : public gl::buffer
@@ -109,7 +109,7 @@ export namespace gl
 
         void read (std::span<      T> memory, gl::index_t offset = 0u) requires (Read )
         {
-            const auto read_range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(memory.size()), offset }, count());
+            const auto read_range = gl::clamp_range(gl::range_t{ static_cast<gl::count_t>(memory.size()), offset }, count());
             if (read_range.empty()) return;
 
             mapping_.memory = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::read, read_range);
@@ -120,7 +120,7 @@ export namespace gl
         }
         void write(std::span<const T> memory, gl::index_t offset = 0u) requires (Write)
         {
-            const auto write_range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(memory.size()), offset }, count());
+            const auto write_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, count());
             if (write_range.empty()) return;
 
             mapping_.memory = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::write, count());
@@ -160,7 +160,7 @@ export namespace gl
 
         void read (std::span<      T> memory, gl::index_t offset = 0u) requires (Read )
         {
-            const auto read_range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(memory.size()), offset }, count());
+            const auto read_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, count());
             if (read_range.empty()) return;
 
             memory_locker_.wait(read_range);
@@ -169,7 +169,7 @@ export namespace gl
         }
         void write(std::span<const T> memory, gl::index_t offset = 0u) requires (Write)
         {
-            const auto write_range = gl::clamp_range(gl::range{ static_cast<gl::count_t>(memory.size()), offset }, count());
+            const auto write_range = gl::clamp_range(gl::range_t{ static_cast<gl::count_t>(memory.size()), offset }, count());
             if (write_range.empty()) return;
 
             memory_locker_.wait(write_range);

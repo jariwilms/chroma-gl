@@ -6,37 +6,37 @@ import opengl.types;
 export namespace gl
 {
     template<typename T, gl::uint32_t Count>
-    struct region
+    struct region_t
     {
-        constexpr region(const gl::vector_t<T, Count>& extent = {}, const gl::vector_t<T, Count>& origin = {})
+        constexpr region_t(const gl::vector_t<T, Count>& extent = {}, const gl::vector_t<T, Count>& origin = {})
             : extent{ extent }, origin{ origin } {}
 
-        auto operator==(const region&) const -> gl::bool_t = default;
+        auto operator==(const region_t&) const -> gl::bool_t = default;
 
         gl::vector_t<T, Count> extent{};
         gl::vector_t<T, Count> origin{};
     };
-    struct      range
+    struct      range_t
     {
-        constexpr range(gl::count_t count = {}, gl::index_t index = {})
+        constexpr range_t(gl::size_t count = {}, gl::size_t index = {})
             : count{ count }, index{ index } {}
 
-        constexpr auto operator==(const range&) const -> gl::bool_t = default;
+        constexpr auto operator==(const range_t&) const -> gl::bool_t = default;
 
         auto empty() const -> gl::bool_t
         {
-            return count == gl::count_t{ 0u };
+            return count == gl::size_t{ 0u };
         }
 
-        gl::count_t count{};
-        gl::index_t index{};
+        gl::size_t count{};
+        gl::size_t index{};
     };
-    struct byte_range
+    struct byte_range_t
     {
-        constexpr byte_range(gl::size_t size = {}, gl::size_t offset = {})
+        constexpr byte_range_t(gl::size_t size = {}, gl::size_t offset = {})
             : size{ size }, offset{ offset } {}
 
-        constexpr auto operator==(const byte_range&) const -> gl::bool_t = default;
+        constexpr auto operator==(const byte_range_t&) const -> gl::bool_t = default;
 
         auto empty() const -> gl::bool_t
         {
@@ -47,8 +47,8 @@ export namespace gl
         gl::size_t offset{};
     };
 
-    using length_t      = gl::region<gl::uint32_t, 1u>;
-    using area_t        = gl::region<gl::uint32_t, 2u>;
-    using volume_t      = gl::region<gl::uint32_t, 3u>;
-    using hypervolume_t = gl::region<gl::uint32_t, 4u>; //Yes, this exists
+    using length_t      = gl::region_t<gl::uint32_t, 1u>;
+    using area_t        = gl::region_t<gl::uint32_t, 2u>;
+    using volume_t      = gl::region_t<gl::uint32_t, 3u>;
+    using hypervolume_t = gl::region_t<gl::uint32_t, 4u>; //Yes, this exists
 }

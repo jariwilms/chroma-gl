@@ -29,7 +29,7 @@ export namespace glfw
     {
         ::glfwWindowHint(std::to_underlying(hint), std::to_underlying(value));
     }
-    auto create_window                 (const std::string& title, gl::vector2u dimensions) -> glfw::window_t*
+    auto create_window                 (const std::string& title, gl::vector_2u dimensions) -> glfw::window_t*
     {
         auto handle = ::glfwCreateWindow(
             static_cast<gl::int32_t>(dimensions.x), 
@@ -47,32 +47,32 @@ export namespace glfw
     {
         return ::glfwWindowShouldClose(window);
     }
-    auto get_window_size               (glfw::window_t* window) -> gl::vector2u
+    auto get_window_size               (glfw::window_t* window) -> gl::vector_2u
     {
-        auto dimensions = gl::vector2i{};
+        auto dimensions = gl::vector_2i{};
         ::glfwGetWindowSize(window, &dimensions.x, &dimensions.y);
 
-        return std::bit_cast<gl::vector2u>(dimensions);
+        return std::bit_cast<gl::vector_2u>(dimensions);
     }
-    auto get_monitor_size              (glfw::monitor_t* monitor) -> gl::vector2u
+    auto get_monitor_size              (glfw::monitor_t* monitor) -> gl::vector_2u
     {
-        auto dimensions = gl::vector2i{};
+        auto dimensions = gl::vector_2i{};
         ::glfwGetMonitorPhysicalSize(monitor, &dimensions.x, &dimensions.y);
 
-        return std::bit_cast<gl::vector2u>(dimensions);
+        return std::bit_cast<gl::vector_2u>(dimensions);
     }
-    auto get_frame_buffer_size         (glfw::window_t* window) -> gl::vector2u
+    auto get_frame_buffer_size         (glfw::window_t* window) -> gl::vector_2u
     {
-        auto dimensions = gl::vector2i{};
+        auto dimensions = gl::vector_2i{};
         ::glfwGetFramebufferSize(window, &dimensions.x, &dimensions.y);
 
-        return std::bit_cast<gl::vector2u>(dimensions);
+        return std::bit_cast<gl::vector_2u>(dimensions);
     }
     void set_window_should_close       (glfw::window_t* window, gl::bool_t value)
     {
         ::glfwSetWindowShouldClose(window, value);
     }
-    void set_window_size               (glfw::window_t* window, const gl::vector2u& dimensions)
+    void set_window_size               (glfw::window_t* window, const gl::vector_2u& dimensions)
     {
         ::glfwSetWindowSize(
             window                                 , 
@@ -83,13 +83,13 @@ export namespace glfw
     {
         ::glfwSetWindowTitle(window, title.c_str());
     }
-    void set_window_monitor            (glfw::window_t* window, glfw::monitor_t* monitor, gl::vector2u dimensions)
+    void set_window_monitor            (glfw::window_t* window, glfw::monitor_t* monitor, gl::vector_2u dimensions)
     {
         const auto video_mode         = glfw::get_video_mode(monitor ? monitor : glfw::get_primary_monitor());
-        const auto monitor_resolution = gl::vector2u{ video_mode->width, video_mode->height };
-        const auto window_center      = gl::vector2u{ glfw::get_window_size (window) / 2u   };
-        const auto monitor_center     = gl::vector2u{ monitor_resolution             / 2u   };
-        const auto top_left           = gl::vector2u{ monitor_center - window_center        };
+        const auto monitor_resolution = gl::vector_2u{ video_mode->width, video_mode->height };
+        const auto window_center      = gl::vector_2u{ glfw::get_window_size (window) / 2u   };
+        const auto monitor_center     = gl::vector_2u{ monitor_resolution             / 2u   };
+        const auto top_left           = gl::vector_2u{ monitor_center - window_center        };
 
         ::glfwSetWindowMonitor(
             window, monitor, 

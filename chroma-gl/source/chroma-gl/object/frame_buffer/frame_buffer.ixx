@@ -64,7 +64,7 @@ export module opengl.object.frame_buffer;
 //    //    frame_buffer()
 //    //        : gl::object{ gl::create_frame_buffer(), [](auto* handle) { gl::delete_frame_buffer(*handle); } }
 //    //        , attachments_{}, texture_map_{}, cubemap_map_{}, render_buffer_map_{}, dimensions_{} {}
-//    //    frame_buffer(const gl::vector2u& dimensions, std::span<const specification_t> specifications)
+//    //    frame_buffer(const gl::vector_2u& dimensions, std::span<const specification_t> specifications)
 //    //        : gl::object{ gl::create_frame_buffer(), [](auto* handle) { gl::delete_frame_buffer(*handle); } }
 //    //        , attachments_{}, texture_map_{}, cubemap_map_{}, render_buffer_map_{}, dimensions_{ dimensions }
 //    //    {
@@ -196,7 +196,7 @@ export module opengl.object.frame_buffer;
 //    //        gl::frame_buffer_draw_buffer(handle(), gl::frame_buffer_source_e::color_0 + index);
 //    //    }
 //
-//    //    void resize(const gl::vector2u& dimensions)
+//    //    void resize(const gl::vector_2u& dimensions)
 //    //    {
 //    //        std::ranges::for_each(texture_map_      , [&](const auto& _)
 //    //            {
@@ -233,7 +233,7 @@ export module opengl.object.frame_buffer;
 //    //    {
 //    //        return attachments_.at(gl::to_underlying(attachment));
 //    //    }
-//    //    auto dimensions() const -> const gl::vector2u&
+//    //    auto dimensions() const -> const gl::vector_2u&
 //    //    {
 //    //        return dimensions_;
 //    //    }
@@ -243,7 +243,7 @@ export module opengl.object.frame_buffer;
 //    //    std::unordered_map<std::string, std::shared_ptr<gl::texture2d>>     texture_map_;
 //    //    std::unordered_map<std::string, std::shared_ptr<gl::cubemap>>       cubemap_map_;
 //    //    std::unordered_map<std::string, std::shared_ptr<gl::render_buffer>> render_buffer_map_;
-//    //    gl::vector2u                                                        dimensions_;
+//    //    gl::vector_2u                                                        dimensions_;
 //    //};
 //    //class frame_buffer_ms : public gl::object
 //    //{
@@ -253,10 +253,10 @@ export module opengl.object.frame_buffer;
 //    //    using surface_e       = api::frame_buffer::surface_e;
 //    //    using target_e        = api::frame_buffer::target_e;
 //
-//    //    frame_buffer_ms(const gl::vector2u& dimensions, gl::uint32_t samples)
+//    //    frame_buffer_ms(const gl::vector_2u& dimensions, gl::uint32_t samples)
 //    //        : gl::object{ gl::create_frame_buffer(), [](auto* handle) { gl::delete_frame_buffer(*handle); } }
 //    //        , attachments_{}, textureMap_{}, renderBufferMap_{}, dimensions_{ dimensions }, samples_{ samples } {}
-//    //    frame_buffer_ms(const gl::vector2u& dimensions, std::span<const specification_t> specifications, gl::uint32_t samples)
+//    //    frame_buffer_ms(const gl::vector_2u& dimensions, std::span<const specification_t> specifications, gl::uint32_t samples)
 //    //        : gl::object{ gl::create_frame_buffer(), [](auto* handle) { gl::delete_frame_buffer(*handle); } }
 //    //        , attachments_{}, textureMap_{}, renderBufferMap_{}, dimensions_{ dimensions }, samples_{ samples }
 //    //    {
@@ -392,7 +392,7 @@ export module opengl.object.frame_buffer;
 //    //        gl::frame_buffer_draw_buffer(handle(), gl::frame_buffer_source_e::color0 + index);
 //    //    }
 //
-//    //    void resize(const gl::vector2u& dimensions)
+//    //    void resize(const gl::vector_2u& dimensions)
 //    //    {
 //    //        std::ranges::for_each(textureMap_     , [&](const auto& _)
 //    //            {
@@ -425,7 +425,7 @@ export module opengl.object.frame_buffer;
 //    //    {
 //    //        return attachments_.at(gl::to_underlying(attachment));
 //    //    }
-//    //    auto dimensions() const -> const gl::vector2u&
+//    //    auto dimensions() const -> const gl::vector_2u&
 //    //    {
 //    //        return dimensions_;
 //    //    }
@@ -438,7 +438,7 @@ export module opengl.object.frame_buffer;
 //    //    std::array<std::string, 11u>                                           attachments_;
 //    //    std::unordered_map<std::string, std::shared_ptr<gl::texture2d_ms>>     textureMap_;
 //    //    std::unordered_map<std::string, std::shared_ptr<gl::render_buffer_ms>> renderBufferMap_;
-//    //    gl::vector2u                                                           dimensions_;
+//    //    gl::vector_2u                                                           dimensions_;
 //    //    gl::uint32_t                                                           samples_;
 //    //};
 //}

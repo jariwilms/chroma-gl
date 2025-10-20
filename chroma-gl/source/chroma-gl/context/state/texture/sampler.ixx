@@ -7,7 +7,7 @@ export namespace gl::state
 {
     struct sampler
     {
-        gl::vector4f                       border_color         = { 0.0f, 0.0f, 0.0f, 0.0f }                               ;
+        gl::vector_4f                      border_color         = { 0.0f, 0.0f, 0.0f, 0.0f }                               ;
         gl::texture_compare_mode_e         compare_mode         = gl::texture_compare_mode_e        ::none                 ;
         gl::texture_compare_function_e     compare_function     = gl::texture_compare_function_e    ::less_equal           ;
         gl::texture_minification_filter_e  minification_filter  = gl::texture_minification_filter_e ::nearest_mipmap_linear;

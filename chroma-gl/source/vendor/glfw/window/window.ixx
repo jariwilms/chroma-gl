@@ -23,10 +23,10 @@ export namespace glfw
         struct user_data
         {
             std::shared_ptr<glfw::input> input      = {};
-            gl::vector2u*                dimensions = {};
+            gl::vector_2u*                dimensions = {};
         };
 
-        window(const std::string& title, const gl::vector2u& dimensions)
+        window(const std::string& title, const gl::vector_2u& dimensions)
            : title_{ title }, dimensions_{ dimensions }, display_mode_{ display_mode_e::windowed }
         {
             glfw::initialize();
@@ -83,7 +83,7 @@ export namespace glfw
             glfw::set_frame_buffer_size_callback(window_.get(), [](glfw::window_t*  window, gl::int32_t   width , gl::int32_t   height  )
                 {
                     const auto* user_data = glfw::get_window_user_pointer<window::user_data>(window);
-                    *user_data->dimensions = gl::vector2u{ width, height };
+                    *user_data->dimensions = gl::vector_2u{ width, height };
                 });
         }
 
@@ -101,7 +101,7 @@ export namespace glfw
         {
             glfw::set_window_title(window_.get(), title.c_str());
         }
-        void resize             (const gl::vector2u& dimensions)
+        void resize             (const gl::vector_2u& dimensions)
         {
             glfw::set_window_size(window_.get(), dimensions);
             dimensions_ = dimensions;
@@ -112,7 +112,7 @@ export namespace glfw
             auto monitor = static_cast<glfw::monitor_t*>(nullptr);
             if (display_mode == display_mode_e::fullscreen) monitor = glfw::get_primary_monitor();
 
-            glfw::set_window_monitor(window_.get(), monitor, gl::vector2u{ 1280, 720 });
+            glfw::set_window_monitor(window_.get(), monitor, gl::vector_2u{ 1280, 720 });
         }
 
         void        close       ()
@@ -132,7 +132,7 @@ export namespace glfw
         {
             return display_mode_;
         }
-        auto dimensions         () const -> const gl::vector2u&
+        auto dimensions         () const -> const gl::vector_2u&
         {
             return dimensions_;
         }
@@ -155,7 +155,7 @@ export namespace glfw
         std::shared_ptr<glfw::input>                                          input_;
         std::string                                                           title_;
         display_mode_e                                                        display_mode_;
-        gl::vector2u                                                          dimensions_;
+        gl::vector_2u                                                          dimensions_;
         user_data                                                             user_data_;
     };
 }

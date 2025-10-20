@@ -6,5 +6,5 @@ import opengl.object.fence;
 
 export namespace gl
 {
-    using memory_lock_t = std::tuple<gl::fence, gl::range>;
+    using memory_lock_t = std::tuple<gl::fence, gl::range_t>;
 }
