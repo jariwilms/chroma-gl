@@ -89,12 +89,5 @@ export namespace gl
     //enum class render_buffer_t          : std::underlying_type_t<gl::handle_t>;
     //enum class transform_feedback_t     : std::underlying_type_t<gl::handle_t>;
 
-
-
-    auto value_pointer(auto value) -> auto*
-    {
-        return glm::value_ptr(value);
-    }
-
     using debug_callback_t = gl::void_t(__stdcall*)(gl::enum_t source, gl::enum_t type, gl::uint32_t id, gl::enum_t severity, gl::sizei_t length, gl::c_string message, const gl::void_t* user_parameter);
 }

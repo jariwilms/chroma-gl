@@ -3,6 +3,7 @@ export module opengl.utility;
 import std;
 import opengl.domain;
 import opengl.types;
+import vendor.glm;
 
 export namespace gl
 {
@@ -20,6 +21,15 @@ export namespace gl
     constexpr auto to_underlying_pointer(const T* const value) noexcept -> const std::underlying_type_t<T>* const
     {
         return std::bit_cast<const std::underlying_type_t<T>* const>(value);
+    }
+
+              auto value_pointer        (auto& value) -> auto*
+    {
+        return glm::value_ptr(value);
+    }
+              auto value_pointer        (const auto& value) -> const auto*
+    {
+        return glm::value_ptr(value);
     }
 
     template<std::ranges::range Range>
