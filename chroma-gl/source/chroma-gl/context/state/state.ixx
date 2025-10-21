@@ -5,7 +5,7 @@ export import opengl.context.state.query_target;
 import std;
 import opengl;
 
-export namespace gl::state
+export namespace gl
 {
 
 }

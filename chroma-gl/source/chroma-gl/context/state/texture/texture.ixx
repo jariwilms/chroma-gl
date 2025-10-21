@@ -3,9 +3,9 @@ export module opengl.context.state.texture;
 import std;
 import opengl;
 
-export namespace gl::state
+export namespace gl
 {
-    struct texture
+    struct texture_state
     {
         gl::uint32_t                                              base_level           =     0u                                                   ;
         gl::uint32_t                                              maximum_level        =  1000u                                                   ;
