@@ -10,13 +10,9 @@ export namespace gl
     public:
         explicit 
         fence() 
-        { 
-            sync_ = gl::fence_sync(); 
-        }
+            : sync_{ gl::fence_sync() } {}
         fence(fence&& other) noexcept
-        {
-            sync_ = std::exchange(other.sync_, gl::sync_t{});
-        }
+            : sync_{ std::exchange(other.sync_, gl::sync_t{}) } {}
        ~fence() 
         { 
             gl::delete_sync(sync_);
