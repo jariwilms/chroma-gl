@@ -106,10 +106,10 @@ export namespace gl
         return result;
     }
 
-    template<std::integral T, gl::uint32_t Count>
-    constexpr auto mipmap_levels        (const gl::vector_t<T, Count>& vector) -> T
+    template<gl::uint32_t Count>
+    constexpr auto mipmap_levels        (const gl::vector_t<gl::uint32_t, Count>& dimensions) -> gl::uint8_t
     {
-        return glm::levels(vector);
+        return static_cast<gl::uint8_t>(glm::levels(dimensions));
     }
 
               void todo                 ()
