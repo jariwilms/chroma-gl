@@ -1,133 +1,98 @@
 export module opengl.object.cubemap;
-//
-//import std;
-//import opengl;
-//import opengl.config;
-//import opengl.image;
-//import opengl.object.texture;
-//
-//export namespace gl
-//{
-//    class cubemap : public gl::object
-//    {
-//    public:
-//        using format_e   = gl::texture_format_e;
-//        using filter_e   = gl::texture_filter_e;
-//        using wrapping_e = gl::texture_wrapping_e;
-//        using wrapping_t = gl::proxy<wrapping_e, wrapping_e>;
-//        enum class face_e
-//        {
-//            right , 
-//            left  , 
-//            top   , 
-//            bottom, 
-//            front , 
-//            back  , 
-//        };
-//
-//         cubemap(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector_2u& dimensions)
-//            : gl::object{ gl::create_texture(gl::texture_target_e::cubemap), [](auto* handle) { gl::delete_texture(*handle); } }
-//            , format_{ format }, filter_{ filter }, wrapping_{ wrapping }, dimensions_{ dimensions }, mipmap_levels_{ 1u }
-//        {
-//            if (filter != filter_e::none)
-//            {
-//                gl::texture_parameter(handle(), glp::magnification_filter{ gl::map_texture_magnification_filter(filter_) });
-//                gl::texture_parameter(handle(), glp::minification_filter { gl::map_texture_minification_filter (filter_) });
-//                gl::texture_parameter(handle(), glp::maximum_anisotropy  { gl::float32_t{ 1.0f } });
-//
-//                mipmap_levels_ = gl::mipmap_levels(dimensions_);
-//            }
-//
-//            const auto& [s, t] = wrapping_.pack;
-//            gl::texture_parameter(handle(), glp::wrapping_s{ s });
-//            gl::texture_parameter(handle(), glp::wrapping_t{ t });
-//            
-//            gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
-//        }
-//         cubemap(format_e format, filter_e filter, wrapping_t wrapping, const gl::vector_2u& dimensions, std::span<const gl::image> faces)
-//            : cubemap{ format, filter, wrapping, dimensions }
-//        {
-//            attach_faces(faces, format_);
-//            generate_mipmap();
-//        }
-//         cubemap(format_e format,                                        const gl::vector_2u& dimensions, std::span<const gl::image> faces)
-//            : cubemap{ format, filter_e::trilinear, wrapping_e::repeat, dimensions, faces } {}
-//
-//        void bind(gl::binding_t binding) const
-//        {
-//            gl::bind_texture_unit(handle(), binding);
-//        }
-//
-//        void copy      (face_e face, format_e format,                    std::span<const gl::byte_t> data)
-//        {
-//            copy_range(face, format, dimensions_, data);
-//        }
-//        void copy_range(face_e face, format_e format, gl::area_t region, std::span<const gl::byte_t> data)
-//        {
-//            if (data.empty()) return;
-//            if (glm::any(glm::greaterThan(region.origin + region.extent, dimensions_))) throw std::out_of_range{ "region exceeds texture bounds" };
-//
-//            gl::texture_sub_image_3d(
-//                handle(),
-//                gl::map_texture_format_base(format), 
-//                gl::map_texture_format_type(format), 
-//                gl::uint32_t{ 0u },
-//                gl::volume_t{ gl::vector3u{ dimensions_, 1u }, gl::vector3u{ 0u, 0u, gl::to_underlying(face) } },
-//                data);
-//        }
-//
-//        void apply_wrapping (wrapping_t wrapping)
-//        {
-//            wrapping_ = wrapping;
-//
-//            const auto& [s, t] = wrapping_.pack;
-//            gl::texture_parameter(handle(), glp::wrapping_s{ s });
-//            gl::texture_parameter(handle(), glp::wrapping_s{ t });
-//        }
-//        void generate_mipmap()
-//        {
-//            if (filter_ != filter_e::none) gl::generate_texture_mipmap(handle());
-//        }
-//
-//        auto format       () const -> format_e
-//        {
-//            return format_;
-//        }
-//        auto filter       () const -> filter_e
-//        {
-//            return filter_;
-//        }
-//        auto wrapping     () const -> const std::tuple<wrapping_e, wrapping_e>&
-//        {
-//            return wrapping_.pack;
-//        }
-//        auto dimensions   () const -> const gl::vector_2u&
-//        {
-//            return dimensions_;
-//        }
-//        auto mipmap_levels() const -> gl::uint32_t
-//        {
-//            return mipmap_levels_;
-//        }
-//
-//    private:
-//        void attach_faces(std::span<const gl::image> faces, format_e format)
-//        {
-//            //These indices are swapped intentionally    |   |
-//            const auto indices = std::array<gl::index_t, 6u>{ 0u, 1u, 3u, 2u, 4u, 5u };
-//            
-//            for (auto&& [index, face] : std::views::enumerate(faces))
-//            {
-//                if (face.dimensions() != dimensions_) throw std::invalid_argument{ "face dimensions must be equal to cubemap dimensions" };
-//
-//                copy(static_cast<face_e>(indices.at(index)), format, face.data());
-//            }
-//        }
-//
-//        format_e     format_;
-//        filter_e     filter_;
-//        wrapping_t   wrapping_;
-//        gl::vector_2u dimensions_;
-//        gl::uint32_t mipmap_levels_;
-//    };
-//}
+
+import std;
+import opengl;
+import opengl.config;
+import opengl.io.image;
+import opengl.object;
+import opengl.object.buffer;
+import opengl.object.texture;
+import opengl.context.state.texture;
+
+export namespace gl
+{
+    class cubemap : public gl::object
+    {
+    public:
+        using format_e = gl::texture_format_e;
+        using face_e   = gl::cubemap_face_e;
+
+        explicit
+        cubemap(format_e format, const gl::vector_1u& dimensions, gl::bool_t allocate_mipmaps = gl::true_)
+            : gl::object{ gl::create_texture(gl::texture_target_e::cubemap) }
+            , format_{ format }, dimensions_{ dimensions.x }, mipmap_levels_{ 1u }
+        {
+            if (allocate_mipmaps) mipmap_levels_ = gl::mipmap_levels(dimensions_);
+
+            gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
+        }
+        
+        void transfer       (face_e face,                                                  gl::pixel_buffer_data pixel_buffer_data,                  std::span<const gl::byte_t>       memory)
+        {
+            transfer(face, gl::uint32_t{ 0u }, dimensions_, pixel_buffer_data, memory);
+        }
+        void transfer       (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::pixel_buffer_data pixel_buffer_data,                  std::span<const gl::byte_t>       memory)
+        {
+            const auto image_volume = gl::volume_t{ gl::vector_3u{ image_area.extent, 0u }, gl::vector_3u{ image_area.origin, gl::to_underlying(face - face_e::positive_x) } };
+            gl::texture_sub_image_3d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_volume, memory);
+        }
+        void transfer       (                                                              gl::pixel_buffer_data pixel_buffer_data, const std::array<std::span<const gl::byte_t>, 6u>& memory)
+        {
+            for (const auto [index, source] : std::views::enumerate(memory))
+            {
+                transfer(face_e::positive_x + index, pixel_buffer_data, source);
+            }
+        }
+        void generate_mipmap()
+        {
+            gl::generate_texture_mipmap(handle());
+        }
+
+        template<gl::texture_parameter_e Parameter>
+        void apply          (auto value)
+        {
+            gl::texture_parameter<Parameter>(handle(), value);
+        }
+        void apply          (const gl::texture_state& texture_state)
+        {
+            using enum gl::texture_parameter_e;
+
+            apply<base_level          >(texture_state.base_level          );
+            apply<maximum_level       >(texture_state.maximum_level       );
+            apply<border_color        >(texture_state.border_color        );
+            apply<compare_function    >(texture_state.compare_function    );
+            apply<compare_mode        >(texture_state.compare_mode        );
+            apply<minification_filter >(texture_state.minification_filter );
+            apply<magnification_filter>(texture_state.magnification_filter);
+            apply<wrapping_r          >(texture_state.wrapping_r          );
+            apply<wrapping_s          >(texture_state.wrapping_s          );
+            apply<wrapping_t          >(texture_state.wrapping_t          );
+            apply<swizzle_r           >(texture_state.swizzle_r           );
+            apply<swizzle_g           >(texture_state.swizzle_g           );
+            apply<swizzle_b           >(texture_state.swizzle_b           );
+            apply<swizzle_a           >(texture_state.swizzle_a           );
+            apply<maximum_anisotropy  >(texture_state.maximum_anisotropy  );
+            apply<minimum_lod         >(texture_state.minimum_lod         );
+            apply<maximum_lod         >(texture_state.maximum_lod         );
+            apply<lod_bias            >(texture_state.lod_bias            );
+        }
+
+        auto format         () const -> format_e
+        {
+            return format_;
+        }
+        auto dimensions     () const -> const gl::vector_2u&
+        {
+            return dimensions_;
+        }
+        auto mipmap_levels  () const -> gl::uint32_t
+        {
+            return mipmap_levels_;
+        }
+
+    private:
+        format_e      format_;
+        gl::vector_2u dimensions_;
+        gl::uint8_t   mipmap_levels_;
+    };
+}
