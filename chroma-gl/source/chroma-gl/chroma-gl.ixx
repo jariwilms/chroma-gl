@@ -1,7 +1,6 @@
 export module chroma_gl;
 export import opengl;
 export import opengl.context;
-export import opengl.render_state;
 export import opengl.object.buffer;
 export import opengl.object.cubemap;
 export import opengl.object.frame_buffer;
