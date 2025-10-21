@@ -70,15 +70,16 @@ export namespace gl
     class vertex_array : public gl::object
     {
     public:
+        explicit
         vertex_array()
             : gl::object{ gl::create_vertex_array() }
-            , attribute_index_{}, binding_point_{}, index_count_{} {}
+            , binding_point_{}, attribute_index_{}, index_count_{} {}
        ~vertex_array()
         {
            gl::delete_vertex_array(handle());
         }
 
-        void bind() const
+        void bind()
         {
             gl::bind_vertex_array(handle());
         }
@@ -116,7 +117,7 @@ export namespace gl
 
             binding_point_ = static_cast<gl::binding_t>(gl::to_underlying(binding_point_) + 1u);
         }
-        void tie(gl::handle_t index_buffer , gl::count_t indices                )
+        void tie(gl::handle_t index_buffer , gl::count_t indices                    )
         {
             gl::vertex_array_element_buffer(handle(), index_buffer);
             index_count_ = indices;
