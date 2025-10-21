@@ -1,4 +1,4 @@
-export module opengl.image;
+export module opengl.io.image;
 
 import std;
 import opengl.config;
