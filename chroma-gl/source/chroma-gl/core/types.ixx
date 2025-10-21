@@ -27,8 +27,8 @@ export namespace gl
     using sizeu_t                       = ::GLuint                     ; //Unsigned 32-bit size-type
     using sizei_t                       = ::GLsizei                    ; //  Signed 32-bit size-type
     using size_t                        = ::khronos_usize_t            ; //Maximum possible size of an object on a given platform
-    using count_t                       = ::GLuint                     ; //Number of elements
-    using index_t                       = ::GLuint                     ; //Number of elements offset
+    using count_t                       = ::khronos_usize_t            ; //Number of elements
+    using index_t                       = ::khronos_usize_t            ; //Number of elements offset
     using intptr_t                      = ::GLsizeiptr                 ; //Address pointer
     using ptrdiff_t                     = ::GLintptr                   ; //Address pointer offset
     
@@ -89,5 +89,5 @@ export namespace gl
     //enum class render_buffer_t          : std::underlying_type_t<gl::handle_t>;
     //enum class transform_feedback_t     : std::underlying_type_t<gl::handle_t>;
 
-    using debug_callback_t = gl::void_t(__stdcall*)(gl::enum_t source, gl::enum_t type, gl::uint32_t id, gl::enum_t severity, gl::sizei_t length, gl::c_string message, const gl::void_t* user_parameter);
+    using debug_callback_t = gl::void_t(__stdcall *)(gl::enum_t source, gl::enum_t type, gl::uint32_t id, gl::enum_t severity, gl::sizei_t length, gl::c_string message, const gl::void_t* user_parameter);
 }
