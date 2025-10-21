@@ -1253,10 +1253,10 @@ export namespace gl
     enum class program_stage_e : gl::bitfield_t
     {
         vertex                  = GL_VERTEX_SHADER_BIT         , 
-        fragment                = GL_FRAGMENT_SHADER_BIT       , 
-        geometry                = GL_GEOMETRY_SHADER_BIT       , 
         tessellation_control    = GL_TESS_CONTROL_SHADER_BIT   , 
         tessellation_evaluation = GL_TESS_EVALUATION_SHADER_BIT, 
+        geometry                = GL_GEOMETRY_SHADER_BIT       , 
+        fragment                = GL_FRAGMENT_SHADER_BIT       , 
         compute                 = GL_COMPUTE_SHADER_BIT        , 
         
         all                     = GL_ALL_SHADER_BITS           , 
@@ -1382,6 +1382,10 @@ export namespace gl
         wrapping_r           = GL_TEXTURE_WRAP_R        , 
         wrapping_s           = GL_TEXTURE_WRAP_S        , 
         wrapping_t           = GL_TEXTURE_WRAP_T        , 
+    };
+    enum class shader_binary_format_e : gl::enum_t
+    {
+        spir_v = GL_SHADER_BINARY_FORMAT_SPIR_V, 
     };
     enum class shader_parameter_e : gl::enum_t
     {
@@ -1958,31 +1962,32 @@ export namespace gl
     template<typename T> concept has_bitwise_not = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::bitwise_not);
     template<typename T> concept has_compare     = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::compare    );
 
-    template<gl::has_addition    T                 > constexpr auto operator+ (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) +  std::to_underlying(right)); }
-    template<gl::has_addition    T, std::integral U> constexpr auto operator+ (T  left, U right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) + right); }
-    template<gl::has_subtraction T                 > constexpr auto operator- (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) -  std::to_underlying(right)); }
-    template<gl::has_subtraction T, std::integral U> constexpr auto operator- (T  left, U right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) - right); }
-    template<gl::has_bitwise_and T                 > constexpr auto operator& (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) &  std::to_underlying(right)); }
-    template<gl::has_bitwise_or  T                 > constexpr auto operator| (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) |  std::to_underlying(right)); }
-    template<gl::has_bitwise_xor T                 > constexpr auto operator^ (T  left, T right) noexcept -> T          { return std::bit_cast<T>(std::to_underlying(left) ^  std::to_underlying(right)); }
-    template<gl::has_bitwise_not T                 > constexpr auto operator~ (         T right) noexcept -> T          { return std::bit_cast<T>(                         ~  std::to_underlying(right)); }          
-    template<gl::has_addition    T                 > constexpr auto operator+=(T& left, T right) noexcept -> T&         { return left = left + right; }
-    template<gl::has_addition    T, std::integral U> constexpr auto operator+=(T& left, U right) noexcept -> T&         { return left = left + right; }
-    template<gl::has_subtraction T                 > constexpr auto operator-=(T& left, T right) noexcept -> T&         { return left = left - right; }
-    template<gl::has_subtraction T, std::integral U> constexpr auto operator-=(T& left, U right) noexcept -> T&         { return left = left - right; }
-    template<gl::has_bitwise_and T                 > constexpr auto operator&=(T& left, T right) noexcept -> T&         { return left = left & right; }
-    template<gl::has_bitwise_or  T                 > constexpr auto operator|=(T& left, T right) noexcept -> T&         { return left = left | right; }
-    template<gl::has_bitwise_xor T                 > constexpr auto operator^=(T& left, T right) noexcept -> T&         { return left = left ^ right; }
-    template<gl::has_compare     T                 > constexpr auto operator< (T  left, T right) noexcept -> gl::bool_t { return                  std::to_underlying(left) <  std::to_underlying(right);  }
-    template<gl::has_compare     T                 > constexpr auto operator> (T  left, T right) noexcept -> gl::bool_t { return                  std::to_underlying(left) >  std::to_underlying(right);  }
-    template<gl::has_compare     T                 > constexpr auto operator<=(T  left, T right) noexcept -> gl::bool_t { return                  std::to_underlying(left) <= std::to_underlying(right);  }
-    template<gl::has_compare     T                 > constexpr auto operator>=(T  left, T right) noexcept -> gl::bool_t { return                  std::to_underlying(left) >= std::to_underlying(right);  }
+    template<gl::has_addition    T                 > constexpr auto operator+ (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) +  std::to_underlying(right)); }
+    template<gl::has_addition    T, std::integral U> constexpr auto operator+ (T  left, U right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) +                     right ); }
+    template<gl::has_subtraction T                 > constexpr auto operator- (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) -  std::to_underlying(right)); }
+    template<gl::has_subtraction T, std::integral U> constexpr auto operator- (T  left, U right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) -                     right ); }
+    template<gl::has_bitwise_and T                 > constexpr auto operator& (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) &  std::to_underlying(right)); }
+    template<gl::has_bitwise_or  T                 > constexpr auto operator| (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) |  std::to_underlying(right)); }
+    template<gl::has_bitwise_xor T                 > constexpr auto operator^ (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) ^  std::to_underlying(right)); }
+    template<gl::has_bitwise_not T                 > constexpr auto operator~ (         T right) noexcept -> T          { return static_cast<T>(                         ~  std::to_underlying(right)); }          
+    template<gl::has_addition    T                 > constexpr auto operator+=(T& left, T right) noexcept -> T&         { return                left = left + right                                   ; }
+    template<gl::has_addition    T, std::integral U> constexpr auto operator+=(T& left, U right) noexcept -> T&         { return                left = left + right                                   ; }
+    template<gl::has_subtraction T                 > constexpr auto operator-=(T& left, T right) noexcept -> T&         { return                left = left - right                                   ; }
+    template<gl::has_subtraction T, std::integral U> constexpr auto operator-=(T& left, U right) noexcept -> T&         { return                left = left - right                                   ; }
+    template<gl::has_bitwise_and T                 > constexpr auto operator&=(T& left, T right) noexcept -> T&         { return                left = left & right                                   ; }
+    template<gl::has_bitwise_or  T                 > constexpr auto operator|=(T& left, T right) noexcept -> T&         { return                left = left | right                                   ; }
+    template<gl::has_bitwise_xor T                 > constexpr auto operator^=(T& left, T right) noexcept -> T&         { return                left = left ^ right                                   ; }
+    template<gl::has_compare     T                 > constexpr auto operator< (T  left, T right) noexcept -> gl::bool_t { return                std::to_underlying(left) <  std::to_underlying(right) ; }
+    template<gl::has_compare     T                 > constexpr auto operator> (T  left, T right) noexcept -> gl::bool_t { return                std::to_underlying(left) >  std::to_underlying(right) ; }
+    template<gl::has_compare     T                 > constexpr auto operator<=(T  left, T right) noexcept -> gl::bool_t { return                std::to_underlying(left) <= std::to_underlying(right) ; }
+    template<gl::has_compare     T                 > constexpr auto operator>=(T  left, T right) noexcept -> gl::bool_t { return                std::to_underlying(left) >= std::to_underlying(right) ; }
 
     template<> struct gl::enum_operation<gl::buffer_mapping_range_access_flags_e> { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
     template<> struct gl::enum_operation<gl::buffer_mask_e                      > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
     template<> struct gl::enum_operation<gl::buffer_storage_flags_e             > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
     template<> struct gl::enum_operation<gl::context_flags_e                    > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
     template<> struct gl::enum_operation<gl::context_profile_e                  > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::cubemap_face_e                     > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
     template<> struct gl::enum_operation<gl::feature_e                          > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
     template<> struct gl::enum_operation<gl::frame_buffer_attachment_e          > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
     template<> struct gl::enum_operation<gl::frame_buffer_source_e              > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
