@@ -102,7 +102,16 @@ export namespace gl
             default: throw std::invalid_argument{ "invalid dimensions" };
         }
     }
+    auto map_texture_target_multisample  (gl::uint32_t dimensions) -> gl::texture_target_e
+    {
+        switch (dimensions)
+        {
+            case 2u: return gl::texture_target_e::_2d_multisample;
+            case 3u: return gl::texture_target_e::_2d_multisample_array;
 
+            default: throw std::invalid_argument{ "invalid dimensions" };
+        }
+    }
 
     
     template<gl::uint32_t Dimensions>
@@ -113,6 +122,7 @@ export namespace gl
         using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
         using region_t = gl::region_t<gl::uint32_t, Dimensions>;
 
+        explicit
         texture_n(format_e format, const vector_t& dimensions,                              gl::bool_t allocate_mipmaps = gl::true_)
             : gl::object{ gl::create_texture(gl::map_texture_target(Dimensions)) }
             , format_{ format }, dimensions_{ dimensions }, mipmap_levels_{ 1u }
@@ -123,10 +133,11 @@ export namespace gl
             if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
             if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_storage_3d(handle(), format_, dimensions_, mipmap_levels_);
         }
-        texture_n(format_e format, const vector_t& dimensions, const state::texture& state, gl::bool_t allocate_mipmaps = gl::true_)
+        explicit
+        texture_n(format_e format, const vector_t& dimensions, const gl::texture_state& texture_state, gl::bool_t allocate_mipmaps = gl::true_)
             : texture_n{ format, dimensions, allocate_mipmaps }
         {
-            apply(state);
+            apply(texture_state);
         }
         texture_n(texture_n&&) noexcept = default;
        ~texture_n()
@@ -144,28 +155,28 @@ export namespace gl
         {
             gl::texture_parameter<Parameter>(handle(), value);
         }
-        void apply          (const state::texture& state)
+        void apply          (const gl::texture_state& texture_state)
         {
             using enum gl::texture_parameter_e;
 
-            apply<base_level          >(state.base_level          );
-            apply<maximum_level       >(state.maximum_level       );
-            apply<border_color        >(state.border_color        );
-            apply<compare_function    >(state.compare_function    );
-            apply<compare_mode        >(state.compare_mode        );
-            apply<minification_filter >(state.minification_filter );
-            apply<magnification_filter>(state.magnification_filter);
-            apply<wrapping_r          >(state.wrapping_r          );
-            apply<wrapping_s          >(state.wrapping_s          );
-            apply<wrapping_t          >(state.wrapping_t          );
-            apply<swizzle_r           >(state.swizzle_r           );
-            apply<swizzle_g           >(state.swizzle_g           );
-            apply<swizzle_b           >(state.swizzle_b           );
-            apply<swizzle_a           >(state.swizzle_a           );
-            apply<maximum_anisotropy  >(state.maximum_anisotropy  );
-            apply<minimum_lod         >(state.minimum_lod         );
-            apply<maximum_lod         >(state.maximum_lod         );
-            apply<lod_bias            >(state.lod_bias            );
+            apply<base_level          >(texture_state.base_level          );
+            apply<maximum_level       >(texture_state.maximum_level       );
+            apply<border_color        >(texture_state.border_color        );
+            apply<compare_function    >(texture_state.compare_function    );
+            apply<compare_mode        >(texture_state.compare_mode        );
+            apply<minification_filter >(texture_state.minification_filter );
+            apply<magnification_filter>(texture_state.magnification_filter);
+            apply<wrapping_r          >(texture_state.wrapping_r          );
+            apply<wrapping_s          >(texture_state.wrapping_s          );
+            apply<wrapping_t          >(texture_state.wrapping_t          );
+            apply<swizzle_r           >(texture_state.swizzle_r           );
+            apply<swizzle_g           >(texture_state.swizzle_g           );
+            apply<swizzle_b           >(texture_state.swizzle_b           );
+            apply<swizzle_a           >(texture_state.swizzle_a           );
+            apply<maximum_anisotropy  >(texture_state.maximum_anisotropy  );
+            apply<minimum_lod         >(texture_state.minimum_lod         );
+            apply<maximum_lod         >(texture_state.maximum_lod         );
+            apply<lod_bias            >(texture_state.lod_bias            );
         }
         
         void transfer       (                                                 gl::pixel_buffer_data pixel_buffer_data, std::span<const gl::byte_t> memory)
@@ -178,11 +189,6 @@ export namespace gl
             if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_sub_image_2d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
             if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_sub_image_3d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
         }
-        void transfer       (gl::uint32_t image_level, region_t image_region, gl::pixel_unpack_buffer& pixel_unpack_buffer                               )
-        {
-            pixel_unpack_buffer.bind();
-            transfer(image_level, image_region, pixel_unpack_buffer.pixel_buffer_data(), std::span<const gl::byte_t>{});
-        }
         void generate_mipmap()
         {
             gl::generate_texture_mipmap(handle());
@@ -192,11 +198,11 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions     () const -> const gl::vector_3u&
+        auto dimensions     () const -> const vector_t&
         {
             return dimensions_;
         }
-        auto mipmap_levels  () const -> gl::uint32_t
+        auto mipmap_levels  () const -> gl::uint8_t
         {
             return mipmap_levels_;
         }
@@ -204,9 +210,9 @@ export namespace gl
         auto operator=      (texture_n&&) noexcept -> texture_n& = default;
 
     private:
-        format_e     format_;
-        vector_t     dimensions_;
-        gl::uint32_t mipmap_levels_;
+        format_e    format_;
+        vector_t    dimensions_;
+        gl::uint8_t mipmap_levels_;
     };
     template<gl::uint32_t Dimensions>
     class compressed_texture_n : public gl::texture_n<Dimensions>
@@ -216,6 +222,7 @@ export namespace gl
         using vector_t = gl::texture_n<Dimensions>::vector_t;
         using region_t = gl::texture_n<Dimensions>::region_t;
 
+        explicit
         compressed_texture_n(format_e format, const vector_t& dimensions, gl::bool_t allocate_mipmaps = gl::true_)
             : gl::texture_n<Dimensions>{ static_cast<gl::texture_n<Dimensions>::format_e>(format), dimensions, allocate_mipmaps } {}
 
@@ -233,13 +240,69 @@ export namespace gl
         {
             pixel_unpack_buffer.bind();
             transfer(image_level, image_region, pixel_unpack_buffer.pixel_buffer_data(), std::span<const gl::byte_t>{});
+            pixel_unpack_buffer.unbind();
         }
     };
+    template<gl::uint32_t Dimensions>
+    class multisampled_texture_n : public gl::object
+    {
+    public:
+        using format_e = gl::texture_format_e;
+        using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
 
-    using texture_1d            = gl::texture_n           <1u>;
-    using texture_2d            = gl::texture_n           <2u>;
-    using texture_3d            = gl::texture_n           <3u>;
-    using compressed_texture_1d = gl::compressed_texture_n<1u>;
-    using compressed_texture_2d = gl::compressed_texture_n<2u>;
-    using compressed_texture_3d = gl::compressed_texture_n<3u>;
+        explicit
+        multisampled_texture_n(format_e format, const vector_t& dimensions, gl::uint32_t sample_count, gl::bool_t use_fixed_sample_locations = gl::true_)
+            : gl::object{ gl::create_texture(gl::map_texture_target_multisample(Dimensions)) }
+            , format_{ format }, dimensions_{ dimensions }, sample_count_{ sample_count }, has_fixed_sample_locations_{ use_fixed_sample_locations }
+        {
+            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_storage_2d_multisample(handle(), format_, dimensions_, sample_count, has_fixed_sample_locations_);
+            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_storage_3d_multisample(handle(), format_, dimensions_, sample_count, has_fixed_sample_locations_);
+        }
+        multisampled_texture_n(multisampled_texture_n&&) noexcept = default;
+       ~multisampled_texture_n()
+        {
+            gl::delete_texture(handle());
+        }
+
+        void bind                      (gl::binding_t slot)
+        {
+            gl::bind_texture_unit(handle(), slot);
+        }
+
+        auto format                    () const -> format_e
+        {
+            return format_;
+        }
+        auto dimensions                () const -> const gl::vector_3u&
+        {
+            return dimensions_;
+        }
+        auto sample_count              () const -> gl::count_t
+        {
+            return sample_count_;
+        }
+        auto has_fixed_sample_locations() const -> gl::bool_t
+        {
+            return has_fixed_sample_locations_;
+        }
+
+        auto operator=                 (multisampled_texture_n&&) noexcept -> multisampled_texture_n& = default;
+
+    private:
+        format_e     format_;
+        vector_t     dimensions_;
+        gl::uint32_t sample_count_;
+        gl::bool_t   has_fixed_sample_locations_;
+    };
+
+
+
+    using texture_1d              = gl::texture_n             <1u>;
+    using texture_2d              = gl::texture_n             <2u>;
+    using texture_3d              = gl::texture_n             <3u>;
+    using compressed_texture_1d   = gl::compressed_texture_n  <1u>;
+    using compressed_texture_2d   = gl::compressed_texture_n  <2u>;
+    using compressed_texture_3d   = gl::compressed_texture_n  <3u>;
+    using multisampled_texture_2d = gl::multisampled_texture_n<2u>;
+    using multisampled_texture_3d = gl::multisampled_texture_n<3u>;
 }
