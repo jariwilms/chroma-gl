@@ -63,11 +63,11 @@ export namespace gl
             gl::delete_buffer(handle());
         }
 
-        auto count() const -> gl::size_t
+        auto count() const -> gl::count_t
         {
             return element_count_;
         }
-        auto size() const -> gl::size_t
+        auto size () const -> gl::size_t
         {
             return element_count_ * element_size_;
         }
@@ -75,20 +75,22 @@ export namespace gl
         auto operator=(buffer&&) noexcept -> buffer & = default;
 
     protected:
-        buffer(gl::size_t element_count, gl::size_t element_size)
+        explicit
+        buffer(gl::count_t element_count, gl::size_t element_size)
             : gl::object{ gl::create_buffer() }
             , element_count_{ element_count }, element_size_{ element_size } {}
 
     private:
-        gl::size_t element_count_;
-        gl::size_t element_size_;
+        gl::count_t element_count_;
+        gl::size_t  element_size_;
     };
     template<typename T>
     class static_buffer : public gl::buffer
     {
     public:
+        explicit
         static_buffer(std::span<const T> source)
-            : gl::buffer{ static_cast<gl::count_t>(source.size()), sizeof(T) }
+            : gl::buffer{ source.size(), sizeof(T) }
         {
             gl::buffer_storage(handle(), gl::buffer_storage_flags_e::static_, source);
         }
@@ -97,6 +99,7 @@ export namespace gl
     class dynamic_buffer : public gl::buffer
     {
     public:
+        explicit
         dynamic_buffer(gl::count_t element_count)
             : gl::buffer{ element_count, sizeof(T) }
         {
@@ -109,7 +112,7 @@ export namespace gl
 
         void read (std::span<      T> memory, gl::index_t offset = 0u) requires (Read )
         {
-            const auto read_range = gl::clamp_range(gl::range_t{ static_cast<gl::count_t>(memory.size()), offset }, count());
+            const auto read_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, count());
             if (read_range.empty()) return;
 
             mapping_.memory = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::read, read_range);
@@ -138,6 +141,7 @@ export namespace gl
     class persistent_buffer : public gl::buffer
     {
     public:
+        explicit
         persistent_buffer(gl::count_t element_count)
             : gl::buffer{ element_count, sizeof(T) }
         {
@@ -152,7 +156,7 @@ export namespace gl
                               gl::buffer_storage  <T>(handle(), buffer_storage_flags     , element_count);
             mapping_.memory = gl::map_buffer_range<T>(handle(), buffer_range_access_flags, count()      );
         }
-        persistent_buffer(gl::persistent_buffer<T, Read, Write>&&) noexcept = default;
+        persistent_buffer(persistent_buffer&&) noexcept = default;
        ~persistent_buffer()
         {
             gl::unmap_buffer(handle());
@@ -177,7 +181,7 @@ export namespace gl
             memory_locker_.lock(write_range);
         }
 
-        auto operator=(gl::persistent_buffer<T, Read, Write>&&) noexcept -> gl::persistent_buffer<T, Read, Write>& = default;
+        auto operator=(persistent_buffer&&) noexcept -> persistent_buffer& = default;
 
     private:
         gl::mapping<T>    mapping_;
@@ -187,9 +191,10 @@ export namespace gl
     class partition_buffer : private gl::dynamic_buffer<T, Read, Write>
     {
     public:
+        explicit
         partition_buffer(gl::count_t partition_count, gl::count_t partition_element_count)
             : gl::dynamic_buffer<T, Read, Write>{ partition_count * partition_element_count }
-            , partition_index_{ 0u }, partition_count_{ partition_count }, partition_element_count_{ partition_element_count } {}
+            , partition_count_{ partition_count }, partition_element_count_{ partition_element_count }, partition_index_{ 0u } {}
 
         void read_next (std::span<const T> memory, gl::index_t offset) requires (Read )
         {
@@ -212,9 +217,9 @@ export namespace gl
             ++partition_index_ %= partition_count_;
         }
         
-        gl::count_t partition_index_;
         gl::count_t partition_count_;
         gl::count_t partition_element_count_;
+        gl::index_t partition_index_;
     };
 
 
@@ -227,9 +232,13 @@ export namespace gl
     public:
         using T::T;
 
-        void bind()
+        void bind  ()
         {
             gl::bind_buffer(this->handle(), Target);
+        }
+        void unbind()
+        {
+            gl::bind_buffer(gl::null_object, Target);
         }
     };
     template<auto Target, typename T> requires (std::is_same_v<decltype(Target), gl::buffer_base_target_e>)
@@ -249,6 +258,9 @@ export namespace gl
     template<typename T                                   > using shared_buffer  = gl::persistent_buffer<T, gl::true_ , gl::true_ >;
     template<typename T                                   > using result_buffer  = gl::persistent_buffer<T, gl::true_ , gl::false_>;
 
+    template<typename T                                   > using uniform_buffer        = gl::bindable_buffer<gl::buffer_base_target_e::uniform_buffer       , gl::stream_buffer    <T             >>;
+    template<typename T, gl::bool_t Read, gl::bool_t Write> using shader_storage_buffer = gl::bindable_buffer<gl::buffer_base_target_e::shader_storage_buffer, gl::persistent_buffer<T, Read, Write>>;
+    template<typename T                                   > using draw_indirect_buffer  = gl::bindable_buffer<gl::buffer_target_e     ::draw_indirect_buffer , gl::stream_buffer    <T             >>;
 
 
     struct pixel_buffer_data
@@ -286,13 +298,4 @@ export namespace gl
     private:
         gl::pixel_buffer_data pixel_buffer_data_;
     };
-
-
-
-    
-    template<typename T                                   > using uniform_buffer        = gl::bindable_buffer<gl::buffer_base_target_e::uniform_buffer       , gl::stream_buffer    <T             >>;
-    template<typename T, gl::bool_t Read, gl::bool_t Write> using shader_storage_buffer = gl::bindable_buffer<gl::buffer_base_target_e::shader_storage_buffer, gl::persistent_buffer<T, Read, Write>>;
-                                                            //using pixel_pack_buffer     = gl::bindable_buffer<gl::buffer_target_e     ::pixel_pack_buffer    , gl::stream_buffer    <gl::byte_t    >>;
-                                                            //using pixel_unpack_buffer   = gl::bindable_buffer<gl::buffer_target_e     ::pixel_unpack_buffer  , gl::stream_buffer    <gl::byte_t    >>;
-    template<typename T                                   > using draw_indirect_buffer  = gl::bindable_buffer<gl::buffer_target_e     ::draw_indirect_buffer , gl::stream_buffer    <T             >>;
 }
