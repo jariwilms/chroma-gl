@@ -116,14 +116,14 @@ export namespace gl
         {
             using enum gl::render_buffer_format_e;
 
-            case d_uint16_n      :
-            case d_uint24_n      :
-            case d_float32       : return gl::frame_buffer_attachment_e::depth        ;
-            case s_uint8         : return gl::frame_buffer_attachment_e::stencil      ;
-            case ds_uint32_24_8  :
-            case ds_float32_uint8: return gl::frame_buffer_attachment_e::depth_stencil;
+            case depth_uint16_n             :
+            case depth_uint24_n             :
+            case depth_float32              : return gl::frame_buffer_attachment_e::depth        ;
+            case stencil_uint8              : return gl::frame_buffer_attachment_e::stencil      ;
+            case depth_stencil_uint32_24_8  :
+            case depth_stencil_float32_uint8: return gl::frame_buffer_attachment_e::depth_stencil;
 
-            default              : return gl::frame_buffer_attachment_e::color_0      ;
+            default                         : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
     auto map_program_stage                 (gl::shader_type_e          shader_type) -> gl::program_stage_e
