@@ -144,17 +144,32 @@ export namespace gl
            gl::delete_texture(handle());
         }
 
-        void bind           (gl::binding_t slot)
+        void bind            (gl::binding_t slot)
         {
             gl::bind_texture_unit(handle(), slot);
         }
 
+        void transfer        (                                                 gl::pixel_buffer_data pixel_buffer_data, std::span<const gl::byte_t> memory)
+        {
+            transfer(gl::uint32_t{ 0u }, dimensions_, pixel_buffer_data, memory);
+        }
+        void transfer        (gl::uint32_t image_level, region_t image_region, gl::pixel_buffer_data pixel_buffer_data, std::span<const gl::byte_t> memory)
+        {
+            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::texture_sub_image_1d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
+            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_sub_image_2d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
+            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_sub_image_3d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
+        }
+        void generate_mipmaps()
+        {
+            gl::generate_texture_mipmaps(handle());
+        }
+        
         template<gl::texture_parameter_e Parameter>
-        void apply          (auto value)
+        void apply           (auto value)
         {
             gl::texture_parameter<Parameter>(handle(), value);
         }
-        void apply          (const gl::texture_state& texture_state)
+        void apply           (const gl::texture_state& texture_state)
         {
             using enum gl::texture_parameter_e;
 
@@ -177,36 +192,21 @@ export namespace gl
             apply<maximum_lod         >(texture_state.maximum_lod         );
             apply<lod_bias            >(texture_state.lod_bias            );
         }
-        
-        void transfer       (                                                 gl::pixel_buffer_data pixel_buffer_data, std::span<const gl::byte_t> memory)
-        {
-            transfer(gl::uint32_t{ 0u }, dimensions_, pixel_buffer_data, memory);
-        }
-        void transfer       (gl::uint32_t image_level, region_t image_region, gl::pixel_buffer_data pixel_buffer_data, std::span<const gl::byte_t> memory)
-        {
-            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::texture_sub_image_1d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_sub_image_2d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_sub_image_3d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
-        }
-        void generate_mipmap()
-        {
-            gl::generate_texture_mipmap(handle());
-        }
 
-        auto format         () const -> format_e
+        auto format          () const -> format_e
         {
             return format_;
         }
-        auto dimensions     () const -> const vector_t&
+        auto dimensions      () const -> const vector_t&
         {
             return dimensions_;
         }
-        auto mipmap_levels  () const -> gl::uint8_t
+        auto mipmap_levels   () const -> gl::uint8_t
         {
             return mipmap_levels_;
         }
 
-        auto operator=      (texture_n&&) noexcept -> texture_n& = default;
+        auto operator=       (texture_n&&) noexcept -> texture_n& = default;
 
     private:
         format_e    format_;

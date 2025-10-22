@@ -24,33 +24,33 @@ export namespace gl
             gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
         }
         
-        void transfer       (face_e face,                                                  gl::pixel_buffer_data pixel_buffer_data,                 std::span<const gl::byte_t>      memory)
+        void transfer        (face_e face,                                                  gl::pixel_buffer_data pixel_buffer_data,                 std::span<const gl::byte_t>      memory)
         {
             transfer(face, gl::uint32_t{ 0u }, dimensions_, pixel_buffer_data, memory);
         }
-        void transfer       (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::pixel_buffer_data pixel_buffer_data,                 std::span<const gl::byte_t>      memory)
+        void transfer        (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::pixel_buffer_data pixel_buffer_data,                 std::span<const gl::byte_t>      memory)
         {
             const auto image_volume = gl::volume_t{ gl::vector_3u{ image_area.extent, 0u }, gl::vector_3u{ image_area.origin, gl::to_underlying(face - face_e::positive_x) } };
             gl::texture_sub_image_3d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_volume, memory);
         }
-        void transfer       (                                                              gl::pixel_buffer_data pixel_buffer_data, std::span<const std::span<const gl::byte_t>, 6u> memory)
+        void transfer        (                                                              gl::pixel_buffer_data pixel_buffer_data, std::span<const std::span<const gl::byte_t>, 6u> memory)
         {
             for (const auto [index, source] : std::views::enumerate(memory))
             {
                 transfer(face_e::positive_x + index, pixel_buffer_data, source);
             }
         }
-        void generate_mipmap()
+        void generate_mipmaps()
         {
-            gl::generate_texture_mipmap(handle());
+            gl::generate_texture_mipmaps(handle());
         }
 
         template<gl::texture_parameter_e Parameter>
-        void apply          (auto value)
+        void apply           (auto value)
         {
             gl::texture_parameter<Parameter>(handle(), value);
         }
-        void apply          (const gl::texture_state& texture_state)
+        void apply           (const gl::texture_state& texture_state)
         {
             using enum gl::texture_parameter_e;
 
@@ -74,15 +74,15 @@ export namespace gl
             apply<lod_bias            >(texture_state.lod_bias            );
         }
 
-        auto format         () const -> format_e
+        auto format          () const -> format_e
         {
             return format_;
         }
-        auto dimensions     () const -> const gl::vector_2u&
+        auto dimensions      () const -> const gl::vector_2u&
         {
             return dimensions_;
         }
-        auto mipmap_levels  () const -> gl::uint32_t
+        auto mipmap_levels   () const -> gl::uint32_t
         {
             return mipmap_levels_;
         }
