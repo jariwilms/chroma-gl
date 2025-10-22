@@ -2491,6 +2491,9 @@ export namespace gl
     }
     void frame_buffer_draw_buffers                        (gl::handle_t frame_buffer, std::span<const gl::frame_buffer_source_e> sources)
     {
+        const auto maximum_draw_buffers = gl::get_value<gl::data_e::maximum_draw_buffers>();
+        if (sources.size() > maximum_draw_buffers) throw std::invalid_argument{ "exceeded maximum supported draw buffers" };
+
         ::glNamedFramebufferDrawBuffers(gl::to_underlying(frame_buffer), static_cast<gl::sizei_t>(sources.size()), gl::to_underlying_pointer(sources.data()));
     }
     void color_mask                                       (const gl::vector_4b& mask)
