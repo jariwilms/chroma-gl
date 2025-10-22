@@ -2,7 +2,6 @@ export module opengl.object.texture;
 
 import std;
 import opengl;
-import opengl.context.state.texture;
 import opengl.object;
 import opengl.object.buffer;
 
