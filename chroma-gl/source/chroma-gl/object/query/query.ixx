@@ -3,7 +3,6 @@ export module opengl.object.query;
 import std;
 import opengl;
 import opengl.object;
-import opengl.context.state;
 
 export namespace gl
 {
