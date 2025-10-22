@@ -5,6 +5,7 @@ export import opengl.flags;
 export import opengl.meta;
 export import opengl.parameters;
 export import opengl.proxy;
+export import opengl.state;
 export import opengl.structures;
 export import opengl.types;
 export import opengl.utility;
@@ -303,7 +304,7 @@ export namespace gl
         if constexpr (D == stencil_reference                                    ) return get_int32(D);
         if constexpr (D == stencil_value_mask                                   ) return get_uint32(D);
         if constexpr (D == stencil_write_mask                                   ) return get_uint32(D);
-        if constexpr (D == stereo                                               ) return get_boolean(D);
+        if constexpr (D == supports_stereo                                      ) return get_boolean(D);
         if constexpr (D == sub_pixel_bits                                       ) return get_uint32(D);
         if constexpr (D == texture_binding_1d                                   ) return get_handle(D);
         if constexpr (D == texture_binding_1d_array                             ) return get_handle(D);
@@ -1026,7 +1027,7 @@ export namespace gl
         if constexpr (P == is_double_buffered                ) return static_cast<gl::bool_t             >(get_frame_buffer_parameter_iv(frame_buffer, P));
         if constexpr (P == sample_buffers                    ) return static_cast<gl::uint32_t           >(get_frame_buffer_parameter_iv(frame_buffer, P));
         if constexpr (P == samples                           ) return static_cast<gl::uint32_t           >(get_frame_buffer_parameter_iv(frame_buffer, P));
-        if constexpr (P == stereo                            ) return static_cast<gl::bool_t             >(get_frame_buffer_parameter_iv(frame_buffer, P));
+        if constexpr (P == supports_stereo                   ) return static_cast<gl::bool_t             >(get_frame_buffer_parameter_iv(frame_buffer, P));
     }
     template<gl::frame_buffer_attachment_parameter_e P>
     auto get_frame_buffer_attachment_parameter_value      (gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment) -> auto
@@ -1949,13 +1950,13 @@ export namespace gl
             gl::to_underlying(frame_buffer)                             , gl::to_underlying(attachment)    , 
             gl::to_underlying(gl::render_buffer_target_e::render_buffer), gl::to_underlying(render_buffer));
     }
-    void frame_buffer_texture                             (gl::handle_t frame_buffer, gl::handle_t texture, gl::frame_buffer_attachment_e attachment, gl::uint32_t level)
+    void frame_buffer_texture                             (gl::handle_t frame_buffer, gl::handle_t texture      , gl::frame_buffer_attachment_e attachment, gl::uint32_t level)
     {
         ::glNamedFramebufferTexture(
             gl::to_underlying(frame_buffer) , gl::to_underlying(attachment), gl::to_underlying(texture), 
             static_cast<gl::int32_t>(level));
     }
-    void frame_buffer_texture_layer                       (gl::handle_t frame_buffer, gl::handle_t texture, gl::frame_buffer_attachment_e attachment, gl::uint32_t level, gl::uint32_t layer)
+    void frame_buffer_texture_layer                       (gl::handle_t frame_buffer, gl::handle_t texture      , gl::frame_buffer_attachment_e attachment, gl::uint32_t level, gl::uint32_t layer)
     {
         ::glNamedFramebufferTextureLayer(
             gl::to_underlying       (frame_buffer), gl::to_underlying       (attachment), gl::to_underlying(texture), 
