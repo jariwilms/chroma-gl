@@ -87,27 +87,24 @@ export namespace gl
                         const auto format  = std::get<gl::texture_format_e>(specification.format);
                         if (gl::map_frame_buffer_attachment(format) == attachment_e::color_0) color_attachments.emplace_back(static_cast<color_attachment_e>(attachment));
 
-                              auto texture = gl::texture_2d{ format, dimensions_ };
-                        gl::frame_buffer_texture(handle(), texture.handle(), attachment, gl::uint32_t{ 0u });
-                        textures_.emplace(specification.identifier, std::move(texture));
+                        textures_.emplace(specification.identifier, gl::texture_2d{ format, dimensions_ });
+                        attach<surface_e::texture>(specification.identifier, attachment, gl::uint32_t{ 0u });
                     }
                     case surface_e::cubemap      :
                     {
                         const auto format  = std::get<gl::texture_format_e>(specification.format);
                         if (gl::map_frame_buffer_attachment(format) == attachment_e::color_0) color_attachments.emplace_back(static_cast<color_attachment_e>(attachment));
 
-                              auto cubemap = gl::cubemap{ format, dimensions_ };
-                        gl::frame_buffer_texture(handle(), cubemap.handle(), attachment, gl::uint32_t{ 0u });
-                        cubemaps_.emplace(specification.identifier, std::move(cubemap));
+                        cubemaps_.emplace(specification.identifier, gl::cubemap{ format, dimensions_ });
+                        attach<surface_e::cubemap>(specification.identifier, attachment, gl::uint32_t{ 0u });
                     }
                     case surface_e::render_buffer:
                     {
                         const auto format        = std::get<gl::render_buffer_format_e>(specification.format);
                         if (gl::map_frame_buffer_attachment(format) == attachment_e::color_0) color_attachments.emplace_back(static_cast<color_attachment_e>(attachment));
 
-                              auto render_buffer = gl::render_buffer{ format, dimensions_ };
-                        gl::frame_buffer_render_buffer(handle(), render_buffer.handle(), attachment);
-                        render_buffers_.emplace(specification.identifier, std::move(render_buffer));
+                        render_buffers_.emplace(specification.identifier, gl::render_buffer{ format, dimensions_ });
+                        attach<surface_e::render_buffer>(specification.identifier, attachment);
                     }
 
                     default                      : throw std::invalid_argument{ "invalid surface" };
@@ -116,8 +113,8 @@ export namespace gl
 
             if   (color_attachments.empty())
             {
-                gl::frame_buffer_read_buffer(handle(), source_e::none);
-                gl::frame_buffer_draw_buffer(handle(), source_e::none);
+                read_from(source_e::none);
+                write_to (source_e::none);
             }
             else
             {
@@ -128,11 +125,11 @@ export namespace gl
                     color_buffer_sources.at(index) = source_e::color_0 + offset;
                 }
     
-                gl::frame_buffer_draw_buffers(handle(), color_buffer_sources);
+                write_to(color_buffer_sources);
             }
     
             const auto frame_buffer_status = gl::check_frame_buffer_status(handle());
-            if (frame_buffer_status != gl::frame_buffer_status_e::complete) throw std::runtime_error{ "framebuffer not complete" };
+            if (frame_buffer_status != gl::frame_buffer_status_e::complete) throw std::runtime_error{ "frame buffer status not complete" };
         }
         frame_buffer(frame_buffer&&) noexcept = default;
        ~frame_buffer()
@@ -153,44 +150,39 @@ export namespace gl
         }
 
         template<surface_e Surface = surface_e::texture>
-        void read_from   (const gl::string& identifier, color_attachment_e color_attachment, gl::uint32_t image_level)
+        void attach(const gl::string& identifier, attachment_e attachment, gl::uint32_t image_level = 0u)
         {
-                 if constexpr (Surface == surface_e::texture)
-            {
-                auto& texture = textures_.at(identifier);
-                gl::frame_buffer_texture    (handle(), texture.handle(), static_cast<attachment_e>(color_attachment), image_level);
-                gl::frame_buffer_read_buffer(handle(), static_cast<source_e>(color_attachment));
-            }
-            else if constexpr (Surface == surface_e::cubemap)
-            {
-                auto& cubemap = cubemaps_.at(identifier);
-                gl::frame_buffer_texture    (handle(), cubemap.handle(), static_cast<attachment_e>(color_attachment), image_level);
-                gl::frame_buffer_read_buffer(handle(), static_cast<source_e>(color_attachment));
-            }
-            else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid surface");
+                 if constexpr (Surface == surface_e::texture      ) gl::frame_buffer_texture      (handle(), textures_      .at(identifier).handle(), attachment, image_level);
+            else if constexpr (Surface == surface_e::cubemap      ) gl::frame_buffer_texture      (handle(), cubemaps_      .at(identifier).handle(), attachment, image_level);
+            else if constexpr (Surface == surface_e::render_buffer) gl::frame_buffer_render_buffer(handle(), render_buffers_.at(identifier).handle(), attachment             );
+        }
+
+        void read_from(source_e color_source)
+        {
+            gl::frame_buffer_read_buffer(handle(), color_source);
+        }
+        void write_to (source_e color_source)
+        {
+            gl::frame_buffer_draw_buffer(handle(), color_source);
+        }
+        void write_to (std::span<const source_e> color_sources)
+        {
+            gl::frame_buffer_draw_buffers(handle(), color_sources);
+        }
+
+        template<surface_e Surface = surface_e::texture>
+        void apply(const gl::string& identifier, auto value)
+        {
+                 if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(value);
+            else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(value);
+            else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid application");
         }
         template<surface_e Surface = surface_e::texture>
-        void write_to    (const gl::string& identifier, color_attachment_e color_attachment, gl::uint32_t image_level)
+        void apply(const gl::string& identifier, const gl::texture_state& texture_state)
         {
-            //if constexpr (Surface == surface_e::texture)
-            //{
-            //    auto& texture = textures_.at(identifier);
-            //    gl::frame_buffer_texture    (handle(), texture.handle(), static_cast<attachment_e>(color_attachment), image_level);
-            //    gl::frame_buffer_draw_buffer(handle(), static_cast<source_e>(color_attachment));
-            //}
-            //else if constexpr (Surface == surface_e::cubemap)
-            //{
-            //    auto& cubemap = cubemaps_.at(identifier);
-            //    gl::frame_buffer_texture(handle(), cubemap.handle(), static_cast<attachment_e>(color_attachment), image_level);
-            //    gl::frame_buffer_draw_buffer(handle(), static_cast<source_e>(color_attachment));
-            //}
-            //else if constexpr (Surface == surface_e::render_buffer)
-            //{
-            //    auto& render_buffer = render_buffers_.at(identifier);
-            //    gl::frame_buffer_render_buffer(handle(), render_buffer.handle(), static_cast<attachment_e>(color_attachment));
-            //    gl::frame_buffer_draw_buffer  (handle(), static_cast<source_e>(color_attachment));
-            //}
-            //else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid surface");
+                 if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(texture_state);
+            else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(texture_state);
+            else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid application");
         }
 
         template<surface_e Surface = surface_e::texture>
