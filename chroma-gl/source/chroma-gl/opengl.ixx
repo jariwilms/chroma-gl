@@ -1794,7 +1794,7 @@ export namespace gl
         else if constexpr (P == wrapping_s          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
         else if constexpr (P == wrapping_t          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
     }
-    void generate_texture_mipmap                          (gl::handle_t texture)
+    void generate_texture_mipmaps                         (gl::handle_t texture)
     {
         ::glGenerateTextureMipmap(gl::to_underlying(texture));
     }
@@ -2105,9 +2105,9 @@ export namespace gl
             case int32_2_10_10_10_r        : 
             case uint32_2_10_10_10_r       : 
             case uint32_10_11_11_11_float_r: return vertex_array_attribute_format_i(vertex_array, attribute, type, count, offset               );
-            case fixed                     : return vertex_array_attribute_format_f(vertex_array, attribute, type, count, offset, is_normalized);
+            case fixed                     : 
             case float16                   : 
-            case float32                   : 
+            case float32                   : return vertex_array_attribute_format_f(vertex_array, attribute, type, count, offset, is_normalized);
             case float64                   : return vertex_array_attribute_format_l(vertex_array, attribute, type, count, offset               );
         }
     }
