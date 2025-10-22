@@ -700,6 +700,17 @@ export namespace gl
         depth   = GL_DEPTH  , 
         stencil = GL_STENCIL,  
     };
+    enum class frame_buffer_color_attachment_e : gl::enum_t
+    {
+        color_0 = GL_COLOR_ATTACHMENT0, 
+        color_1 = GL_COLOR_ATTACHMENT1, 
+        color_2 = GL_COLOR_ATTACHMENT2, 
+        color_3 = GL_COLOR_ATTACHMENT3, 
+        color_4 = GL_COLOR_ATTACHMENT4, 
+        color_5 = GL_COLOR_ATTACHMENT5, 
+        color_6 = GL_COLOR_ATTACHMENT6, 
+        color_7 = GL_COLOR_ATTACHMENT7, 
+    };
     enum class frame_buffer_filter_e : gl::enum_t
     {
         nearest = GL_NEAREST, 
@@ -1987,6 +1998,7 @@ export namespace gl
     template<> struct gl::enum_operation<gl::cubemap_face_e                     > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
     template<> struct gl::enum_operation<gl::feature_e                          > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
     template<> struct gl::enum_operation<gl::frame_buffer_attachment_e          > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::frame_buffer_color_attachment_e    > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
     template<> struct gl::enum_operation<gl::frame_buffer_source_e              > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
     template<> struct gl::enum_operation<gl::memory_barrier_e                   > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
     template<> struct gl::enum_operation<gl::memory_regional_barrier_e          > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
