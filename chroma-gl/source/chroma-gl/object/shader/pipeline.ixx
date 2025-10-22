@@ -24,7 +24,7 @@ export namespace gl
         }
     }
 
-    class pipeline : gl::object
+    class pipeline : public gl::object
     {
     public:
         using stage_e  = gl::program_stage_e;
