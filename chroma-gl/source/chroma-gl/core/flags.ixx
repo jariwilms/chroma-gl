@@ -466,8 +466,8 @@ export namespace gl
         stencil_reference                                     = GL_STENCIL_REF                              , 
         stencil_value_mask                                    = GL_STENCIL_VALUE_MASK                       , 
         stencil_write_mask                                    = GL_STENCIL_WRITEMASK                        , 
-        stereo                                                = GL_STEREO                                   , 
         sub_pixel_bits                                        = GL_SUBPIXEL_BITS                            , 
+        supports_stereo                                       = GL_STEREO                                   , 
         texture_binding_1d                                    = GL_TEXTURE_BINDING_1D                       , 
         texture_binding_1d_array                              = GL_TEXTURE_BINDING_1D_ARRAY                 , 
         texture_binding_2d                                    = GL_TEXTURE_BINDING_2D                       , 
@@ -722,15 +722,15 @@ export namespace gl
     {
         color_read_format                  = GL_IMPLEMENTATION_COLOR_READ_FORMAT          , 
         color_read_type                    = GL_IMPLEMENTATION_COLOR_READ_TYPE            , 
-        has_default_fixed_sample_locations = GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS, 
         default_height                     = GL_FRAMEBUFFER_DEFAULT_HEIGHT                , 
         default_layers                     = GL_FRAMEBUFFER_DEFAULT_LAYERS                , 
         default_samples                    = GL_FRAMEBUFFER_DEFAULT_SAMPLES               , 
         default_width                      = GL_FRAMEBUFFER_DEFAULT_WIDTH                 , 
+        has_default_fixed_sample_locations = GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS, 
         is_double_buffered                 = GL_DOUBLEBUFFER                              , 
         sample_buffers                     = GL_SAMPLE_BUFFERS                            , 
         samples                            = GL_SAMPLES                                   , 
-        stereo                             = GL_STEREO                                    , 
+        supports_stereo                    = GL_STEREO                                    , 
     };
     enum class frame_buffer_source_e : gl::enum_t
     {
@@ -1330,21 +1330,18 @@ export namespace gl
     };
     enum class render_buffer_format_e : gl::enum_t
     {
-        r_uint8_n         = GL_R8               , 
+        r_uint8_n                   = GL_R8               , 
+        rg_uint8_n                  = GL_RG8              , 
+        rgb_uint8_n                 = GL_RGB8             , 
+        rgba_uint8_n                = GL_RGBA8            , 
+        rgba_uint8_s                = GL_SRGB8_ALPHA8     , 
         
-        rg_uint8_n        = GL_RG8              , 
-        
-        rgb_uint8_n       = GL_RGB8             , 
-        
-        rgba_uint8_n      = GL_RGBA8            , 
-        rgba_uint8_s      = GL_SRGB8_ALPHA8     , 
-        
-        d_uint16_n        = GL_DEPTH_COMPONENT16, 
-        d_uint24_n        = GL_DEPTH_COMPONENT24, 
-        d_float32         = GL_DEPTH_COMPONENT32, 
-        s_uint8           = GL_STENCIL_INDEX8   , 
-        ds_uint32_24_8    = GL_DEPTH24_STENCIL8 , 
-        ds_float32_uint8  = GL_DEPTH32F_STENCIL8, 
+        depth_uint16_n              = GL_DEPTH_COMPONENT16, 
+        depth_uint24_n              = GL_DEPTH_COMPONENT24, 
+        depth_float32               = GL_DEPTH_COMPONENT32, 
+        stencil_uint8               = GL_STENCIL_INDEX8   , 
+        depth_stencil_uint32_24_8   = GL_DEPTH24_STENCIL8 , 
+        depth_stencil_float32_uint8 = GL_DEPTH32F_STENCIL8, 
     };
     enum class render_buffer_parameter_e : gl::enum_t
     {
@@ -1561,17 +1558,17 @@ export namespace gl
         
         rgb_int8_n                   = GL_RGB8_SNORM        , 
         rgb_int16_n                  = GL_RGB16_SNORM       , 
-        rgb_uint8_n                  = GL_RGB8              , //recommended for normal textures
+        rgb_uint8_n                  = GL_RGB8              , //Recommended for normal textures
         rgb_uint16_n                 = GL_RGB16             , 
         rgb_float16                  = GL_RGB16F            , 
         rgb_float32                  = GL_RGB32F            , 
         
         rgba_int8_n                  = GL_RGBA8_SNORM       , 
         rgba_int16_n                 = GL_RGBA16_SNORM      , 
-        rgba_uint8_n                 = GL_RGBA8             , //recommended for albedo textures
+        rgba_uint8_n                 = GL_RGBA8             , //Recommended for albedo textures
         rgba_uint16_n                = GL_RGBA16            , 
         rgba_float16                 = GL_RGBA16F           , 
-        rgba_float32                 = GL_RGBA32F           , //recommended for high dynamic range textures
+        rgba_float32                 = GL_RGBA32F           , //Recommended for high dynamic range textures
         
         srgb_uint8                   = GL_SRGB8             , 
         srgba_uint8                  = GL_SRGB8_ALPHA8      , 
