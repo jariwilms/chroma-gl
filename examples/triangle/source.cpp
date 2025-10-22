@@ -1,43 +1,3 @@
-# Chroma-gl
-An OpenGL wrapper library.
-
-## Introduction
-Chroma-gl is a C++23 library that provides a modern, robust, and user-friendly interface for OpenGL.
-Its primary goals are to:
-* Offer a more intuitive and correct interface for development.
-* Encapsulate existing OpenGL functions, simplifying integration of custom logic and error checking.
-* Implement state caching in order to eliminate redundant API calls.
-* Ensure compile-and runtime safety through input validation.
-
-Even though OpenGL is showing its age, it is still widely used by aspiring graphics programmers, or those who want a less complex rendering API.
-
-## Prerequisites
-* C++23 Compiler
-  * Visual Studio 2026 Insiders is heavily recommended.
-* An OpenGL 4.6 compatible graphics driver.
-
-## Getting Started
-Note: The C++ module ecosystem is still maturing. Tooling support can be inconsistent, which may require manual project configuration
-
-1. Generate Project Files
-Run the generate.bat script in the root directory. This will use Premake to create a Visual Studio solution (.sln) and project files.
-2. Configure Project in Visual Studio. (Important!)
-Due to how Visual Studio currently handles C++ module dependencies, you must manually adjust a few project settings:
-   1. Open the generated .sln file in Visual Studio.
-   2. In the Solution Explorer, right-click the chroma-gl project and select Properties.
-   3. Navigate to Configuration Properties -> C/C++ -> Output Files.
-   4. Change the following settings to use the $(IntDir)%(RelativeDir) macro:
-      * Module Output File Name
-      * Module Dependencies File Name
-      * Object File Name
-   5. Click Apply and then OK.
-
-This ensures that each compiled module interface file has a unique name.
-
-## Usage Example
-The following program demonstrates how to render a simple triangle to the screen
-
-```cpp
 import std;
 import chroma_gl;
 import vendor.glfw;
@@ -86,7 +46,7 @@ auto main() -> int
     auto const color_vertex_layout            = gl::vertex_layout<decltype(position_descriptor), decltype(color_descriptor)>{};
     color_vertex_array.tie(color_vertex_buffer.handle(), color_vertex_layout        );
     color_vertex_array.tie(color_index_buffer .handle(), color_index_buffer .count());
-
+    
     //Shader setup
     auto const color_vertex_shader_binary     = load_file("color.vert.spv");
     auto const color_fragment_shader_binary   = load_file("color.frag.spv");
@@ -118,16 +78,3 @@ auto main() -> int
     window.close();
     return 0;
 }
-```
-
-## Documentation
-The chroma-gl API is designed to closely mirror the official OpenGL 4.6 specification. For detailed information on specific functions, please refer to the official documentation:
-* https://registry.khronos.org/OpenGL/specs/gl/glspec46.core.pdf
-* https://registry.khronos.org/OpenGL-Refpages/gl4/
-* https://docs.gl/
-
-## Contributing
-If you find a bug, have a feature request, or would like to contribute code, please open an issue or submit a pull request. All contributions are welcome.
-
-## License
-Chroma-gl is licensed under the MIT License.
