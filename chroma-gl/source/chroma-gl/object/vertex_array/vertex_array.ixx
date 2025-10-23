@@ -64,10 +64,10 @@ export namespace gl
 
             binding_point_ = static_cast<gl::binding_t>(gl::to_underlying(binding_point_) + 1u);
         }
-        void attach(gl::buffer& index_buffer , gl::count_t index_count)
+        void attach(gl::buffer& index_buffer)
         {
             gl::vertex_array_element_buffer(handle(), index_buffer.handle());
-            index_count_ = index_count;
+            index_count_ = index_buffer.count();
         }
 
         auto index_count() const -> gl::count_t
