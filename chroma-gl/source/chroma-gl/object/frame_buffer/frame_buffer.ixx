@@ -15,7 +15,6 @@ export namespace gl
         cubemap      , 
         render_buffer, 
     };
-
     struct frame_buffer_specification
     {
         using format_t = std::variant<gl::texture_format_e, gl::render_buffer_format_e>;
@@ -28,39 +27,6 @@ export namespace gl
         format_t                   format;
     };
     using frame_buffer_attachment_map_t = std::unordered_map<gl::frame_buffer_attachment_e, gl::frame_buffer_specification>;
-
-    auto map_frame_buffer_attachment(gl::texture_format_e       texture_format      ) -> gl::frame_buffer_attachment_e
-    {
-        switch (texture_format)
-        {
-            using enum gl::texture_format_e;
-
-            case depth_uint16_n              :
-            case depth_uint24_n              :
-            case depth_float32               : return gl::frame_buffer_attachment_e::depth        ;
-            case stencil_uint8               : return gl::frame_buffer_attachment_e::stencil      ;
-            case depth_stencil_uint24_n_uint8:
-            case depth_stencil_float32_uint8 : return gl::frame_buffer_attachment_e::depth_stencil;
-
-            default                          : return gl::frame_buffer_attachment_e::color_0      ;
-        }
-    }
-    auto map_frame_buffer_attachment(gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
-    {
-        switch (render_buffer_format)
-        {
-            using enum gl::render_buffer_format_e;
-
-            case depth_uint16_n             :
-            case depth_uint24_n             :
-            case depth_float32              : return gl::frame_buffer_attachment_e::depth        ;
-            case stencil_uint8              : return gl::frame_buffer_attachment_e::stencil      ;
-            case depth_stencil_uint32_24_8  :
-            case depth_stencil_float32_uint8: return gl::frame_buffer_attachment_e::depth_stencil;
-
-            default                         : return gl::frame_buffer_attachment_e::color_0      ;
-        }
-    }
 
     class frame_buffer : public gl::object
     {
@@ -150,7 +116,7 @@ export namespace gl
         }
 
         template<surface_e Surface = surface_e::texture>
-        void attach(const gl::string& identifier, attachment_e attachment, gl::uint32_t image_level = 0u)
+        void attach      (const gl::string& identifier, attachment_e attachment, gl::uint32_t image_level = 0u)
         {
                  if constexpr (Surface == surface_e::texture      ) gl::frame_buffer_texture      (handle(), textures_      .at(identifier).handle(), attachment, image_level);
             else if constexpr (Surface == surface_e::cubemap      ) gl::frame_buffer_texture      (handle(), cubemaps_      .at(identifier).handle(), attachment, image_level);
@@ -161,24 +127,24 @@ export namespace gl
         {
             gl::frame_buffer_read_buffer(handle(), color_source);
         }
-        void write_to (source_e color_source)
+        void write_to    (source_e color_source)
         {
             gl::frame_buffer_draw_buffer(handle(), color_source);
         }
-        void write_to (std::span<const source_e> color_sources)
+        void write_to    (std::span<const source_e> color_sources)
         {
             gl::frame_buffer_draw_buffers(handle(), color_sources);
         }
 
         template<surface_e Surface = surface_e::texture>
-        void apply(const gl::string& identifier, auto value)
+        void apply       (const gl::string& identifier, auto value)
         {
                  if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(value);
             else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(value);
             else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid application");
         }
         template<surface_e Surface = surface_e::texture>
-        void apply(const gl::string& identifier, const gl::texture_state& texture_state)
+        void apply       (const gl::string& identifier, const gl::texture_state& texture_state)
         {
                  if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(texture_state);
             else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(texture_state);
@@ -197,7 +163,7 @@ export namespace gl
             return dimensions_;
         }
 
-        auto operator=(frame_buffer&&) noexcept -> frame_buffer& = default;
+        auto operator=   (frame_buffer&&) noexcept -> frame_buffer& = default;
 
     private:
         std::unordered_map<gl::string, gl::texture_2d   > textures_;
