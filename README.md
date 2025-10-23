@@ -9,8 +9,6 @@ Its primary goals are to:
 * Implement state caching in order to eliminate redundant API calls.
 * Ensure compile-and runtime safety through input validation.
 
-Even though OpenGL is showing its age, it is still widely used by aspiring graphics programmers, or those who want a less complex rendering API.
-
 This library is designed in two parts, and can be imported using the following modules:
 * opengl: provides a wrapper around the OpenGL 4.6 API
 * chroma_gl: provides additional object classes like gl::texture_2d, gl::shader etc.
@@ -59,7 +57,7 @@ auto load_file(std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
     return buffer;
 }
 
-auto main() -> int
+static inline void triangle_example()
 {
     auto const triangle_vertices              = std::vector<gl::float32_t>
     {
@@ -84,15 +82,15 @@ auto main() -> int
     auto       color_vertex_buffer            = gl::vertex_buffer<gl::float32_t>{ triangle_vertices };
     auto       color_index_buffer             = gl::index_buffer{ triangle_indices };
     auto       color_vertex_array             = gl::vertex_array{};
-    auto const position_descriptor            = gl::vertex_attribute_descriptor<gl::float32_t, 3u>{};
-    auto const color_descriptor               = gl::vertex_attribute_descriptor<gl::float32_t, 3u>{};
-    auto const color_vertex_layout            = gl::vertex_layout<decltype(position_descriptor), decltype(color_descriptor)>{};
-    color_vertex_array.tie(color_vertex_buffer.handle(), color_vertex_layout        );
-    color_vertex_array.tie(color_index_buffer .handle(), color_index_buffer .count());
+    using      position_attribute             = gl::vertex_attribute<gl::float32_t, 3u>;
+    using      color_attribute                = gl::vertex_attribute<gl::float32_t, 3u>;
+    using      color_vertex_layout            = gl::vertex_layout<position_attribute, color_attribute>;
+    color_vertex_array.attach<color_vertex_layout>(color_vertex_buffer                            );
+    color_vertex_array.attach                     (color_index_buffer , color_index_buffer.count());
 
     //Shader setup
-    auto const color_vertex_shader_binary     = load_file("color.vert.spv");
-    auto const color_fragment_shader_binary   = load_file("color.frag.spv");
+    auto const color_vertex_shader_binary     = load_file("assets/shaders/compiled/color.vert.spv");
+    auto const color_fragment_shader_binary   = load_file("assets/shaders/compiled/color.frag.spv");
     auto       color_vertex_shader            = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", color_vertex_shader_binary  );
     auto       color_fragment_shader          = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", color_fragment_shader_binary);
     auto       color_shaders                  = std::initializer_list{ color_vertex_shader, color_fragment_shader };
@@ -116,7 +114,6 @@ auto main() -> int
     }
 
     window.close();
-    return 0;
 }
 ```
 
