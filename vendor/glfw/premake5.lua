@@ -15,8 +15,4 @@ project "glfw"
 	}
 	
 	filter "system:windows"
-		systemversion "latest"
-		
-		defines { 
-			"_GLFW_WIN32",
-		}
+		defines { "_GLFW_WIN32", }
