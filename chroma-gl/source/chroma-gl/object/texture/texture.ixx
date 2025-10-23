@@ -7,113 +7,6 @@ import opengl.object.buffer;
 
 export namespace gl
 {
-    enum class texture_filter_e
-    {
-        none     , 
-        nearest  , 
-        bilinear , 
-        trilinear, 
-    };
-    
-    auto map_texture_minification_filter (gl::texture_filter_e filter) -> gl::texture_minification_filter_e
-    {
-        switch (filter)
-        {
-            using enum gl::texture_filter_e;
-
-            case none     : return gl::texture_minification_filter_e::nearest               ;
-            case nearest  : return gl::texture_minification_filter_e::nearest_mipmap_nearest;
-            case bilinear : return gl::texture_minification_filter_e::linear_mipmap_nearest ;
-            case trilinear: return gl::texture_minification_filter_e::linear_mipmap_linear  ;
-
-            default: throw std::invalid_argument{ "invalid filter" };
-        }
-    }
-    auto map_texture_magnification_filter(gl::texture_filter_e filter) -> gl::texture_magnification_filter_e
-    {
-        switch (filter)
-        {
-            using enum gl::texture_filter_e;
-
-            case none     : return gl::texture_magnification_filter_e::nearest;
-            case nearest  : return gl::texture_magnification_filter_e::nearest;
-            case bilinear : return gl::texture_magnification_filter_e::linear ;
-            case trilinear: return gl::texture_magnification_filter_e::linear ;
-
-            default: throw std::invalid_argument{ "invalid filter" };
-        }
-    }
-    auto map_texture_format_size         (gl::texture_format_e texture_format) -> gl::size_t
-    {
-        switch (texture_format)
-        {
-            using enum gl::texture_format_e;
-
-            case r_int8_n                    : return  1u;
-            case r_int16_n                   : return  2u;
-            case r_uint8_n                   : return  1u;
-            case r_uint16_n                  : return  2u;
-            case r_float16                   : return  2u;
-            case r_float32                   : return  4u;
-
-            case rg_int8_n                   : return  2u;
-            case rg_int16_n                  : return  4u;
-            case rg_uint8_n                  : return  2u;
-            case rg_uint16_n                 : return  4u;
-            case rg_float16                  : return  4u;
-            case rg_float32                  : return  8u;
-
-            case rgb_int8_n                  : return  3u;
-            case rgb_int16_n                 : return  6u;
-            case rgb_uint8_n                 : return  3u;
-            case rgb_uint16_n                : return  6u;
-            case rgb_float16                 : return  6u;
-            case rgb_float32                 : return 12u;
-
-            case rgba_int8_n                 : return  4u;
-            case rgba_int16_n                : return  8u;
-            case rgba_uint8_n                : return  4u;
-            case rgba_uint16_n               : return  8u;
-            case rgba_float16                : return  8u;
-            case rgba_float32                : return 16u;
-
-            case srgb_uint8                  : return  3u;
-            case srgba_uint8                 : return  4u;
-
-            case depth_uint16_n              : return  2u;
-            case depth_uint24_n              : return  3u;
-            case depth_float32               : return  4u;
-            case stencil_uint8               : return  1u;
-            case depth_stencil_uint24_n_uint8: return  4u;
-            case depth_stencil_float32_uint8 : return  5u;
-
-            default                          : throw std::invalid_argument{ "invalid format" };
-        }
-    }
-    auto map_texture_target              (gl::uint32_t dimensions) -> gl::texture_target_e
-    {
-        switch (dimensions)
-        {
-            case 1u: return gl::texture_target_e::_1d;
-            case 2u: return gl::texture_target_e::_2d;
-            case 3u: return gl::texture_target_e::_3d;
-
-            default: throw std::invalid_argument{ "invalid dimensions" };
-        }
-    }
-    auto map_texture_target_multisample  (gl::uint32_t dimensions) -> gl::texture_target_e
-    {
-        switch (dimensions)
-        {
-            case 2u: return gl::texture_target_e::_2d_multisample;
-            case 3u: return gl::texture_target_e::_2d_multisample_array;
-
-            default: throw std::invalid_argument{ "invalid dimensions" };
-        }
-    }
-
-
-    
     template<gl::uint32_t Dimensions>
     class texture_n : public gl::object
     {
@@ -123,7 +16,7 @@ export namespace gl
         using region_t = gl::region_t<gl::uint32_t, Dimensions>;
 
         explicit
-        texture_n(format_e format, const vector_t& dimensions,                              gl::bool_t allocate_mipmaps = gl::true_)
+        texture_n(format_e format, const vector_t& dimensions,                                         gl::bool_t allocate_mipmaps = gl::true_)
             : gl::object{ gl::create_texture(gl::map_texture_target(Dimensions)) }
             , format_{ format }, dimensions_{ dimensions }, mipmap_levels_{ 1u }
         {
