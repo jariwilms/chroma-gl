@@ -2,6 +2,7 @@ export module opengl;
 export import opengl.constants;
 export import opengl.domain;
 export import opengl.flags;
+export import opengl.mapping;
 export import opengl.meta;
 export import opengl.parameters;
 export import opengl.proxy;
@@ -12,7 +13,6 @@ export import opengl.utility;
 
 import std;
 import <glad/gl.h>;
-import opengl.mapping;
 
 export namespace gl
 {
@@ -1993,7 +1993,7 @@ export namespace gl
         if constexpr (P == patch_vertices           ) patch_parameter_i (                    gl::patch_parameter_e::patch_vertices            , value       );
     }
     template<typename T, gl::uint32_t Count, gl::bool_t Normalized = gl::false_>
-    void vertex_attribute                                 (gl::index_t index, const gl::vector_t<T, Count>& value)
+    void specify_vertex_attribute                         (gl::index_t index, const gl::vector_t<T, Count>& value)
     {
         const auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
         if (index > maximum_vertex_attributes) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
