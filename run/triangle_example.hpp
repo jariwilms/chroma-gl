@@ -1,10 +1,12 @@
+#pragma once
+
 import std;
 import chroma_gl;
 import vendor.glfw;
 
 #include "load_file.hpp"
 
-void triangle_example()
+static inline void triangle_example()
 {
     auto const triangle_vertices              = std::vector<gl::float32_t>
     {

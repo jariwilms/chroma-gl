@@ -1,10 +1,12 @@
+#pragma once
+
 import std;
 import chroma_gl;
 import vendor.glfw;
 
 #include "load_file.hpp"
 
-void texture_example()
+static inline void texture_example()
 {
     auto const texture_vertices               = std::vector<gl::float32_t>
     {
