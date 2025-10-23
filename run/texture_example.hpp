@@ -36,8 +36,8 @@ static inline void texture_example()
     using      position_descriptor            = gl::vertex_attribute<gl::float32_t, 3u>;
     using      uv_descriptor                  = gl::vertex_attribute<gl::float32_t, 2u>;
     using      texture_vertex_layout          = gl::vertex_layout<position_descriptor, uv_descriptor>;
-    texture_vertex_array.attach<texture_vertex_layout>(texture_vertex_buffer                              );
-    texture_vertex_array.attach                       (texture_index_buffer , texture_index_buffer.count());
+    texture_vertex_array.attach<texture_vertex_layout>(texture_vertex_buffer);
+    texture_vertex_array.attach                       (texture_index_buffer );
 
     auto       image_data                     = load_file("assets/textures/opengl_logo.png");
     auto       image                          = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);

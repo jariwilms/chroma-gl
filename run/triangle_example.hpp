@@ -34,8 +34,8 @@ static inline void triangle_example()
     using      position_attribute             = gl::vertex_attribute<gl::float32_t, 3u>;
     using      color_attribute                = gl::vertex_attribute<gl::float32_t, 3u>;
     using      color_vertex_layout            = gl::vertex_layout<position_attribute, color_attribute>;
-    color_vertex_array.attach<color_vertex_layout>(color_vertex_buffer                            );
-    color_vertex_array.attach                     (color_index_buffer , color_index_buffer.count());
+    color_vertex_array.attach<color_vertex_layout>(color_vertex_buffer);
+    color_vertex_array.attach                     (color_index_buffer );
     
     //Shader setup
     auto const color_vertex_shader_binary     = load_file("assets/shaders/compiled/color.vert.spv");
