@@ -31,11 +31,11 @@ static inline void triangle_example()
     auto       color_vertex_buffer            = gl::vertex_buffer<gl::float32_t>{ triangle_vertices };
     auto       color_index_buffer             = gl::index_buffer{ triangle_indices };
     auto       color_vertex_array             = gl::vertex_array{};
-    auto const position_descriptor            = gl::vertex_attribute_descriptor<gl::float32_t, 3u>{};
-    auto const color_descriptor               = gl::vertex_attribute_descriptor<gl::float32_t, 3u>{};
-    auto const color_vertex_layout            = gl::vertex_layout<decltype(position_descriptor), decltype(color_descriptor)>{};
-    color_vertex_array.tie(color_vertex_buffer.handle(), color_vertex_layout        );
-    color_vertex_array.tie(color_index_buffer .handle(), color_index_buffer .count());
+    using      position_attribute             = gl::vertex_attribute<gl::float32_t, 3u>;
+    using      color_attribute                = gl::vertex_attribute<gl::float32_t, 3u>;
+    using      color_vertex_layout            = gl::vertex_layout<position_attribute, color_attribute>;
+    color_vertex_array.attach<color_vertex_layout>(color_vertex_buffer                            );
+    color_vertex_array.attach                     (color_index_buffer , color_index_buffer.count());
     
     //Shader setup
     auto const color_vertex_shader_binary     = load_file("assets/shaders/compiled/color.vert.spv");
