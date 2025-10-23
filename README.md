@@ -11,6 +11,10 @@ Its primary goals are to:
 
 Even though OpenGL is showing its age, it is still widely used by aspiring graphics programmers, or those who want a less complex rendering API.
 
+This library is designed in two parts, and can be imported using the following modules:
+* opengl: provides a wrapper around the OpenGL 4.6 API
+* chroma_gl: provides additional object classes like gl::texture_2d, gl::shader etc.
+
 ## Prerequisites
 * C++23 Compiler
   * Visual Studio 2026 Insiders is heavily recommended.
@@ -19,20 +23,19 @@ Even though OpenGL is showing its age, it is still widely used by aspiring graph
 ## Getting Started
 Note: The C++ module ecosystem is still maturing. Tooling support can be inconsistent, which may require manual project configuration
 
-1. Generate Project Files
-Run the generate.bat script in the root directory. This will use Premake to create a Visual Studio solution (.sln) and project files.
-2. Configure Project in Visual Studio. (Important!)
+1. Create solution<br>
+Run the generate.bat script in the root directory. Premake5 will generate a Visual Studio solution (.sln) along with project files.
+2. Open the solution.
+3. Build the solution. If you encounter errors about missing module files, continue to step 4.
+4. Configure Project in Visual Studio. (Important!)<br>
 Due to how Visual Studio currently handles C++ module dependencies, you must manually adjust a few project settings:
-   1. Open the generated .sln file in Visual Studio.
-   2. In the Solution Explorer, right-click the chroma-gl project and select Properties.
-   3. Navigate to Configuration Properties -> C/C++ -> Output Files.
-   4. Change the following settings to use the $(IntDir)%(RelativeDir) macro:
+   1. In the Solution Explorer, right-click the chroma-gl project and select Properties.
+   2. Navigate to Configuration Properties -> C/C++ -> Output Files.
+   3. Change the following settings to use the $(IntDir)%(RelativeDir) macro:
       * Module Output File Name
       * Module Dependencies File Name
       * Object File Name
-   5. Click Apply and then OK.
-
-This ensures that each compiled module interface file has a unique name.
+   4. Click Apply and then OK.
 
 ## Usage Example
 The following program demonstrates how to render a simple triangle to the screen
@@ -121,7 +124,7 @@ auto main() -> int
 ```
 
 ## Documentation
-The chroma-gl API is designed to closely mirror the official OpenGL 4.6 specification. For detailed information on specific functions, please refer to the official documentation:
+The chroma-gl API is designed to closely mirror the official OpenGL 4.6 specification. For detailed information, please refer to the official documentation:
 * https://registry.khronos.org/OpenGL/specs/gl/glspec46.core.pdf
 * https://registry.khronos.org/OpenGL-Refpages/gl4/
 * https://docs.gl/
@@ -131,3 +134,6 @@ If you find a bug, have a feature request, or would like to contribute code, ple
 
 ## License
 Chroma-gl is licensed under the MIT License.
+
+## Addendum
+###### <i>Please someone hire me lol</i>
