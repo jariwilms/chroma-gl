@@ -52,7 +52,8 @@ group "Application"
 		filter "configurations:Debug"
 			defines { "BUILD_CONFIGURATION=debug", }
 		filter "configurations:Release"
-			defines { "BUILD_CONFIGURATION=release", }
+			sanitize { "Address" }
+			defines  { "BUILD_CONFIGURATION=release", }
 	
 	-- @brief Visual Studio: Bugfix for conflicting C++ module names
 	-- Credit goes to larioteo
@@ -89,15 +90,20 @@ group "Application"
 		
 		includedirs { 
 			"chroma-gl/source", 
+			"run", 
 		}
 		files { 
-			"run/source.cpp", 
-			"run/triangle_example.cpp", 
-			"run/texture_example.cpp", 
+			"run/*.hpp", 
+			"run/*.cpp", 
 		}
 		links { 
 			"chroma-gl", 
 		}
+
+		filter "configurations:Release"
+			sanitize { "Address" }
+
+
 
 group "Vendor"
 	include "vendor/glad"
