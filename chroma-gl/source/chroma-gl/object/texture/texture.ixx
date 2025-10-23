@@ -112,6 +112,7 @@ export namespace gl
         }
     }
 
+
     
     template<gl::uint32_t Dimensions>
     class texture_n : public gl::object
