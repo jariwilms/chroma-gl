@@ -136,4 +136,4 @@ If you find a bug, have a feature request, or would like to contribute code, ple
 Chroma-gl is licensed under the MIT License.
 
 ## Addendum
-###### <i>Please someone hire me lol</i>
+###### <i>Someone please hire me lol</i>
