@@ -33,11 +33,11 @@ static inline void texture_example()
     auto       texture_vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ texture_vertices };
     auto       texture_index_buffer           = gl::index_buffer                { texture_indices  };
     auto       texture_vertex_array           = gl::vertex_array{};
-    auto const position_descriptor            = gl::vertex_attribute_descriptor<gl::float32_t, 3u>{};
-    auto const uv_descriptor                  = gl::vertex_attribute_descriptor<gl::float32_t, 2u>{};
-    auto const texture_vertex_layout          = gl::vertex_layout<decltype(position_descriptor), decltype(uv_descriptor)>{};
-    texture_vertex_array.tie(texture_vertex_buffer.handle(), texture_vertex_layout        );
-    texture_vertex_array.tie(texture_index_buffer .handle(), texture_index_buffer .count());
+    using      position_descriptor            = gl::vertex_attribute<gl::float32_t, 3u>;
+    using      uv_descriptor                  = gl::vertex_attribute<gl::float32_t, 2u>;
+    using      texture_vertex_layout          = gl::vertex_layout<position_descriptor, uv_descriptor>;
+    texture_vertex_array.attach<texture_vertex_layout>(texture_vertex_buffer                              );
+    texture_vertex_array.attach                       (texture_index_buffer , texture_index_buffer.count());
 
     auto       image_data                     = load_file("assets/textures/opengl_logo.png");
     auto       image                          = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
