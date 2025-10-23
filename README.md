@@ -100,9 +100,6 @@ auto main() -> int
 
 
 
-    gl::enable<gl::feature_e::blending>();
-    gl::blend_function(gl::blending_factor_e::source_alpha, gl::blending_factor_e::one_minus_source_alpha);
-
     while (!window.should_close())
     {
         window.poll_events();
