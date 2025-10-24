@@ -43,8 +43,8 @@ static inline void triangle()
     auto const fragment_shader_binary = load_file("examples/assets/shaders/compiled/color.frag.spv");
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shaders_list           = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shaders_list };
+    auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };
+    auto       pipeline               = gl::pipeline{ shader_list };
 
 
 
@@ -53,9 +53,9 @@ static inline void triangle()
     {
         window.poll_events();
 
-        gl::clear_color(gl::vector_4f{ 0.1f });
+        gl::clear_color(gl::vector_4f{ 0.1f } );
         gl::clear      (gl::buffer_mask_e::all);
-        gl::viewport   (window.dimensions());
+        gl::viewport   (window.dimensions()   );
 
         pipeline    .bind();
         vertex_array.bind();
