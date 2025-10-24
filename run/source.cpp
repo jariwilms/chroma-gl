@@ -1,7 +1,8 @@
-#include "triangle_example.hpp"
-#include "texture_example.hpp"
+#include "examples/triangle.hpp"
+#include "examples/texture.hpp"
 
 auto main() -> int
 {
-    triangle_example();
+    triangle();
+    texture();
 }
