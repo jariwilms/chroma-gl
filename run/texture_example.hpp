@@ -8,6 +8,7 @@ import vendor.glfw;
 
 static inline void texture_example()
 {
+    //Vertex data
     auto const texture_vertices               = std::vector<gl::float32_t>
     {
         //  x      y      z      u      v
@@ -29,7 +30,7 @@ static inline void texture_example()
     auto       window                         = glfw::window{ "my_window", window_dimensions };
     auto const input                          = window.input_handler();
 
-    //Texture data
+    //Texture buffers
     auto       texture_vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ texture_vertices };
     auto       texture_index_buffer           = gl::index_buffer                { texture_indices  };
     auto       texture_vertex_array           = gl::vertex_array{};
@@ -39,6 +40,7 @@ static inline void texture_example()
     texture_vertex_array.attach<texture_vertex_layout>(texture_vertex_buffer);
     texture_vertex_array.attach                       (texture_index_buffer );
 
+    //Texture loading
     auto       image_data                     = load_file("assets/textures/opengl_logo.png");
     auto       image                          = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
     auto       texture                        = gl::texture_2d{ gl::texture_2d::format_e::rgba_uint8_n, image.dimensions() };
@@ -66,6 +68,7 @@ static inline void texture_example()
     gl::enable<gl::feature_e::blending>();
     gl::blend_function(gl::blending_factor_e::source_alpha, gl::blending_factor_e::one_minus_source_alpha);
 
+    //Render loop
     while (!window.should_close())
     {
         window.poll_events();

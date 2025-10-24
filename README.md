@@ -59,6 +59,7 @@ auto load_file(std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
 
 static inline void triangle_example()
 {
+    //Vertex data
     auto const triangle_vertices              = std::vector<gl::float32_t>
     {
         //  x      y      z,     r      g      b
@@ -78,7 +79,7 @@ static inline void triangle_example()
     auto       window                         = glfw::window{ "my_window", window_dimensions };
     auto const input                          = window.input_handler();
 
-    //Triangle data
+    //Triangle buffers
     auto       color_vertex_buffer            = gl::vertex_buffer<gl::float32_t>{ triangle_vertices };
     auto       color_index_buffer             = gl::index_buffer{ triangle_indices };
     auto       color_vertex_array             = gl::vertex_array{};
@@ -98,6 +99,7 @@ static inline void triangle_example()
 
 
 
+    //Render loop
     while (!window.should_close())
     {
         window.poll_events();
