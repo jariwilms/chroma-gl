@@ -5,15 +5,15 @@ import opengl;
 
 export namespace gl
 {
-    template<typename T, gl::uint32_t Count, gl::index_t Location = 0u, gl::uint32_t Instancing_Rate = 0u> requires (meta::within_closed_interval_v<Count, 1u, 4u>)
-        struct vertex_attribute
+    template<typename T, gl::count_t Components, gl::index_t Divisor = 0u, gl::bool_t Normalized = gl::false_> requires (meta::within_closed_interval_v<Components, 1u, 4u>)
+    struct vertex_attribute
     {
-        using type = T;
+        using component_t = T;
 
-        static const auto type_size = gl::size_t{ sizeof(T) };
-        static const auto count = gl::count_t{ Count };
-        static const auto stride = gl::size_t{ Count * sizeof(T) };
-        static const auto location = gl::index_t{ Location };
-        static const auto instancing_rate = gl::uint32_t{ Instancing_Rate };
+        static const auto components     = gl::count_t{ Components             };
+        static const auto component_size = gl::size_t { sizeof(T)              };
+        static const auto stride         = gl::size_t { Components * sizeof(T) };
+        static const auto divisor        = gl::index_t{ Divisor                };
+        static const auto is_normalized  = gl::bool_t { Normalized             };
     };
 }

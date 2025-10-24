@@ -41,21 +41,21 @@ export namespace gl
         {
             using layout_t = Layout;
             using tuple_t  = typename layout_t::tuple_t;
-
+            
             gl::vertex_array_vertex_buffer(handle(), vertex_buffer.handle(), binding_point_, layout_t::stride, gl::index_t{ 0u });
             
-            auto offset    = gl::ptrdiff_t{};
+            auto  offset   = gl::ptrdiff_t{};
             std::apply([&](auto... attributes)
                 {
                     ([&](auto attribute)
                         {
-                            using attribute_t   = decltype(attribute);
-                            using fundamental_t = typename attribute_t::type;
+                            using attribute_t = decltype(attribute);
+                            using component_t = typename attribute_t::component_t;
                             
                             enable_attribute(attribute_index_);
-                            gl::vertex_array_attribute_format (handle(), attribute_index_, offset, gl::map_attribute_type<fundamental_t>(), attribute_t::count, gl::false_);
+                            gl::vertex_array_attribute_format (handle(), attribute_index_, offset, gl::map_attribute_type<component_t>(), attribute_t::components, attribute_t::is_normalized);
                             gl::vertex_array_attribute_binding(handle(), attribute_index_, binding_point_);
-                            gl::vertex_array_binding_divisor  (handle(), static_cast<gl::binding_t>(attribute_index_), attribute_t::instancing_rate);
+                            gl::vertex_array_binding_divisor  (handle(), static_cast<gl::binding_t>(attribute_index_), attribute_t::divisor);
 
                             offset += attribute_t::stride;
                             ++attribute_index_;
@@ -68,6 +68,11 @@ export namespace gl
         {
             gl::vertex_array_element_buffer(handle(), index_buffer.handle());
             index_count_ = index_buffer.count();
+        }
+        void detach()
+        {
+            gl::vertex_array_element_buffer(handle(), gl::null_object);
+            index_count_ = gl::count_t{ 0u };
         }
 
         auto index_count() const -> gl::count_t
