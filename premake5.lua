@@ -93,8 +93,8 @@ group "Application"
 			"run", 
 		}
 		files { 
-			"run/*.hpp", 
-			"run/*.cpp", 
+			"run/**.hpp", 
+			"run/**.cpp", 
 		}
 		links { 
 			"chroma-gl", 
