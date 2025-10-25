@@ -13,7 +13,7 @@ export namespace gl
         using type_e = gl::shader_type_e;
 
         explicit
-        shader(type_e type, const std::string& entry_point, std::span<const gl::byte_t> binary)
+        shader(type_e type, const gl::string& entry_point, std::span<const gl::byte_t> binary)
             : gl::object{ gl::create_program() }
             , type_{ type }
         {
