@@ -4,7 +4,7 @@ import vendor.glfw;
 
 #include "examples/load_file.hpp"
 
-void instance_id()
+static inline void instance_id()
 {
     //Vertex data
     auto const vertices = std::vector<gl::float32_t>
