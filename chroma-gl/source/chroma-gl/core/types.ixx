@@ -30,7 +30,7 @@ export namespace gl
     using count_t                       = ::khronos_usize_t            ; //Number of elements
     using index_t                       = ::khronos_usize_t            ; //Number of elements offset
     using intptr_t                      = ::GLsizeiptr                 ; //Address pointer
-    using ptrdiff_t                     = ::GLintptr                   ; //Address pointer offset
+    using ptrdiff_t                     = ::GLintptr                   ; //Address pointer byte offset
     
     using enum_t                        = ::GLenum                     ; //Enumeration constant
     using bitfield_t                    = ::GLbitfield                 ; //Combination of logical bits
