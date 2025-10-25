@@ -2159,13 +2159,13 @@ export namespace gl
             gl::to_underlying               (draw_mode)                                         , 
             std::bit_cast<const gl::void_t*>(offset * sizeof(gl::draw_arrays_indirect_command)));
     }
-    void draw_arrays_instanced                            (gl::draw_mode_e draw_mode, gl::count_t instance_count, gl::range_t range)
+    void draw_arrays_instanced                            (gl::draw_mode_e draw_mode, gl::range_t range, gl::count_t instance_count)
     {
         ::glDrawArraysInstanced(
             gl::to_underlying       (draw_mode)  , static_cast<gl::int32_t>(range.index)    , 
             static_cast<gl::sizei_t>(range.count), static_cast<gl::sizei_t>(instance_count));
     }
-    void draw_arrays_instanced_base_instance              (gl::draw_mode_e draw_mode, gl::count_t instance_count, gl::range_t range, gl::index_t base_instance)
+    void draw_arrays_instanced_base_instance              (gl::draw_mode_e draw_mode, gl::range_t range, gl::index_t base_instance, gl::count_t instance_count)
     {
         ::glDrawArraysInstancedBaseInstance(
             gl::to_underlying       (draw_mode)  , static_cast<gl::int32_t>(range.index)   , 
