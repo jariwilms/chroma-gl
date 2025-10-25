@@ -253,17 +253,25 @@ export namespace gl
         }
     };
 
-    template<typename T                                   > using generic_buffer        = gl::dynamic_buffer   <T, gl::true_ , gl::true_ >;
-    template<typename T                                   > using stream_buffer         = gl::persistent_buffer<T, gl::false_, gl::true_ >;
-    template<typename T                                   > using shared_buffer         = gl::persistent_buffer<T, gl::true_ , gl::true_ >;
-    template<typename T                                   > using result_buffer         = gl::persistent_buffer<T, gl::true_ , gl::false_>;
+    template<typename T>
+    using generic_buffer        = gl::dynamic_buffer   <T, gl::true_ , gl::true_ >;
+    template<typename T>
+    using stream_buffer         = gl::persistent_buffer<T, gl::false_, gl::true_ >;
+    template<typename T>
+    using shared_buffer         = gl::persistent_buffer<T, gl::true_ , gl::true_ >;
+    template<typename T>
+    using result_buffer         = gl::persistent_buffer<T, gl::true_ , gl::false_>;
 
-    template<typename T                                   > using uniform_buffer        = gl::bindable_buffer<gl::buffer_base_target_e::uniform_buffer       , gl::stream_buffer    <T             >>;
-    template<typename T, gl::bool_t Read, gl::bool_t Write> using shader_storage_buffer = gl::bindable_buffer<gl::buffer_base_target_e::shader_storage_buffer, gl::persistent_buffer<T, Read, Write>>;
-    template<typename T                                   > using draw_indirect_buffer  = gl::bindable_buffer<gl::buffer_target_e     ::draw_indirect_buffer , gl::stream_buffer    <T             >>;
+    template<typename T>
+    using uniform_buffer        = gl::bindable_buffer<gl::buffer_base_target_e::uniform_buffer       , gl::stream_buffer    <T             >>;
+    template<typename T, gl::bool_t Read = gl::true_, gl::bool_t Write = gl::true_>
+    using shader_storage_buffer = gl::bindable_buffer<gl::buffer_base_target_e::shader_storage_buffer, gl::persistent_buffer<T, Read, Write>>;
+    template<typename T>
+    using draw_indirect_buffer  = gl::bindable_buffer<gl::buffer_target_e     ::draw_indirect_buffer , gl::stream_buffer    <T             >>;
 
-    template<typename T>                                    using vertex_buffer         = gl::static_buffer<T>;
-                                                            using index_buffer          = gl::bindable_buffer<gl::buffer_target_e::element_array_buffer, gl::static_buffer<gl::uint32_t>>;
+    template<typename T>
+    using vertex_buffer         = gl::static_buffer<T>;
+    using index_buffer          = gl::bindable_buffer<gl::buffer_target_e::element_array_buffer, gl::static_buffer<gl::uint32_t>>;
 
 
                                                             
