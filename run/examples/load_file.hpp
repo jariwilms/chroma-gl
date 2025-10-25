@@ -16,3 +16,12 @@ static auto load_file(std::filesystem::path const& filepath) -> std::vector<gl::
 
     return buffer;
 }
+auto load_file_to_string(std::filesystem::path const& filepath) -> std::string
+{
+    auto file   = std::ifstream{ filepath };
+    auto buffer = std::ostringstream{};
+    if (!file) throw std::runtime_error("failed to open file: " + filepath.string());
+
+    buffer << file.rdbuf();
+    return buffer.str();
+}
