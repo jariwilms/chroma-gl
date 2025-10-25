@@ -210,7 +210,7 @@ export namespace gl
         dynamic_read = GL_DYNAMIC_READ,  
         dynamic_copy = GL_DYNAMIC_COPY,  
     };
-    enum class callback_pointer_e : gl::enum_t
+    enum class callback_pointer_parameter_e : gl::enum_t
     {
         debug_callback_function       = GL_DEBUG_CALLBACK_FUNCTION  , 
         debug_callback_user_parameter = GL_DEBUG_CALLBACK_USER_PARAM, 
