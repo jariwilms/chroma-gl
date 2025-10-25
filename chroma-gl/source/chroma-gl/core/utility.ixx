@@ -82,15 +82,21 @@ export namespace gl
     {
         return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
     }
-    constexpr auto range_intersection   (gl::byte_range_t first, gl::byte_range_t second) -> gl::byte_range_t
+    auto range_intersection(gl::range_t first, gl::range_t second) -> gl::range_t
     {
-        const auto first_end  = gl::size_t{ first .offset + first .size };
-        const auto second_end = gl::size_t{ second.offset + second.size };
-        const auto start      = gl::size_t{ (first.offset > second.offset) ? first.offset : second.offset };
-        const auto end        = gl::size_t{ (first_end < second_end) ? first_end : second_end };
-
-        if   (start < end) return gl::byte_range_t{ end - start, start };
-        else               return gl::byte_range_t{};
+        const auto intersect_index = std::max   (first.index              , second.index                   );
+        const auto intersect_end   = std::min   (first.index + first.count, second.index  + second.count   );
+        const auto intersect_count = gl::ternary(intersect_end > intersect_index, intersect_end - intersect_index, gl::size_t{ 0u });
+        
+        return gl::range_t{ intersect_count, intersect_index };
+    }
+    auto range_intersection(gl::byte_range_t first, gl::byte_range_t second) -> gl::byte_range_t
+    {
+        const auto intersect_index = std::max   (first.offset             , second.offset              );
+        const auto intersect_end   = std::min   (first.offset + first.size, second.offset + second.size);
+        const auto intersect_count = gl::ternary(intersect_end > intersect_index, intersect_end - intersect_index, gl::size_t{ 0u });
+        
+        return gl::byte_range_t{ intersect_count, intersect_index };
     }
     template<typename T, gl::uint32_t Count>
     constexpr auto clamp_region         (const gl::region_t<T, Count>& region, const gl::vector_t<T, Count>& boundary) -> gl::region_t<T, Count>
