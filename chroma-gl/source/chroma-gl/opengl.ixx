@@ -508,7 +508,7 @@ export namespace gl
                 return ::glGetInternalformati64v(gl::to_underlying(target), internal_format, gl::to_underlying(parameter), static_cast<gl::sizei_t>(sizeof(gl::int64_t)), &value), value;
             };
 
-        //Queries marked with "//" might be erroneous
+        //Queries marked with "//" may be erroneous
         using enum gl::internal_format_parameter_e;
 
              if constexpr (P == auto_generate_mipmap                  ) return static_cast<gl::support_level_e >(get_internal_format_iv(target, internal_format, P));
@@ -599,15 +599,15 @@ export namespace gl
 
         using enum gl::synchronization_property_e;
         if constexpr (P == condition) return static_cast<gl::synchronization_object_condition_e>(get_sync_iv(sync, P));
-        if constexpr (P == flags    ) return gl::bitfield_t{ 0u };
-        if constexpr (P == status   ) return static_cast<gl::synchronization_object_status_e>   (get_sync_iv(sync, P));
-        if constexpr (P == type     ) return static_cast<gl::synchronization_object_type_e>     (get_sync_iv(sync, P));
+        if constexpr (P == flags    ) return static_cast<gl::bitfield_t                        >(get_sync_iv(sync, P));
+        if constexpr (P == status   ) return static_cast<gl::synchronization_object_status_e   >(get_sync_iv(sync, P));
+        if constexpr (P == type     ) return static_cast<gl::synchronization_object_type_e     >(get_sync_iv(sync, P));
     }
     template<gl::query_symbol_e S>
     auto get_query_value                                  (gl::query_target_e target) -> gl::uint32_t
     {
         auto value = gl::int32_t{};
-        return ::glGetQueryiv(gl::to_underlying(target), gl::to_underlying(S), &value), std::bit_cast<gl::uint32_t>(value);
+        return ::glGetQueryiv(gl::to_underlying(target), gl::to_underlying(S), &value), static_cast<gl::uint32_t>(value);
     }
     template<gl::query_symbol_e S>
     auto get_query_value_index                            (gl::query_target_e target, gl::index_t index) -> gl::uint32_t
@@ -632,7 +632,7 @@ export namespace gl
         using enum gl::query_parameter_e;
         if constexpr (P == target          ) return static_cast<gl::query_target_e>(get_query_object_iv (query, P));
         if constexpr (P == result          ) return                                 get_query_object_uiv(query, P) ;
-        if constexpr (P == result_available) return static_cast<gl::bool_t>        (get_query_object_iv (query, P));
+        if constexpr (P == result_available) return static_cast<gl::bool_t        >(get_query_object_iv (query, P));
         if constexpr (P == result_no_wait  ) return                                 get_query_object_uiv(query, P) ;
     }
     template<gl::query_parameter_e P>
