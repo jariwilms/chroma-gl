@@ -1371,13 +1371,13 @@ export namespace gl
         if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
         ::glBindBufferRange(
-            gl::to_underlying         (target)           , gl::to_underlying(binding)                 , gl::to_underlying(buffer), 
-            static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size));
+            gl::to_underlying         (target)           , gl::to_underlying      (binding)         , gl::to_underlying(buffer), 
+            static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::size_t>(byte_range.size));
     }
     template<typename T = gl::byte_t>
     void bind_buffers_range                               (std::span<const gl::handle_t> buffers, std::span<const gl::range_t> ranges, gl::buffer_base_target_e target, gl::binding_t binding)
     {
-        const auto sizes   = std::vector<gl::intptr_t >(ranges.size());
+        const auto sizes   = std::vector<gl::size_t   >(ranges.size());
         const auto offsets = std::vector<gl::ptrdiff_t>(ranges.size());
 
         for (std::tuple<gl::handle_t&, gl::range_t&> value : std::views::zip(buffers, ranges))
@@ -1395,12 +1395,12 @@ export namespace gl
     template<typename T = gl::byte_t>
     void buffer_storage                                   (gl::handle_t buffer, gl::buffer_storage_flags_e flags, gl::count_t element_count)
     {
-        ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::intptr_t>(element_count * sizeof(T)), nullptr, gl::to_underlying(flags));
+        ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::size_t>(element_count * sizeof(T)), nullptr, gl::to_underlying(flags));
     }
     template<typename T = gl::byte_t>
     void buffer_storage                                   (gl::handle_t buffer, gl::buffer_storage_flags_e flags, std::span<const T> memory)
     {
-        ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::intptr_t>(memory.size_bytes()), memory.data(), gl::to_underlying(flags));
+        ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::size_t>(memory.size_bytes()), memory.data(), gl::to_underlying(flags));
     }
     template<typename T = gl::byte_t>
     void buffer_sub_data                                  (gl::handle_t buffer, gl::index_t offset, std::span<const T> memory)
@@ -1409,7 +1409,7 @@ export namespace gl
         const auto byte_range  = gl::convert_range<T>(gl::range_t{ memory.size(), offset });
         if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
-        ::glNamedBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size), memory.data());
+        ::glNamedBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::sizei_t>(byte_range.size), memory.data());
     }
     template<typename T = gl::byte_t>
     void clear_buffer_data                                (gl::handle_t buffer, gl::buffer_base_format_e base_format, gl::buffer_format_e format, gl::data_type_e data_type, T value)
@@ -1443,7 +1443,7 @@ export namespace gl
         const auto  buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
         if (buffer_size % sizeof(T) != gl::size_t{ 0u }) throw std::invalid_argument{ "buffer size is not an exact multiple of type size" };
         
-              auto* pointer     = reinterpret_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), gl::ptrdiff_t{ 0 }, static_cast<gl::intptr_t>(buffer_size), gl::to_underlying(access)));
+              auto* pointer     = reinterpret_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), gl::ptrdiff_t{ 0 }, static_cast<gl::sizei_t>(buffer_size), gl::to_underlying(access)));
         if (!pointer) throw std::runtime_error{ "failed to map buffer" };
         
         return std::span{ pointer, buffer_size / sizeof(T) };
@@ -1457,7 +1457,7 @@ export namespace gl
         const auto  byte_range   = gl::convert_range<T>(range);
         if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
         
-              auto* pointer      = reinterpret_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size), gl::to_underlying(access)));
+              auto* pointer      = reinterpret_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::sizei_t>(byte_range.size), gl::to_underlying(access)));
         if (!pointer) throw std::runtime_error{ "failed to map buffer" };
 
         return std::span{ pointer, byte_range.size / sizeof(T) };
@@ -1471,7 +1471,7 @@ export namespace gl
         const auto byte_range  = gl::convert_range<T>(range);
         if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
-        ::glFlushMappedNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size));
+        ::glFlushMappedNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::sizei_t>(byte_range.size));
     }
     auto unmap_buffer                                     (gl::handle_t buffer) -> gl::bool_t
     {
@@ -1490,7 +1490,7 @@ export namespace gl
         const auto byte_range  = gl::convert_range<T>(range);
         if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
-        ::glInvalidateBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size));
+        ::glInvalidateBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::size_t>(byte_range.size));
     }
     template<typename T = gl::byte_t>
     void copy_buffer_sub_data                             (gl::handle_t source_buffer, gl::handle_t destination_buffer, gl::range_t source_range, gl::index_t destination_offset)
@@ -1504,9 +1504,9 @@ export namespace gl
         if (source_byte_range.offset + source_byte_range.size > destination_buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
         ::glCopyNamedBufferSubData(
-            gl::to_underlying         (source_buffer)            , gl::to_underlying         (destination_buffer), 
-            static_cast<gl::ptrdiff_t>(source_byte_range.offset) , static_cast<gl::ptrdiff_t>(destination_offset), 
-            static_cast<gl::intptr_t> (source_byte_range.size  ));
+            gl::to_underlying         (source_buffer)           , gl::to_underlying         (destination_buffer), 
+            static_cast<gl::ptrdiff_t>(source_byte_range.offset), static_cast<gl::ptrdiff_t>(destination_offset), 
+            static_cast<gl::size_t   >(source_byte_range.size ));
     }
     
 
@@ -1851,7 +1851,7 @@ export namespace gl
     void texture_buffer_range                             (gl::handle_t texture, gl::handle_t buffer, gl::buffer_format_e format, gl::range_t range)
     {
         const auto byte_range = gl::convert_range<T>(range);
-        ::glTextureBufferRange(gl::to_underlying(texture), gl::to_underlying(format), gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size));
+        ::glTextureBufferRange(gl::to_underlying(texture), gl::to_underlying(format), gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::sizei_t>(byte_range.size));
     }
     template<gl::texture_parameter_e P>
     void texture_parameter                                (gl::handle_t texture, gl::texture_parameter_argument_t<P> value)

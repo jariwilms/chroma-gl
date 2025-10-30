@@ -6,8 +6,9 @@ import vendor.glm;
 
 export namespace gl
 {
-    using void_t                        = ::GLvoid                     ;
     using bool_t                        = bool                         ;
+
+    using void_t                        = ::GLvoid                     ;
     using boolean_t                     = ::GLboolean                  ;
     using byte_t                        = ::GLubyte                    ;
     using char_t                        = ::GLchar                     ;
@@ -29,8 +30,9 @@ export namespace gl
     using size_t                        = ::khronos_usize_t            ; //Maximum possible size of an object on a given platform
     using count_t                       = ::khronos_usize_t            ; //Number of elements
     using index_t                       = ::khronos_usize_t            ; //Number of elements offset
-    using intptr_t                      = ::GLsizeiptr                 ; //Address pointer
-    using ptrdiff_t                     = ::GLintptr                   ; //Address pointer byte offset
+    using sizeiptr_t                    = ::GLsizeiptr                 ; //Address pointer
+    using intptr_t                      = ::GLintptr                   ; //Address pointer byte offset
+    using ptrdiff_t                     = ::GLintptr                   ; //Address pointer byte offset alias
     
     using enum_t                        = ::GLenum                     ; //Enumeration constant
     using bitfield_t                    = ::GLbitfield                 ; //Combination of logical bits
