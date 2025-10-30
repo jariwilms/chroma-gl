@@ -30,14 +30,14 @@ export namespace gl
         }
         void transfer        (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::pixel_buffer_data pixel_buffer_data,                 std::span<const gl::byte_t>      memory)
         {
-            const auto image_volume = gl::volume_t{ gl::vector_3u{ image_area.extent, 0u }, gl::vector_3u{ image_area.origin, gl::to_underlying(face - face_e::positive_x) } };
+            const auto image_volume = gl::volume_t{ gl::vector_3u{ image_area.extent, 1u }, gl::vector_3u{ image_area.origin, gl::to_underlying(face - face_e::positive_x) } };
             gl::texture_sub_image_3d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_volume, memory);
         }
         void transfer        (                                                              gl::pixel_buffer_data pixel_buffer_data, std::span<const std::span<const gl::byte_t>, 6u> memory)
         {
-            for (const auto [index, source] : std::views::enumerate(memory))
+            for (const auto [index, face_memory] : std::views::enumerate(memory))
             {
-                transfer(face_e::positive_x + index, pixel_buffer_data, source);
+                transfer(face_e::positive_x + index, pixel_buffer_data, face_memory);
             }
         }
         void generate_mipmaps()
@@ -82,7 +82,7 @@ export namespace gl
         {
             return dimensions_;
         }
-        auto mipmap_levels   () const -> gl::uint32_t
+        auto mipmap_levels   () const -> gl::uint8_t
         {
             return mipmap_levels_;
         }
