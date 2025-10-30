@@ -252,6 +252,10 @@ export namespace gl
         if constexpr (Data == number_program_binary_formats                        ) return get_uint32(Data);
         if constexpr (Data == number_shader_binary_formats                         ) return get_uint32(Data);
         if constexpr (Data == pack_alignment                                       ) return get_uint32(Data);
+        if constexpr (Data == pack_compressed_block_depth                          ) return get_uint32(Data);
+        if constexpr (Data == pack_compressed_block_height                         ) return get_uint32(Data);
+        if constexpr (Data == pack_compressed_block_size                           ) return static_cast<gl::size_t>(get_uint32(Data));
+        if constexpr (Data == pack_compressed_block_width                          ) return get_uint32(Data);
         if constexpr (Data == pack_image_height                                    ) return get_uint32(Data);
         if constexpr (Data == pack_row_length                                      ) return get_uint32(Data);
         if constexpr (Data == pack_skip_images                                     ) return get_uint32(Data);
@@ -325,6 +329,10 @@ export namespace gl
         if constexpr (Data == uniform_buffer_binding                               ) return get_handle(Data);
         if constexpr (Data == uniform_buffer_offset_alignment                      ) return get_uint32(Data);
         if constexpr (Data == unpack_alignment                                     ) return get_uint32(Data);
+        if constexpr (Data == unpack_compressed_block_depth                        ) return get_uint32(Data);
+        if constexpr (Data == unpack_compressed_block_height                       ) return get_uint32(Data);
+        if constexpr (Data == unpack_compressed_block_size                         ) return static_cast<gl::size_t>(get_uint32(Data));
+        if constexpr (Data == unpack_compressed_block_width                        ) return get_uint32(Data);
         if constexpr (Data == unpack_image_height                                  ) return get_uint32(Data);
         if constexpr (Data == unpack_row_length                                    ) return get_uint32(Data);
         if constexpr (Data == unpack_skip_images                                   ) return get_uint32(Data);
@@ -858,7 +866,7 @@ export namespace gl
 
 
     //Chapter 8 - Textures and Samplers
-    template<gl::sampler_parameter_e Parameter>
+    template<gl::sampler_parameter_e          Parameter>
     auto get_sampler_parameter_value                      (gl::handle_t sampler) -> auto
     {
         auto get_sampler_parameter_iv  = [](gl::handle_t sampler, gl::sampler_parameter_e sampler_parameter) -> gl::int32_t
@@ -902,7 +910,7 @@ export namespace gl
         if constexpr (Parameter == wrapping_s          ) return static_cast<gl::texture_wrapping_e            >(get_sampler_parameter_uiv(sampler, Parameter));
         if constexpr (Parameter == wrapping_t          ) return static_cast<gl::texture_wrapping_e            >(get_sampler_parameter_uiv(sampler, Parameter));
     }
-    template<gl::texture_parameter_e Parameter>
+    template<gl::texture_parameter_e          Parameter>
     auto get_texture_parameter_value                      (gl::handle_t texture) -> auto
     {
         auto get_texture_parameter_iv = [](gl::handle_t texture, gl::texture_parameter_e texture_parameter) -> gl::int32_t
@@ -950,7 +958,7 @@ export namespace gl
         if constexpr (Parameter == wrapping_s          ) return static_cast<gl::texture_wrapping_e            >(get_texture_parameter_iv(texture, Parameter));
         if constexpr (Parameter == wrapping_t          ) return static_cast<gl::texture_wrapping_e            >(get_texture_parameter_iv(texture, Parameter));
     }
-    template<gl::texture_level_parameter_e Parameter>
+    template<gl::texture_level_parameter_e    Parameter>
     auto get_texture_level_parameter_value                (gl::handle_t texture, gl::uint32_t image_level)
     {
         auto get_texture_level_parameter_iv = [](gl::handle_t texture, gl::uint32_t image_level, gl::texture_level_parameter_e texture_level_parameter) -> gl::int32_t
@@ -981,53 +989,95 @@ export namespace gl
         if constexpr (Parameter == red_type             ) return static_cast<gl::texture_component_type_e>(get_texture_level_parameter_iv(texture, image_level, Parameter));
         if constexpr (Parameter == width                ) return static_cast<gl::uint32_t                >(get_texture_level_parameter_iv(texture, image_level, Parameter));
     }
-    template<typename T>
-    auto get_texture_image                                (gl::handle_t texture, gl::uint32_t image_level, gl::pixel_data_type_e pixel_data_type, gl::buffer_base_format_e buffer_base_format,                      gl::size_t size) -> std::vector<T>
+    template<typename T = gl::byte_t>
+    auto get_texture_image                                (gl::handle_t texture, gl::uint32_t image_level,                            gl::buffer_base_format_e buffer_base_format, gl::pixel_data_type_e pixel_data_type) -> std::vector<T>
     {
-        auto vector = std::vector<T>(size);
+        const auto texture_level_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto texture_level_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        const auto texture_level_depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, image_level);
+        const auto pixel_count          = texture_level_width * texture_level_height * texture_level_depth;
+        const auto pixel_component_size = gl::map_pixel_data_component_size(pixel_data_type);
+        const auto pixel_size           = pixel_component_size * gl::map_buffer_base_format_component_count(buffer_base_format);
+        const auto image_size           = pixel_count * pixel_size;
+        if (image_size % sizeof(T) != gl::size_t{ 0u }) throw std::invalid_argument{ "type size is not an exact multiple of image size" };
+
+              auto vector               = std::vector<T>(image_size / sizeof(T));
         ::glGetTextureImage(
             gl::to_underlying       (texture)           , 
             static_cast<gl::int32_t>(image_level)       , 
             gl::to_underlying       (buffer_base_format), gl::to_underlying(pixel_data_type), 
-            static_cast<gl::sizei_t>(vector.size())     , vector.data()                    );
+            static_cast<gl::sizei_t>(image_size)        , vector.data()                    );
 
         return vector;
     }
-    template<typename T>
-    auto get_texture_sub_image                            (gl::handle_t texture, gl::uint32_t image_level, gl::pixel_data_type_e pixel_data_type, gl::buffer_base_format_e buffer_base_format, gl::volume_t region, gl::size_t size) -> std::vector<T>
+    template<typename T = gl::byte_t>
+    auto get_texture_sub_image                            (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t image_volume, gl::buffer_base_format_e buffer_base_format, gl::pixel_data_type_e pixel_data_type) -> std::vector<T>
     {
-        auto vector = std::vector<T>(size);
+        const auto image_width          = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height         = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        const auto image_depth          = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, image_level);
+        if (image_volume.origin.x + image_volume.extent.x > image_width ) throw std::invalid_argument{ "volume width exceeds texture width"  };
+        if (image_volume.origin.y + image_volume.extent.y > image_height) throw std::invalid_argument{ "volume width exceeds texture height" };
+        if (image_volume.origin.z                         > image_depth ) throw std::invalid_argument{ "volume width exceeds texture depth"  };
+
+        const auto pixel_count          = image_volume.extent.x * image_volume.extent.y * image_volume.extent.z;
+        const auto pixel_component_size = gl::map_pixel_data_component_size(pixel_data_type);
+        const auto pixel_size           = pixel_component_size * gl::map_buffer_base_format_component_count(buffer_base_format);
+        const auto image_size           = pixel_count * pixel_size;
+        if (image_size % sizeof(T) != gl::size_t{ 0u }) throw std::invalid_argument{ "type size is not an exact multiple of image size" };
+
+              auto vector               = std::vector<T>(image_size / sizeof(T));
         ::glGetTextureSubImage(
-            gl::to_underlying       (texture)           , 
-            static_cast<gl::int32_t>(image_level)       , 
-            static_cast<gl::int32_t>(region.origin.x)   , static_cast<gl::int32_t>(region.origin.y)   , static_cast<gl::int32_t>(region.origin.z), 
-            static_cast<gl::sizei_t>(region.extent.x)   , static_cast<gl::sizei_t>(region.extent.y)   , static_cast<gl::sizei_t>(region.extent.z), 
-            gl::to_underlying       (buffer_base_format), gl::to_underlying       (buffer_base_format), 
-            static_cast<gl::sizei_t>(vector.size())     , vector.data()                              );
+            gl::to_underlying       (texture)              , 
+            static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::int32_t>(image_volume.origin.x), static_cast<gl::int32_t>(image_volume.origin.y), static_cast<gl::int32_t>(image_volume.origin.z), 
+            static_cast<gl::sizei_t>(image_volume.extent.x), static_cast<gl::sizei_t>(image_volume.extent.y), static_cast<gl::sizei_t>(image_volume.extent.z), 
+            gl::to_underlying       (buffer_base_format)   , gl::to_underlying       (pixel_data_type)      , 
+            static_cast<gl::sizei_t>(image_size)           , vector.data()                                 );
 
         return vector;
     }
-    template<typename T>
-    auto get_compressed_texture_image                     (gl::handle_t texture, gl::uint32_t image_level,                      gl::size_t size) -> std::vector<T>
+    template<typename T = gl::byte_t>
+    auto get_compressed_texture_image                     (gl::handle_t texture, gl::uint32_t image_level) -> std::vector<T>
     {
-        auto vector = std::vector<T>(size);
+        const auto compressed_image_size = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::compressed_image_size>(texture, image_level);
+        if (compressed_image_size % sizeof(T) != gl::size_t{ 0u }) throw std::invalid_argument{ "type size is not an exact multiple of texture size" };
+
+              auto vector                = std::vector<T>(compressed_image_size / sizeof(T));
         ::glGetCompressedTextureImage(
-            gl::to_underlying       (texture)      , 
-            static_cast<gl::int32_t>(image_level)  , 
-            static_cast<gl::sizei_t>(vector.size()), vector.data());
+            gl::to_underlying       (texture)              , 
+            static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::sizei_t>(compressed_image_size), vector.data());
 
         return vector;
     }
-    template<typename T>
-    auto get_compressed_texture_sub_image                 (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t region, gl::size_t size) -> std::vector<T>
+    template<typename T = gl::byte_t>
+    auto get_compressed_texture_sub_image                 (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t image_volume) -> std::vector<T>
     {
-        auto vector = std::vector<T>(size);
+        const auto texture_level_width     = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width                >(texture, image_level);
+        const auto texture_level_height    = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height               >(texture, image_level);
+        const auto texture_level_depth     = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth                >(texture, image_level);
+        if (image_volume.origin.x + image_volume.extent.x > texture_level_width ) throw std::invalid_argument{ "volume width exceeds texture width"  };
+        if (image_volume.origin.y + image_volume.extent.y > texture_level_height) throw std::invalid_argument{ "volume width exceeds texture height" };
+        if (image_volume.origin.z                         > texture_level_depth ) throw std::invalid_argument{ "volume width exceeds texture depth"  };
+        
+        const auto compressed_block_width  = gl::get_value<gl::data_e::pack_compressed_block_width >();
+        const auto compressed_block_height = gl::get_value<gl::data_e::pack_compressed_block_height>();
+        const auto compressed_block_depth  = gl::get_value<gl::data_e::pack_compressed_block_depth >();
+        if ((image_volume.extent.x != texture_level_width  || image_volume.origin.x != 0u) && image_volume.origin.x % compressed_block_width  != gl::size_t{ 0u }) throw std::invalid_argument{ "volume width exceeds texture width"  };
+        if ((image_volume.extent.y != texture_level_height || image_volume.origin.y != 0u) && image_volume.origin.y % compressed_block_height != gl::size_t{ 0u }) throw std::invalid_argument{ "volume width exceeds texture height" };
+        if ((image_volume.extent.z != texture_level_width  || image_volume.origin.z != 0u) && image_volume.origin.z % compressed_block_depth  != gl::size_t{ 0u }) throw std::invalid_argument{ "volume width exceeds texture depth"  };
+
+        const auto compressed_image_size   = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::compressed_image_size>(texture, image_level);
+        if (compressed_image_size % sizeof(T) != gl::size_t{ 0u }               ) throw std::invalid_argument{ "type size is not an exact multiple of texture size" };
+
+              auto vector               = std::vector<T>(compressed_image_size / sizeof(T));
         ::glGetCompressedTextureSubImage(
-            gl::to_underlying       (texture)        , 
-            static_cast<gl::int32_t>(image_level)    , 
-            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z), 
-            static_cast<gl::sizei_t>(vector.size())  , vector.data()                           );
+            gl::to_underlying       (texture)              , 
+            static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::int32_t>(image_volume.origin.x), static_cast<gl::int32_t>(image_volume.origin.y), static_cast<gl::int32_t>(image_volume.origin.z), 
+            static_cast<gl::sizei_t>(image_volume.extent.x), static_cast<gl::sizei_t>(image_volume.extent.y), static_cast<gl::sizei_t>(image_volume.extent.z), 
+            static_cast<gl::sizei_t>(compressed_image_size), vector.data()                                 );
 
         return vector;
     }
@@ -1070,17 +1120,17 @@ export namespace gl
             };
 
         using enum gl::frame_buffer_attachment_parameter_e;
-        if constexpr (P == alpha_size          ) return static_cast<gl::sizeu_t                                 >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
-        if constexpr (P == blue_size           ) return static_cast<gl::sizeu_t                                 >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
+        if constexpr (P == alpha_size          ) return static_cast<gl::size_t                                  >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
+        if constexpr (P == blue_size           ) return static_cast<gl::size_t                                  >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
         if constexpr (P == color_encoding      ) return static_cast<gl::color_encoding_e                        >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
         if constexpr (P == component_type      ) return static_cast<gl::frame_buffer_attachment_component_type_e>(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
-        if constexpr (P == depth_size          ) return static_cast<gl::sizeu_t                                 >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
-        if constexpr (P == green_size          ) return static_cast<gl::sizeu_t                                 >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
+        if constexpr (P == depth_size          ) return static_cast<gl::size_t                                  >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
+        if constexpr (P == green_size          ) return static_cast<gl::size_t                                  >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
         if constexpr (P == is_layered          ) return static_cast<gl::bool_t                                  >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
         if constexpr (P == object_name         ) return static_cast<gl::handle_t                                >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
         if constexpr (P == object_type         ) return static_cast<gl::frame_buffer_attachment_object_type_e   >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
-        if constexpr (P == red_size            ) return static_cast<gl::sizeu_t                                 >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
-        if constexpr (P == stencil_size        ) return static_cast<gl::sizeu_t                                 >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
+        if constexpr (P == red_size            ) return static_cast<gl::size_t                                  >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
+        if constexpr (P == stencil_size        ) return static_cast<gl::size_t                                  >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
         if constexpr (P == texture_cubemap_face) return static_cast<gl::cubemap_face_e                          >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
         if constexpr (P == texture_layer       ) return static_cast<gl::uint32_t                                >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
         if constexpr (P == texture_level       ) return static_cast<gl::uint32_t                                >(get_frame_buffer_attachment_parameter_iv(frame_buffer, attachment, P));
@@ -1099,12 +1149,12 @@ export namespace gl
         if constexpr (P == height         ) return static_cast<gl::uint32_t             >(get_render_buffer_parameter_iv(render_buffer, P));
         if constexpr (P == internal_format) return static_cast<gl::frame_buffer_format_e>(get_render_buffer_parameter_iv(render_buffer, P));
         if constexpr (P == samples        ) return static_cast<gl::uint32_t             >(get_render_buffer_parameter_iv(render_buffer, P));
-        if constexpr (P == red_size       ) return static_cast<gl::sizeu_t              >(get_render_buffer_parameter_iv(render_buffer, P));
-        if constexpr (P == green_size     ) return static_cast<gl::sizeu_t              >(get_render_buffer_parameter_iv(render_buffer, P));
-        if constexpr (P == blue_size      ) return static_cast<gl::sizeu_t              >(get_render_buffer_parameter_iv(render_buffer, P));
-        if constexpr (P == alpha_size     ) return static_cast<gl::sizeu_t              >(get_render_buffer_parameter_iv(render_buffer, P));
-        if constexpr (P == depth_size     ) return static_cast<gl::sizeu_t              >(get_render_buffer_parameter_iv(render_buffer, P));
-        if constexpr (P == stencil_size   ) return static_cast<gl::sizeu_t              >(get_render_buffer_parameter_iv(render_buffer, P));
+        if constexpr (P == red_size       ) return static_cast<gl::size_t               >(get_render_buffer_parameter_iv(render_buffer, P));
+        if constexpr (P == green_size     ) return static_cast<gl::size_t               >(get_render_buffer_parameter_iv(render_buffer, P));
+        if constexpr (P == blue_size      ) return static_cast<gl::size_t               >(get_render_buffer_parameter_iv(render_buffer, P));
+        if constexpr (P == alpha_size     ) return static_cast<gl::size_t               >(get_render_buffer_parameter_iv(render_buffer, P));
+        if constexpr (P == depth_size     ) return static_cast<gl::size_t               >(get_render_buffer_parameter_iv(render_buffer, P));
+        if constexpr (P == stencil_size   ) return static_cast<gl::size_t               >(get_render_buffer_parameter_iv(render_buffer, P));
     }
 
 
@@ -1143,9 +1193,9 @@ export namespace gl
         if constexpr (P == is_integer_data) return static_cast<gl::bool_t                       >(get_vertex_array_indexed32_iv(vertex_array, P, index));
         if constexpr (P == is_long_data   ) return static_cast<gl::bool_t                       >(get_vertex_array_indexed32_iv(vertex_array, P, index));
         if constexpr (P == is_normalized  ) return static_cast<gl::bool_t                       >(get_vertex_array_indexed32_iv(vertex_array, P, index));
-        if constexpr (P == relative_offset) return static_cast<gl::sizei_t                      >(get_vertex_array_indexed32_iv(vertex_array, P, index));
-        if constexpr (P == size           ) return static_cast<gl::sizeu_t                      >(get_vertex_array_indexed32_iv(vertex_array, P, index));
-        if constexpr (P == stride         ) return static_cast<gl::sizeu_t                      >(get_vertex_array_indexed32_iv(vertex_array, P, index));
+        if constexpr (P == relative_offset) return static_cast<gl::ptrdiff_t                    >(get_vertex_array_indexed32_iv(vertex_array, P, index));
+        if constexpr (P == size           ) return static_cast<gl::size_t                       >(get_vertex_array_indexed32_iv(vertex_array, P, index));
+        if constexpr (P == stride         ) return static_cast<gl::size_t                       >(get_vertex_array_indexed32_iv(vertex_array, P, index));
         if constexpr (P == type           ) return static_cast<gl::vertex_array_attribute_type_e>(get_vertex_array_indexed32_iv(vertex_array, P, index));
     }
 
@@ -1223,7 +1273,7 @@ export namespace gl
     //Chapter 4 - Event Model
     auto fence_sync                                       () -> gl::sync_t
     {
-        return std::bit_cast<gl::sync_t>(::glFenceSync(gl::to_underlying(gl::synchronization_object_condition_e::gpu_commands_complete), gl::bitfield_t{ 0u }));
+        return static_cast<gl::sync_t>(::glFenceSync(gl::to_underlying(gl::synchronization_object_condition_e::gpu_commands_complete), gl::bitfield_t{ 0u }));
     }
     void delete_sync                                      (gl::sync_t sync)
     {
@@ -1231,7 +1281,7 @@ export namespace gl
     }
     auto client_wait_sync                                 (gl::sync_t sync, gl::synchronization_command_e synchronization_command, gl::time_t timeout) -> gl::synchronization_status_e
     {
-        return std::bit_cast<gl::synchronization_status_e>(::glClientWaitSync(sync, gl::to_underlying(synchronization_command), timeout));
+        return static_cast<gl::synchronization_status_e>(::glClientWaitSync(sync, gl::to_underlying(synchronization_command), timeout));
     }
     void server_wait_sync                                 (gl::sync_t sync)
     {
@@ -1245,7 +1295,9 @@ export namespace gl
     auto create_queries                                   (gl::query_target_e target, gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateQueries(gl::to_underlying(target), static_cast<gl::sizei_t>(count), gl::to_underlying_pointer(handles.data())), handles;
+        ::glCreateQueries(gl::to_underlying(target), static_cast<gl::sizei_t>(count), gl::to_underlying_pointer(handles.data()));
+        
+        return handles;
     }
     void delete_query                                     (gl::handle_t query)
     {
@@ -1287,7 +1339,9 @@ export namespace gl
     auto create_buffers                                   (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateBuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        ::glCreateBuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data()));
+        
+        return handles;
     }
     void delete_buffer                                    (gl::handle_t buffer)
     {
@@ -1309,82 +1363,115 @@ export namespace gl
     {
         ::glBindBuffersBase(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     void bind_buffer_range                                (gl::handle_t buffer, gl::buffer_base_target_e target, gl::binding_t binding, gl::range_t range)
     {
-        const auto byte_range = gl::convert_range<T>(range);
-        ::glBindBufferRange(gl::to_underlying(target), gl::to_underlying(binding), gl::to_underlying(buffer), byte_range.offset, byte_range.size);
+        const auto buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
+        const auto byte_range   = gl::convert_range<T>(range);
+        if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
+
+        ::glBindBufferRange(
+            gl::to_underlying         (target)           , gl::to_underlying(binding)                 , gl::to_underlying(buffer), 
+            static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size));
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     void bind_buffers_range                               (std::span<const gl::handle_t> buffers, std::span<const gl::range_t> ranges, gl::buffer_base_target_e target, gl::binding_t binding)
     {
         const auto sizes   = std::vector<gl::intptr_t >(ranges.size());
         const auto offsets = std::vector<gl::ptrdiff_t>(ranges.size());
 
-        std::ranges::for_each(ranges, [&](const gl::range_t& range)
-            {
-                const auto byte_range = gl::convert_range<T>(range);
+        for (std::tuple<gl::handle_t&, gl::range_t&> value : std::views::zip(buffers, ranges))
+        {
+            const auto buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(std::get<0u>(value));
+            const auto byte_range   = gl::convert_range<T>(std::get<1u>(value));
+            if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
-                sizes  .emplace_back(byte_range.size  );
-                offsets.emplace_back(byte_range.offset);
-            });
+            sizes  .emplace_back(byte_range.size  );
+            offsets.emplace_back(byte_range.offset);
+        }
 
         ::glBindBuffersRange(gl::to_underlying(target), gl::to_underlying(binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()), offsets.data(), sizes.data());
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     void buffer_storage                                   (gl::handle_t buffer, gl::buffer_storage_flags_e flags, gl::count_t element_count)
     {
         ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::intptr_t>(element_count * sizeof(T)), nullptr, gl::to_underlying(flags));
     }
-    template<typename T>                  
-    void buffer_storage                                   (gl::handle_t buffer, gl::buffer_storage_flags_e flags, std::span<const T> data)
+    template<typename T = gl::byte_t>
+    void buffer_storage                                   (gl::handle_t buffer, gl::buffer_storage_flags_e flags, std::span<const T> memory)
     {
-        ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::intptr_t>(data.size_bytes()), data.data(), gl::to_underlying(flags));
+        ::glNamedBufferStorage(gl::to_underlying(buffer), static_cast<gl::intptr_t>(memory.size_bytes()), memory.data(), gl::to_underlying(flags));
     }
-    template<typename T>
-    void buffer_data                                      (gl::handle_t buffer, gl::index_t index, std::span<const T> data)
+    template<typename T = gl::byte_t>
+    void buffer_sub_data                                  (gl::handle_t buffer, gl::index_t offset, std::span<const T> memory)
     {
-        ::glNamedBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(index * sizeof(T)), static_cast<gl::intptr_t>(data.size_bytes()), data.data());
+        const auto buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
+        const auto byte_range  = gl::convert_range<T>(gl::range_t{ memory.size(), offset });
+        if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
+
+        ::glNamedBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size), memory.data());
     }
-    template<typename T>
-    void clear_buffer_data                                (gl::handle_t buffer, gl::buffer_base_format_e base_format, gl::buffer_format_e format, gl::data_type_e type,                  std::span<const T> data)
+    template<typename T = gl::byte_t>
+    void clear_buffer_data                                (gl::handle_t buffer, gl::buffer_base_format_e base_format, gl::buffer_format_e format, gl::data_type_e data_type, T value)
     {
-        ::glClearNamedBufferData(gl::to_underlying(buffer), gl::to_underlying(format), gl::to_underlying(base_format), gl::to_underlying(type), data.data());
+        const auto base_format_components = gl::map_buffer_base_format_components(base_format);
+        const auto data_type_size         = gl::map_data_type_size               (data_type  );
+        if (base_format_components * data_type_size > sizeof(T)) throw std::invalid_argument{ "base format and type do not match clear value" };
+
+        ::glClearNamedBufferData(gl::to_underlying(buffer), gl::to_underlying(format), gl::to_underlying(base_format), gl::to_underlying(data_type), &value);
     }
-    template<typename T>
-    void clear_buffer_sub_data                            (gl::handle_t buffer, gl::buffer_base_format_e base_format, gl::buffer_format_e format, gl::data_type_e type, gl::range_t range, std::span<const T> data)
+    template<typename T = gl::byte_t>
+    void clear_buffer_sub_data                            (gl::handle_t buffer, gl::buffer_base_format_e base_format, gl::buffer_format_e format, gl::data_type_e data_type, gl::range_t range, T value)
     {
-        const auto byte_range = gl::convert_range<T>(range);
+        const auto buffer_size            = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
+        const auto byte_range             = gl::convert_range<T>(range);
+        if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
+
+        const auto base_format_components = gl::map_buffer_base_format_components(base_format);
+        const auto data_type_size         = gl::map_data_type_size               (data_type  );
+        if (base_format_components * data_type_size > sizeof(T)) throw std::invalid_argument{ "base format and type do not match clear value" };
+
         ::glClearNamedBufferSubData(
             gl::to_underlying         (buffer)           , gl::to_underlying       (format)         , 
             static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::sizei_t>(byte_range.size), 
-            gl::to_underlying         (base_format)      , gl::to_underlying       (type)           , 
-            data.data()                                 );
+            gl::to_underlying         (base_format)      , gl::to_underlying       (data_type)      , 
+            &value                                      );
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     auto map_buffer                                       (gl::handle_t buffer, gl::buffer_mapping_access_flags_e access) -> std::span<T>
     {
-        const auto buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
-        return std::span<T>{ std::bit_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), gl::ptrdiff_t{ 0 }, static_cast<gl::intptr_t>(buffer_size), gl::to_underlying(access))), buffer_size / sizeof(T) };
+        const auto  buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
+        if (buffer_size % sizeof(T) != gl::size_t{ 0u }) throw std::invalid_argument{ "buffer size is not an exact multiple of type size" };
+        
+              auto* pointer     = reinterpret_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), gl::ptrdiff_t{ 0 }, static_cast<gl::intptr_t>(buffer_size), gl::to_underlying(access)));
+        if (!pointer) throw std::runtime_error{ "failed to map buffer" };
+        
+        return std::span{ pointer, buffer_size / sizeof(T) };
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     auto map_buffer_range                                 (gl::handle_t buffer, gl::buffer_mapping_range_access_flags_e access, gl::range_t range) -> std::span<T>
     {
-        const auto buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
-        const auto buffer_range = gl::byte_range_t{ buffer_size };
-        const auto intersection = gl::range_intersection(gl::convert_range<T>(range), buffer_range);
-        if (intersection.empty()) return std::span<T>{};
+        if (range.empty()) return std::span<T>{};
+
+        const auto  buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
+        const auto  byte_range   = gl::convert_range<T>(range);
+        if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
         
-              auto pointer      = ::glMapNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(intersection.offset), static_cast<gl::intptr_t>(intersection.size), gl::to_underlying(access));
-        return std::span<T>{ std::bit_cast<T*>(pointer), intersection.size / sizeof(T) };
+              auto* pointer      = reinterpret_cast<T*>(::glMapNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size), gl::to_underlying(access)));
+        if (!pointer) throw std::runtime_error{ "failed to map buffer" };
+
+        return std::span{ pointer, byte_range.size / sizeof(T) };
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     void flush_buffer_range                               (gl::handle_t buffer, gl::range_t range)
     {
-        const auto buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
-        const auto buffer_range = gl::byte_range_t{ buffer_size };
-        const auto intersection = gl::range_intersection(gl::convert_range<T>(range), buffer_range);
-        if (!intersection.empty()) ::glFlushMappedNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(intersection.offset), static_cast<gl::intptr_t>(intersection.size));
+        if (range.empty()) return;
+
+        const auto buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
+        const auto byte_range  = gl::convert_range<T>(range);
+        if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
+
+        ::glFlushMappedNamedBufferRange(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size));
     }
     auto unmap_buffer                                     (gl::handle_t buffer) -> gl::bool_t
     {
@@ -1394,37 +1481,32 @@ export namespace gl
     {
         ::glInvalidateBufferData(gl::to_underlying(buffer));
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     void invalidate_buffer_sub_data                       (gl::handle_t buffer, gl::range_t range)
     {
-        const auto buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
-        const auto buffer_range = gl::byte_range_t{ buffer_size };
-        const auto intersection = gl::range_intersection(gl::convert_range<T>(range), buffer_range);
-        if (!intersection.empty()) ::glInvalidateBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(intersection.offset), static_cast<gl::intptr_t>(intersection.size));
+        if (range.empty()) return;
+
+        const auto buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
+        const auto byte_range  = gl::convert_range<T>(range);
+        if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
+
+        ::glInvalidateBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::intptr_t>(byte_range.size));
     }
-    template<typename T>
-    void copy_buffer_sub_data                             (gl::handle_t source_buffer, gl::handle_t destination_buffer, gl::range_t source_range, gl::range_t destination_range)
+    template<typename T = gl::byte_t>
+    void copy_buffer_sub_data                             (gl::handle_t source_buffer, gl::handle_t destination_buffer, gl::range_t source_range, gl::index_t destination_offset)
     {
-        destination_range.count = source_range.count;
+        if (source_range.empty()) return;
 
-        const auto source_buffer_size       = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(source_buffer);
-        const auto source_buffer_range      = gl::byte_range_t{ source_buffer_size };
-        const auto source_intersection      = gl::range_intersection(gl::convert_range<T>(source_range), source_buffer_range);
-        if (source_intersection     .empty()) return;
+        const auto source_buffer_size      = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(source_buffer     );
+        const auto destination_buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(destination_buffer);
+        const auto source_byte_range       = gl::convert_range<T>(source_range);
+        if (source_byte_range.offset + source_byte_range.size > source_buffer_size     ) throw std::invalid_argument{ "range exceeds buffer bounds" };
+        if (source_byte_range.offset + source_byte_range.size > destination_buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
-        const auto destination_buffer_size  = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(destination_buffer);
-        const auto destination_buffer_range = gl::byte_range_t{ destination_buffer_size };
-        const auto destination_intersection = gl::range_intersection(gl::convert_range<T>(destination_range), destination_buffer_range);
-        if (destination_intersection.empty()) return;
-
-        const auto copy_size                = std::min(source_intersection.size, destination_intersection.size);
-        if (copy_size)
-        {
-            ::glCopyNamedBufferSubData(
-                gl::to_underlying         (source_buffer)             , gl::to_underlying         (destination_buffer)             , 
-                static_cast<gl::ptrdiff_t>(source_intersection.offset), static_cast<gl::ptrdiff_t>(destination_intersection.offset), 
-                static_cast<gl::intptr_t> (copy_size)                );
-        }
+        ::glCopyNamedBufferSubData(
+            gl::to_underlying         (source_buffer)            , gl::to_underlying         (destination_buffer), 
+            static_cast<gl::ptrdiff_t>(source_byte_range.offset) , static_cast<gl::ptrdiff_t>(destination_offset), 
+            static_cast<gl::intptr_t> (source_byte_range.size  ));
     }
     
 
@@ -2658,7 +2740,7 @@ export namespace gl
     template<typename T>
     auto read_pixels                                      (gl::area_t region, gl::pixel_data_format_e format, gl::pixel_data_type_e type) -> std::vector<T>
     {
-        const auto bytes_per_pixel = map_pixel_data_format_components(format) * map_pixel_data_bytes_per_component(type);
+        const auto bytes_per_pixel = map_pixel_data_format_component_count(format) * map_pixel_data_component_size(type);
         const auto required_size   = region.extent.x * region.extent.y * bytes_per_pixel;
               auto vector          = std::vector<T>(required_size / sizeof(T));
 
