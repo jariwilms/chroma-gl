@@ -8,7 +8,7 @@ import opengl.utility;
 export namespace gl
 {
     template<typename T>
-    auto map_attribute_type                () -> gl::vertex_array_attribute_type_e
+    auto map_attribute_type                    () -> gl::vertex_array_attribute_type_e
     {
         if constexpr (std::is_same_v<T, gl::int8_t   >) return gl::vertex_array_attribute_type_e::int8   ;
         if constexpr (std::is_same_v<T, gl::int16_t  >) return gl::vertex_array_attribute_type_e::int16  ;
@@ -19,7 +19,54 @@ export namespace gl
         if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
         if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;
     }
-    auto map_draw_type_size                (gl::draw_type_e            draw_type           ) -> gl::size_t
+    auto map_buffer_base_format_components(gl::buffer_base_format_e buffer_base_format) -> gl::size_t
+    {
+        switch (buffer_base_format)
+        {
+            using enum buffer_base_format_e;
+
+            case r            : return 1u;
+            case r_int        : return 1u;
+            case g            : return 1u;
+            case g_int        : return 1u;
+            case b            : return 1u;
+            case b_int        : return 1u;
+            case rg           : return 2u;
+            case rg_int       : return 2u;
+            case rgb          : return 3u;
+            case rgb_int      : return 3u;
+            case bgr          : return 3u;
+            case bgr_int      : return 3u;
+            case rgba         : return 4u;
+            case rgba_int     : return 4u;
+            case bgra         : return 4u;
+            case bgra_int     : return 4u;
+            case depth        : return 1u;
+            case stencil      : return 1u;
+            case depth_stencil: return 2u;
+
+            default           : throw std::invalid_argument{ "invalid base format" };
+        }
+    }
+    auto map_data_type_size                    (gl::data_type_e data_type) -> gl::size_t
+    {
+        switch (data_type)
+        {
+            using enum gl::data_type_e;
+
+            case int8   : return 1u;
+            case int16  : return 2u;
+            case int32  : return 3u;
+            case uint8  : return 1u;
+            case uint16 : return 2u;
+            case uint32 : return 3u;
+            case float32: return 4u;
+            case float64: return 8u;
+            
+            default     : throw std::invalid_argument{ "invalid data type" };
+        }
+    }
+    auto map_draw_type_size                    (gl::draw_type_e            draw_type           ) -> gl::size_t
     {
         switch (draw_type)
         {
@@ -32,7 +79,7 @@ export namespace gl
             default    : throw std::invalid_argument{ "invalid draw type" };
         }
     }
-    auto map_frame_buffer_attachment       (gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
+    auto map_frame_buffer_attachment           (gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
     {
         switch (render_buffer_format)
         {
@@ -48,7 +95,7 @@ export namespace gl
             default                         : return gl::frame_buffer_attachment_e::color_0      ;
         }
     }
-    auto map_frame_buffer_attachment       (gl::texture_format_e       texture_format      ) -> gl::frame_buffer_attachment_e
+    auto map_frame_buffer_attachment           (gl::texture_format_e       texture_format      ) -> gl::frame_buffer_attachment_e
     {
         switch (texture_format)
         {
@@ -64,7 +111,7 @@ export namespace gl
             default                          : return gl::frame_buffer_attachment_e::color_0      ;
         }
     }
-    auto map_pixel_data_bytes_per_component(gl::pixel_data_type_e      pixel_data_type     ) -> gl::uint32_t
+    auto map_pixel_data_component_size         (gl::pixel_data_type_e      pixel_data_type     ) -> gl::uint32_t
     {
         switch (pixel_data_type)
         {
@@ -95,12 +142,12 @@ export namespace gl
 
             case float16                  : return 2u;
             case float32                  : return 4u;
-            case float32_uint32_24_8_r    : return 4u;
+            case float32_uint32_24_8_r    : return 8u;
 
             default                       : throw std::invalid_argument{ "invalid pixel data type" };
         }
     }
-    auto map_pixel_data_format_components  (gl::pixel_data_format_e    pixel_data_format   ) -> gl::uint32_t
+    auto map_pixel_data_format_component_count (gl::pixel_data_format_e    pixel_data_format   ) -> gl::uint32_t
     {
         switch (pixel_data_format)
         {
@@ -120,7 +167,36 @@ export namespace gl
             default           : throw std::invalid_argument{ "invalid pixel data format" };
         }
     }
-    auto map_program_stage                 (gl::shader_type_e          shader_type         ) -> gl::program_stage_e
+    auto map_buffer_base_format_component_count(gl::buffer_base_format_e buffer_base_format    ) -> gl::count_t
+    {
+        switch (buffer_base_format)
+        {
+            using enum gl::buffer_base_format_e;
+
+            case r            : return 1u;
+            case r_int        : return 1u;
+            case g            : return 1u;
+            case g_int        : return 1u;
+            case b            : return 1u;
+            case b_int        : return 1u;
+            case rg           : return 2u;
+            case rg_int       : return 2u;
+            case rgb          : return 3u;
+            case rgb_int      : return 3u;
+            case bgr          : return 3u;
+            case bgr_int      : return 3u;
+            case rgba         : return 4u;
+            case rgba_int     : return 4u;
+            case bgra         : return 4u;
+            case bgra_int     : return 4u;
+            case depth        : return 1u;
+            case stencil      : return 1u;
+            case depth_stencil: return 2u;
+
+            default           : throw std::invalid_argument{ "invalid buffer base format"};
+        }
+    }
+    auto map_program_stage                     (gl::shader_type_e          shader_type         ) -> gl::program_stage_e
     {
         switch (shader_type)
         {
@@ -136,7 +212,7 @@ export namespace gl
             default                     : throw std::invalid_argument{ "invalid shader type" };
         }
     }
-    auto map_render_buffer_attachment      (gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
+    auto map_render_buffer_attachment          (gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
     {
         switch (render_buffer_format)
         {
@@ -152,7 +228,7 @@ export namespace gl
             default                         : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
-    auto map_texture_attachment            (gl::texture_format_e       texture_format      ) -> gl::frame_buffer_attachment_e
+    auto map_texture_attachment                (gl::texture_format_e       texture_format      ) -> gl::frame_buffer_attachment_e
     {
         switch (texture_format)
         {
@@ -168,7 +244,7 @@ export namespace gl
             default                          : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
-    auto map_texture_base_format_components(gl::texture_base_format_e  texture_base_format ) -> gl::uint32_t
+    auto map_texture_base_format_components    (gl::texture_base_format_e  texture_base_format ) -> gl::uint32_t
     {
         switch (texture_base_format)
         {
@@ -184,7 +260,7 @@ export namespace gl
             default     : throw std::invalid_argument{ "invalid texture base format" };
         }
     }
-    auto map_texture_format_base           (gl::texture_format_e       texture_format      ) -> gl::texture_base_format_e
+    auto map_texture_format_base               (gl::texture_format_e       texture_format      ) -> gl::texture_base_format_e
     {
         switch (texture_format)
         {
@@ -200,7 +276,7 @@ export namespace gl
             default          : throw std::invalid_argument{ "invalid format" };
         }
     }
-    auto map_texture_format_type           (gl::texture_format_e       texture_format      ) -> gl::pixel_data_type_e
+    auto map_texture_format_type               (gl::texture_format_e       texture_format      ) -> gl::pixel_data_type_e
     {
         switch (texture_format)
         {
@@ -217,7 +293,7 @@ export namespace gl
             default        : throw std::invalid_argument{ "invalid format" };
         }
     }
-    auto map_texture_format_size           (gl::texture_format_e       texture_format      ) -> gl::size_t
+    auto map_texture_format_size               (gl::texture_format_e       texture_format      ) -> gl::size_t
     {
         switch (texture_format)
         {
@@ -264,7 +340,7 @@ export namespace gl
             default                          : throw std::invalid_argument{ "invalid format" };
         }
     }
-    auto map_texture_target                (gl::uint32_t               dimensions          ) -> gl::texture_target_e
+    auto map_texture_target                    (gl::uint32_t               dimensions          ) -> gl::texture_target_e
     {
         switch (dimensions)
         {
@@ -275,7 +351,7 @@ export namespace gl
             default: throw std::invalid_argument{ "invalid dimensions" };
         }
     }
-    auto map_texture_target_multisample    (gl::uint32_t               dimensions          ) -> gl::texture_target_e
+    auto map_texture_target_multisample        (gl::uint32_t               dimensions          ) -> gl::texture_target_e
     {
         switch (dimensions)
         {
