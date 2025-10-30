@@ -33,7 +33,7 @@ export namespace gl
     }
 
     template<std::ranges::range Range>
-    constexpr auto as_bytes             (Range source) -> std::span<const gl::byte_t>
+    constexpr auto as_bytes             (const Range& source) -> std::span<const gl::byte_t>
     {
         using value_t = typename Range::value_type;
         return std::span{ std::bit_cast<const gl::byte_t*>(source.data()), source.size() * sizeof(value_t) };
