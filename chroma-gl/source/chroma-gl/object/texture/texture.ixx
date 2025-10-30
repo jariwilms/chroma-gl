@@ -95,7 +95,7 @@ export namespace gl
         {
             return dimensions_;
         }
-        auto mipmap_levels   () const -> gl::uint8_t
+        auto mipmap_levels   () const -> gl::uint32_t
         {
             return mipmap_levels_;
         }
@@ -103,9 +103,9 @@ export namespace gl
         auto operator=       (texture_n&&) noexcept -> texture_n& = default;
 
     private:
-        format_e    format_;
-        vector_t    dimensions_;
-        gl::uint8_t mipmap_levels_;
+        format_e     format_;
+        vector_t     dimensions_;
+        gl::uint32_t mipmap_levels_;
     };
     template<gl::uint32_t Dimensions>
     class compressed_texture_n : public gl::texture_n<Dimensions>
@@ -128,12 +128,6 @@ export namespace gl
             if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::compressed_texture_sub_image_1d(this->handle(), compressed_pixel_buffer_data.texture_compressed_base_format, image_level, image_region, memory);
             if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::compressed_texture_sub_image_2d(this->handle(), compressed_pixel_buffer_data.texture_compressed_base_format, image_level, image_region, memory);
             if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::compressed_texture_sub_image_3d(this->handle(), compressed_pixel_buffer_data.texture_compressed_base_format, image_level, image_region, memory);
-        }
-        void transfer(gl::uint32_t image_level, region_t image_region, gl::pixel_unpack_buffer& pixel_unpack_buffer                                                     )
-        {
-            pixel_unpack_buffer.bind();
-            transfer(image_level, image_region, pixel_unpack_buffer.pixel_buffer_data(), std::span<const gl::byte_t>{});
-            pixel_unpack_buffer.unbind();
         }
     };
     template<gl::uint32_t Dimensions>
