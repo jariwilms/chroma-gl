@@ -19,11 +19,11 @@ export namespace gl
         if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
         if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;
     }
-    auto map_buffer_base_format_components(gl::buffer_base_format_e buffer_base_format) -> gl::size_t
+    auto map_buffer_base_format_component_count(gl::buffer_base_format_e buffer_base_format    ) -> gl::count_t
     {
         switch (buffer_base_format)
         {
-            using enum buffer_base_format_e;
+            using enum gl::buffer_base_format_e;
 
             case r            : return 1u;
             case r_int        : return 1u;
@@ -45,7 +45,7 @@ export namespace gl
             case stencil      : return 1u;
             case depth_stencil: return 2u;
 
-            default           : throw std::invalid_argument{ "invalid base format" };
+            default           : throw std::invalid_argument{ "invalid buffer base format"};
         }
     }
     auto map_data_type_size                    (gl::data_type_e data_type) -> gl::size_t
@@ -167,35 +167,6 @@ export namespace gl
             default           : throw std::invalid_argument{ "invalid pixel data format" };
         }
     }
-    auto map_buffer_base_format_component_count(gl::buffer_base_format_e buffer_base_format    ) -> gl::count_t
-    {
-        switch (buffer_base_format)
-        {
-            using enum gl::buffer_base_format_e;
-
-            case r            : return 1u;
-            case r_int        : return 1u;
-            case g            : return 1u;
-            case g_int        : return 1u;
-            case b            : return 1u;
-            case b_int        : return 1u;
-            case rg           : return 2u;
-            case rg_int       : return 2u;
-            case rgb          : return 3u;
-            case rgb_int      : return 3u;
-            case bgr          : return 3u;
-            case bgr_int      : return 3u;
-            case rgba         : return 4u;
-            case rgba_int     : return 4u;
-            case bgra         : return 4u;
-            case bgra_int     : return 4u;
-            case depth        : return 1u;
-            case stencil      : return 1u;
-            case depth_stencil: return 2u;
-
-            default           : throw std::invalid_argument{ "invalid buffer base format"};
-        }
-    }
     auto map_program_stage                     (gl::shader_type_e          shader_type         ) -> gl::program_stage_e
     {
         switch (shader_type)
@@ -244,6 +215,24 @@ export namespace gl
             default                          : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
+    auto map_texture_base_format_component_count(gl::texture_base_format_e texture_base_format) -> gl::count_t
+    {
+        switch (texture_base_format)
+        {
+            using enum gl::texture_base_format_e;
+
+            case r      : return 1u;
+            case rg     : return 2u;
+            case rgb    : return 3u;
+            case bgr    : return 3u;
+            case rgba   : return 4u;
+            case bgra   : return 4u;
+            case depth  : return 1u;
+            case stencil: return 1u;
+
+            default: throw std::invalid_argument{ "invalid texture base format" };
+        }
+    }
     auto map_texture_base_format_components    (gl::texture_base_format_e  texture_base_format ) -> gl::uint32_t
     {
         switch (texture_base_format)
