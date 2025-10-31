@@ -1563,7 +1563,7 @@ export namespace gl
     {
         const auto* c_string = entry_point.c_str();
         const auto  count    = std::min(indices.size(), values.size());
-        ::glSpecializeShader(gl::to_underlying(shader), c_string, Count, indices.data(), values.data());
+        ::glSpecializeShader(gl::to_underlying(shader), c_string, static_cast<gl::uint32_t>(count), indices.data(), values.data());
     }
     auto create_program                                   () -> gl::handle_t
     {
@@ -1750,132 +1750,126 @@ export namespace gl
     {
         ::glPixelStorei(gl::to_underlying(Mode), parameter);
     }
-    void texture_sub_image_1d                             (gl::handle_t texture, gl::uint32_t image_level, gl::length_t image_length, gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, std::span<const gl::byte_t> memory)
+    void texture_sub_image_1d                             (gl::handle_t texture, gl::uint32_t image_level, gl::length_t image_region, gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, std::span<const gl::byte_t> memory)
     {
-        const auto width                = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
-        if (image_length.origin.x + image_length.extent.x > width) throw std::invalid_argument{ "invalid image width" };
-
-        const auto pixel_component_count = gl::map_texture_base_format_component_count(base_format);
-        const auto pixel_component_size  = gl::map_pixel_data_component_size(pixel_data_type);
-        const auto pixel_size            = pixel_component_size * pixel_component_count;
-        const auto image_size            = image_length.extent.x * pixel_size;
-        if (image_size != memory.size_bytes()) throw std::invalid_argument{ "memory size not equal to image region size" };
+        const auto image_width = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width) throw std::invalid_argument{ "region width exceeds image bounds" };
 
         ::glTextureSubImage1D(
             gl::to_underlying       (texture)              , static_cast<gl::int32_t>(image_level)          , 
-            static_cast<gl::int32_t>(image_length.origin.x), static_cast<gl::sizei_t>(image_length.extent.x), 
+            static_cast<gl::int32_t>(image_region.origin.x), static_cast<gl::sizei_t>(image_region.extent.x),
             gl::to_underlying       (base_format)          , gl::to_underlying       (pixel_data_type)      , 
             memory.data()                                 );
     }
-    void texture_sub_image_2d                             (gl::handle_t texture, gl::uint32_t image_level, gl::area_t   image_area  , gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, std::span<const gl::byte_t> memory)
+    void texture_sub_image_2d                             (gl::handle_t texture, gl::uint32_t image_level, gl::area_t   image_region, gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, std::span<const gl::byte_t> memory)
     {
-        const auto width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
-        const auto height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
-        if (image_area.origin.x + image_area.extent.x > width ) throw std::invalid_argument{ "invalid image width"  };
-        if (image_area.origin.y + image_area.extent.y > height) throw std::invalid_argument{ "invalid image height" };
+        const auto image_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width ) throw std::invalid_argument{ "region width exceeds image bounds" };
+        if (image_region.origin.y + image_region.extent.y > image_height) throw std::invalid_argument{ "region height exceeds image bounds" };
 
         ::glTextureSubImage2D(
-            gl::to_underlying       (texture)            , static_cast<gl::int32_t>(image_level)        , 
-            static_cast<gl::int32_t>(image_area.origin.x), static_cast<gl::int32_t>(image_area.origin.y), 
-            static_cast<gl::sizei_t>(image_area.extent.x), static_cast<gl::sizei_t>(image_area.extent.y), 
-            gl::to_underlying       (base_format)        , gl::to_underlying       (pixel_data_type)    , 
+            gl::to_underlying       (texture)              , static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::int32_t>(image_region.origin.x), static_cast<gl::int32_t>(image_region.origin.y), 
+            static_cast<gl::sizei_t>(image_region.extent.x), static_cast<gl::sizei_t>(image_region.extent.y), 
+            gl::to_underlying       (base_format)          , gl::to_underlying       (pixel_data_type)      , 
             memory.data()                                 );
     }
-    void texture_sub_image_3d                             (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t image_volume, gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, std::span<const gl::byte_t> memory)
+    void texture_sub_image_3d                             (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t image_region, gl::texture_base_format_e base_format, gl::pixel_data_type_e pixel_data_type, std::span<const gl::byte_t> memory)
     {
-        const auto width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
-        const auto height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
-        const auto depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, image_level);
-        if (image_volume.origin.x + image_volume.extent.x > width ) throw std::invalid_argument{ "invalid image width"  };
-        if (image_volume.origin.y + image_volume.extent.y > height) throw std::invalid_argument{ "invalid image height" };
-        if (image_volume.origin.z + image_volume.extent.z > depth ) throw std::invalid_argument{ "invalid image depth"  };
+        const auto image_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        const auto image_depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width ) throw std::invalid_argument{ "region width exceeds image bounds"  };
+        if (image_region.origin.y + image_region.extent.y > image_height) throw std::invalid_argument{ "region height exceeds image bounds" };
+        if (image_region.origin.z + image_region.extent.z > image_depth ) throw std::invalid_argument{ "region depth exceeds image bounds"  };
 
         ::glTextureSubImage3D(
             gl::to_underlying       (texture)              , static_cast<gl::int32_t>(image_level)          , 
-            static_cast<gl::int32_t>(image_volume.origin.x), static_cast<gl::int32_t>(image_volume.origin.y), static_cast<gl::int32_t>(image_volume.origin.z), 
-            static_cast<gl::sizei_t>(image_volume.extent.x), static_cast<gl::sizei_t>(image_volume.extent.y), static_cast<gl::sizei_t>(image_volume.extent.z), 
+            static_cast<gl::int32_t>(image_region.origin.x), static_cast<gl::int32_t>(image_region.origin.y), static_cast<gl::int32_t>(image_region.origin.z),
+            static_cast<gl::sizei_t>(image_region.extent.x), static_cast<gl::sizei_t>(image_region.extent.y), static_cast<gl::sizei_t>(image_region.extent.z),
             gl::to_underlying       (base_format)          , gl::to_underlying       (pixel_data_type)      , 
             memory.data()                                 );
     }
-    void copy_texture_sub_image_1d                        (gl::handle_t texture, gl::uint32_t level, gl::length_t region, const gl::vector_2u& coordinates)
+    void copy_texture_sub_image_1d                        (gl::handle_t texture, gl::uint32_t image_level, gl::length_t image_region, const gl::vector_2u& coordinates)
     {
-        const auto width = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
-        if (region.origin.x + region.extent.x > width) throw std::invalid_argument{ "invalid region width"  };
+        const auto image_width = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width) throw std::invalid_argument{ "region width exceeds image bounds" };
         
         ::glCopyTextureSubImage1D(
-            gl::to_underlying       (texture)         , static_cast<gl::int32_t>(level)        , 
-            static_cast<gl::int32_t>(region.origin.x) , 
-            static_cast<gl::int32_t>(coordinates  .x) , static_cast<gl::int32_t>(coordinates.y), 
-            static_cast<gl::sizei_t>(region.extent.x));
+            gl::to_underlying       (texture)               , static_cast<gl::int32_t>(image_level)  , 
+            static_cast<gl::int32_t>(image_region.origin.x) ,
+            static_cast<gl::int32_t>(coordinates        .x) , static_cast<gl::int32_t>(coordinates.y), 
+            static_cast<gl::sizei_t>(image_region.extent.x));
     }
-    void copy_texture_sub_image_2d                        (gl::handle_t texture, gl::uint32_t level, gl::area_t   region, const gl::vector_2u& coordinates)
+    void copy_texture_sub_image_2d                        (gl::handle_t texture, gl::uint32_t image_level, gl::area_t   image_region, const gl::vector_2u& coordinates)
     {
-        const auto width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
-        const auto height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, level);
-        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
-        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
+        const auto image_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width ) throw std::invalid_argument{ "region width exceeds image bounds"  };
+        if (image_region.origin.y + image_region.extent.y > image_height) throw std::invalid_argument{ "region height exceeds image bounds" };
 
         ::glCopyTextureSubImage2D(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)           , 
-            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y) , 
-            static_cast<gl::int32_t>(coordinates  .x), static_cast<gl::int32_t>(coordinates  .y) , 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y));
+            gl::to_underlying       (texture)              , static_cast<gl::int32_t>(image_level)           , 
+            static_cast<gl::int32_t>(image_region.origin.x), static_cast<gl::int32_t>(image_region.origin.y) , 
+            static_cast<gl::int32_t>(coordinates        .x), static_cast<gl::int32_t>(coordinates        .y) , 
+            static_cast<gl::sizei_t>(image_region.extent.x), static_cast<gl::sizei_t>(image_region.extent.y));
     }
-    void copy_texture_sub_image_3d                        (gl::handle_t texture, gl::uint32_t level, gl::volume_t region, const gl::vector_2u& coordinates)
+    void copy_texture_sub_image_3d                        (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t image_region, const gl::vector_2u& coordinates)
     {
-        const auto width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
-        const auto height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, level);
-        const auto depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, level);
-        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
-        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
-        if (region.origin.z + region.extent.z > depth ) throw std::invalid_argument{ "invalid region depth"  };
+        const auto image_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        const auto image_depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width ) throw std::invalid_argument{ "region width exceeds image bounds"  };
+        if (image_region.origin.y + image_region.extent.y > image_height) throw std::invalid_argument{ "region height exceeds image bounds" };
+        if (image_region.origin.z + image_region.extent.z > image_depth ) throw std::invalid_argument{ "region depth exceeds image bounds"  };
 
         ::glCopyTextureSubImage3D(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)           , 
-            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y) , static_cast<gl::int32_t>(region.origin.z), 
-            static_cast<gl::int32_t>(coordinates  .x), static_cast<gl::int32_t>(coordinates  .y) , 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y));
+            gl::to_underlying       (texture)              , static_cast<gl::int32_t>(image_level)           , 
+            static_cast<gl::int32_t>(image_region.origin.x), static_cast<gl::int32_t>(image_region.origin.y) , static_cast<gl::int32_t>(image_region.origin.z), 
+            static_cast<gl::int32_t>(coordinates        .x), static_cast<gl::int32_t>(coordinates        .y) , 
+            static_cast<gl::sizei_t>(image_region.extent.x), static_cast<gl::sizei_t>(image_region.extent.y));
     }
-    void compressed_texture_sub_image_1d                  (gl::handle_t texture, gl::texture_compressed_base_format_e format, gl::uint32_t level, gl::length_t region, std::span<const gl::byte_t> source)
+    void compressed_texture_sub_image_1d                  (gl::handle_t texture, gl::uint32_t image_level, gl::length_t image_region, gl::texture_compressed_base_format_e compressed_base_format, std::span<const gl::byte_t> memory)
     {
-        const auto width = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
-        if (region.origin.x + region.extent.x > width) throw std::invalid_argument{ "invalid region width" };
+        const auto image_width = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width) throw std::invalid_argument{ "invalid image_region width" };
 
         ::glCompressedTextureSubImage1D(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
-            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::sizei_t>(region.extent.x), 
-            gl::to_underlying       (format)         , 
-            static_cast<gl::sizei_t>(source.size())  , source.data()                             );
+            gl::to_underlying       (texture)               , static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::int32_t>(image_region.origin.x) , static_cast<gl::sizei_t>(image_region.extent.x), 
+            gl::to_underlying       (compressed_base_format),
+            static_cast<gl::sizei_t>(memory.size())         , memory.data()                                 );
     }
-    void compressed_texture_sub_image_2d                  (gl::handle_t texture, gl::texture_compressed_base_format_e format, gl::uint32_t level, gl::area_t   region, std::span<const gl::byte_t> source)
+    void compressed_texture_sub_image_2d                  (gl::handle_t texture, gl::uint32_t image_level, gl::area_t   image_region, gl::texture_compressed_base_format_e compressed_base_format, std::span<const gl::byte_t> memory)
     {
-        const auto width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
-        const auto height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, level);
-        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
-        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
+        const auto image_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width ) throw std::invalid_argument{ "invalid region width"  };
+        if (image_region.origin.y + image_region.extent.y > image_height) throw std::invalid_argument{ "invalid region height" };
 
         ::glCompressedTextureSubImage2D(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
-            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), 
-            gl::to_underlying       (format)         , 
-            static_cast<gl::sizei_t>(source.size())  , source.data()                             );
+            gl::to_underlying       (texture)               , static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::int32_t>(image_region.origin.x) , static_cast<gl::int32_t>(image_region.origin.y), 
+            static_cast<gl::sizei_t>(image_region.extent.x) , static_cast<gl::sizei_t>(image_region.extent.y), 
+            gl::to_underlying       (compressed_base_format), 
+            static_cast<gl::sizei_t>(memory.size())         , memory.data()                                 );
     }
-    void compressed_texture_sub_image_3d                  (gl::handle_t texture, gl::texture_compressed_base_format_e format, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> source)
+    void compressed_texture_sub_image_3d                  (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t image_region, gl::texture_compressed_base_format_e compressed_base_format, std::span<const gl::byte_t> memory)
     {
-        const auto width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, level);
-        const auto height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, level);
-        const auto depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, level);
-        if (region.origin.x + region.extent.x > width ) throw std::invalid_argument{ "invalid region width"  };
-        if (region.origin.y + region.extent.y > height) throw std::invalid_argument{ "invalid region height" };
-        if (region.origin.z + region.extent.z > depth ) throw std::invalid_argument{ "invalid region depth"  };
+        const auto image_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        const auto image_depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width ) throw std::invalid_argument{ "invalid region width"  };
+        if (image_region.origin.y + image_region.extent.y > image_height) throw std::invalid_argument{ "invalid region height" };
+        if (image_region.origin.z + image_region.extent.z > image_depth ) throw std::invalid_argument{ "invalid region depth"  };
         
         ::glCompressedTextureSubImage3D(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
-            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z), 
-            gl::to_underlying       (format)         , 
-            static_cast<gl::sizei_t>(source.size())  , source.data()                             );
+            gl::to_underlying       (texture)               , static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::int32_t>(image_region.origin.x) , static_cast<gl::int32_t>(image_region.origin.y), static_cast<gl::int32_t>(image_region.origin.z), 
+            static_cast<gl::sizei_t>(image_region.extent.x) , static_cast<gl::sizei_t>(image_region.extent.y), static_cast<gl::sizei_t>(image_region.extent.z), 
+            gl::to_underlying       (compressed_base_format),
+            static_cast<gl::sizei_t>(memory.size())         , memory.data()                                 );
     }
     void texture_buffer                                   (gl::handle_t texture, gl::handle_t buffer, gl::buffer_format_e format)
     {
@@ -1884,11 +1878,17 @@ export namespace gl
     template<typename T>
     void texture_buffer_range                             (gl::handle_t texture, gl::handle_t buffer, gl::buffer_format_e format, gl::range_t range)
     {
-        const auto byte_range = gl::convert_range<T>(range);
-        ::glTextureBufferRange(gl::to_underlying(texture), gl::to_underlying(format), gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::sizei_t>(byte_range.size));
+        const auto buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
+        const auto byte_range  = gl::convert_range<T>(range);
+        if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
+
+        ::glTextureBufferRange(
+            gl::to_underlying        (texture)          , 
+            gl::to_underlying        (format)           , gl::to_underlying          (buffer)          , 
+            static_cast<gl::intptr_t>(byte_range.offset), static_cast<gl::sizeiptr_t>(byte_range.size));
     }
-    template<gl::texture_parameter_e P>
-    void texture_parameter                                (gl::handle_t texture, gl::texture_parameter_argument_t<P> value)
+    template<gl::texture_parameter_e Parameter>
+    void texture_parameter                                (gl::handle_t texture, gl::texture_parameter_argument_t<Parameter> value)
     {
         auto texture_parameter_iv  = [](gl::handle_t texture, gl::texture_parameter_e parameter, gl::int32_t                            value) -> gl::void_t
             {
@@ -1908,111 +1908,124 @@ export namespace gl
             };
 
         using enum gl::texture_parameter_e;
-
-             if constexpr (P == base_level          ) texture_parameter_uiv(texture, P,                   value );
-        else if constexpr (P == border_color        )
+        if constexpr (Parameter == base_level          ) texture_parameter_uiv(texture, Parameter,                   value );
+        if constexpr (Parameter == border_color        )
              {
                 auto overload = gl::overload_t
                 {
-                    [=](gl::vector_4i vector) { ::glTextureParameterIiv (gl::to_underlying(texture), gl::to_underlying(P), gl::value_pointer(vector)); },
-                    [=](gl::vector_4u vector) { ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(P), gl::value_pointer(vector)); },
-                    [=](gl::vector_4f vector) { ::glTextureParameterfv  (gl::to_underlying(texture), gl::to_underlying(P), gl::value_pointer(vector)); },
+                    [=](gl::vector_4i vector) { ::glTextureParameterIiv (gl::to_underlying(texture), gl::to_underlying(Parameter), gl::value_pointer(vector)); },
+                    [=](gl::vector_4u vector) { ::glTextureParameterIuiv(gl::to_underlying(texture), gl::to_underlying(Parameter), gl::value_pointer(vector)); },
+                    [=](gl::vector_4f vector) { ::glTextureParameterfv  (gl::to_underlying(texture), gl::to_underlying(Parameter), gl::value_pointer(vector)); },
                 };
 
                 std::visit(overload, value);
              }
-        else if constexpr (P == compare_function    ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == compare_mode        ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == depth_stencil_mode  ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == lod_bias            ) texture_parameter_fv (texture, P,                   value );
-        else if constexpr (P == magnification_filter) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == maximum_anisotropy  ) texture_parameter_fv (texture, P,                   value );
-        else if constexpr (P == maximum_level       ) texture_parameter_uiv(texture, P,                   value );
-        else if constexpr (P == maximum_lod         ) texture_parameter_fv (texture, P,                   value );
-        else if constexpr (P == minification_filter ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == minimum_lod         ) texture_parameter_fv (texture, P,                   value );
-        else if constexpr (P == swizzle_a           ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == swizzle_b           ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == swizzle_g           ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == swizzle_r           ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == swizzle_rgba        ) set_swizzle_rgba     (texture, P, gl::to_underlying(value));
-        else if constexpr (P == target              ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == wrapping_r          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == wrapping_s          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
-        else if constexpr (P == wrapping_t          ) texture_parameter_uiv(texture, P, gl::to_underlying(value));
+        if constexpr (Parameter == compare_function    ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == compare_mode        ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == depth_stencil_mode  ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == lod_bias            ) texture_parameter_fv (texture, Parameter,                   value );
+        if constexpr (Parameter == magnification_filter) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == maximum_anisotropy  ) texture_parameter_fv (texture, Parameter,                   value );
+        if constexpr (Parameter == maximum_level       ) texture_parameter_uiv(texture, Parameter,                   value );
+        if constexpr (Parameter == maximum_lod         ) texture_parameter_fv (texture, Parameter,                   value );
+        if constexpr (Parameter == minification_filter ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == minimum_lod         ) texture_parameter_fv (texture, Parameter,                   value );
+        if constexpr (Parameter == swizzle_a           ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == swizzle_b           ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == swizzle_g           ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == swizzle_r           ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == swizzle_rgba        ) set_swizzle_rgba     (texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == target              ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == wrapping_r          ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == wrapping_s          ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
+        if constexpr (Parameter == wrapping_t          ) texture_parameter_uiv(texture, Parameter, gl::to_underlying(value));
     }
     void generate_texture_mipmaps                         (gl::handle_t texture)
     {
         ::glGenerateTextureMipmap(gl::to_underlying(texture));
     }
-    template<gl::texture_target_e T, gl::texture_target_e U> requires (meta::is_valid_texture_view<T, U>())
-    void texture_view                                     (gl::handle_t source, gl::handle_t destination, gl::texture_format_e format, gl::uint32_t minimum_level, gl::uint32_t levels, gl::uint32_t minimum_layer, gl::uint32_t layers)
+    template<gl::texture_target_e Original, gl::texture_target_e Target> requires (meta::is_valid_texture_view<Original, Target>())
+    void texture_view                                     (gl::handle_t source_texture, gl::handle_t destination_texture, gl::texture_format_e format, gl::uint32_t image_levels, gl::uint32_t first_image_level, gl::uint32_t image_layers, gl::uint32_t first_image_layer)
     {
-        ::glTextureView(gl::to_underlying(destination), gl::to_underlying(U), gl::to_underlying(source), gl::to_underlying(format), minimum_level, levels, minimum_layer, layers);
+        ::glTextureView(gl::to_underlying(destination_texture), gl::to_underlying(Target), gl::to_underlying(source_texture), gl::to_underlying(format), first_image_level, image_levels, first_image_layer, image_layers);
     }
-    void texture_storage_1d                               (gl::handle_t texture, gl::texture_format_e format, const gl::vector_1u& dimensions, gl::uint32_t levels)
+    void texture_storage_1d                               (gl::handle_t texture, gl::texture_format_e format, const gl::vector_1u& dimensions, gl::uint32_t image_levels)
     {
         ::glTextureStorage1D(
-            gl::to_underlying       (texture)      , static_cast<gl::sizei_t>(levels), gl::to_underlying(format), 
+            gl::to_underlying       (texture)      , static_cast<gl::sizei_t>(image_levels), gl::to_underlying(format),
             static_cast<gl::sizei_t>(dimensions.x));
     }
-    void texture_storage_2d                               (gl::handle_t texture, gl::texture_format_e format, const gl::vector_2u& dimensions, gl::uint32_t levels)
+    void texture_storage_2d                               (gl::handle_t texture, gl::texture_format_e format, const gl::vector_2u& dimensions, gl::uint32_t image_levels)
     {
         ::glTextureStorage2D(
-            gl::to_underlying       (texture)     , static_cast<gl::sizei_t>(levels)       , gl::to_underlying(format), 
+            gl::to_underlying       (texture)     , static_cast<gl::sizei_t>(image_levels) , gl::to_underlying(format),
             static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y));
     }
-    void texture_storage_3d                               (gl::handle_t texture, gl::texture_format_e format, const gl::vector_3u& dimensions, gl::uint32_t levels)
+    void texture_storage_3d                               (gl::handle_t texture, gl::texture_format_e format, const gl::vector_3u& dimensions, gl::uint32_t image_levels)
     {
         ::glTextureStorage3D(
-            gl::to_underlying       (texture)     , static_cast<gl::sizei_t>(levels)      , gl::to_underlying       (format)       , 
+            gl::to_underlying       (texture)     , static_cast<gl::sizei_t>(image_levels), gl::to_underlying       (format)       ,
             static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y), static_cast<gl::sizei_t>(dimensions.z));
     }
-    void texture_storage_2d_multisample                   (gl::handle_t texture, gl::texture_format_e format, const gl::vector_2u& dimensions, gl::uint32_t samples, gl::bool_t fixed = gl::true_)
+    void texture_storage_2d_multisample                   (gl::handle_t texture, gl::texture_format_e format, const gl::vector_2u& dimensions, gl::uint32_t samples, gl::bool_t has_fixed_sample_locations = gl::true_)
     {
         ::glTextureStorage2DMultisample(
             gl::to_underlying       (texture)     , 
             static_cast<gl::sizei_t>(samples)     , gl::to_underlying       (format)      , 
-            static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y), fixed);
+            static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y), static_cast<gl::boolean_t>(has_fixed_sample_locations));
     }
-    void texture_storage_3d_multisample                   (gl::handle_t texture, gl::texture_format_e format, const gl::vector_3u& dimensions, gl::uint32_t samples, gl::bool_t fixed = gl::true_)
+    void texture_storage_3d_multisample                   (gl::handle_t texture, gl::texture_format_e format, const gl::vector_3u& dimensions, gl::uint32_t samples, gl::bool_t has_fixed_sample_locations = gl::true_)
     {
         ::glTextureStorage3DMultisample(
             gl::to_underlying       (texture)     , 
             static_cast<gl::sizei_t>(samples)     , gl::to_underlying       (format)      , 
-            static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y), static_cast<gl::sizei_t>(dimensions.z), fixed);
+            static_cast<gl::sizei_t>(dimensions.x), static_cast<gl::sizei_t>(dimensions.y), static_cast<gl::sizei_t>(dimensions.z), static_cast<gl::boolean_t>(has_fixed_sample_locations));
     }
-    void invalidate_texture_image                         (gl::handle_t texture, gl::uint32_t level)
+    void invalidate_texture_image                         (gl::handle_t texture, gl::uint32_t image_level)
     {
-        ::glInvalidateTexImage(gl::to_underlying(texture), static_cast<gl::int32_t>(level));
+        ::glInvalidateTexImage(gl::to_underlying(texture), static_cast<gl::int32_t>(image_level));
     }
-    void invalidate_texture_sub_image                     (gl::handle_t texture, gl::uint32_t level, gl::volume_t region)
+    void invalidate_texture_sub_image                     (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t image_region)
     {
+        const auto image_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        const auto image_depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width ) throw std::invalid_argument{ "invalid region width"  };
+        if (image_region.origin.y + image_region.extent.y > image_height) throw std::invalid_argument{ "invalid region height" };
+        if (image_region.origin.z + image_region.extent.z > image_depth ) throw std::invalid_argument{ "invalid region depth"  };
+
         ::glInvalidateTexSubImage(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
-            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z) , 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z));
+            gl::to_underlying       (texture)              , static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::int32_t>(image_region.origin.x), static_cast<gl::int32_t>(image_region.origin.y), static_cast<gl::int32_t>(image_region.origin.z) , 
+            static_cast<gl::sizei_t>(image_region.extent.x), static_cast<gl::sizei_t>(image_region.extent.y), static_cast<gl::sizei_t>(image_region.extent.z));
     }
-    void clear_texture_image                              (gl::handle_t texture, gl::texture_base_format_e format, gl::texture_type_e type, gl::uint32_t level, std::span<const gl::byte_t> source)
+    void clear_texture_image                              (gl::handle_t texture, gl::texture_base_format_e base_format, gl::texture_type_e type, gl::uint32_t image_level, std::span<const gl::byte_t> memory)
     {
         ::glClearTexImage(
-            gl::to_underlying(texture), static_cast<gl::int32_t>(level), 
-            gl::to_underlying(format) , gl::to_underlying       (type) , source.data());
+            gl::to_underlying(texture)    , static_cast<gl::int32_t>(image_level), 
+            gl::to_underlying(base_format), gl::to_underlying       (type)       , memory.data());
     }
-    void clear_texture_sub_image                          (gl::handle_t texture, gl::texture_base_format_e format, gl::texture_type_e type, gl::uint32_t level, gl::volume_t region, std::span<const gl::byte_t> source)
+    void clear_texture_sub_image                          (gl::handle_t texture, gl::texture_base_format_e base_format, gl::texture_type_e type, gl::uint32_t image_level, gl::volume_t image_region, std::span<const gl::byte_t> memory)
     {
+        const auto image_width  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width >(texture, image_level);
+        const auto image_height = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height>(texture, image_level);
+        const auto image_depth  = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth >(texture, image_level);
+        if (image_region.origin.x + image_region.extent.x > image_width ) throw std::invalid_argument{ "invalid region width"  };
+        if (image_region.origin.y + image_region.extent.y > image_height) throw std::invalid_argument{ "invalid region height" };
+        if (image_region.origin.z + image_region.extent.z > image_depth ) throw std::invalid_argument{ "invalid region depth"  };
+
         ::glClearTexSubImage(
-            gl::to_underlying       (texture)        , static_cast<gl::int32_t>(level)          , 
-            static_cast<gl::int32_t>(region.origin.x), static_cast<gl::int32_t>(region.origin.y), static_cast<gl::int32_t>(region.origin.z), 
-            static_cast<gl::sizei_t>(region.extent.x), static_cast<gl::sizei_t>(region.extent.y), static_cast<gl::sizei_t>(region.extent.z), 
-            gl::to_underlying       (format)         , gl::to_underlying       (type)           , source.data()                           );
+            gl::to_underlying       (texture)              , static_cast<gl::int32_t>(image_level)          , 
+            static_cast<gl::int32_t>(image_region.origin.x), static_cast<gl::int32_t>(image_region.origin.y), static_cast<gl::int32_t>(image_region.origin.z), 
+            static_cast<gl::sizei_t>(image_region.extent.x), static_cast<gl::sizei_t>(image_region.extent.y), static_cast<gl::sizei_t>(image_region.extent.z), 
+            gl::to_underlying       (base_format)          , gl::to_underlying       (type)                 , memory.data()                                 );
     }
-    void bind_image_texture                               (gl::handle_t texture, gl::uint32_t level, gl::bool_t is_layered, gl::uint32_t layer, gl::index_t image_unit, gl::image_format_e image_format, gl::image_access_e image_access)
+    void bind_image_texture                               (gl::handle_t texture, gl::uint32_t image_level, gl::bool_t is_layered, gl::uint32_t image_layer, gl::index_t image_unit, gl::image_format_e image_format, gl::image_access_e image_access)
     {
         ::glBindImageTexture(
-            static_cast<gl::uint32_t>(image_unit), gl::to_underlying(texture), 
-            static_cast<gl::int32_t> (level)     , is_layered, 
-            static_cast<gl::int32_t> (layer)     , gl::to_underlying(image_access), gl::to_underlying(image_format));
+            static_cast<gl::uint32_t>(image_unit) , gl::to_underlying         (texture)     , 
+            static_cast<gl::int32_t> (image_level), static_cast<gl::boolean_t>(is_layered)  , 
+            static_cast<gl::int32_t> (image_layer), gl::to_underlying         (image_access), gl::to_underlying(image_format));
     }
     void bind_image_textures                              (std::span<const gl::handle_t> textures, gl::range_t range)
     {
