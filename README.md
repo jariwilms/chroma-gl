@@ -122,7 +122,7 @@ auto main() -> int
 ```
 
 ## Documentation
-The chroma-gl API is designed to closely mirror the official OpenGL 4.6 specification. For detailed information, please refer to the official documentation:
+Chroma-gl is designed to closely mirror the OpenGL 4.6 API. For detailed information, please refer to the official documentation:
 * https://registry.khronos.org/OpenGL/specs/gl/glspec46.core.pdf
 * https://registry.khronos.org/OpenGL-Refpages/gl4/
 * https://docs.gl/
