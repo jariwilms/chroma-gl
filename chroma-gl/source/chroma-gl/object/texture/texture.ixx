@@ -49,9 +49,9 @@ export namespace gl
         }
         void transfer        (gl::uint32_t image_level, region_t image_region, gl::pixel_buffer_data pixel_buffer_data, std::span<const gl::byte_t> memory)
         {
-            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::texture_sub_image_1d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_sub_image_2d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_sub_image_3d(handle(), pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, image_level, image_region, memory);
+            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::texture_sub_image_1d(handle(), image_level, image_region, pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, memory);
+            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_sub_image_2d(handle(), image_level, image_region, pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, memory);
+            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_sub_image_3d(handle(), image_level, image_region, pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, memory);
         }
         void generate_mipmaps()
         {
