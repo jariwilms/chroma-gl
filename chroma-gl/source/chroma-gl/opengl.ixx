@@ -1999,7 +1999,7 @@ export namespace gl
             static_cast<gl::int32_t>(image_region.origin.x), static_cast<gl::int32_t>(image_region.origin.y), static_cast<gl::int32_t>(image_region.origin.z) , 
             static_cast<gl::sizei_t>(image_region.extent.x), static_cast<gl::sizei_t>(image_region.extent.y), static_cast<gl::sizei_t>(image_region.extent.z));
     }
-    void clear_texture_image                              (gl::handle_t texture, gl::texture_base_format_e base_format, gl::texture_type_e type, gl::uint32_t image_level, std::span<const gl::byte_t> memory)
+    void clear_texture_image                              (gl::handle_t texture, gl::texture_base_format_e base_format, gl::texture_type_e type, gl::uint32_t image_level,                            std::span<const gl::byte_t> memory)
     {
         ::glClearTexImage(
             gl::to_underlying(texture)    , static_cast<gl::int32_t>(image_level), 
@@ -2038,12 +2038,16 @@ export namespace gl
     auto create_frame_buffer                              () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateFramebuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        ::glCreateFramebuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle));
+            
+        return handle;
     }
-    auto create_frame_buffer                              (gl::count_t count) -> std::vector<gl::handle_t>
+    auto create_frame_buffers                             (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateFramebuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        ::glCreateFramebuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data()));
+        
+        return handles;
     }
     void delete_frame_buffer                              (gl::handle_t frame_buffer)
     {
@@ -2057,7 +2061,7 @@ export namespace gl
     {
         ::glBindFramebuffer(gl::to_underlying(target), gl::to_underlying(frame_buffer));
     }
-    template<gl::frame_buffer_parameter_e P>
+    template<gl::frame_buffer_parameter_e Parameter>
     void frame_buffer_parameter                           (gl::handle_t frame_buffer, gl::uint32_t value)
     {
         auto frame_buffer_parameter_i = [](gl::handle_t frame_buffer, gl::frame_buffer_parameter_e parameter, gl::uint32_t value)
@@ -2065,24 +2069,29 @@ export namespace gl
                 ::glNamedFramebufferParameteri(gl::to_underlying(frame_buffer), gl::to_underlying(parameter), static_cast<gl::int32_t>(value));
             };
 
+        using enum gl::frame_buffer_parameter_e;
         if constexpr (
-               P == gl::frame_buffer_parameter_e::default_width               
-            || P == gl::frame_buffer_parameter_e::default_height
-            || P == gl::frame_buffer_parameter_e::default_layers
-            || P == gl::frame_buffer_parameter_e::default_samples
-            || P == gl::frame_buffer_parameter_e::has_default_fixed_sample_locations
-            || P == gl::frame_buffer_parameter_e::default_width                     ) frame_buffer_parameter_i(frame_buffer, P, value);
+            Parameter == default_width                      ||
+            Parameter == default_height                     ||
+            Parameter == default_layers                     ||
+            Parameter == default_samples                    ||
+            Parameter == has_default_fixed_sample_locations ||
+            Parameter == default_width                       ) frame_buffer_parameter_i(frame_buffer, Parameter, value);
         else static_assert(gl::false_, "invalid frame buffer parameter");
     }
     auto create_render_buffer                             () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateRenderbuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        ::glCreateRenderbuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle));
+        
+        return handle;
     }
     auto create_render_buffers                            (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateRenderbuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        ::glCreateRenderbuffers(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data()));
+        
+        return handles;
     }
     void delete_render_buffer                             (gl::handle_t render_buffer)
     {
@@ -2110,25 +2119,25 @@ export namespace gl
             gl::to_underlying(frame_buffer)                             , gl::to_underlying(attachment)    , 
             gl::to_underlying(gl::render_buffer_target_e::render_buffer), gl::to_underlying(render_buffer));
     }
-    void frame_buffer_texture                             (gl::handle_t frame_buffer, gl::handle_t texture      , gl::frame_buffer_attachment_e attachment, gl::uint32_t level)
+    void frame_buffer_texture                             (gl::handle_t frame_buffer, gl::handle_t texture      , gl::frame_buffer_attachment_e attachment, gl::uint32_t image_level)
     {
         ::glNamedFramebufferTexture(
-            gl::to_underlying(frame_buffer) , gl::to_underlying(attachment), gl::to_underlying(texture), 
-            static_cast<gl::int32_t>(level));
+            gl::to_underlying       (frame_buffer), gl::to_underlying(attachment), gl::to_underlying(texture), 
+            static_cast<gl::int32_t>(image_level));
     }
-    void frame_buffer_texture_layer                       (gl::handle_t frame_buffer, gl::handle_t texture      , gl::frame_buffer_attachment_e attachment, gl::uint32_t level, gl::uint32_t layer)
+    void frame_buffer_texture_layer                       (gl::handle_t frame_buffer, gl::handle_t texture      , gl::frame_buffer_attachment_e attachment, gl::uint32_t image_level, gl::uint32_t image_layer)
     {
         ::glNamedFramebufferTextureLayer(
-            gl::to_underlying       (frame_buffer), gl::to_underlying       (attachment), gl::to_underlying(texture), 
-            static_cast<gl::int32_t>(level)       , static_cast<gl::int32_t>(layer)    );
+            gl::to_underlying       (frame_buffer), gl::to_underlying       (attachment)  , gl::to_underlying(texture), 
+            static_cast<gl::int32_t>(image_level) , static_cast<gl::int32_t>(image_layer));
     }
     void texture_barrier                                  ()
     {
         ::glTextureBarrier();
     }
-    auto check_frame_buffer_status                        (gl::handle_t frame_buffer) -> gl::frame_buffer_status_e
+    auto check_frame_buffer_status                        (gl::handle_t frame_buffer, gl::frame_buffer_target_e frame_buffer_target) -> gl::frame_buffer_status_e
     {
-        return static_cast<gl::frame_buffer_status_e>(::glCheckNamedFramebufferStatus(gl::to_underlying(frame_buffer), gl::to_underlying(gl::frame_buffer_target_e::write)));
+        return static_cast<gl::frame_buffer_status_e>(::glCheckNamedFramebufferStatus(gl::to_underlying(frame_buffer), gl::to_underlying(frame_buffer_target)));
     }
 
 

@@ -94,7 +94,7 @@ export namespace gl
                 write_to(color_buffer_sources);
             }
     
-            const auto frame_buffer_status = gl::check_frame_buffer_status(handle());
+            const auto frame_buffer_status = gl::check_frame_buffer_status(handle(), gl::frame_buffer_target_e::read_write);
             if (frame_buffer_status != gl::frame_buffer_status_e::complete) throw std::runtime_error{ "frame buffer status not complete" };
         }
         frame_buffer(frame_buffer&&) noexcept = default;
