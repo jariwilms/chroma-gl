@@ -47,8 +47,8 @@ export namespace gl
         gl::size_t offset{};
     };
 
-    using length_t      = gl::region_t<gl::uint32_t, 1u>;
-    using area_t        = gl::region_t<gl::uint32_t, 2u>;
-    using volume_t      = gl::region_t<gl::uint32_t, 3u>;
-    using hypervolume_t = gl::region_t<gl::uint32_t, 4u>; //Yes, this exists
+    using length_t       = gl::region_t<gl::uint32_t, 1u>;
+    using area_t         = gl::region_t<gl::uint32_t, 2u>;
+    using volume_t       = gl::region_t<gl::uint32_t, 3u>;
+    using hyper_volume_t = gl::region_t<gl::uint32_t, 4u>; //Yes, this exists
 }

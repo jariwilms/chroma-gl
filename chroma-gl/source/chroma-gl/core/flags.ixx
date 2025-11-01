@@ -234,6 +234,15 @@ export namespace gl
         linear = GL_LINEAR, 
         srgb   = GL_SRGB  , 
     };
+    enum class compressed_texture_base_format_e : gl::enum_t
+    {
+        r     = GL_COMPRESSED_RED       , 
+        rg    = GL_COMPRESSED_RG        , 
+        rgb   = GL_COMPRESSED_RGB       , 
+        rgba  = GL_COMPRESSED_RGBA      , 
+        srgb  = GL_COMPRESSED_SRGB      , 
+        srgba = GL_COMPRESSED_SRGB_ALPHA, 
+    };
     enum class context_flags_e : gl::bitfield_t
     {
         forward_compatible = GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT,  
@@ -1513,15 +1522,6 @@ export namespace gl
         bgra    = GL_BGRA           , 
         depth   = GL_DEPTH_COMPONENT, 
         stencil = GL_STENCIL_INDEX  , 
-    };
-    enum class texture_compressed_base_format_e : gl::enum_t
-    {
-        r     = GL_COMPRESSED_RED       , 
-        rg    = GL_COMPRESSED_RG        , 
-        rgb   = GL_COMPRESSED_RGB       , 
-        rgba  = GL_COMPRESSED_RGBA      , 
-        srgb  = GL_COMPRESSED_SRGB      , 
-        srgba = GL_COMPRESSED_SRGB_ALPHA, 
     };
     enum class texture_compare_function_e : gl::enum_t
     {
