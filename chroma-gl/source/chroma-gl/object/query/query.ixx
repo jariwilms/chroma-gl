@@ -23,17 +23,11 @@ export namespace gl
         
         void begin    ()
         {
-            if (gl::query_target_state.at(target_) == gl::true_) throw std::runtime_error{ "target query already in progress" };
-
             gl::begin_query(handle(), target_);
-            gl::query_target_state.at(target_) = gl::true_;
         }
         void end      ()
         {
-            if (gl::query_target_state.at(target_) == gl::false_) throw std::runtime_error{ "target query not in progress" };
-
             gl::end_query(target_);
-            gl::query_target_state.at(target_) = gl::false_;
         }
         
         auto available() const -> gl::bool_t
