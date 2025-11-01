@@ -703,7 +703,7 @@ export namespace gl
         if (buffer_size % sizeof(T) != gl::size_t{ 0u }) throw std::invalid_argument{ "buffer can not be partitioned by element" };
 
               auto vector      = std::vector<T>(buffer_size / sizeof(T));
-        ::glGetNamedBufferSubData(gl::to_underlying(buffer), gl::ptrdiff_t{ 0 }, static_cast<gl::sizeiptr_t>(buffer_size), vector.data());
+        ::glGetNamedBufferSubData(gl::to_underlying(buffer), gl::intptr_t{ 0 }, static_cast<gl::sizeiptr_t>(buffer_size), vector.data());
         
         return vector;
     }
@@ -715,7 +715,7 @@ export namespace gl
         if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
               auto vector      = std::vector<T>(range.count);
-        ::glGetNamedBufferSubData(gl::to_underlying(buffer), static_cast<gl::ptrdiff_t>(byte_range.offset), static_cast<gl::sizeiptr_t>(byte_range.size), vector.data());
+        ::glGetNamedBufferSubData(gl::to_underlying(buffer), static_cast<gl::intptr_t>(byte_range.offset), static_cast<gl::sizeiptr_t>(byte_range.size), vector.data());
         
         return vector;
     }
@@ -1228,7 +1228,7 @@ export namespace gl
 
         if (!message_logs.empty())
         {
-            for (auto offset = gl::ptrdiff_t{ 0 }; const auto index : std::views::iota(0u, message_log_count))
+            for (auto offset = gl::intptr_t{ 0 }; const auto index : std::views::iota(0u, message_log_count))
             {
                 const auto length = lengths.at(index);
                       auto log    = std::string{ message_log.data() + offset, static_cast<gl::size_t>(length) - 1u };
@@ -1376,8 +1376,8 @@ export namespace gl
     template<typename T = gl::byte_t>
     void bind_buffers_range                               (std::span<const gl::handle_t> buffers, gl::buffer_base_target_e base_target, gl::binding_t binding, std::span<const gl::range_t> ranges)
     {
-        const auto sizes   = std::vector<gl::size_t   >(ranges.size());
-        const auto offsets = std::vector<gl::ptrdiff_t>(ranges.size());
+        const auto sizes   = std::vector<gl::size_t  >(ranges.size());
+        const auto offsets = std::vector<gl::intptr_t>(ranges.size());
         for (std::tuple<gl::handle_t&, gl::range_t&> value : std::views::zip(buffers, ranges))
         {
             const auto buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(std::get<0u>(value));
@@ -2143,8 +2143,8 @@ export namespace gl
 
 
     //Chapter 10 - Vertex Specification and Drawing Commands
-    template<gl::patch_parameter_e P>
-    void patch_parameter                                  (gl::patch_parameter_argument_t<P> value)
+    template<gl::patch_parameter_e Parameter>
+    void patch_parameter                                  (gl::patch_parameter_argument_t<Parameter> value)
     {
         auto patch_parameter_i = [](gl::patch_parameter_e parameter, gl::int32_t   value)
             {
@@ -2156,12 +2156,11 @@ export namespace gl
             };
 
         using enum gl::patch_parameter_e;
-
-        if constexpr (P == patch_default_inner_level) ::glPatchParameterfv(gl::to_underlying(gl::patch_parameter_e::patch_default_inner_level), value.data());
-        if constexpr (P == patch_default_outer_level) ::glPatchParameterfv(gl::to_underlying(gl::patch_parameter_e::patch_default_outer_level), value.data());
-        if constexpr (P == patch_vertices           ) patch_parameter_i (                    gl::patch_parameter_e::patch_vertices            , value       );
+        if constexpr (Parameter == patch_default_inner_level) ::glPatchParameterfv(gl::to_underlying(Parameter), value.data());
+        if constexpr (Parameter == patch_default_outer_level) ::glPatchParameterfv(gl::to_underlying(Parameter), value.data());
+        if constexpr (Parameter == patch_vertices           ) patch_parameter_i (                    Parameter , value       );
     }
-    template<typename T, gl::uint32_t Count, gl::bool_t Normalized = gl::false_>
+    template<typename T, gl::uint32_t Count, gl::bool_t IsNormalized = gl::false_>
     void specify_vertex_attribute                         (gl::index_t index, const gl::vector_t<T, Count>& value)
     {
         const auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
@@ -2169,54 +2168,58 @@ export namespace gl
         
              if constexpr (std::is_same_v<T, gl::uint8_t  >)
         {
-            if constexpr (Count == 4 && Normalized == gl::true_ ) ::glVertexAttrib4Nub(index, value.x, value.y, value.z, value.w);
+            if constexpr (Count == 4 && IsNormalized == gl::true_ ) ::glVertexAttrib4Nub(index, value.x, value.y, value.z, value.w);
         }
         else if constexpr (std::is_same_v<T, gl::int16_t  >)
         {
-            if constexpr (Count == 1 && Normalized == gl::false_) ::glVertexAttrib1s  (index, value.x                           );
-            if constexpr (Count == 2 && Normalized == gl::false_) ::glVertexAttrib2s  (index, value.x, value.y                  );
-            if constexpr (Count == 3 && Normalized == gl::false_) ::glVertexAttrib3s  (index, value.x, value.y, value.z         );
-            if constexpr (Count == 4 && Normalized == gl::false_) ::glVertexAttrib4s  (index, value.x, value.y, value.z, value.w);
+            if constexpr (Count == 1 && IsNormalized == gl::false_) ::glVertexAttrib1s  (index, value.x                           );
+            if constexpr (Count == 2 && IsNormalized == gl::false_) ::glVertexAttrib2s  (index, value.x, value.y                  );
+            if constexpr (Count == 3 && IsNormalized == gl::false_) ::glVertexAttrib3s  (index, value.x, value.y, value.z         );
+            if constexpr (Count == 4 && IsNormalized == gl::false_) ::glVertexAttrib4s  (index, value.x, value.y, value.z, value.w);
         }
         else if constexpr (std::is_same_v<T, gl::int32_t  >)
         {
-            if constexpr (Count == 1 && Normalized == gl::false_) ::glVertexAttribI1i (index, value.x                           );
-            if constexpr (Count == 2 && Normalized == gl::false_) ::glVertexAttribI2i (index, value.x, value.y                  );
-            if constexpr (Count == 3 && Normalized == gl::false_) ::glVertexAttribI3i (index, value.x, value.y, value.z         );
-            if constexpr (Count == 4 && Normalized == gl::false_) ::glVertexAttribI4i (index, value.x, value.y, value.z, value.w);
+            if constexpr (Count == 1 && IsNormalized == gl::false_) ::glVertexAttribI1i (index, value.x                           );
+            if constexpr (Count == 2 && IsNormalized == gl::false_) ::glVertexAttribI2i (index, value.x, value.y                  );
+            if constexpr (Count == 3 && IsNormalized == gl::false_) ::glVertexAttribI3i (index, value.x, value.y, value.z         );
+            if constexpr (Count == 4 && IsNormalized == gl::false_) ::glVertexAttribI4i (index, value.x, value.y, value.z, value.w);
         }
         else if constexpr (std::is_same_v<T, gl::uint32_t >)
         {
-            if constexpr (Count == 1 && Normalized == gl::false_) ::glVertexAttribI1ui(index, value.x                           );
-            if constexpr (Count == 2 && Normalized == gl::false_) ::glVertexAttribI2ui(index, value.x, value.y                  );
-            if constexpr (Count == 3 && Normalized == gl::false_) ::glVertexAttribI3ui(index, value.x, value.y, value.z         );
-            if constexpr (Count == 4 && Normalized == gl::false_) ::glVertexAttribI4ui(index, value.x, value.y, value.z, value.w);
+            if constexpr (Count == 1 && IsNormalized == gl::false_) ::glVertexAttribI1ui(index, value.x                           );
+            if constexpr (Count == 2 && IsNormalized == gl::false_) ::glVertexAttribI2ui(index, value.x, value.y                  );
+            if constexpr (Count == 3 && IsNormalized == gl::false_) ::glVertexAttribI3ui(index, value.x, value.y, value.z         );
+            if constexpr (Count == 4 && IsNormalized == gl::false_) ::glVertexAttribI4ui(index, value.x, value.y, value.z, value.w);
         }
         else if constexpr (std::is_same_v<T, gl::float32_t>)
         {
-            if constexpr (Count == 1 && Normalized == gl::false_) ::glVertexAttrib1f  (index, value.x                           );
-            if constexpr (Count == 2 && Normalized == gl::false_) ::glVertexAttrib2f  (index, value.x, value.y                  );
-            if constexpr (Count == 3 && Normalized == gl::false_) ::glVertexAttrib3f  (index, value.x, value.y, value.z         );
-            if constexpr (Count == 4 && Normalized == gl::false_) ::glVertexAttrib4f  (index, value.x, value.y, value.z, value.w);
+            if constexpr (Count == 1 && IsNormalized == gl::false_) ::glVertexAttrib1f  (index, value.x                           );
+            if constexpr (Count == 2 && IsNormalized == gl::false_) ::glVertexAttrib2f  (index, value.x, value.y                  );
+            if constexpr (Count == 3 && IsNormalized == gl::false_) ::glVertexAttrib3f  (index, value.x, value.y, value.z         );
+            if constexpr (Count == 4 && IsNormalized == gl::false_) ::glVertexAttrib4f  (index, value.x, value.y, value.z, value.w);
         }
         else if constexpr (std::is_same_v<T, gl::float64_t>)
         {
-            if constexpr (Count == 1 && Normalized == gl::false_) ::glVertexAttribL1d (index, value.x                           );
-            if constexpr (Count == 2 && Normalized == gl::false_) ::glVertexAttribL2d (index, value.x, value.y                  );
-            if constexpr (Count == 3 && Normalized == gl::false_) ::glVertexAttribL3d (index, value.x, value.y, value.z         );
-            if constexpr (Count == 4 && Normalized == gl::false_) ::glVertexAttribL4d (index, value.x, value.y, value.z, value.w);
+            if constexpr (Count == 1 && IsNormalized == gl::false_) ::glVertexAttribL1d (index, value.x                           );
+            if constexpr (Count == 2 && IsNormalized == gl::false_) ::glVertexAttribL2d (index, value.x, value.y                  );
+            if constexpr (Count == 3 && IsNormalized == gl::false_) ::glVertexAttribL3d (index, value.x, value.y, value.z         );
+            if constexpr (Count == 4 && IsNormalized == gl::false_) ::glVertexAttribL4d (index, value.x, value.y, value.z, value.w);
         }
-        else              static_assert(gl::false_ && sizeof(T), "parameters do not match a valid vertex attribute function");
+        else    static_assert(gl::false_ && sizeof(T), "parameters do not match a valid vertex attribute function");
     }
     auto create_vertex_array                              () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateVertexArrays(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        ::glCreateVertexArrays(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle));
+        
+        return handle;
     }
     auto create_vertex_arrays                             (gl::count_t count) -> std::vector<gl::handle_t>
     {
         auto handles = std::vector<gl::handle_t>(count);
-        return ::glCreateVertexArrays(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data())), handles;
+        ::glCreateVertexArrays(static_cast<gl::sizei_t>(handles.size()), gl::to_underlying_pointer(handles.data()));
+        
+        return handles;
     }
     void delete_vertex_array                              (gl::handle_t vertex_array)
     {
@@ -2234,34 +2237,34 @@ export namespace gl
     {
         ::glVertexArrayElementBuffer(gl::to_underlying(vertex_array), gl::to_underlying(element_buffer));
     }
-    void vertex_array_attribute_format                    (gl::handle_t vertex_array, gl::index_t attribute, gl::ptrdiff_t offset, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::bool_t is_normalized = gl::false_)
+    void vertex_array_attribute_format                    (gl::handle_t vertex_array, gl::vertex_array_attribute_type_e attribute_type, gl::index_t attribute_index, gl::count_t attribute_count, gl::ptrdiff_t byte_offset, gl::bool_t is_normalized = gl::false_)
     {
-        auto vertex_array_attribute_format_i = [](gl::handle_t vertex_array, gl::index_t attribute, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::ptrdiff_t offset                       ) -> gl::void_t
+        auto vertex_array_attribute_format_i = [](gl::handle_t vertex_array, gl::index_t attribute_index, gl::vertex_array_attribute_type_e attribute_type, gl::count_t attribute_count, gl::ptrdiff_t byte_offset                          ) -> gl::void_t
             {
                 ::glVertexArrayAttribIFormat(
-                    gl::to_underlying        (vertex_array), 
-                    static_cast<gl::uint32_t>(attribute)   , static_cast<gl::int32_t >(count)  , 
-                    gl::to_underlying        (type)        , static_cast<gl::uint32_t>(offset));
+                    gl::to_underlying        (vertex_array)   , 
+                    static_cast<gl::uint32_t>(attribute_index), static_cast<gl::int32_t >(attribute_count), 
+                    gl::to_underlying        (attribute_type) , static_cast<gl::uint32_t>(byte_offset)   );
             };
-        auto vertex_array_attribute_format_f = [](gl::handle_t vertex_array, gl::index_t attribute, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::ptrdiff_t offset, gl::bool_t normalized)
+        auto vertex_array_attribute_format_f = [](gl::handle_t vertex_array, gl::index_t attribute_index, gl::vertex_array_attribute_type_e attribute_type, gl::count_t attribute_count, gl::ptrdiff_t byte_offset, gl::bool_t is_normalized)
             {
                 ::glVertexArrayAttribFormat(
-                    gl::to_underlying        (vertex_array), 
-                    static_cast<gl::uint32_t>(attribute)   ,             static_cast<gl::int32_t >(count)  , 
-                    gl::to_underlying        (type)        , normalized, static_cast<gl::uint32_t>(offset));
+                    gl::to_underlying        (vertex_array)   , 
+                    static_cast<gl::uint32_t>(attribute_index),                static_cast<gl::int32_t >(attribute_count),
+                    gl::to_underlying        (attribute_type) , is_normalized, static_cast<gl::uint32_t>(byte_offset)   );
             };
-        auto vertex_array_attribute_format_l = [](gl::handle_t vertex_array, gl::index_t attribute, gl::vertex_array_attribute_type_e type, gl::count_t count, gl::ptrdiff_t offset                       )
+        auto vertex_array_attribute_format_l = [](gl::handle_t vertex_array, gl::index_t attribute_index, gl::vertex_array_attribute_type_e attribute_type, gl::count_t attribute_count, gl::ptrdiff_t byte_offset                          )
             {
                 ::glVertexArrayAttribLFormat(
-                    gl::to_underlying        (vertex_array), 
-                    static_cast<gl::uint32_t>(attribute)   , static_cast<gl::int32_t >(count)  , 
-                    gl::to_underlying        (type)        , static_cast<gl::uint32_t>(offset));
+                    gl::to_underlying        (vertex_array)   , 
+                    static_cast<gl::uint32_t>(attribute_index), static_cast<gl::int32_t >(attribute_count),
+                    gl::to_underlying        (attribute_type) , static_cast<gl::uint32_t>(byte_offset)   );
             };
 
         const auto maximum_vertex_attributes = gl::get_value<gl::data_e::maximum_vertex_attributes>();
-        if (attribute > maximum_vertex_attributes) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
+        if (attribute_index > maximum_vertex_attributes) throw std::invalid_argument{ "index exceeds vertex attribute limit" };
         
-        switch (type)
+        switch (attribute_type)
         {
             using enum vertex_array_attribute_type_e;
 
@@ -2273,45 +2276,45 @@ export namespace gl
             case uint32                    : 
             case int32_2_10_10_10_r        : 
             case uint32_2_10_10_10_r       : 
-            case uint32_10_11_11_11_float_r: return vertex_array_attribute_format_i(vertex_array, attribute, type, count, offset               );
+            case uint32_10_11_11_11_float_r: return vertex_array_attribute_format_i(vertex_array, attribute_index, attribute_type, attribute_count, byte_offset               );
             case fixed                     : 
             case float16                   : 
-            case float32                   : return vertex_array_attribute_format_f(vertex_array, attribute, type, count, offset, is_normalized);
-            case float64                   : return vertex_array_attribute_format_l(vertex_array, attribute, type, count, offset               );
+            case float32                   : return vertex_array_attribute_format_f(vertex_array, attribute_index, attribute_type, attribute_count, byte_offset, is_normalized);
+            case float64                   : return vertex_array_attribute_format_l(vertex_array, attribute_index, attribute_type, attribute_count, byte_offset               );
         }
     }
-    void vertex_array_vertex_buffer                       (gl::handle_t vertex_array, gl::handle_t vertex_buffer, gl::binding_t binding, gl::size_t stride, gl::index_t index)
+    void vertex_array_vertex_buffer                       (gl::handle_t vertex_array, gl::handle_t vertex_buffer, gl::binding_t binding, gl::ptrdiff_t element_offset, gl::ptrdiff_t element_stride)
     {
-        ::glVertexArrayVertexBuffer(gl::to_underlying(vertex_array), gl::to_underlying(binding), gl::to_underlying(vertex_buffer), static_cast<gl::ptrdiff_t>(index), static_cast<gl::sizei_t>(stride));
+        ::glVertexArrayVertexBuffer(gl::to_underlying(vertex_array), gl::to_underlying(binding), gl::to_underlying(vertex_buffer), static_cast<gl::intptr_t>(element_offset), static_cast<gl::sizei_t>(element_stride));
     }
-    void vertex_array_vertex_buffers                      (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, std::span<const gl::sizeu_t> strides, std::span<const gl::sizeu_t> offsets, gl::range_t range)
+    void vertex_array_vertex_buffers                      (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, gl::index_t first_binding, std::span<const gl::ptrdiff_t> offsets, std::span<const gl::uint32_t> strides)
     {
-        if (vertex_buffers.size() != strides.size()) throw std::invalid_argument{ "vertex buffer size does not match stride size" };
+        const auto count = std::min(strides.size(), offsets.size());
 
         ::glVertexArrayVertexBuffers(
             gl::to_underlying        (vertex_array)         , 
-            static_cast<gl::uint32_t>(range.index)          , static_cast<gl::sizei_t>           (range.count)   , 
-            gl::to_underlying_pointer(vertex_buffers.data()), std::bit_cast<const gl::ptrdiff_t*>(offsets.data()), std::bit_cast<const gl::sizei_t*>(strides.data()));
+            static_cast<gl::uint32_t>(first_binding)        , static_cast     <      gl::sizei_t  >(count)         , 
+            gl::to_underlying_pointer(vertex_buffers.data()), reinterpret_cast<const gl::intptr_t*>(offsets.data()), reinterpret_cast<const gl::sizei_t*>(strides.data()));
     }
-    void vertex_array_attribute_binding                   (gl::handle_t vertex_array, gl::index_t attribute, gl::binding_t binding)
+    void vertex_array_attribute_binding                   (gl::handle_t vertex_array, gl::index_t attribute_index, gl::binding_t binding)
     {
-        ::glVertexArrayAttribBinding(gl::to_underlying(vertex_array), static_cast<gl::uint32_t>(attribute), gl::to_underlying(binding));
+        ::glVertexArrayAttribBinding(gl::to_underlying(vertex_array), static_cast<gl::uint32_t>(attribute_index), gl::to_underlying(binding));
     }
-    void enable_vertex_array_attribute                    (gl::handle_t vertex_array, gl::index_t index)
+    void enable_vertex_array_attribute                    (gl::handle_t vertex_array, gl::index_t attribute_index)
     {
-        ::glEnableVertexArrayAttrib(gl::to_underlying(vertex_array), static_cast<gl::uint32_t>(index));
+        ::glEnableVertexArrayAttrib(gl::to_underlying(vertex_array), static_cast<gl::uint32_t>(attribute_index));
     }
-    void disable_vertex_array_attribute                   (gl::handle_t vertex_array, gl::index_t index)
+    void disable_vertex_array_attribute                   (gl::handle_t vertex_array, gl::index_t attribute_index)
     {
-        ::glDisableVertexArrayAttrib(gl::to_underlying(vertex_array), static_cast<gl::uint32_t>(index));
+        ::glDisableVertexArrayAttrib(gl::to_underlying(vertex_array), static_cast<gl::uint32_t>(attribute_index));
     }
-    void vertex_array_binding_divisor                     (gl::handle_t vertex_array, gl::binding_t binding, gl::uint32_t divisor)
+    void vertex_array_binding_divisor                     (gl::handle_t vertex_array, gl::binding_t binding, gl::uint32_t instance_step_rate)
     {
-        ::glVertexArrayBindingDivisor(gl::to_underlying(vertex_array), gl::to_underlying(binding), divisor);
+        ::glVertexArrayBindingDivisor(gl::to_underlying(vertex_array), gl::to_underlying(binding), instance_step_rate);
     }
-    void primitive_restart_index                          (gl::index_t index)
+    void primitive_restart_index                          (gl::index_t restart_index)
     {
-        ::glPrimitiveRestartIndex(static_cast<gl::uint32_t>(index));
+        ::glPrimitiveRestartIndex(static_cast<gl::uint32_t>(restart_index));
     }
     void draw_arrays                                      (gl::draw_mode_e draw_mode, gl::range_t range)
     {
@@ -2344,15 +2347,15 @@ export namespace gl
     {
         const auto draw_type_size = gl::map_draw_type_size(draw_type);
         ::glDrawElements(
-            gl::to_underlying(draw_mode), static_cast  <      gl::sizei_t>(element_count)           , 
-            gl::to_underlying(draw_type), std::bit_cast<const gl::void_t*>(offset * draw_type_size));
+            gl::to_underlying(draw_mode), static_cast     <      gl::sizei_t >(element_count)           , 
+            gl::to_underlying(draw_type), reinterpret_cast<const gl::void_t *>(offset * draw_type_size));
     }
     void draw_elements_base_vertex                        (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::count_t element_count, gl::index_t offset, gl::int32_t base_vertex)
     {
         const auto draw_type_size = gl::map_draw_type_size(draw_type);
         ::glDrawElementsBaseVertex(
-            gl::to_underlying(draw_mode),                                                            static_cast<gl::sizei_t>(element_count), 
-            gl::to_underlying(draw_type), std::bit_cast<const gl::void_t*>(offset * draw_type_size),                          base_vertex  );
+            gl::to_underlying(draw_mode), static_cast     <      gl::sizei_t >(element_count)          , 
+            gl::to_underlying(draw_type), reinterpret_cast<const gl::void_t *>(offset * draw_type_size), base_vertex);
     }
     void draw_elements_indirect                           (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::index_t offset)
     {
@@ -2360,36 +2363,36 @@ export namespace gl
         if (draw_indirect_buffer_binding == gl::null_object) throw std::runtime_error{ "no draw indirect buffer bound" };
 
         ::glDrawElementsIndirect(
-            gl::to_underlying               (draw_mode)                                           , gl::to_underlying(draw_type), 
-            std::bit_cast<const gl::void_t*>(offset * sizeof(gl::draw_elements_indirect_command)));
+            gl::to_underlying                  (draw_mode)                                           , gl::to_underlying(draw_type), 
+            reinterpret_cast<const gl::void_t*>(offset * sizeof(gl::draw_elements_indirect_command)));
     }
     void draw_elements_instanced                          (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::count_t element_count, gl::index_t offset, gl::count_t instance_count)
     {
         const auto draw_type_size = gl::map_draw_type_size(draw_type);
         ::glDrawElementsInstanced(
-            gl::to_underlying(draw_mode),                                                            static_cast<gl::sizei_t>(element_count ) , 
-            gl::to_underlying(draw_type), std::bit_cast<const gl::void_t*>(offset * draw_type_size), static_cast<gl::sizei_t>(instance_count));
+            gl::to_underlying(draw_mode),                                                               static_cast<gl::sizei_t>(element_count ) , 
+            gl::to_underlying(draw_type), reinterpret_cast<const gl::void_t*>(offset * draw_type_size), static_cast<gl::sizei_t>(instance_count));
     }
     void draw_elements_instanced_base_instance            (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::count_t element_count, gl::index_t offset, gl::count_t instance_count, gl::index_t base_instance)
     {
         const auto draw_type_size = gl::map_draw_type_size(draw_type);
         ::glDrawElementsInstancedBaseInstance(
-            gl::to_underlying(draw_mode),                                                            static_cast<gl::sizei_t>(element_count) , 
-            gl::to_underlying(draw_type), std::bit_cast<const gl::void_t*>(offset * draw_type_size), static_cast<gl::sizei_t>(instance_count), static_cast<gl::uint32_t>(base_instance));
+            gl::to_underlying(draw_mode),                                                               static_cast<gl::sizei_t>(element_count) , 
+            gl::to_underlying(draw_type), reinterpret_cast<const gl::void_t*>(offset * draw_type_size), static_cast<gl::sizei_t>(instance_count), static_cast<gl::uint32_t>(base_instance));
     }
     void draw_elements_instanced_base_vertex              (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::count_t element_count, gl::index_t offset, gl::count_t instance_count, gl::int32_t base_vertex)
     {
         const auto draw_type_size = gl::map_draw_type_size(draw_type);
         ::glDrawElementsInstancedBaseVertex(
-            gl::to_underlying(draw_mode),                                                            static_cast<gl::sizei_t>(element_count) , 
-            gl::to_underlying(draw_type), std::bit_cast<const gl::void_t*>(offset * draw_type_size), static_cast<gl::sizei_t>(instance_count), base_vertex);
+            gl::to_underlying(draw_mode),                                                               static_cast<gl::sizei_t>(element_count) , 
+            gl::to_underlying(draw_type), reinterpret_cast<const gl::void_t*>(offset * draw_type_size), static_cast<gl::sizei_t>(instance_count), base_vertex);
     }
     void draw_elements_instanced_base_vertex_base_instance(gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::count_t element_count, gl::index_t offset, gl::count_t instance_count, gl::int32_t base_vertex, gl::index_t base_instance)
     {
         const auto draw_type_size = gl::map_draw_type_size(draw_type);
         ::glDrawElementsInstancedBaseVertexBaseInstance(
-            gl::to_underlying(draw_mode),                                                            static_cast<gl::sizei_t>(element_count) , 
-            gl::to_underlying(draw_type), std::bit_cast<const gl::void_t*>(offset * draw_type_size), static_cast<gl::sizei_t>(instance_count), base_vertex, static_cast<gl::uint32_t>(base_instance));
+            gl::to_underlying(draw_mode),                                                               static_cast<gl::sizei_t>(element_count) , 
+            gl::to_underlying(draw_type), reinterpret_cast<const gl::void_t*>(offset * draw_type_size), static_cast<gl::sizei_t>(instance_count), base_vertex, static_cast<gl::uint32_t>(base_instance));
     }
     void draw_range_elements                              (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::index_t start_index, gl::index_t end_index, gl::count_t element_count, gl::index_t offset)
     {
@@ -2397,7 +2400,7 @@ export namespace gl
         ::glDrawRangeElements(
             gl::to_underlying        (draw_mode)    , 
             static_cast<gl::uint32_t>(start_index)  , static_cast<gl::uint32_t>(end_index), 
-            static_cast<gl::sizei_t >(element_count), gl::to_underlying        (draw_type), std::bit_cast<const gl::void_t*>(offset * draw_type_size));
+            static_cast<gl::sizei_t >(element_count), gl::to_underlying        (draw_type), reinterpret_cast<const gl::void_t*>(offset * draw_type_size));
     }
     void draw_range_elements_base_vertex                  (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::index_t start_index, gl::index_t end_index, gl::count_t element_count, gl::index_t offset, gl::int32_t base_vertex)
     {
@@ -2405,14 +2408,14 @@ export namespace gl
         ::glDrawRangeElementsBaseVertex(
             gl::to_underlying        (draw_mode)    , 
             static_cast<gl::uint32_t>(start_index)  , static_cast<gl::uint32_t>(end_index), 
-            static_cast<gl::sizei_t >(element_count), gl::to_underlying        (draw_type), std::bit_cast<const gl::void_t*>(offset * draw_type_size), base_vertex);
+            static_cast<gl::sizei_t >(element_count), gl::to_underlying        (draw_type), reinterpret_cast<const gl::void_t*>(offset * draw_type_size), base_vertex);
     }
     void multi_draw_arrays                                (gl::draw_mode_e draw_mode, std::span<const gl::index_t> starting_indices, std::span<const gl::count_t> vertex_counts)
     {
         const auto draw_count = std::min(starting_indices.size(), vertex_counts.size());
         ::glMultiDrawArrays(
-            gl::to_underlying                (draw_mode)           , std::bit_cast<const gl::int32_t*>(starting_indices.data()), 
-            std::bit_cast<const gl::sizei_t*>(vertex_counts.data()), static_cast  <      gl::sizei_t >(draw_count)            );
+            gl::to_underlying                   (draw_mode)           , reinterpret_cast<const gl::int32_t*>(starting_indices.data()), 
+            reinterpret_cast<const gl::sizei_t*>(vertex_counts.data()), static_cast     <      gl::sizei_t >(draw_count)            );
     }
     void multi_draw_arrays_indirect                       (gl::draw_mode_e draw_mode, gl::count_t draw_count, gl::index_t offset)
     {
@@ -2420,29 +2423,32 @@ export namespace gl
         if (draw_indirect_buffer_binding == gl::null_object) throw std::runtime_error{ "no draw indirect buffer bound" };
 
         ::glMultiDrawArraysIndirect(
-            gl::to_underlying       (draw_mode) , std::bit_cast<const gl::void_t*>(offset * sizeof(gl::draw_arrays_indirect_command)), 
-            static_cast<gl::sizei_t>(draw_count), gl::sizei_t{ 0 }                                                                  );
+            gl::to_underlying       (draw_mode)                                                    , 
+            reinterpret_cast<const gl::void_t *>(offset * sizeof(gl::draw_arrays_indirect_command)),
+            static_cast     <      gl::sizei_t >(draw_count)                                       , gl::sizei_t{ 0 });
     }
     void multi_draw_elements                              (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, std::span<const gl::count_t> element_counts, std::span<const gl::index_t> index_offsets)
     {
-        const auto draw_count = std::min(element_counts.size(), index_offsets.size());
+        const auto draw_count     = std::min(element_counts.size(), index_offsets.size());
+        const auto offset_pointer = index_offsets.data();
         ::glMultiDrawElements(
-            gl::to_underlying(draw_mode), std::bit_cast<const gl::sizei_t*>(element_counts.data()), 
-            gl::to_underlying(draw_type), std::bit_cast<const gl::void_t**>(index_offsets .data()), static_cast<gl::sizei_t>(draw_count));
+            gl::to_underlying(draw_mode), reinterpret_cast<const gl::sizei_t*       >(element_counts.data()), 
+            gl::to_underlying(draw_type), reinterpret_cast<const gl::void_t * const*>(&offset_pointer)      , static_cast<gl::sizei_t>(draw_count));
     }
     void multi_draw_elements_indirect                     (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, gl::count_t draw_count, gl::index_t offset)
     {
         ::glMultiDrawElementsIndirect(
-            gl::to_underlying               (draw_mode)                                          , gl::to_underlying       (draw_type) , 
-            std::bit_cast<const gl::void_t*>(offset * sizeof(gl::draw_elements_indirect_command)), static_cast<gl::sizei_t>(draw_count), gl::sizei_t{ 0 });
+            gl::to_underlying                  (draw_mode)                                          , gl::to_underlying       (draw_type) , 
+            reinterpret_cast<const gl::void_t*>(offset * sizeof(gl::draw_elements_indirect_command)), static_cast<gl::sizei_t>(draw_count), gl::sizei_t{ 0 });
     }
     void multi_draw_elements_base_vertex                  (gl::draw_mode_e draw_mode, gl::draw_type_e draw_type, std::span<const gl::count_t> element_counts, std::span<const gl::index_t> index_offsets, std::span<const gl::int32_t> base_vertex_offsets)
     {
-        const auto draw_count = std::min(std::min(element_counts.size(), index_offsets.size()), base_vertex_offsets.size());
+        const auto draw_count     = std::min(std::min(element_counts.size(), index_offsets.size()), base_vertex_offsets.size());
+        const auto offset_pointer = index_offsets.data();
         ::glMultiDrawElementsBaseVertex(
-            gl::to_underlying(draw_mode), std::bit_cast<const gl::sizei_t*>(element_counts     .data()), 
-            gl::to_underlying(draw_type), std::bit_cast<const gl::void_t**>(index_offsets      .data()), static_cast<gl::sizei_t>(draw_count), 
-                                                                            base_vertex_offsets.data());
+            gl::to_underlying       (draw_mode) , reinterpret_cast<const gl::sizei_t*       >(element_counts.data())     , 
+            gl::to_underlying       (draw_type) , reinterpret_cast<const gl::void_t * const*>(&offset_pointer)           , 
+            static_cast<gl::sizei_t>(draw_count),                                             base_vertex_offsets.data());
     }
     void begin_conditional_render                         (gl::handle_t query, gl::query_mode_e query_mode)
     {
@@ -2506,10 +2512,12 @@ export namespace gl
 
 
     //Chapter 14 - Fixed-Function Primitive Assembly and Rasterization
-    auto get_multisample_value                            (gl::index_t index) -> gl::vector_2f
+    auto get_multisample_value                            (gl::index_t sample_index) -> gl::vector_2f
     {
         auto value = gl::vector_2f{};
-        return ::glGetMultisamplefv(gl::to_underlying(gl::multisample_parameter_e::sample_position), static_cast<gl::uint32_t>(index), gl::value_pointer(value)), value;
+        ::glGetMultisamplefv(gl::to_underlying(gl::multisample_parameter_e::sample_position), static_cast<gl::uint32_t>(sample_index), gl::value_pointer(value));
+        
+        return value;
     }
     void minimum_sample_shading                           (gl::float32_t value)
     {
@@ -2519,8 +2527,8 @@ export namespace gl
     {
         ::glPointSize(size);
     }
-    template<gl::point_parameter_e P>
-    void point_parameter                                  (gl::point_parameter_argument_t<P> value)
+    template<gl::point_parameter_e Parameter>
+    void point_parameter                                  (gl::point_parameter_argument_t<Parameter> value)
     {
         auto point_parameter_i = [](gl::point_parameter_e parameter, gl::int32_t   value) -> gl::void_t
             {
@@ -2532,9 +2540,8 @@ export namespace gl
             };
 
         using enum gl::point_parameter_e;
-
-        if constexpr (P == fade_threshold_size     ) point_parameter_f(P,                   value );
-        if constexpr (P == sprite_coordinate_origin) point_parameter_i(P, gl::to_underlying(value));
+        if constexpr (Parameter == fade_threshold_size     ) point_parameter_f(Parameter,                   value );
+        if constexpr (Parameter == sprite_coordinate_origin) point_parameter_i(Parameter, gl::to_underlying(value));
     }
     void line_width                                       (gl::float32_t value)
     {
@@ -2559,9 +2566,9 @@ export namespace gl
     void scissor_array                                    (gl::index_t index, std::span<const gl::uint32_t, 4u> values)
     {
         ::glScissorArrayv(
-            static_cast   <     gl::uint32_t>(index)         , 
-            static_cast   <     gl::sizei_t >(values.size()) , 
-            std::bit_cast<const gl::int32_t*>(values.data())); 
+            static_cast     <      gl::uint32_t >(index)         , 
+            static_cast     <      gl::sizei_t  >(values.size()) , 
+            reinterpret_cast<const gl::int32_t *>(values.data()));
     }
     void scissor_indexed                                  (gl::index_t index, gl::area_t region)
     {
@@ -2612,19 +2619,19 @@ export namespace gl
     {
         ::glBlendEquation(gl::to_underlying(equation));
     }
-    void blend_equation_indexed                           (gl::blending_equation_e equation, gl::index_t index)
+    void blend_equation_indexed                           (gl::blending_equation_e equation,                                gl::index_t index)
     {
         ::glBlendEquationi(static_cast<gl::uint32_t>(index), gl::to_underlying(equation));
     }
-    void blend_equation_separate                          (gl::blending_equation_e equation_rgb, gl::blending_equation_e equation_alpha)
+    void blend_equation_separate                          (gl::blending_equation_e color   , gl::blending_equation_e alpha                   )
     {
-        ::glBlendEquationSeparate(gl::to_underlying(equation_rgb), gl::to_underlying(equation_alpha));
+        ::glBlendEquationSeparate(gl::to_underlying(color), gl::to_underlying(alpha));
     }
-    void blend_equation_separate_indexed                  (gl::blending_equation_e color, gl::blending_equation_e alpha, gl::index_t index)
+    void blend_equation_separate_indexed                  (gl::blending_equation_e color   , gl::blending_equation_e alpha, gl::index_t index)
     {
         ::glBlendEquationSeparatei(static_cast<gl::uint32_t>(index), gl::to_underlying(color), gl::to_underlying(alpha));
     }
-    void blend_function                                   (gl::blending_factor_e source, gl::blending_factor_e destination)
+    void blend_function                                   (gl::blending_factor_e source      , gl::blending_factor_e destination                                                                                                      )
     {
         ::glBlendFunc(gl::to_underlying(source), gl::to_underlying(destination));
     }
@@ -2635,7 +2642,7 @@ export namespace gl
             gl::to_underlying        (source_color), gl::to_underlying(destination_color) , 
             gl::to_underlying        (source_alpha), gl::to_underlying(destination_alpha));
     }
-    void blend_function_separate                          (gl::blending_factor_e source_color, gl::blending_factor_e source_alpha, gl::blending_factor_e destination_color, gl::blending_factor_e destination_alpha)
+    void blend_function_separate                          (gl::blending_factor_e source_color, gl::blending_factor_e source_alpha, gl::blending_factor_e destination_color, gl::blending_factor_e destination_alpha                   )
     {
         ::glBlendFuncSeparate(gl::to_underlying(source_color), gl::to_underlying(destination_color), gl::to_underlying(source_alpha), gl::to_underlying(destination_alpha));
     }
@@ -2838,9 +2845,9 @@ export namespace gl
     {
         ::glDispatchCompute(work_groups.x, work_groups.y, work_groups.z);
     }
-    void dispatch_compute_indirect                        (gl::index_t offset)
+    void dispatch_compute_indirect                        (gl::index_t   offset     )
     {
-        ::glDispatchComputeIndirect(static_cast<gl::ptrdiff_t>(offset * sizeof(gl::dispatch_indirect_command)));
+        ::glDispatchComputeIndirect(static_cast<gl::intptr_t>(offset * sizeof(gl::dispatch_indirect_command)));
     }
 
 
@@ -2861,7 +2868,7 @@ export namespace gl
             gl::to_underlying(type)                           , gl::to_underlying(user_identifier), gl::to_underlying(severity),
             static_cast<gl::sizei_t>(message.length())        , message.data()                   );
     }
-    void push_debug_group                                 (gl::handle_t identifier, const std::string& message)
+    void push_debug_group                                 (gl::handle_t      identifier,                                                       const std::string& message)
     {
         const auto* c_string = message.c_str();
         ::glPushDebugGroup(gl::to_underlying(gl::debug_source_e::application), gl::to_underlying(identifier), gl::sizei_t{ -1 }, c_string);
