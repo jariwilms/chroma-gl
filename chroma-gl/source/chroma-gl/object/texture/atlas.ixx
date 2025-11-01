@@ -16,10 +16,10 @@ export namespace gl
     public:
         texture_atlas() = default;
         
-        void emplace(gl::texture_2d::format_e format, const gl::vector_2u& dimensions, gl::pixel_buffer_data pixel_buffer_data, std::span<const gl::byte_t> source)
+        void emplace(gl::texture_2d::format_e format, const gl::vector_2u& dimensions, gl::texture_data_descriptor texture_data_descriptor, std::span<const gl::byte_t> source)
         {
             auto& texture = textures_.emplace_back(format, dimensions, gl::true_);
-            texture.transfer(pixel_buffer_data, source);
+            texture.transfer(texture_data_descriptor, source);
         }
 
     private:

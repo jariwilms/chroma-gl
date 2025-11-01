@@ -24,20 +24,20 @@ export namespace gl
             gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
         }
         
-        void transfer        (face_e face,                                                  gl::pixel_buffer_data pixel_buffer_data,                 std::span<const gl::byte_t>      memory)
+        void transfer        (face_e face,                                                  gl::texture_data_descriptor texture_data_descriptor,                 std::span<const gl::byte_t>      memory)
         {
-            transfer(face, gl::uint32_t{ 0u }, dimensions_, pixel_buffer_data, memory);
+            transfer(face, gl::uint32_t{ 0u }, dimensions_, texture_data_descriptor, memory);
         }
-        void transfer        (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::pixel_buffer_data pixel_buffer_data,                 std::span<const gl::byte_t>      memory)
+        void transfer        (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::texture_data_descriptor texture_data_descriptor,                 std::span<const gl::byte_t>      memory)
         {
             const auto image_volume = gl::volume_t{ gl::vector_3u{ image_area.extent, 1u }, gl::vector_3u{ image_area.origin, gl::to_underlying(face - face_e::positive_x) } };
-            gl::texture_sub_image_3d(handle(), image_level, image_volume, pixel_buffer_data.texture_base_format, pixel_buffer_data.pixel_data_type, memory);
+            gl::texture_sub_image_3d(handle(), image_level, image_volume, texture_data_descriptor, memory);
         }
-        void transfer        (                                                              gl::pixel_buffer_data pixel_buffer_data, std::span<const std::span<const gl::byte_t>, 6u> memory)
+        void transfer        (                                                              gl::texture_data_descriptor texture_data_descriptor, std::span<const std::span<const gl::byte_t>, 6u> memory)
         {
             for (const auto [index, face_memory] : std::views::enumerate(memory))
             {
-                transfer(face_e::positive_x + index, pixel_buffer_data, face_memory);
+                transfer(face_e::positive_x + index, texture_data_descriptor, face_memory);
             }
         }
         void generate_mipmaps()

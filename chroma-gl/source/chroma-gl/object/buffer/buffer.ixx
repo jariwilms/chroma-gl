@@ -275,16 +275,6 @@ export namespace gl
 
 
                                                             
-    struct pixel_buffer_data
-    {
-        gl::texture_base_format_e texture_base_format = gl::texture_base_format_e::rgba;
-        gl::pixel_data_type_e     pixel_data_type     = gl::pixel_data_type_e    ::byte;
-    };
-    struct compressed_pixel_buffer_data
-    {
-        gl::texture_compressed_base_format_e texture_compressed_base_format = gl::texture_compressed_base_format_e::rgba;
-        gl::pixel_data_type_e                pixel_data_type = gl::pixel_data_type_e::byte;
-    };
     class pixel_pack_buffer
     {
         //TODO
@@ -294,20 +284,20 @@ export namespace gl
     public:
         pixel_unpack_buffer(gl::count_t element_count)
             : gl::bindable_buffer<gl::buffer_target_e::pixel_unpack_buffer, gl::stream_buffer<gl::byte_t>>{ element_count }
-            , pixel_buffer_data_{} {}
+            , buffer_data_descriptor_{ gl::buffer_base_format_e::rgba, gl::pixel_data_type_e::byte } {}
 
-        void write            (gl::pixel_buffer_data pixel_buffer_data, std::span<const gl::byte_t> memory)
+        void write            (gl::buffer_data_descriptor buffer_data_descriptor, std::span<const gl::byte_t> memory)
         {
-            pixel_buffer_data_ = pixel_buffer_data;
+            buffer_data_descriptor_ = buffer_data_descriptor;
             gl::bindable_buffer<gl::buffer_target_e::pixel_unpack_buffer, gl::stream_buffer<gl::byte_t>>::write(memory);
         }
 
-        auto pixel_buffer_data() const -> gl::pixel_buffer_data
+        auto data_descriptor() const -> gl::buffer_data_descriptor
         {
-            return pixel_buffer_data_;
+            return buffer_data_descriptor_;
         }
 
     private:
-        gl::pixel_buffer_data pixel_buffer_data_;
+        gl::buffer_data_descriptor buffer_data_descriptor_;
     };
 }

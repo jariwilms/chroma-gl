@@ -6,6 +6,20 @@ import opengl.types;
 
 export namespace gl
 {
+    template<typename T>
+    struct pixel_data_descriptor
+    {
+        pixel_data_descriptor(T base_format, gl::pixel_data_type_e pixel_data_type)
+            : base_format{ base_format }, pixel_data_type{ pixel_data_type } {}
+
+        T                     base_format;
+        gl::pixel_data_type_e pixel_data_type;
+    };
+    using  texture_data_descriptor = gl::pixel_data_descriptor<gl::texture_base_format_e>;
+    using  buffer_data_descriptor  = gl::pixel_data_descriptor<gl::buffer_base_format_e >;
+
+
+
     struct message_log
     {
         gl::uint32_t         id       = {};
