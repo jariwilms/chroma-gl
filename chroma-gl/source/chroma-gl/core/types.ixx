@@ -79,17 +79,9 @@ export namespace gl
     enum                                : gl::bool_t  { false_ = GL_FALSE, true_ = GL_TRUE, };
     enum class binding_t                : gl::uint32_t;
     enum class handle_t                 : gl::uint32_t;
-    //enum class texture_t                : std::underlying_type_t<gl::handle_t>;
-    //enum class vertex_array_t           : std::underlying_type_t<gl::handle_t>;
-    //enum class buffer_t                 : std::underlying_type_t<gl::handle_t>;
-    //enum class shader_t                 : std::underlying_type_t<gl::handle_t>;
-    //enum class program_t                : std::underlying_type_t<gl::handle_t>;
-    //enum class query_t                  : std::underlying_type_t<gl::handle_t>;
-    //enum class program_pipeline_t       : std::underlying_type_t<gl::handle_t>;
-    //enum class sampler_t                : std::underlying_type_t<gl::handle_t>;
-    //enum class frame_buffer_t           : std::underlying_type_t<gl::handle_t>;
-    //enum class render_buffer_t          : std::underlying_type_t<gl::handle_t>;
-    //enum class transform_feedback_t     : std::underlying_type_t<gl::handle_t>;
 
-    using debug_callback_t = gl::void_t(__stdcall *)(gl::enum_t source, gl::enum_t type, gl::uint32_t id, gl::enum_t severity, gl::sizei_t length, gl::c_string message, const gl::void_t* user_parameter);
+    using debug_callback_t = gl::void_t(__stdcall*)(gl::enum_t source, gl::enum_t type, gl::uint32_t id, gl::enum_t severity, gl::sizei_t length, gl::c_string message, const gl::void_t* user_parameter);
+
+    template<typename... Ts>
+    struct overload_t : Ts... { using Ts::operator()...; };
 }
