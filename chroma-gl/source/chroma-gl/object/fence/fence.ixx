@@ -10,19 +10,38 @@ export namespace gl
     public:
         explicit 
         fence() 
-            : sync_{ gl::fence_sync() } {}
+            : sync_{} {}
         fence(fence&& other) noexcept
             : sync_{ std::exchange(other.sync_, gl::sync_t{}) } {}
        ~fence() 
-        { 
+        {
             gl::delete_sync(sync_);
         }
 
-             operator  gl::sync_t()
+        void place    ()
         {
-            return sync_;
+            if (!sync_) sync_ = gl::fence_sync();
         }
-        auto operator=           (fence&& other) noexcept -> fence&
+        void wait     (gl::bool_t client_side = gl::true_)
+        {
+            if (client_side)
+            {
+                      auto status  = gl::client_wait_sync(sync_, gl::synchronization_command_e{}, gl::time_t{ 0u });
+                const auto timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
+                while (status == gl::synchronization_status_e::timeout_expired)
+                {
+                    status = gl::client_wait_sync(sync_, gl::synchronization_command_e::flush, timeout);
+                }
+
+                if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "sync wait failed" };
+            }
+            else
+            {
+                gl::server_wait_sync(sync_);
+            }
+        }
+
+        auto operator=(fence&& other) noexcept -> fence&
         {
             if (this != &other) sync_ = std::exchange(other.sync_, sync_);
 
