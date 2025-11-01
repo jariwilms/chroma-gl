@@ -9,7 +9,7 @@ export namespace gl
     template<typename T>
     struct pixel_data_descriptor
     {
-        pixel_data_descriptor(T base_format, gl::pixel_data_type_e pixel_data_type)
+        pixel_data_descriptor(T base_format, gl::pixel_data_type_e pixel_data_type = gl::pixel_data_type_e::byte)
             : base_format{ base_format }, pixel_data_type{ pixel_data_type } {}
 
         T                     base_format;
