@@ -23,7 +23,7 @@ export namespace gl
         return std::bit_cast<const std::underlying_type_t<T>* const>(value);
     }
 
-              auto value_pointer        (auto& value) -> auto*
+              auto value_pointer        (      auto& value) -> auto*
     {
         return glm::value_ptr(value);
     }
