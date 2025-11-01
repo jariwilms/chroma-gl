@@ -109,17 +109,17 @@ export namespace gl
         auto get_binary_formats = [](gl::data_e data) -> std::vector<gl::enum_t>
             {
                 auto program_binary_format_count = gl::count_t{};
-                ::glGetIntegerv(gl::to_underlying(gl::data_e::number_program_binary_formats), std::bit_cast<gl::int32_t*>(&program_binary_format_count));
+                ::glGetIntegerv(gl::to_underlying(gl::data_e::number_program_binary_formats), reinterpret_cast<gl::int32_t*>(&program_binary_format_count));
 
                 auto program_binary_formats      = std::vector<gl::enum_t>(program_binary_format_count);
-                ::glGetIntegerv(gl::to_underlying(data), std::bit_cast<gl::int32_t*>(program_binary_formats.data()));
+                ::glGetIntegerv(gl::to_underlying(data), reinterpret_cast<gl::int32_t*>(program_binary_formats.data()));
 
                 return program_binary_formats;
             };
         auto get_area           = [](gl::data_e data) -> gl::area_t
             {
                 auto value = gl::vector_4u{};
-                ::glGetIntegerv(gl::to_underlying(data), std::bit_cast<gl::int32_t*>(gl::value_pointer(value)));
+                ::glGetIntegerv(gl::to_underlying(data), reinterpret_cast<gl::int32_t*>(gl::value_pointer(value)));
 
                 return gl::area_t{ gl::vector_2u{ value.z, value.w }, gl::vector_2u{ value.x, value.y } };
             };
@@ -1545,7 +1545,7 @@ export namespace gl
     {
         ::glDeleteShader(gl::to_underlying(shader));
     }
-    void shader_binary                                    (gl::handle_t                  shader , gl::shader_binary_format_e binary_format, std::span<const gl::byte_t> binary)
+    void shader_binary                                    (                gl::handle_t  shader , gl::shader_binary_format_e binary_format, std::span<const gl::byte_t> binary)
     {
         ::glShaderBinary(
             gl::sizei_t{ 1 }                  , 
@@ -2328,8 +2328,8 @@ export namespace gl
         if (draw_indirect_buffer_binding == gl::null_object) throw std::runtime_error{ "no draw indirect buffer bound" };
 
         ::glDrawArraysIndirect(
-            gl::to_underlying               (draw_mode)                                         , 
-            std::bit_cast<const gl::void_t*>(offset * sizeof(gl::draw_arrays_indirect_command)));
+            gl::to_underlying                  (draw_mode)                                         , 
+            reinterpret_cast<const gl::void_t*>(offset * sizeof(gl::draw_arrays_indirect_command)));
     }
     void draw_arrays_instanced                            (gl::draw_mode_e draw_mode, gl::range_t range, gl::count_t instance_count)
     {
