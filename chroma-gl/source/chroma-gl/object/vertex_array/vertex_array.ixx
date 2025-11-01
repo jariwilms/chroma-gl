@@ -42,7 +42,7 @@ export namespace gl
             using layout_t = Layout;
             using tuple_t  = typename layout_t::tuple_t;
             
-            gl::vertex_array_vertex_buffer(handle(), vertex_buffer.handle(), binding_point_, layout_t::stride, gl::index_t{ 0u });
+            gl::vertex_array_vertex_buffer(handle(), vertex_buffer.handle(), binding_point_, gl::ptrdiff_t{ 0 }, layout_t::stride);
             
             auto  offset   = gl::ptrdiff_t{};
             std::apply([&](auto... attributes)
@@ -53,7 +53,7 @@ export namespace gl
                             using component_t = typename attribute_t::component_t;
                             
                             enable_attribute(attribute_index_);
-                            gl::vertex_array_attribute_format (handle(), attribute_index_, offset, gl::map_attribute_type<component_t>(), attribute_t::components, attribute_t::is_normalized);
+                            gl::vertex_array_attribute_format (handle(), gl::map_attribute_type<component_t>(), attribute_index_, attribute_t::components, offset, attribute_t::is_normalized);
                             gl::vertex_array_attribute_binding(handle(), attribute_index_, binding_point_);
                             gl::vertex_array_binding_divisor  (handle(), static_cast<gl::binding_t>(attribute_index_), attribute_t::divisor);
 
