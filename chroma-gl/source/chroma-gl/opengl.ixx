@@ -1448,12 +1448,12 @@ export namespace gl
             &value                                     );
     }
     template<typename T = gl::byte_t>
-    auto map_buffer                                       (gl::handle_t buffer, gl::buffer_mapping_access_flags_e             access_flags                   ) -> std::span<T>
+    auto map_buffer                                       (gl::handle_t buffer, gl::buffer_mapping_range_access_flags_e range_access_flags                   ) -> std::span<T>
     {
         const auto  buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
         if (buffer_size % sizeof(T) != gl::size_t{ 0u }) throw std::invalid_argument{ "buffer size is not divisible by type size" };
         
-              auto* pointer     = ::glMapNamedBufferRange(gl::to_underlying(buffer), gl::intptr_t{ 0 }, static_cast<gl::sizeiptr_t>(buffer_size), gl::to_underlying(access_flags));
+              auto* pointer     = ::glMapNamedBufferRange(gl::to_underlying(buffer), gl::intptr_t{ 0 }, static_cast<gl::sizeiptr_t>(buffer_size), gl::to_underlying(range_access_flags));
         if (!pointer) throw std::runtime_error{ "failed to map buffer" };
         
         return std::span{ reinterpret_cast<T*>(pointer), buffer_size / sizeof(T) };
