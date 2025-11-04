@@ -11,8 +11,8 @@ export namespace gl
         explicit 
         fence() 
             : sync_{} {}
-        fence(fence&& other) noexcept
-            : sync_{ std::exchange(other.sync_, gl::sync_t{}) } {}
+        fence(fence&& object) noexcept
+            : sync_{ std::exchange(object.sync_, gl::sync_t{}) } {}
        ~fence() 
         {
             gl::delete_sync(sync_);
@@ -22,28 +22,23 @@ export namespace gl
         {
             if (!sync_) sync_ = gl::fence_sync();
         }
-        void wait     (gl::bool_t client_side = gl::true_)
+        void wait     ()
         {
-            if (client_side)
+                  auto status  = gl::client_wait_sync(sync_, gl::synchronization_command_e::flush, gl::time_t{ 0u });
+            const auto timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
+            while (status == gl::synchronization_status_e::timeout_expired)
             {
-                      auto status  = gl::client_wait_sync(sync_, gl::synchronization_command_e{}, gl::time_t{ 0u });
-                const auto timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
-                while (status == gl::synchronization_status_e::timeout_expired)
-                {
-                    status = gl::client_wait_sync(sync_, gl::synchronization_command_e::flush, timeout);
-                }
+                status = gl::client_wait_sync(sync_, gl::synchronization_command_e::flush, timeout);
+            }
 
-                if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "sync wait failed" };
-            }
-            else
-            {
-                gl::server_wait_sync(sync_);
-            }
+            if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "sync wait failed" };
+
+            gl::delete_sync(sync_);
         }
 
-        auto operator=(fence&& other) noexcept -> fence&
+        auto operator=(fence&& object) noexcept -> fence&
         {
-            if (this != &other) sync_ = std::exchange(other.sync_, sync_);
+            if (this != &object) sync_ = std::exchange(object.sync_, sync_);
 
             return *this;
         }

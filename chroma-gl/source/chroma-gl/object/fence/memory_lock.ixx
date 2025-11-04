@@ -10,6 +10,9 @@ export namespace gl
     class memory_locker
     {
     public:
+        memory_locker()
+            : locks_{} {}
+
         void lock(gl::range_t range)
         {
             auto& [fence, _] = locks_.emplace_back(gl::fence{}, range);
