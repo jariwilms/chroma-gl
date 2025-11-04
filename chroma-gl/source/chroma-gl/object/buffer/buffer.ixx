@@ -8,52 +8,6 @@ import opengl.object.memory_lock;
 
 export namespace gl
 {
-    template<typename T>
-    struct mapping
-    {
-        std::span<T> memory;
-        gl::range_t    range;
-    };
-    class  memory_locker
-    {
-    public:
-        void lock          (gl::range_t range)
-        {
-            locks_.emplace_back(gl::fence{}, range);
-        }
-        void wait          (gl::range_t range)
-        {
-            auto remaining_locks = std::vector<gl::memory_lock_t>{};
-            std::ranges::for_each(locks_, [&](gl::memory_lock_t& lock)
-                {
-                    auto& [lock_fence, lock_range] = lock;
-                    if   (gl::range_overlaps(lock_range, range)) wait_for_fence(lock_fence);
-                    else                                         remaining_locks.emplace_back(std::move(lock));
-                });
-
-            locks_ = std::move(remaining_locks);
-        }
-
-    private:
-        void wait_for_fence(gl::fence& fence)
-        {
-            auto status  = gl::synchronization_status_e::timeout_expired;
-            auto timeout = gl::time_t{ 0u };
-
-            while (status == gl::synchronization_status_e::timeout_expired)
-            {
-                status  = gl::client_wait_sync(fence, gl::synchronization_command_e::flush, timeout);
-                timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
-
-                if (status == gl::synchronization_status_e::wait_failed) throw std::runtime_error{ "sync wait failed" };
-            }
-        }
-
-        std::vector<gl::memory_lock_t> locks_;
-    };
-
-
-
     class buffer : public gl::object
     {
     public:
@@ -72,7 +26,7 @@ export namespace gl
             return element_count_ * element_size_;
         }
 
-        auto operator=(buffer&&) noexcept -> buffer & = default;
+        auto operator=(buffer&&) noexcept -> buffer& = default;
 
     protected:
         explicit
@@ -89,14 +43,53 @@ export namespace gl
     {
     public:
         explicit
-        static_buffer(std::span<const T> source)
-            : gl::buffer{ source.size(), sizeof(T) }
+        static_buffer(std::span<const T> memory)
+            : gl::buffer{ memory.size(), sizeof(T) }
         {
-            gl::buffer_storage(handle(), gl::buffer_storage_flags_e::static_, source);
+            gl::buffer_storage<T>(handle(), gl::buffer_storage_flags_e::static_, memory);
         }
     };
-    template<typename T, gl::bool_t Read, gl::bool_t Write>
-    class dynamic_buffer : public gl::buffer
+
+
+
+
+
+    template<typename Derived, typename T>
+    struct dynamic_upload
+    {
+        void upload(std::span<const T> memory, gl::index_t offset = 0u)
+        {
+                  auto& derived      = static_cast<Derived&>(*this);
+            const auto  upload_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, derived.count());
+            if (upload_range.empty()) return;
+
+            auto mapped_memory       = gl::map_buffer_range<T>(derived.handle(), gl::buffer_mapping_range_access_flags_e::write, upload_range);
+            std::memcpy(mapped_memory.data() + upload_range.index, memory.data(), upload_range.count * sizeof(T));
+            gl::unmap_buffer(derived.handle());
+        }
+    };
+    template<typename Derived, typename T>
+    struct dynamic_download
+    {
+        void download(std::span<T> memory, gl::index_t offset = 0u)
+        {
+                  auto& derived        = static_cast<Derived&>(*this);
+            const auto  download_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, derived.count());
+            if (download_range.empty()) return;
+
+            auto mapped_memory         = gl::map_buffer_range<T>(derived.handle(), gl::buffer_mapping_range_access_flags_e::read, download_range);
+            std::memcpy(memory.data(), mapped_memory.data() + download_range.index, download_range.count * sizeof(T));
+            gl::unmap_buffer(derived.handle());
+        }
+    };
+
+    template<typename Derived, typename T, gl::bool_t Upload, gl::bool_t Download> struct dynamic_transfer;
+    template<typename Derived, typename T> struct dynamic_transfer<Derived, T, gl::true_ , gl::false_> { using  type =        gl::dynamic_upload<Derived, T>                                            ; };
+    template<typename Derived, typename T> struct dynamic_transfer<Derived, T, gl::false_, gl::true_ > { using  type =                                               gl::dynamic_download<Derived, T>   ; };
+    template<typename Derived, typename T> struct dynamic_transfer<Derived, T, gl::true_ , gl::true_ > { struct type : public gl::dynamic_upload<Derived, T>, public gl::dynamic_download<Derived, T> {}; };
+
+    template<typename T, gl::bool_t Upload = gl::true_, gl::bool_t Download = gl::true_>
+    class dynamic_buffer : public gl::buffer, public gl::dynamic_transfer<gl::dynamic_buffer<T, Upload, Download>, T, Upload, Download>::type
     {
     public:
         explicit
@@ -104,200 +97,159 @@ export namespace gl
             : gl::buffer{ element_count, sizeof(T) }
         {
             auto buffer_storage_flags = gl::buffer_storage_flags_e{};
-            if constexpr (Read ) buffer_storage_flags |= gl::buffer_storage_flags_e::read;
-            if constexpr (Write) buffer_storage_flags |= gl::buffer_storage_flags_e::write;
+            if constexpr (Upload  ) buffer_storage_flags |= gl::buffer_storage_flags_e::write;
+            if constexpr (Download) buffer_storage_flags |= gl::buffer_storage_flags_e::read;
 
             gl::buffer_storage<T>(handle(), buffer_storage_flags, element_count);
         }
 
-        void read (std::span<      T> memory, gl::index_t offset = 0u) requires (Read )
-        {
-            const auto read_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, count());
-            if (read_range.empty()) return;
-
-            mapping_.memory = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::read, read_range);
-            memory_locker_.wait(read_range);
-            std::memcpy(memory.data(), mapping_.memory.data(), read_range.count * sizeof(T));
-            memory_locker_.lock(read_range);
-            gl::unmap_buffer(handle());
-        }
-        void write(std::span<const T> memory, gl::index_t offset = 0u) requires (Write)
-        {
-            const auto write_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, count());
-            if (write_range.empty()) return;
-
-            mapping_.memory = gl::map_buffer_range<T>(handle(), gl::buffer_mapping_range_access_flags_e::write, count());
-            memory_locker_.wait(write_range);
-            std::memcpy(mapping_.memory.data(), memory.data(), write_range.count * sizeof(T));
-            memory_locker_.lock(write_range);
-            gl::unmap_buffer(handle());
-        }
-
     private:
-        gl::mapping<T>    mapping_;
-        gl::memory_locker memory_locker_;
+        friend struct gl::dynamic_upload  <dynamic_buffer, T>;
+        friend struct gl::dynamic_download<dynamic_buffer, T>;
     };
-    template<typename T, gl::bool_t Read, gl::bool_t Write>
-    class persistent_buffer : public gl::buffer
+
+
+
+    template<typename Derived, typename T>
+    struct persistent_upload
+    {
+        void upload(std::span<const T> memory, gl::index_t offset = 0u)
+        {
+                  auto& derived      = static_cast<Derived&>(*this);
+            const auto  upload_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, derived.count());
+            if (upload_range.empty()) return;
+
+            derived.memory_locker_.wait(upload_range);
+            std::memcpy(derived.mapped_memory_.data() + upload_range.index, memory.data(), upload_range.count * sizeof(T));
+            derived.memory_locker_.lock(upload_range);
+        }
+    };
+    template<typename Derived, typename T>
+    struct persistent_download
+    {
+        void download(std::span<T> memory, gl::index_t offset = 0u)
+        {
+                  auto& derived        = static_cast<Derived&>(*this);
+            const auto  download_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, derived.count());
+            if (download_range.empty()) return;
+
+            derived.memory_locker_.wait(download_range);
+            std::memcpy(memory.data(), derived.mapped_memory_.data() + download_range.index, download_range.count * sizeof(T));
+            derived.memory_locker_.lock(download_range);
+        }
+    };
+
+    template<typename Derived, typename T, gl::bool_t Upload, gl::bool_t Download> struct persistent_transfer;
+    template<typename Derived, typename T> struct persistent_transfer<Derived, T, gl::true_ , gl::false_> { using  type =        gl::persistent_upload<Derived, T>                                               ; };
+    template<typename Derived, typename T> struct persistent_transfer<Derived, T, gl::false_, gl::true_ > { using  type =                                                  gl::persistent_download<Derived, T>   ; };
+    template<typename Derived, typename T> struct persistent_transfer<Derived, T, gl::true_ , gl::true_ > { struct type : public gl::persistent_upload<Derived, T>, public gl::persistent_download<Derived, T> {}; };
+
+    template<typename T, gl::bool_t Upload = gl::true_, gl::bool_t Download = gl::true_>
+    class persistent_buffer : public gl::buffer, public gl::persistent_transfer<gl::persistent_buffer<T, Upload, Download>, T, Upload, Download>::type
     {
     public:
         explicit
         persistent_buffer(gl::count_t element_count)
             : gl::buffer{ element_count, sizeof(T) }
+            , mapped_memory_{}, memory_locker_{}
         {
-            auto buffer_storage_flags      = gl::buffer_storage_flags_e::persistent | gl::buffer_storage_flags_e::coherent;
-            if constexpr (Read ) buffer_storage_flags |= gl::buffer_storage_flags_e::read;
-            if constexpr (Write) buffer_storage_flags |= gl::buffer_storage_flags_e::write;
+            auto storage_flags              = gl::buffer_storage_flags_e::persistent | gl::buffer_storage_flags_e::coherent;
+            if constexpr (Upload  ) storage_flags |= gl::buffer_storage_flags_e::write;
+            if constexpr (Download) storage_flags |= gl::buffer_storage_flags_e::read;
 
-            auto buffer_range_access_flags = gl::buffer_mapping_range_access_flags_e::persistent | gl::buffer_mapping_range_access_flags_e::coherent;
-            if constexpr (Read ) buffer_range_access_flags |= gl::buffer_mapping_range_access_flags_e::read;
-            if constexpr (Write) buffer_range_access_flags |= gl::buffer_mapping_range_access_flags_e::write;
+            auto mapping_range_access_flags = gl::buffer_mapping_range_access_flags_e::persistent | gl::buffer_mapping_range_access_flags_e::coherent;
+            if constexpr (Upload  ) mapping_range_access_flags |= gl::buffer_mapping_range_access_flags_e::write;
+            if constexpr (Download) mapping_range_access_flags |= gl::buffer_mapping_range_access_flags_e::read;
 
-                              gl::buffer_storage  <T>(handle(), buffer_storage_flags     , element_count);
-            mapping_.memory = gl::map_buffer_range<T>(handle(), buffer_range_access_flags, count()      );
+                             gl::buffer_storage  <T>(handle(), storage_flags             , element_count);
+            mapped_memory_ = gl::map_buffer_range<T>(handle(), mapping_range_access_flags, count()      );
         }
-        persistent_buffer(persistent_buffer&&) noexcept = default;
-       ~persistent_buffer()
-        {
-            gl::unmap_buffer(handle());
-        }
-
-        void read (std::span<      T> memory, gl::index_t offset = 0u) requires (Read )
-        {
-            const auto read_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, count());
-            if (read_range.empty()) return;
-
-            memory_locker_.wait(read_range);
-            std::memcpy(memory.data(), mapping_.memory.data(), read_range.count * sizeof(T));
-            memory_locker_.lock(read_range);
-        }
-        void write(std::span<const T> memory, gl::index_t offset = 0u) requires (Write)
-        {
-            const auto write_range = gl::clamp_range(gl::range_t{ static_cast<gl::count_t>(memory.size()), offset }, count());
-            if (write_range.empty()) return;
-
-            memory_locker_.wait(write_range);
-            std::memcpy(mapping_.memory.data(), memory.data(), write_range.count * sizeof(T));
-            memory_locker_.lock(write_range);
-        }
-
-        auto operator=(persistent_buffer&&) noexcept -> persistent_buffer& = default;
 
     private:
-        gl::mapping<T>    mapping_;
+        friend struct gl::persistent_upload  <persistent_buffer<T, Upload, Download>, T>;
+        friend struct gl::persistent_download<persistent_buffer<T, Upload, Download>, T>;
+
+        std::span<T>      mapped_memory_;
         gl::memory_locker memory_locker_;
     };
-    template<typename T, gl::bool_t Read, gl::bool_t Write>
-    class partition_buffer : private gl::dynamic_buffer<T, Read, Write>
-    {
-    public:
-        explicit
-        partition_buffer(gl::count_t partition_count, gl::count_t partition_element_count)
-            : gl::dynamic_buffer<T, Read, Write>{ partition_count * partition_element_count }
-            , partition_count_{ partition_count }, partition_element_count_{ partition_element_count }, partition_index_{ 0u } {}
-
-        void read_next (std::span<const T> memory, gl::index_t offset) requires (Read )
-        {
-            const auto partition_offset = partition_index_ * partition_element_count_;
-            read(memory, partition_offset + offset);
-            
-            to_next_partition();
-        }
-        void write_next(std::span<const T> memory, gl::index_t offset) requires (Write)
-        {
-            const auto partition_offset = partition_index_ * partition_element_count_;
-            write(memory, partition_offset + offset);
-            
-            to_next_partition();
-        }
-
-    private:
-        void to_next_partition()
-        {
-            ++partition_index_ %= partition_count_;
-        }
-        
-        gl::count_t partition_count_;
-        gl::count_t partition_element_count_;
-        gl::index_t partition_index_;
-    };
 
 
 
-    template<auto Target, typename T>
+    template<typename T, auto Target>
     class bindable_buffer;
-    template<auto Target, typename T> requires (std::is_same_v<decltype(Target), gl::buffer_target_e     >)
-    class bindable_buffer<Target, T> : public T
+    template<typename T, auto Target> requires (std::is_same_v<decltype(Target), gl::buffer_target_e     >)
+    class bindable_buffer<T, Target> : public T
     {
     public:
         using T::T;
 
         void bind  ()
         {
-            gl::bind_buffer(this->handle(), Target);
+            gl::bind_buffer(T::handle(), Target);
         }
         void unbind()
         {
             gl::bind_buffer(gl::null_object, Target);
         }
     };
-    template<auto Target, typename T> requires (std::is_same_v<decltype(Target), gl::buffer_base_target_e>)
-    class bindable_buffer<Target, T> : public T
+    template<typename T, auto Target> requires (std::is_same_v<decltype(Target), gl::buffer_base_target_e>)
+    class bindable_buffer<T, Target> : public T
     {
     public:
         using T::T;
 
         void bind(gl::binding_t binding)
         {
-            gl::bind_buffer_base(this->handle(), Target, binding);
+            gl::bind_buffer_base(T::handle(), Target, binding);
         }
     };
 
-    template<typename T>
-    using generic_buffer        = gl::dynamic_buffer   <T, gl::true_ , gl::true_ >;
-    template<typename T>
-    using stream_buffer         = gl::persistent_buffer<T, gl::false_, gl::true_ >;
-    template<typename T>
-    using shared_buffer         = gl::persistent_buffer<T, gl::true_ , gl::true_ >;
-    template<typename T>
-    using result_buffer         = gl::persistent_buffer<T, gl::true_ , gl::false_>;
 
-    template<typename T>
-    using uniform_buffer        = gl::bindable_buffer<gl::buffer_base_target_e::uniform_buffer       , gl::stream_buffer    <T             >>;
-    template<typename T, gl::bool_t Read = gl::true_, gl::bool_t Write = gl::true_>
-    using shader_storage_buffer = gl::bindable_buffer<gl::buffer_base_target_e::shader_storage_buffer, gl::persistent_buffer<T, Read, Write>>;
-    template<typename T>
-    using draw_indirect_buffer  = gl::bindable_buffer<gl::buffer_target_e     ::draw_indirect_buffer , gl::stream_buffer    <T             >>;
 
-    template<typename T>
+    template<typename T> 
     using vertex_buffer         = gl::static_buffer<T>;
-    using index_buffer          = gl::bindable_buffer<gl::buffer_target_e::element_array_buffer, gl::static_buffer<gl::uint32_t>>;
+    using index_buffer          = gl::static_buffer<gl::uint32_t>;
+
+    template<typename T>
+    using uniform_buffer        = gl::bindable_buffer<gl::dynamic_buffer<T, gl::true_, gl::false_>, gl::buffer_base_target_e::uniform_buffer>;
+    template<typename T, gl::bool_t Upload = gl::true_, gl::bool_t Download = gl::true_>
+    using shader_storage_buffer = gl::bindable_buffer<gl::persistent_buffer<T, Upload, Download>, gl::buffer_base_target_e::shader_storage_buffer>;
+
+    template<typename T> 
+    using shared_buffer         = gl::shader_storage_buffer<T, gl::true_ , gl::true_ >;
+    template<typename T> 
+    using stream_buffer         = gl::shader_storage_buffer<T, gl::true_ , gl::false_>;
+    template<typename T> 
+    using result_buffer         = gl::shader_storage_buffer<T, gl::false_, gl::true_ >;
+
+    using pixel_unpack_buffer   = gl::bindable_buffer<gl::stream_buffer<gl::byte_t                        >, gl::buffer_target_e::pixel_unpack_buffer >;
+    using pixel_pack_buffer     = gl::bindable_buffer<gl::result_buffer<gl::byte_t                        >, gl::buffer_target_e::pixel_pack_buffer   >;
+    using draw_indirect_buffer  = gl::bindable_buffer<gl::stream_buffer<gl::draw_elements_indirect_command>, gl::buffer_target_e::draw_indirect_buffer>;
 
 
-                                                            
-    class pixel_pack_buffer
-    {
-        //TODO
-    };
-    class pixel_unpack_buffer : public gl::bindable_buffer<gl::buffer_target_e::pixel_unpack_buffer, gl::stream_buffer<gl::byte_t>>
+
+
+
+    template<typename T>
+    class partition_buffer : private gl::stream_buffer<T>
     {
     public:
-        pixel_unpack_buffer(gl::count_t element_count)
-            : gl::bindable_buffer<gl::buffer_target_e::pixel_unpack_buffer, gl::stream_buffer<gl::byte_t>>{ element_count }
-            , buffer_data_descriptor_{ gl::buffer_base_format_e::rgba, gl::pixel_data_type_e::byte } {}
+        explicit
+        partition_buffer(gl::count_t partition_count, gl::count_t partition_element_count)
+            : gl::stream_buffer<T>{ partition_count * partition_element_count }
+            , partition_count_{ partition_count }, partition_element_count_{ partition_element_count }, partition_index_{ 0u } {}
 
-        void write            (gl::buffer_data_descriptor buffer_data_descriptor, std::span<const gl::byte_t> memory)
+        void upload(std::span<const T> memory)
         {
-            buffer_data_descriptor_ = buffer_data_descriptor;
-            gl::bindable_buffer<gl::buffer_target_e::pixel_unpack_buffer, gl::stream_buffer<gl::byte_t>>::write(memory);
-        }
-
-        auto data_descriptor() const -> gl::buffer_data_descriptor
-        {
-            return buffer_data_descriptor_;
+            const auto partition_offset = partition_index_ * partition_element_count_;
+            gl::stream_buffer<T>::upload(memory, partition_offset);
+            
+            ++partition_index_ %= partition_count_;
         }
 
     private:
-        gl::buffer_data_descriptor buffer_data_descriptor_;
+        gl::count_t partition_count_;
+        gl::count_t partition_element_count_;
+        gl::index_t partition_index_;
     };
 }
