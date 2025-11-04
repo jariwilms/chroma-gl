@@ -119,15 +119,15 @@ export namespace gl
         compressed_texture_n(format_e format, const vector_t& dimensions, gl::bool_t allocate_mipmaps = gl::true_)
             : gl::texture_n<Dimensions>{ static_cast<gl::texture_n<Dimensions>::format_e>(format), dimensions, allocate_mipmaps } {}
 
-        void transfer(                                                 gl::compressed_texture_base_format_e compressed_texture_base_format, std::span<const gl::byte_t> memory)
+        void transfer(                                                 gl::compressed_texture_data_descriptor compressed_texture_data_descriptor, std::span<const gl::byte_t> memory)
         {
-            transfer(gl::uint32_t{ 0u }, this->dimensions(), compressed_texture_base_format, memory);
+            transfer(gl::uint32_t{ 0u }, gl::texture_n<Dimensions>::dimensions(), compressed_texture_data_descriptor.base_format, memory);
         }
-        void transfer(gl::uint32_t image_level, region_t image_region, gl::compressed_texture_base_format_e compressed_texture_base_format, std::span<const gl::byte_t> memory)
+        void transfer(gl::uint32_t image_level, region_t image_region, gl::compressed_texture_data_descriptor compressed_texture_data_descriptor, std::span<const gl::byte_t> memory)
         {
-            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::compressed_texture_sub_image_1d(this->handle(), compressed_texture_base_format, image_level, image_region, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::compressed_texture_sub_image_2d(this->handle(), compressed_texture_base_format, image_level, image_region, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::compressed_texture_sub_image_3d(this->handle(), compressed_texture_base_format, image_level, image_region, memory);
+            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::compressed_texture_sub_image_1d(gl::texture_n<Dimensions>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
+            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::compressed_texture_sub_image_2d(gl::texture_n<Dimensions>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
+            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::compressed_texture_sub_image_3d(gl::texture_n<Dimensions>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
         }
     };
     template<gl::uint32_t Dimensions>

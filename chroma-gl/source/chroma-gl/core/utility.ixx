@@ -67,12 +67,12 @@ export namespace gl
     template<typename T>
     constexpr auto convert_range        (gl::range_t      range) -> gl::byte_range_t
     {
-        return gl::byte_range_t{ range.count * sizeof(T), range.index * sizeof(T) };
+        return gl::byte_range_t{ range.index * sizeof(T), range.count * sizeof(T) };
     }
     template<typename T>
     constexpr auto convert_range        (gl::byte_range_t range) -> gl::range_t
     {
-        return gl::range_t{ range.size / sizeof(T), range.offset / sizeof(T) };
+        return gl::range_t{ range.offset / sizeof(T), range.size / sizeof(T) };
     }
     constexpr auto range_overlaps       (gl::range_t      first, gl::range_t      second) -> gl::bool_t
     {
@@ -88,7 +88,7 @@ export namespace gl
         const auto intersect_end   = std::min   (first.index + first.count, second.index  + second.count   );
         const auto intersect_count = gl::ternary(intersect_end > intersect_index, intersect_end - intersect_index, gl::size_t{ 0u });
         
-        return gl::range_t{ intersect_count, intersect_index };
+        return gl::range_t{ intersect_index, intersect_count };
     }
     auto range_intersection(gl::byte_range_t first, gl::byte_range_t second) -> gl::byte_range_t
     {
@@ -98,11 +98,11 @@ export namespace gl
         
         return gl::byte_range_t{ intersect_count, intersect_index };
     }
-    template<typename T, gl::uint32_t Count>
-    constexpr auto clamp_region         (const gl::region_t<T, Count>& region, const gl::vector_t<T, Count>& boundary) -> gl::region_t<T, Count>
+    template<typename T, gl::uint32_t Components>
+    constexpr auto clamp_region         (const gl::region_t<T, Components>& region, const gl::vector_t<T, Components>& boundary) -> gl::region_t<T, Components>
     {
-        auto result = gl::region_t<T, Count>{};
-        std::ranges::for_each(std::views::iota(0u, Count), [&](auto index)
+        auto result = gl::region_t<T, Components>{};
+        std::ranges::for_each(std::views::iota(0u, Components), [&](auto index)
             {
                 const auto maximum_extent = T{ boundary[index] - std::clamp(region.origin[index], T{ 0 }, boundary[index]) };
                 result.origin[index]      = std::clamp(region.origin[index], T{ 0 }, boundary[index]);

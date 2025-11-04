@@ -60,7 +60,7 @@ export namespace gl
         void upload(std::span<const T> memory, gl::index_t offset = 0u)
         {
                   auto& derived      = static_cast<Derived&>(*this);
-            const auto  upload_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, derived.count());
+            const auto  upload_range = gl::clamp_range(gl::range_t{ offset, memory.size() }, derived.count());
             if (upload_range.empty()) return;
 
             auto mapped_memory       = gl::map_buffer_range<T>(derived.handle(), gl::buffer_mapping_range_access_flags_e::write, upload_range);
@@ -74,7 +74,7 @@ export namespace gl
         void download(std::span<T> memory, gl::index_t offset = 0u)
         {
                   auto& derived        = static_cast<Derived&>(*this);
-            const auto  download_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, derived.count());
+            const auto  download_range = gl::clamp_range(gl::range_t{ offset, memory.size() }, derived.count());
             if (download_range.empty()) return;
 
             auto mapped_memory         = gl::map_buffer_range<T>(derived.handle(), gl::buffer_mapping_range_access_flags_e::read, download_range);
@@ -116,7 +116,7 @@ export namespace gl
         void upload(std::span<const T> memory, gl::index_t offset = 0u)
         {
                   auto& derived      = static_cast<Derived&>(*this);
-            const auto  upload_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, derived.count());
+            const auto  upload_range = gl::clamp_range(gl::range_t{ offset, memory.size() }, derived.count());
             if (upload_range.empty()) return;
 
             derived.memory_locker_.wait(upload_range);
@@ -130,7 +130,7 @@ export namespace gl
         void download(std::span<T> memory, gl::index_t offset = 0u)
         {
                   auto& derived        = static_cast<Derived&>(*this);
-            const auto  download_range = gl::clamp_range(gl::range_t{ memory.size(), offset }, derived.count());
+            const auto  download_range = gl::clamp_range(gl::range_t{ offset, memory.size() }, derived.count());
             if (download_range.empty()) return;
 
             derived.memory_locker_.wait(download_range);

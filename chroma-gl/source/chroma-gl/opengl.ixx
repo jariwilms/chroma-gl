@@ -1410,7 +1410,7 @@ export namespace gl
     void buffer_sub_data                                  (gl::handle_t buffer, gl::index_t index, std::span<const T> memory)
     {
         const auto buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
-        const auto byte_range  = gl::byte_range_t{ memory.size_bytes(), index * sizeof(T) };
+        const auto byte_range  = gl::byte_range_t{ index * sizeof(T), memory.size_bytes() };
         if (byte_range.offset + byte_range.size > buffer_size) throw std::invalid_argument{ "range exceeds buffer bounds" };
 
         ::glNamedBufferSubData(

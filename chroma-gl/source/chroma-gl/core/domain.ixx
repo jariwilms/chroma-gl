@@ -5,46 +5,52 @@ import opengl.types;
 
 export namespace gl
 {
-    template<typename T, gl::uint32_t Count>
+    template<typename T, gl::uint32_t Components>
     struct region_t
     {
-        constexpr region_t(const gl::vector_t<T, Count>& extent = {}, const gl::vector_t<T, Count>& origin = {})
-            : extent{ extent }, origin{ origin } {}
+        region_t(                                           const gl::vector_t<T, Components>& extent)
+            : origin{        }, extent{ extent } {}
+        region_t(const gl::vector_t<T, Components>& origin, const gl::vector_t<T, Components>& extent)
+            : origin{ origin }, extent{ extent } {}
 
         auto operator==(const region_t&) const -> gl::bool_t = default;
 
-        gl::vector_t<T, Count> extent{};
-        gl::vector_t<T, Count> origin{};
+        gl::vector_t<T, Components> origin;
+        gl::vector_t<T, Components> extent;
     };
     struct      range_t
     {
-        constexpr range_t(gl::size_t count = {}, gl::size_t index = {})
-            : count{ count }, index{ index } {}
-
-        constexpr auto operator==(const range_t&) const -> gl::bool_t = default;
+        range_t(                   gl::count_t count)
+            : index{    0u }, count{ count } {}
+        range_t(gl::index_t index, gl::count_t count)
+            : index{ index }, count{ count } {}
 
         auto empty() const -> gl::bool_t
         {
-            return count == gl::size_t{ 0u };
+            return count == gl::count_t{ 0u };
         }
 
-        gl::size_t count{};
-        gl::size_t index{};
+        auto operator==(const range_t&) const -> gl::bool_t = default;
+
+        gl::index_t index;
+        gl::count_t count;
     };
     struct byte_range_t
     {
-        constexpr byte_range_t(gl::size_t size = {}, gl::size_t offset = {})
-            : size{ size }, offset{ offset } {}
-
-        constexpr auto operator==(const byte_range_t&) const -> gl::bool_t = default;
+        byte_range_t(                   gl::size_t size)
+            : offset{     0u }, size{ size } {}
+        byte_range_t(gl::size_t offset, gl::size_t size)
+            : offset{ offset }, size{ size } {}
 
         auto empty() const -> gl::bool_t
         {
             return size == gl::size_t{ 0u };
         }
 
-        gl::size_t size  {};
-        gl::size_t offset{};
+        auto operator==(const byte_range_t&) const -> gl::bool_t = default;
+
+        gl::size_t offset;
+        gl::size_t size  ;
     };
 
     using length_t       = gl::region_t<gl::uint32_t, 1u>;

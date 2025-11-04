@@ -15,8 +15,9 @@ export namespace gl
         T                     base_format;
         gl::pixel_data_type_e pixel_data_type;
     };
-    using  texture_data_descriptor = gl::pixel_data_descriptor<gl::texture_base_format_e>;
-    using  buffer_data_descriptor  = gl::pixel_data_descriptor<gl::buffer_base_format_e >;
+    using  texture_data_descriptor            = gl::pixel_data_descriptor<gl::texture_base_format_e           >;
+    using  compressed_texture_data_descriptor = gl::pixel_data_descriptor<gl::compressed_texture_base_format_e>;
+    using  buffer_data_descriptor             = gl::pixel_data_descriptor<gl::buffer_base_format_e            >;
 
 
 
