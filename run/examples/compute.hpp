@@ -27,17 +27,20 @@ static inline void compute_result()
     auto       shader_list            = std::initializer_list{ compute_shader };
     auto       pipeline               = gl::pipeline{ shader_list };
 
-    //Dispatch and CPU synchronization
+    //Bindings and data upload
     pipeline     .bind ();
     input_buffer .bind (gl::binding_t{ 0u });
     output_buffer.bind (gl::binding_t{ 1u });
-    input_buffer .write(input_data);
-
-    gl::dispatch_compute(gl::vector_3u{ input_size / 256u, 1u, 1u });
-    auto       fence                  = gl::fence{};
-    auto       result                 = gl::client_wait_sync(fence, gl::synchronization_command_e::flush, gl::time_t{ 1000000000 }); //1s
+    input_buffer .upload(input_data);
     
-    output_buffer.read(output_data);
+    //Dispatch and CPU synchronization
+    gl::dispatch_compute(gl::vector_3u{ input_size / 256u, 1u, 1u });
+    auto       fence                  = gl::fence{}; //Fence is not placed by default
+    fence.place();                                   //Place the fence
+    //...                                            //Do other stuff
+    fence.wait();                                    //Wait for the result
+    
+    output_buffer.download(output_data);
 
     window.close();
 }
