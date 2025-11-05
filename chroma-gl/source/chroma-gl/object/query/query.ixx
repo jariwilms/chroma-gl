@@ -38,6 +38,7 @@ export namespace gl
     class query : public gl::base_query<Target>
     {
     public:
+        explicit
         query() = default;
 
         void begin() 
@@ -53,6 +54,7 @@ export namespace gl
     class query<gl::query_target_e::timestamp> : public gl::base_query<gl::query_target_e::timestamp>
     {
     public:
+        explicit
         query() = default;
 
         void record()

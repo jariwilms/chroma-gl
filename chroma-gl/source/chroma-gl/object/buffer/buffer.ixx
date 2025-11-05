@@ -261,7 +261,7 @@ export namespace gl
     template<typename T, auto Binding = gl::none> 
     using result_buffer         = gl::persistent_buffer<T, gl::false_, gl::true_ , Binding>;
 
-    using pixel_unpack_buffer   = gl::stream_buffer<gl::byte_t                        , gl::buffer_target_e::pixel_unpack_buffer >;
     using pixel_pack_buffer     = gl::result_buffer<gl::byte_t                        , gl::buffer_target_e::pixel_pack_buffer   >;
+    using pixel_unpack_buffer   = gl::stream_buffer<gl::byte_t                        , gl::buffer_target_e::pixel_unpack_buffer >;
     using draw_indirect_buffer  = gl::stream_buffer<gl::draw_elements_indirect_command, gl::buffer_target_e::draw_indirect_buffer>;
 }

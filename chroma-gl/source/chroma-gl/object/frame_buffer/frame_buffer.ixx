@@ -38,6 +38,7 @@ export namespace gl
         using surface_e          = gl::frame_buffer_surface_e;
         using target_e           = gl::frame_buffer_target_e;
 
+        explicit
         frame_buffer(const gl::frame_buffer_attachment_map_t attachment_map, const gl::vector_2u& dimensions)
             : gl::object{ gl::create_frame_buffer() }
             , textures_{}, cubemaps_{}, render_buffers_{}, dimensions_{ dimensions }
@@ -123,7 +124,7 @@ export namespace gl
             else if constexpr (Surface == surface_e::render_buffer) gl::frame_buffer_render_buffer(handle(), render_buffers_.at(identifier).handle(), attachment             );
         }
 
-        void read_from(source_e color_source)
+        void read_from   (source_e color_source)
         {
             gl::frame_buffer_read_buffer(handle(), color_source);
         }
@@ -141,14 +142,14 @@ export namespace gl
         {
                  if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(value);
             else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(value);
-            else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid application");
+            else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid surface");
         }
         template<surface_e Surface = surface_e::texture>
         void apply       (const gl::string& identifier, const gl::texture_state& texture_state)
         {
                  if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(texture_state);
             else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(texture_state);
-            else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid application");
+            else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid surface");
         }
 
         template<surface_e Surface = surface_e::texture>

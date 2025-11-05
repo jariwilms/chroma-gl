@@ -24,20 +24,20 @@ export namespace gl
             gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
         }
         
-        void transfer        (face_e face,                                                  gl::texture_data_descriptor texture_data_descriptor,                 std::span<const gl::byte_t>      memory)
+        void upload          (face_e face,                                                  gl::texture_data_descriptor texture_data_descriptor,                 std::span<const gl::byte_t>      memory)
         {
-            transfer(face, gl::uint32_t{ 0u }, dimensions_, texture_data_descriptor, memory);
+            upload(face, gl::uint32_t{ 0u }, dimensions_, texture_data_descriptor, memory);
         }
-        void transfer        (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::texture_data_descriptor texture_data_descriptor,                 std::span<const gl::byte_t>      memory)
+        void upload          (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::texture_data_descriptor texture_data_descriptor,                 std::span<const gl::byte_t>      memory)
         {
             const auto image_volume = gl::volume_t{ gl::vector_3u{ image_area.extent, 1u }, gl::vector_3u{ image_area.origin, gl::to_underlying(face - face_e::positive_x) } };
             gl::texture_sub_image_3d(handle(), image_level, image_volume, texture_data_descriptor, memory);
         }
-        void transfer        (                                                              gl::texture_data_descriptor texture_data_descriptor, std::span<const std::span<const gl::byte_t>, 6u> memory)
+        void upload          (                                                              gl::texture_data_descriptor texture_data_descriptor, std::span<const std::span<const gl::byte_t>, 6u> memory)
         {
             for (const auto [index, face_memory] : std::views::enumerate(memory))
             {
-                transfer(face_e::positive_x + index, texture_data_descriptor, face_memory);
+                upload(face_e::positive_x + index, texture_data_descriptor, face_memory);
             }
         }
         void generate_mipmaps()

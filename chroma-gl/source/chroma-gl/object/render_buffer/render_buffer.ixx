@@ -11,6 +11,7 @@ export namespace gl
     public:
         using format_e = gl::render_buffer_format_e;
 
+        explicit
         render_buffer(format_e format, const gl::vector_2u& dimensions)
             : gl::object{ gl::create_render_buffer() }
             , format_{ format }, dimensions_{ dimensions }

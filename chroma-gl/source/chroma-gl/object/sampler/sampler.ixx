@@ -12,6 +12,7 @@ export namespace gl
     public:
         using parameter_e = gl::sampler_parameter_e;
 
+        explicit
         sampler(const gl::sampler_state& sampler_state)
             : gl::object{ gl::create_sampler() }
         {

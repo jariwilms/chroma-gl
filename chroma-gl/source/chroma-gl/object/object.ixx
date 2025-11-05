@@ -14,9 +14,11 @@ export namespace gl
         }
 
     protected:
-        explicit object(gl::handle_t handle)
+        explicit 
+        object(gl::handle_t handle)
             : handle_{ handle } {}
-        explicit object(object&& other) noexcept
+        explicit 
+        object(object&& other) noexcept
             : handle_{ std::exchange(other.handle_ , gl::null_object) } {}
 
         auto handle() const -> gl::handle_t
