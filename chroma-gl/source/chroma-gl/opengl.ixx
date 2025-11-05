@@ -39,72 +39,100 @@ export namespace gl
         auto get_boolean        = [](gl::data_e data) -> gl::bool_t
             {
                 auto value = gl::boolean_t{};
-                return ::glGetBooleanv(gl::to_underlying(data), &value), static_cast<gl::bool_t>(value);
+                ::glGetBooleanv(gl::to_underlying(data), &value);
+                
+                return static_cast<gl::bool_t>(value);
             };
         auto get_int32          = [](gl::data_e data) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetIntegerv(gl::to_underlying(data), &value), value;
+                ::glGetIntegerv(gl::to_underlying(data), &value);
+                
+                return value;
             };
         auto get_int64          = [](gl::data_e data) -> gl::int64_t
             {
                 auto value = gl::int64_t{};
-                return ::glGetInteger64v(gl::to_underlying(data), &value), value;
+                ::glGetInteger64v(gl::to_underlying(data), &value);
+                
+                return value;
             };
         auto get_uint32         = [](gl::data_e data) -> gl::uint32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetIntegerv(gl::to_underlying(data), &value), static_cast<gl::int32_t>(value);
+                ::glGetIntegerv(gl::to_underlying(data), &value);
+                
+                return static_cast<gl::int32_t>(value);
             };
         auto get_uint64         = [](gl::data_e data) -> gl::uint64_t
             {
                 auto value = gl::int64_t{};
-                return ::glGetInteger64v(gl::to_underlying(data), &value), static_cast<gl::uint64_t>(value);
+                ::glGetInteger64v(gl::to_underlying(data), &value);
+                
+                return static_cast<gl::uint64_t>(value);
             };
         auto get_float32        = [](gl::data_e data) -> gl::float32_t
             {
                 auto value = gl::float32_t{};
-                return ::glGetFloatv(gl::to_underlying(data), &value), value;
+                ::glGetFloatv(gl::to_underlying(data), &value);
+                
+                return value;
             };
         auto get_float64        = [](gl::data_e data) -> gl::float64_t
             {
                 auto value = gl::float64_t{};
-                return ::glGetDoublev(gl::to_underlying(data), &value), value;
+                ::glGetDoublev(gl::to_underlying(data), &value);
+                
+                return value;
             };
         auto get_vector4b       = [](gl::data_e data) -> gl::vector_4b
             {
                 auto value = gl::vector_4b{};
-                return ::glGetBooleanv(gl::to_underlying(data), gl::value_pointer(value)), value;
+                ::glGetBooleanv(gl::to_underlying(data), gl::value_pointer(value));
+                
+                return value;
             };
         auto get_vector2i       = [](gl::data_e data) -> gl::vector_2i
             {
                 auto value = gl::vector_2i{};
-                return ::glGetIntegerv(gl::to_underlying(data), gl::value_pointer(value)), value;
+                ::glGetIntegerv(gl::to_underlying(data), gl::value_pointer(value));
+                
+                return value;
             };
         auto get_vector2f       = [](gl::data_e data) -> gl::vector_2f
             {
                 auto value = gl::vector_2f{};
-                return ::glGetFloatv(gl::to_underlying(data), gl::value_pointer(value)), value;
+                ::glGetFloatv(gl::to_underlying(data), gl::value_pointer(value));
+                
+                return value;
             };
         auto get_vector4f       = [](gl::data_e data) -> gl::vector_4f
             {
                 auto value = gl::vector_4f{};
-                return ::glGetFloatv(gl::to_underlying(data), gl::value_pointer(value)), value;
+                ::glGetFloatv(gl::to_underlying(data), gl::value_pointer(value));
+                
+                return value;
             };
         auto get_handle         = [](gl::data_e data) -> gl::handle_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetIntegerv(gl::to_underlying(data), &value), static_cast<gl::handle_t>(value);
+                ::glGetIntegerv(gl::to_underlying(data), &value);
+                
+                return static_cast<gl::handle_t>(value);
             };
         auto get_index          = [](gl::data_e data) -> gl::index_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetIntegerv(gl::to_underlying(data), &value), static_cast<gl::index_t>(value);
+                ::glGetIntegerv(gl::to_underlying(data), &value);
+                
+                return static_cast<gl::index_t>(value);
             };
         auto get_bitfield       = [](gl::data_e data) -> gl::bitfield_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetIntegerv(gl::to_underlying(data), &value), static_cast<gl::bitfield_t>(value);
+                ::glGetIntegerv(gl::to_underlying(data), &value);
+                
+                return static_cast<gl::bitfield_t>(value);
             };
         auto get_binary_formats = [](gl::data_e data) -> std::vector<gl::enum_t>
             {
@@ -350,75 +378,101 @@ export namespace gl
     {
         auto get_uint32                = [](gl::data_e data, gl::index_t index) -> gl::uint32_t
             {
-                auto value = gl::int32_t{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, &value), std::bit_cast<gl::uint32_t>(value);
+                auto value = gl::uint32_t{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(&value));
+                
+                return value;
             };
         auto get_uint64                = [](gl::data_e data, gl::index_t index) -> gl::uint64_t
             {
-                auto value = gl::int64_t{};
-                return ::glGetInteger64i_v(gl::to_underlying(data), index, &value), std::bit_cast<gl::uint64_t>(value);
+                auto value = gl::uint64_t{};
+                ::glGetInteger64i_v(gl::to_underlying(data), index, reinterpret_cast<gl::int64_t*>(&value));
+                
+                return value;
             };
         auto get_area                  = [](gl::data_e data, gl::index_t index) -> gl::area_t
             {
                 auto value = gl::vector_4u{};
-                ::glGetIntegeri_v(gl::to_underlying(data), index, std::bit_cast<gl::int32_t*>(gl::value_pointer(value)));
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(gl::value_pointer(value)));
 
                 return gl::area_t{ gl::vector_2u{ value.z, value.w }, gl::vector_2u{ value.x, value.y } };
             };
         auto get_blending_equation     = [](gl::data_e data, gl::index_t index) -> std::array<gl::blending_equation_e, 8u>
             {
-                auto value = std::array<gl::int32_t, 8u>{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::blending_equation_e, 8u>>(value);
+                auto value = std::array<gl::blending_equation_e, 8u>{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(value.data()));
+                
+                return value;
             };
         auto get_blending_factor       = [](gl::data_e data, gl::index_t index) -> std::array<gl::blending_factor_e, 8u>
             {
-                auto value = std::array<gl::int32_t, 8u>{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::blending_equation_e, 8u>>(value);
+                auto value = std::array<gl::blending_equation_e, 8u>{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(value.data()));
+                
+                return value;
             };
         auto get_handle                = [](gl::data_e data, gl::index_t index) -> gl::handle_t
             {
-                auto value = gl::int32_t{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, &value), std::bit_cast<gl::handle_t>(value);
+                auto value = gl::handle_t{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(&value));
+                
+                return value;
             };
         auto get_vector3u              = [](gl::data_e data, gl::index_t index) -> gl::vector_3u
             {
-                auto value = gl::vector_3i{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, gl::value_pointer(value)), std::bit_cast<gl::vector_3u>(value);
+                auto value = gl::vector_3u{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(gl::value_pointer(value)));
+                
+                return value;
             };
         auto get_image_binding_access  = [](gl::data_e data, gl::index_t index) -> std::array<gl::image_access_e, 8u>
             {
-                auto value = std::array<gl::int32_t, 8u>{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::image_access_e, 8u>>(value);
+                auto value = std::array<gl::image_access_e, 8u>{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(value.data()));
+                
+                return value;
             };
         auto get_image_binding_format  = [](gl::data_e data, gl::index_t index) -> std::array<gl::uint32_t, 8u>
             {
-                auto value = std::array<gl::int32_t, 8u>{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::uint32_t, 8u>>(value);
+                auto value = std::array<gl::uint32_t, 8u>{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(value.data()));
+                
+                return value;
             };
         auto get_image_binding_layer   = [](gl::data_e data, gl::index_t index) -> std::array<gl::uint32_t, 8u>
             {
-                auto value = std::array<gl::int32_t, 8u>{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::uint32_t, 8u>>(value);
+                auto value = std::array<gl::uint32_t, 8u>{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(value.data()));
+                
+                return value;
             };
         auto get_image_binding_layered = [](gl::data_e data, gl::index_t index) -> std::array<gl::bool_t, 8u>
             {
-                auto value = std::array<gl::boolean_t, 8u>{};
-                return ::glGetBooleani_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::bool_t, 8u>>(value);
+                auto value = std::array<gl::bool_t, 8u>{};
+                ::glGetBooleani_v(gl::to_underlying(data), index, reinterpret_cast<gl::boolean_t*>(value.data()));
+                
+                return value;
             };
         auto get_image_binding_level   = [](gl::data_e data, gl::index_t index) -> std::array<gl::uint32_t, 8u>
             {
-                auto value = std::array<gl::int32_t, 8u>{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::uint32_t, 8u>>(value);
+                auto value = std::array<gl::uint32_t, 8u>{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(value.data()));
+
+                return value;
             };
         auto get_image_binding_name    = [](gl::data_e data, gl::index_t index) -> std::array<gl::uint32_t, 8u>
             {
-                auto value = std::array<gl::int32_t, 8u>{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, value.data()), std::bit_cast<std::array<gl::uint32_t, 8u>>(value);
+                auto value = std::array<gl::uint32_t, 8u>{};
+                ::glGetIntegeri_v(gl::to_underlying(data), index, reinterpret_cast<gl::int32_t*>(value.data()));
+                
+                return value;
             };
         auto get_scissor_box           = [](gl::data_e data, gl::index_t index) -> gl::vector_4i
             {
                 auto value = gl::vector_4i{};
-                return ::glGetIntegeri_v(gl::to_underlying(data), index, gl::value_pointer(value)), value;
+                ::glGetIntegeri_v(gl::to_underlying(data), index, gl::value_pointer(value));
+                
+                return value;
             };
 
         using enum gl::data_e;
@@ -511,12 +565,16 @@ export namespace gl
         auto get_internal_format_iv   = [](gl::internal_format_target_e internal_format_target, gl::enum_t internal_format, gl::internal_format_parameter_e internal_format_parameter) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetInternalformativ(gl::to_underlying(internal_format_target), internal_format, gl::to_underlying(internal_format_parameter), static_cast<gl::sizei_t>(sizeof(gl::int32_t)), &value), value;
+                ::glGetInternalformativ(gl::to_underlying(internal_format_target), internal_format, gl::to_underlying(internal_format_parameter), static_cast<gl::sizei_t>(sizeof(gl::int32_t)), &value);
+                
+                return value;
             };
         auto get_internal_format_i64v = [](gl::internal_format_target_e internal_format_target, gl::enum_t internal_format, gl::internal_format_parameter_e internal_format_parameter) -> gl::int64_t
             {
                 auto value = gl::int64_t{};
-                return ::glGetInternalformati64v(gl::to_underlying(internal_format_target), internal_format, gl::to_underlying(internal_format_parameter), static_cast<gl::sizei_t>(sizeof(gl::int64_t)), &value), value;
+                ::glGetInternalformati64v(gl::to_underlying(internal_format_target), internal_format, gl::to_underlying(internal_format_parameter), static_cast<gl::sizei_t>(sizeof(gl::int64_t)), &value);
+                
+                return value;
             };
 
         //Queries marked with "//" may be erroneous
@@ -604,7 +662,9 @@ export namespace gl
         auto get_sync_iv = [](gl::sync_t sync, gl::synchronization_property_e property) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetSynciv(sync, gl::to_underlying(property), gl::sizei_t{ 1 }, nullptr, &value), value;
+                ::glGetSynciv(sync, gl::to_underlying(property), gl::sizei_t{ 1 }, nullptr, &value);
+                
+                return value;
             };
 
         using enum gl::synchronization_property_e;
@@ -635,12 +695,16 @@ export namespace gl
         auto get_query_object_iv  = [](gl::handle_t query, gl::query_parameter_e parameter) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetQueryObjectiv(gl::to_underlying(query), gl::to_underlying(parameter), &value), value;
+                ::glGetQueryObjectiv(gl::to_underlying(query), gl::to_underlying(parameter), &value);
+                
+                return value;
             };
         auto get_query_object_uiv = [](gl::handle_t query, gl::query_parameter_e parameter) -> gl::uint32_t
             {
                 auto value = gl::uint32_t{};
-                return ::glGetQueryObjectuiv(gl::to_underlying(query), gl::to_underlying(parameter), &value), value;
+                ::glGetQueryObjectuiv(gl::to_underlying(query), gl::to_underlying(parameter), &value);
+                
+                return value;
             };
 
         using enum gl::query_parameter_e;
@@ -677,12 +741,16 @@ export namespace gl
         auto get_buffer_parameter_iv   = [](gl::handle_t buffer, gl::buffer_parameter_e parameter) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetNamedBufferParameteriv(gl::to_underlying(buffer), gl::to_underlying(parameter), &value), value;
+                ::glGetNamedBufferParameteriv(gl::to_underlying(buffer), gl::to_underlying(parameter), &value);
+                
+                return value;
             };
         auto get_buffer_parameter_i64v = [](gl::handle_t buffer, gl::buffer_parameter_e parameter) -> gl::int64_t
             {
                 auto value = gl::int64_t{};
-                return ::glGetNamedBufferParameteri64v(gl::to_underlying(buffer), gl::to_underlying(parameter), &value), value;
+                ::glGetNamedBufferParameteri64v(gl::to_underlying(buffer), gl::to_underlying(parameter), &value);
+                
+                return value;
             };
 
         using enum gl::buffer_parameter_e;
@@ -893,7 +961,9 @@ export namespace gl
         auto get_border_color          = [](gl::handle_t sampler) -> gl::vector_4f
             {
                 auto value = gl::vector_4f{};
-                return ::glGetSamplerParameterfv(gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(value)), value;
+                ::glGetSamplerParameterfv(gl::to_underlying(sampler), gl::to_underlying(gl::sampler_parameter_e::border_color), gl::value_pointer(value));
+                
+                return value;
             };
 
         using enum gl::sampler_parameter_e;
@@ -1092,7 +1162,9 @@ export namespace gl
         auto get_frame_buffer_parameter_iv = [](gl::handle_t frame_buffer, gl::frame_buffer_parameter_e parameter) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetNamedFramebufferParameteriv(gl::to_underlying(frame_buffer), gl::to_underlying(parameter), &value), value;
+                ::glGetNamedFramebufferParameteriv(gl::to_underlying(frame_buffer), gl::to_underlying(parameter), &value);
+                
+                return value;
             };
 
         using enum gl::frame_buffer_parameter_e;
@@ -1115,7 +1187,9 @@ export namespace gl
         auto get_frame_buffer_attachment_parameter_iv = [](gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::frame_buffer_attachment_parameter_e parameter)
             {
                 auto value = gl::int32_t{};
-                return ::glGetNamedFramebufferAttachmentParameteriv(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), gl::to_underlying(parameter), &value), value;
+                ::glGetNamedFramebufferAttachmentParameteriv(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), gl::to_underlying(parameter), &value);
+                
+                return value;
             };
 
         using enum gl::frame_buffer_attachment_parameter_e;
@@ -1140,7 +1214,9 @@ export namespace gl
         auto get_render_buffer_parameter_iv = [](gl::handle_t render_buffer, gl::render_buffer_parameter_e parameter) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetNamedRenderbufferParameteriv(gl::to_underlying(render_buffer), gl::to_underlying(parameter), &value), value;
+                ::glGetNamedRenderbufferParameteriv(gl::to_underlying(render_buffer), gl::to_underlying(parameter), &value);
+                
+                return value;
             };
 
         using enum gl::render_buffer_parameter_e;
@@ -1164,8 +1240,10 @@ export namespace gl
     {
         if constexpr (Parameter == gl::vertex_array_parameter_e::element_array_buffer_binding)
         {
-            auto value = gl::int32_t{};
-            return ::glGetVertexArrayiv(gl::to_underlying(vertex_array), gl::to_underlying(Parameter), &value), static_cast<gl::handle_t>(value);
+            auto value = gl::handle_t{};
+            ::glGetVertexArrayiv(gl::to_underlying(vertex_array), gl::to_underlying(Parameter), reinterpret_cast<gl::int32_t*>(&value));
+            
+            return value;
         }
     }
     template<gl::vertex_array_parameter_e     Parameter>
@@ -1174,12 +1252,16 @@ export namespace gl
               auto get_vertex_array_indexed32_iv = [](gl::handle_t vertex_array, gl::vertex_array_parameter_e parameter, gl::index_t index) -> gl::int32_t
             {
                 auto value = gl::int32_t{};
-                return ::glGetVertexArrayIndexediv(gl::to_underlying(vertex_array), index, gl::to_underlying(parameter), &value), value;
+                ::glGetVertexArrayIndexediv(gl::to_underlying(vertex_array), index, gl::to_underlying(parameter), &value);
+                
+                return value;
             };
               auto get_vertex_array_indexed64_iv = [](gl::handle_t vertex_array, gl::vertex_array_parameter_e parameter, gl::index_t index) -> gl::int64_t
             {
                 auto value = gl::int64_t{};
-                return ::glGetVertexArrayIndexed64iv(gl::to_underlying(vertex_array), index, gl::to_underlying(parameter), &value), value;
+                ::glGetVertexArrayIndexed64iv(gl::to_underlying(vertex_array), index, gl::to_underlying(parameter), &value);
+                
+                return value;
             };
         
         const auto maximum_vertex_attributes     = gl::get_value<gl::data_e::maximum_vertex_attributes>();
@@ -1289,7 +1371,9 @@ export namespace gl
     auto create_query                                     (gl::query_target_e target) -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateQueries(gl::to_underlying(target), gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        ::glCreateQueries(gl::to_underlying(target), gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle));
+        
+        return handle;
     }
     auto create_queries                                   (gl::query_target_e target, gl::count_t count) -> std::vector<gl::handle_t>
     {
@@ -1333,7 +1417,9 @@ export namespace gl
     auto create_buffer                                    () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
-        return ::glCreateBuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle)), handle;
+        ::glCreateBuffers(gl::sizei_t{ 1 }, gl::to_underlying_pointer(&handle));
+        
+        return handle;
     }
     auto create_buffers                                   (gl::count_t count) -> std::vector<gl::handle_t>
     {
