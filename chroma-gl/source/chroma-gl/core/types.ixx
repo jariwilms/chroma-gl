@@ -77,6 +77,7 @@ export namespace gl
     using vector                        = std::vector<T>;
 
     enum                                : gl::bool_t  { false_ = GL_FALSE, true_ = GL_TRUE, };
+    enum class none_t                   : decltype(GL_NONE);
     enum class binding_t                : gl::uint32_t;
     enum class handle_t                 : gl::uint32_t;
 
