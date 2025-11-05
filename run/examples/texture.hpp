@@ -51,7 +51,7 @@ static inline void texture()
         .maximum_anisotropy   = 16.0f                                                   , 
     };
     auto const pixel_buffer_data      = gl::pixel_data_descriptor{ gl::texture_base_format_e::rgba, gl::pixel_data_type_e::byte };
-    texture.transfer        (pixel_buffer_data, image.data());
+    texture.upload          (pixel_buffer_data, image.data());
     texture.generate_mipmaps();
     texture.apply           (texture_state);
 
