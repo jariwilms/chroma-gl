@@ -10,7 +10,7 @@ export namespace gl
     public:
         explicit 
         fence() 
-            : sync_{} {}
+            : sync_{ nullptr } {}
         fence(fence&& object) noexcept
             : sync_{ std::exchange(object.sync_, gl::sync_t{}) } {}
        ~fence() 
@@ -20,7 +20,8 @@ export namespace gl
 
         void place    ()
         {
-            if (!sync_) sync_ = gl::fence_sync();
+            gl::delete_sync(sync_);
+            sync_ = gl::fence_sync();
         }
         void wait     ()
         {
