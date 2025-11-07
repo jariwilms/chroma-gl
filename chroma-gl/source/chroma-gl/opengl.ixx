@@ -1126,14 +1126,14 @@ export namespace gl
     auto get_compressed_texture_sub_image                 (gl::handle_t texture, gl::uint32_t image_level, gl::volume_t image_volume) -> std::vector<T>
     {
         const auto compressed_image_size   = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::compressed_image_size>(texture, image_level);
-        if (compressed_image_size % sizeof(T) != gl::size_t{ 0u }) throw std::invalid_argument{ "image can not be partitioned by element" };
+        if (compressed_image_size % sizeof(T) != gl::size_t{ 0u })        throw std::invalid_argument{ "image can not be partitioned by element" };
 
         const auto image_width             = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::width                >(texture, image_level);
         const auto image_height            = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::height               >(texture, image_level);
         const auto image_depth             = gl::get_texture_level_parameter_value<gl::texture_level_parameter_e::depth                >(texture, image_level);
-        if (image_volume.origin.x + image_volume.extent.x > image_width ) throw std::invalid_argument{ "volume width exceeds image width"   };
-        if (image_volume.origin.y + image_volume.extent.y > image_height) throw std::invalid_argument{ "volume height exceeds image height" };
-        if (image_volume.origin.z                         > image_depth ) throw std::invalid_argument{ "volume depth exceeds image depth"   };
+        if (image_volume.origin.x + image_volume.extent.x > image_width ) throw std::invalid_argument{ "volume width exceeds image width"        };
+        if (image_volume.origin.y + image_volume.extent.y > image_height) throw std::invalid_argument{ "volume height exceeds image height"      };
+        if (image_volume.origin.z                         > image_depth ) throw std::invalid_argument{ "volume depth exceeds image depth"        };
         
         const auto compressed_block_width  = gl::get_value<gl::data_e::pack_compressed_block_width >();
         const auto compressed_block_height = gl::get_value<gl::data_e::pack_compressed_block_height>();
