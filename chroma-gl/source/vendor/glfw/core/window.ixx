@@ -23,9 +23,10 @@ export namespace glfw
         struct user_data
         {
             std::shared_ptr<glfw::input> input      = {};
-            gl::vector_2u*                dimensions = {};
+            gl::vector_2u*               dimensions = {};
         };
 
+        explicit
         window(const std::string& title, const gl::vector_2u& dimensions)
            : title_{ title }, dimensions_{ dimensions }, display_mode_{ display_mode_e::windowed }
         {
@@ -50,7 +51,7 @@ export namespace glfw
             glfw::set_window_monitor  (window_.get(), nullptr, dimensions_);
             glfw::show_window         (window_.get());
            
-            glad::initialize();
+            glad::initialize(glfw::function_address);
             context_   = std::make_shared<gl::context>();
             input_     = std::make_shared<glfw::input>();
             user_data_ = window::user_data{ input_, &dimensions_ };
@@ -155,7 +156,7 @@ export namespace glfw
         std::shared_ptr<glfw::input>                                          input_;
         std::string                                                           title_;
         display_mode_e                                                        display_mode_;
-        gl::vector_2u                                                          dimensions_;
+        gl::vector_2u                                                         dimensions_;
         user_data                                                             user_data_;
     };
 }
