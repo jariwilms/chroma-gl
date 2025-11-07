@@ -33,8 +33,8 @@ group "Application"
 			"chroma-gl/source"   , 
 			
 			"vendor/glad/include", 
-			"vendor/glfw/include", 
 			"vendor/glm/include" , 
+			"vendor/rgfw/include", 
 		    "vendor/stb/include" , 
 		}
 		files {
@@ -42,17 +42,21 @@ group "Application"
 		}
 		links {
 			"glad"        , 
-			"glfw"        , 
 			"glm"         , 
+			"rgfw"        , 
 			"stb"         , 
 			
 			"opengl32.lib", 
 		}
 		
+		defines {
+			"RGFW_IMPLEMENTATION", 
+			"RGFW_OPENGL", 
+		}
+		
 		filter "configurations:Debug"
-			defines { "BUILD_CONFIGURATION=debug", }
+			defines  { "BUILD_CONFIGURATION=debug", }
 		filter "configurations:Release"
-			sanitize { "Address" }
 			defines  { "BUILD_CONFIGURATION=release", }
 	
 	-- @brief Visual Studio: Bugfix for conflicting C++ module names
@@ -100,14 +104,11 @@ group "Application"
 			"chroma-gl", 
 		}
 
-		filter "configurations:Release"
-			sanitize { "Address" }
-
 
 
 group "Vendor"
 	include "vendor/glad"
-	include "vendor/glfw"
 	include "vendor/glm"
+	include "vendor/rgfw"
 	include "vendor/stb"
 group ""
