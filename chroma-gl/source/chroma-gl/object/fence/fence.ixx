@@ -20,8 +20,7 @@ export namespace gl
 
         void place    ()
         {
-            gl::delete_sync(sync_);
-            sync_ = gl::fence_sync();
+            if (!sync_) sync_ = gl::fence_sync();
         }
         void wait     ()
         {
