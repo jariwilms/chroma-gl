@@ -2,7 +2,7 @@
 
 import std;
 import chroma_gl;
-import vendor.glfw;
+import vendor.rgfw;
 
 #include "load_file.hpp"
 
@@ -35,7 +35,7 @@ static inline void instanced()
 
     //Window creation
     auto const window_dimensions      = gl::vector_2u{ 1280u, 720u };
-    auto       window                 = glfw::window{ "my_window", window_dimensions };
+    auto       window                 = rgfw::window{ "my_window", window_dimensions };
     auto const input                  = window.input_handler();
 
     //Triangle buffers
@@ -62,7 +62,7 @@ static inline void instanced()
     //Render loop
     while (!window.should_close())
     {
-        window.poll_events();
+        window.process_events();
 
         gl::clear_color(gl::vector_4f{ 0.1f } );
         gl::clear      (gl::buffer_mask_e::all);

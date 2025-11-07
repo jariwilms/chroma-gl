@@ -2,7 +2,7 @@
 
 import std;
 import chroma_gl;
-import vendor.glfw;
+import vendor.rgfw;
 
 #include "load_file.hpp"
 
@@ -25,7 +25,7 @@ static inline void triangle()
 
     //Window creation
     auto const window_dimensions      = gl::vector_2u{ 1280u, 720u };
-    auto       window                 = glfw::window{ "my_window", window_dimensions };
+    auto       window                 = rgfw::window{ "my_window", window_dimensions };
     auto const input                  = window.input_handler();
 
     //Triangle buffers
@@ -51,12 +51,12 @@ static inline void triangle()
     //Render loop
     while (!window.should_close())
     {
-        window.poll_events();
+        window.process_events();
 
+        gl::viewport   (window.dimensions()   );
         gl::clear_color(gl::vector_4f{ 0.1f } );
         gl::clear      (gl::buffer_mask_e::all);
-        gl::viewport   (window.dimensions()   );
-
+        
         pipeline    .bind();
         vertex_array.bind();
         gl::draw_elements(gl::draw_mode_e::triangles, gl::draw_type_e::uint32, vertex_array.index_count(), gl::index_t{ 0u });

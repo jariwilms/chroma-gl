@@ -1,21 +1,21 @@
 import std;
 import chroma_gl;
-import vendor.glfw;
+import vendor.rgfw;
 
 #include "examples/load_file.hpp"
 
 static inline void compute_result()
 {
+    //Window creation
+    auto const window_dimensions      = gl::vector_2u{ 1280u, 720u };
+    auto       window                 = rgfw::window{ "my_window", window_dimensions };
+    auto const input                  = window.input_handler();
+    
     //Buffer data
     auto const input_size             = 1024u;
     auto       input_data             = std::vector<gl::float32_t>(input_size);
     auto       output_data            = std::vector<gl::float32_t>(input_size);
     for (auto i = 0u; i < input_size; ++i) input_data[i] = static_cast<gl::float32_t>(i);
-
-    //Window creation
-    auto const window_dimensions      = gl::vector_2u{ 1280u, 720u };
-    auto       window                 = glfw::window{ "my_window", window_dimensions };
-    auto const input                  = window.input_handler();
 
     //Triangle buffers
     auto       input_buffer           = gl::shader_storage_buffer<gl::float32_t>{ input_size };
