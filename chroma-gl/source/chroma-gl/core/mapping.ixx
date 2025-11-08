@@ -338,6 +338,16 @@ export namespace gl
             default: throw std::invalid_argument{ "invalid dimensions" };
         }
     }
+    auto map_texture_array_target              (gl::uint32_t               dimensions          ) -> gl::texture_target_e
+    {
+        switch (dimensions)
+        {
+            case 1u: return gl::texture_target_e::_1d_array;
+            case 2u: return gl::texture_target_e::_2d_array;
+
+            default: throw std::invalid_argument{ "invalid dimensions" };
+        }
+    }
     auto map_texture_target_multisample        (gl::uint32_t               dimensions          ) -> gl::texture_target_e
     {
         switch (dimensions)
