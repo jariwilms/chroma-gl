@@ -3,7 +3,7 @@
 import std;
 import chroma_gl;
 
-static auto load_file(std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
+static auto load_file          (std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
 {
     auto file = std::ifstream{ filepath, std::ios::binary | std::ios::ate };
     if (!file) throw std::runtime_error{ "failed to open file: " + filepath.string() };
@@ -16,7 +16,7 @@ static auto load_file(std::filesystem::path const& filepath) -> std::vector<gl::
 
     return buffer;
 }
-auto load_file_to_string(std::filesystem::path const& filepath) -> std::string
+static auto load_file_to_string(std::filesystem::path const& filepath) -> std::string
 {
     auto file   = std::ifstream{ filepath };
     auto buffer = std::ostringstream{};

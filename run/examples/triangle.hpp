@@ -24,19 +24,19 @@ static inline void triangle()
 
 
     //Window creation
-    auto const window_dimensions      = gl::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window{ "my_window", window_dimensions };
+    auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
+    auto       window                 = rgfw::window   { "my_window", window_dimensions };
     auto const input                  = window.input_handler();
 
     //Triangle buffers
     auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
-    auto       index_buffer           = gl::index_buffer{ index_data };
+    auto       index_buffer           = gl::index_buffer                { index_data  };
     auto       vertex_array           = gl::vertex_array{};
     using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
     using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
-    using      color_vertex_layout    = gl::vertex_layout<position_attribute, color_attribute>;
-    vertex_array.attach<color_vertex_layout>(vertex_buffer);
-    vertex_array.attach                     (index_buffer );
+    using      triangle_data_layout   = gl::vertex_layout<position_attribute, color_attribute>;
+    vertex_array.attach<triangle_data_layout>(vertex_buffer);
+    vertex_array.attach                      (index_buffer );
     
     //Shader setup
     auto const vertex_shader_binary   = load_file("examples/assets/shaders/compiled/triangle.vert.spv");
@@ -47,9 +47,9 @@ static inline void triangle()
     auto       pipeline               = gl::pipeline{ shader_list };
 
 
-
+    
     //Render loop
-    while (!window.should_close())
+    while (window)
     {
         window.process_events();
 
@@ -63,6 +63,4 @@ static inline void triangle()
 
         window.swap_buffers();
     }
-
-    window.close();
 }

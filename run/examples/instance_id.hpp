@@ -7,10 +7,10 @@ import vendor.rgfw;
 static inline void instance_id()
 {
     //Vertex data
-    auto const vertices = std::vector<gl::float32_t>
+    auto const vertex_data = std::vector<gl::float32_t>
     {
          // positions    // colors
-         0.0f,  0.15f,   1.0f, 0.0f, 0.0f,  // top
+         0.0f,   0.15f,  1.0f, 0.0f, 0.0f,  // top
         -0.15f, -0.15f,  0.0f, 1.0f, 0.0f,  // bottom left
          0.15f, -0.15f,  0.0f, 0.0f, 1.0f   // bottom right
     };
@@ -18,12 +18,12 @@ static inline void instance_id()
 
 
     //Window creation
-    auto const window_dimensions      = gl::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window{ "my_window", window_dimensions };
+    auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
+    auto       window                 = rgfw::window   { "my_window", window_dimensions };
     auto const input                  = window.input_handler();
 
     //Triangle buffers
-    auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertices };
+    auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
     auto       vertex_array           = gl::vertex_array{};
     using      position_attribute     = gl::vertex_attribute<gl::float32_t, 2u>;
     using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
@@ -31,7 +31,7 @@ static inline void instance_id()
     vertex_array.attach<vertex_layout>(vertex_buffer);
     
     //Shader setup
-    auto const vertex_shader_binary   = load_file("examples/assets/shaders/compiled/instance_id.vert.spv"); //IMPORTANT: Compile with --target-env=opengl
+    auto const vertex_shader_binary   = load_file("examples/assets/shaders/compiled/instance_id.vert.spv"); //Make sure to compile shaders with --target-env=opengl
     auto const fragment_shader_binary = load_file("examples/assets/shaders/compiled/instance_id.frag.spv"); //
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
@@ -41,7 +41,7 @@ static inline void instance_id()
 
 
     //Render loop
-    while (!window.should_close())
+    while (window)
     {
         window.process_events();
 
@@ -55,6 +55,4 @@ static inline void instance_id()
 
         window.swap_buffers();
     }
-
-    window.close();
 }

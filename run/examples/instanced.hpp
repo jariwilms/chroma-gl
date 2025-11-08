@@ -6,18 +6,9 @@ import vendor.rgfw;
 
 #include "load_file.hpp"
 
-static inline void instanced()
+static inline auto create_grid(gl::uint32_t grid_size, gl::float32_t grid_spacing) -> std::vector<gl::vector_3f>
 {
-    //Vertex data
-    auto const vertices = std::vector<gl::float32_t>
-    {
-        -0.05f, -0.05f, 0.0f, 
-         0.05f, -0.05f, 0.0f, 
-         0.00f,  0.05f, 0.0f, 
-    };
-    auto const grid_size = 10;
-    auto const spacing   = 0.2f;
-    auto       offsets   = std::vector<gl::vector_3f>{};
+    auto offsets = std::vector<gl::vector_3f>{};
     offsets.reserve(grid_size * grid_size);
 
     for (auto row = 0u; row < grid_size; ++row)
@@ -25,22 +16,37 @@ static inline void instanced()
         for (auto col = 0u; col < grid_size; ++col)
         {
             offsets.emplace_back(
-                col * spacing - (grid_size - 1) * spacing / 2.0f , 
-                (static_cast<gl::float32_t>(row) / 5.0f) - 0.9f  , 
-                row * spacing - (grid_size - 1) * spacing / 2.0f);
+                col * grid_spacing - (grid_size - 1) * grid_spacing / 2.0f , 
+                (static_cast<gl::float32_t>(row) / 5.0f) - 0.9f            , 
+                row * grid_spacing - (grid_size - 1) * grid_spacing / 2.0f);
         }
     }
+
+    return offsets;
+}
+static inline void instanced()
+{
+    //Vertex data
+    auto const vertex_data            = std::vector<gl::float32_t>
+    {
+        -0.05f, -0.05f, 0.0f, 
+         0.05f, -0.05f, 0.0f, 
+         0.00f,  0.05f, 0.0f, 
+    };
+    auto const grid_size              = 10u;
+    auto const spacing                = 0.2f;
+    auto const offset_data            = create_grid(grid_size, spacing);
 
 
 
     //Window creation
-    auto const window_dimensions      = gl::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window{ "my_window", window_dimensions };
+    auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
+    auto       window                 = rgfw::window   { "my_window", window_dimensions };
     auto const input                  = window.input_handler();
 
     //Triangle buffers
-    auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertices };
-    auto       offset_buffer          = gl::vertex_buffer<gl::vector_3f>{ offsets };
+    auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
+    auto       offset_buffer          = gl::vertex_buffer<gl::vector_3f>{ offset_data };
     auto       vertex_array           = gl::vertex_array{};
     using      vertex_attribute       = gl::vertex_attribute<gl::float32_t, 3u>;
     using      offset_attribute       = gl::vertex_attribute<gl::float32_t, 3u, 1u>;
@@ -60,13 +66,13 @@ static inline void instanced()
 
 
     //Render loop
-    while (!window.should_close())
+    while (window)
     {
         window.process_events();
 
+        gl::viewport   (window.dimensions()   );
         gl::clear_color(gl::vector_4f{ 0.1f } );
         gl::clear      (gl::buffer_mask_e::all);
-        gl::viewport   (window.dimensions()   );
 
         pipeline    .bind();
         vertex_array.bind();
@@ -74,6 +80,4 @@ static inline void instanced()
 
         window.swap_buffers();
     }
-
-    window.close();
 }
