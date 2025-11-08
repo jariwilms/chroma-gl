@@ -49,8 +49,8 @@ export namespace rgfw
         rgfw::gl_profile_e          profile;
         rgfw::int32_t               major;
         rgfw::int32_t               minor;
-        rgfw::gl_context *          share;
-        rgfw::egl_context*          share_egl;
+        rgfw:: gl_context_t*        share;
+        rgfw::egl_context_t*        share_egl;
         rgfw::gl_renderer_e         renderer;
     };
     struct key_event
