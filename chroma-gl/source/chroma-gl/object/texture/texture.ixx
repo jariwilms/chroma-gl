@@ -3,7 +3,6 @@ export module opengl.object.texture;
 import std;
 import opengl;
 import opengl.object;
-import opengl.object.buffer;
 
 export namespace gl
 {
