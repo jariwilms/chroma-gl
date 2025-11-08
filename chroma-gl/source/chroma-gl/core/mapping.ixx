@@ -171,16 +171,14 @@ export namespace gl
     {
         switch (shader_type)
         {
-            using enum gl::shader_type_e;
+            case gl::shader_type_e::vertex                 : return gl::program_stage_e::vertex                 ;
+            case gl::shader_type_e::tessellation_control   : return gl::program_stage_e::tessellation_control   ;
+            case gl::shader_type_e::tessellation_evaluation: return gl::program_stage_e::tessellation_evaluation;
+            case gl::shader_type_e::geometry               : return gl::program_stage_e::geometry               ;
+            case gl::shader_type_e::fragment               : return gl::program_stage_e::fragment               ;
+            case gl::shader_type_e::compute                : return gl::program_stage_e::compute                ;
 
-            case vertex                 : return gl::program_stage_e::vertex                 ;
-            case tessellation_control   : return gl::program_stage_e::tessellation_control   ;
-            case tessellation_evaluation: return gl::program_stage_e::tessellation_evaluation;
-            case geometry               : return gl::program_stage_e::geometry               ;
-            case fragment               : return gl::program_stage_e::fragment               ;
-            case compute                : return gl::program_stage_e::compute                ;
-
-            default                     : throw std::invalid_argument{ "invalid shader type" };
+            default                                        : throw std::invalid_argument{ "invalid shader type" };
         }
     }
     auto map_render_buffer_attachment          (gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
