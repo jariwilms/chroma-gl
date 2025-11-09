@@ -103,7 +103,62 @@ export namespace gl
         vector_t     dimensions_;
         gl::uint32_t mipmap_levels_;
     };
+    template<gl::uint32_t Dimensions>
+    class texture_n_array_multisample : public gl::object
+    {
+    public:
+        using format_e = gl::texture_format_e;
+        using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
 
-    using texture_1d_array = gl::texture_n_array<1u>;
-    using texture_2d_array = gl::texture_n_array<2u>;
+        texture_n_array_multisample(gl::count_t element_count, format_e format, const vector_t& dimensions, gl::uint32_t sample_count, gl::bool_t use_fixed_sample_locations = gl::true_)
+            : gl::object{ gl::create_texture(gl::map_texture_array_target_multisample(Dimensions)) }
+            , element_count_{ element_count }, format_{ format }, dimensions_{ dimensions }, sample_count_{ sample_count }, has_fixed_sample_locations_{ use_fixed_sample_locations }
+        {
+            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_storage_2d_multisample(handle(), format_, dimensions_, sample_count, has_fixed_sample_locations_);
+        }
+        texture_n_array_multisample(texture_n_array_multisample&&) noexcept = default;
+       ~texture_n_array_multisample()
+        {
+            gl::delete_texture(handle());
+        }
+
+        void bind                      (gl::binding_t slot)
+        {
+            gl::bind_texture_unit(handle(), slot);
+        }
+
+        auto count                     () const -> gl::count_t
+        {
+            return element_count_;
+        }
+        auto format                    () const -> format_e
+        {
+            return format_;
+        }
+        auto dimensions                () const -> const gl::vector_3u&
+        {
+            return dimensions_;
+        }
+        auto sample_count              () const -> gl::count_t
+        {
+            return sample_count_;
+        }
+        auto has_fixed_sample_locations() const -> gl::bool_t
+        {
+            return has_fixed_sample_locations_;
+        }
+
+        auto operator=                 (texture_n_array_multisample&&) noexcept -> texture_n_array_multisample & = default;
+
+    private:
+        gl::count_t  element_count_;
+        format_e     format_;
+        vector_t     dimensions_;
+        gl::uint32_t sample_count_;
+        gl::bool_t   has_fixed_sample_locations_;
+    };
+
+    using texture_1d_array             = gl::texture_n_array            <1u>;
+    using texture_2d_array             = gl::texture_n_array            <2u>;
+    using texture_2d_multisample_array = gl::texture_n_array_multisample<2u>;
 }
