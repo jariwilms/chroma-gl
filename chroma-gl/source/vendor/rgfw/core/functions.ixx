@@ -1,10 +1,10 @@
-export module vendor.rgfw.functions;
+export module rgfw:functions;
 
 import std;
 import <rgfw/rgfw.h>;
-import vendor.rgfw.flags;
-import vendor.rgfw.structures;
-import vendor.rgfw.types;
+import :flags;
+import :structures;
+import :types;
 
 export namespace rgfw
 {

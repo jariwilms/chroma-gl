@@ -1,7 +1,7 @@
-export module vendor.rgfw.types;
+export module rgfw:types;
 
 import std;
-import vendor.glm;
+import glm;
 import <rgfw/rgfw.h>;
 
 export namespace rgfw

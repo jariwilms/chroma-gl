@@ -1,8 +1,8 @@
-export module vendor.rgfw.flags;
+export module rgfw:flags;
 
 import std;
 import <rgfw/rgfw.h>;
-import vendor.rgfw.types;
+import :types;
 
 export namespace rgfw
 {

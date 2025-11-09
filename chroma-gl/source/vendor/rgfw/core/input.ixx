@@ -1,11 +1,10 @@
-export module vendor.rgfw.input;
+export module rgfw:input;
 
 import std;
-import <rgfw/rgfw.h>;
-import vendor.rgfw.code;
-import vendor.rgfw.functions;
-import vendor.rgfw.structures;
-import vendor.rgfw.types;
+import :code;
+import :functions;
+import :structures;
+import :types;
 
 export namespace rgfw
 {
