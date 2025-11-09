@@ -2,7 +2,7 @@
 
 import std;
 import chroma_gl;
-import vendor.rgfw;
+import rgfw;
 
 #include "load_file.hpp"
 
