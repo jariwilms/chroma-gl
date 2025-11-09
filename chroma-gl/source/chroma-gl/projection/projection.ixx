@@ -2,7 +2,7 @@ export module opengl.projection;
 
 import std;
 import opengl;
-import vendor.glm;
+import glm;
 
 export namespace gl
 {

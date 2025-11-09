@@ -2,7 +2,7 @@ export module opengl.types;
 
 import std;
 import <glad/gl.h>;
-import vendor.glm;
+import glm;
 
 export namespace gl
 {
@@ -38,6 +38,11 @@ export namespace gl
     using bitfield_t                    = ::GLbitfield                 ; //Combination of logical bits
     using sync_t                        = ::GLsync                     ; //Synchronization primitive
     using time_t                        = ::khronos_utime_nanoseconds_t; //Duration expressed in nanoseconds
+    using c_string                      = ::GLchar const*              ; //Null-terminated character array
+    
+    using debug_callback_t              = gl::void_t(__stdcall*)(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::sizei_t, gl::c_string, const gl::void_t*);
+
+
 
     template<typename T, gl::uint32_t Components>
     using vector_t                      = glm::vec<Components, T, glm::packed_highp>;
@@ -71,17 +76,12 @@ export namespace gl
     using matrix_4f                     = gl::matrix_t    <gl::float32_t, 4u>;
     using quaternion_4f                 = gl::quaternion_t<gl::float32_t    >;
 
-    using string                        = std::string;
-    using c_string                      = const gl::char_t*;
-    template<typename T>
-    using vector                        = std::vector<T>;
+
 
     enum                                : gl::bool_t  { false_ = GL_FALSE, true_ = GL_TRUE, };
     enum class none_t                   : decltype(GL_NONE);
     enum class binding_t                : gl::uint32_t;
     enum class handle_t                 : gl::uint32_t;
-
-    using debug_callback_t = gl::void_t(__stdcall*)(gl::enum_t source, gl::enum_t type, gl::uint32_t id, gl::enum_t severity, gl::sizei_t length, gl::c_string message, const gl::void_t* user_parameter);
 
     template<typename... Ts>
     struct overload_t : Ts... { using Ts::operator()...; };

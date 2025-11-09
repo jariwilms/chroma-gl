@@ -9,11 +9,8 @@ export namespace gl
     template<typename T>
     struct pixel_data_descriptor
     {
-        pixel_data_descriptor(T base_format, gl::pixel_data_type_e pixel_data_type = gl::pixel_data_type_e::byte)
-            : base_format{ base_format }, pixel_data_type{ pixel_data_type } {}
-
-        T                     base_format;
-        gl::pixel_data_type_e pixel_data_type;
+        T                     base_format     = T                    ::rgba;
+        gl::pixel_data_type_e pixel_data_type = gl::pixel_data_type_e::byte;
     };
     using  texture_data_descriptor            = gl::pixel_data_descriptor<gl::texture_base_format_e           >;
     using  compressed_texture_data_descriptor = gl::pixel_data_descriptor<gl::compressed_texture_base_format_e>;
@@ -23,16 +20,16 @@ export namespace gl
 
     struct message_log
     {
-        gl::uint32_t         id       = {};
-        gl::string           message  = {};
-        gl::debug_source_e   source   = {};
-        gl::debug_type_e     type     = {};
-        gl::debug_severity_e severity = {};
+        gl ::uint32_t         id       = {};
+        std::string           message  = {};
+        gl ::debug_source_e   source   = {};
+        gl ::debug_type_e     type     = {};
+        gl ::debug_severity_e severity = {};
     };
     struct binary_info
     {
-        gl::enum_t             format = {};
-        gl::vector<gl::byte_t> binary = {}; 
+        gl ::enum_t             format = {};
+        std::vector<gl::byte_t> binary = {}; 
     };
     struct draw_elements_indirect_command
     {
