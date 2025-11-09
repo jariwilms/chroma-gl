@@ -19,12 +19,12 @@ export namespace gl
     {
         using format_t = std::variant<gl::texture_format_e, gl::render_buffer_format_e>;
 
-        frame_buffer_specification(const gl::string& identifier, gl::frame_buffer_surface_e surface, format_t format)
+        frame_buffer_specification(const std::string& identifier, gl::frame_buffer_surface_e surface, format_t format)
             : identifier{ identifier }, surface{ surface }, format{ format } {}
 
-        gl::string                 identifier;
-        gl::frame_buffer_surface_e surface;
-        format_t                   format;
+        std::string                 identifier;
+        gl ::frame_buffer_surface_e surface;
+        format_t                    format;
     };
     using frame_buffer_attachment_map_t = std::unordered_map<gl::frame_buffer_attachment_e, gl::frame_buffer_specification>;
 
@@ -109,7 +109,7 @@ export namespace gl
             gl::bind_frame_buffer(handle(), target);
         }
         template<surface_e Surface = surface_e::texture>
-        void bind_surface(const gl::string& identifier, gl::binding_t slot)
+        void bind_surface(const std::string& identifier, gl::binding_t slot)
         {
                  if constexpr (Surface == surface_e::texture) textures_.at(identifier)->bind(slot);
             else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier)->bind(slot);
@@ -117,7 +117,7 @@ export namespace gl
         }
 
         template<surface_e Surface = surface_e::texture>
-        void attach      (const gl::string& identifier, attachment_e attachment, gl::uint32_t image_level = 0u)
+        void attach      (const std::string& identifier, attachment_e attachment, gl::uint32_t image_level = 0u)
         {
                  if constexpr (Surface == surface_e::texture      ) gl::frame_buffer_texture      (handle(), textures_      .at(identifier).handle(), attachment, image_level);
             else if constexpr (Surface == surface_e::cubemap      ) gl::frame_buffer_texture      (handle(), cubemaps_      .at(identifier).handle(), attachment, image_level);
@@ -138,14 +138,14 @@ export namespace gl
         }
 
         template<surface_e Surface = surface_e::texture>
-        void apply       (const gl::string& identifier, auto value)
+        void apply       (const std::string& identifier, auto value)
         {
                  if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(value);
             else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(value);
             else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid surface");
         }
         template<surface_e Surface = surface_e::texture>
-        void apply       (const gl::string& identifier, const gl::texture_state& texture_state)
+        void apply       (const std::string& identifier, const gl::texture_state& texture_state)
         {
                  if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(texture_state);
             else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(texture_state);
@@ -153,7 +153,7 @@ export namespace gl
         }
 
         template<surface_e Surface = surface_e::texture>
-        auto surface     (const gl::string& identifier) const -> const auto&
+        auto surface     (const std::string& identifier) const -> const auto&
         {
                  if constexpr (Surface == surface_e::texture      ) return textures_      .at(identifier);
             else if constexpr (Surface == surface_e::cubemap      ) return cubemaps_      .at(identifier);
@@ -167,9 +167,9 @@ export namespace gl
         auto operator=   (frame_buffer&&) noexcept -> frame_buffer& = default;
 
     private:
-        std::unordered_map<gl::string, gl::texture_2d   > textures_;
-        std::unordered_map<gl::string, gl::cubemap      > cubemaps_;
-        std::unordered_map<gl::string, gl::render_buffer> render_buffers_;
-        gl::vector_2u                                     dimensions_;
+        std::unordered_map<std::string, gl::texture_2d   > textures_;
+        std::unordered_map<std::string, gl::cubemap      > cubemaps_;
+        std::unordered_map<std::string, gl::render_buffer> render_buffers_;
+        gl::vector_2u                                      dimensions_;
     };
 }

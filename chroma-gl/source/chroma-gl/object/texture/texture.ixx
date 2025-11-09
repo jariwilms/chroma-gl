@@ -107,7 +107,7 @@ export namespace gl
         gl::uint32_t mipmap_levels_;
     };
     template<gl::uint32_t Dimensions>
-    class compressed_texture_n : public gl::texture_n<Dimensions>
+    class texture_n_compressed : public gl::texture_n<Dimensions>
     {
     public:
         using format_e = gl::texture_compressed_format_e;
@@ -115,7 +115,7 @@ export namespace gl
         using region_t = gl::texture_n<Dimensions>::region_t;
 
         explicit
-        compressed_texture_n(format_e format, const vector_t& dimensions, gl::bool_t allocate_mipmaps = gl::true_)
+        texture_n_compressed(format_e format, const vector_t& dimensions, gl::bool_t allocate_mipmaps = gl::true_)
             : gl::texture_n<Dimensions>{ static_cast<gl::texture_n<Dimensions>::format_e>(format), dimensions, allocate_mipmaps } {}
 
         void upload(                                                 gl::compressed_texture_data_descriptor compressed_texture_data_descriptor, std::span<const gl::byte_t> memory)
@@ -130,22 +130,22 @@ export namespace gl
         }
     };
     template<gl::uint32_t Dimensions>
-    class multisampled_texture_n : public gl::object
+    class texture_n_multisampled : public gl::object
     {
     public:
         using format_e = gl::texture_format_e;
         using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
 
         explicit
-        multisampled_texture_n(format_e format, const vector_t& dimensions, gl::uint32_t sample_count, gl::bool_t use_fixed_sample_locations = gl::true_)
+        texture_n_multisampled(format_e format, const vector_t& dimensions, gl::uint32_t sample_count, gl::bool_t use_fixed_sample_locations = gl::true_)
             : gl::object{ gl::create_texture(gl::map_texture_target_multisample(Dimensions)) }
             , format_{ format }, dimensions_{ dimensions }, sample_count_{ sample_count }, has_fixed_sample_locations_{ use_fixed_sample_locations }
         {
             if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_storage_2d_multisample(handle(), format_, dimensions_, sample_count, has_fixed_sample_locations_);
             if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_storage_3d_multisample(handle(), format_, dimensions_, sample_count, has_fixed_sample_locations_);
         }
-        multisampled_texture_n(multisampled_texture_n&&) noexcept = default;
-       ~multisampled_texture_n()
+        texture_n_multisampled(texture_n_multisampled&&) noexcept = default;
+       ~texture_n_multisampled()
         {
             gl::delete_texture(handle());
         }
@@ -172,7 +172,7 @@ export namespace gl
             return has_fixed_sample_locations_;
         }
 
-        auto operator=                 (multisampled_texture_n&&) noexcept -> multisampled_texture_n& = default;
+        auto operator=                 (texture_n_multisampled&&) noexcept -> texture_n_multisampled& = default;
 
     private:
         format_e     format_;
@@ -186,9 +186,9 @@ export namespace gl
     using texture_1d              = gl::texture_n             <1u>;
     using texture_2d              = gl::texture_n             <2u>;
     using texture_3d              = gl::texture_n             <3u>;
-    using compressed_texture_1d   = gl::compressed_texture_n  <1u>;
-    using compressed_texture_2d   = gl::compressed_texture_n  <2u>;
-    using compressed_texture_3d   = gl::compressed_texture_n  <3u>;
-    using multisampled_texture_2d = gl::multisampled_texture_n<2u>;
-    using multisampled_texture_3d = gl::multisampled_texture_n<3u>;
+    using texture_1d_compressed   = gl::texture_n_compressed  <1u>;
+    using texture_2d_compressed   = gl::texture_n_compressed  <2u>;
+    using texture_3d_compressed   = gl::texture_n_compressed  <3u>;
+    using texture_2d_multisampled = gl::texture_n_multisampled<2u>;
+    using texture_3d_multisampled = gl::texture_n_multisampled<3u>;
 }
