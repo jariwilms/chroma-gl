@@ -4,24 +4,9 @@ import std;
 import <stb/stb_image.h>;
 import <stb/stb_image_write.h>;
 
-       namespace stb
-{
-    template<typename T>
-    void write_function(void* context, void* data, std::int32_t size)
-    {
-        auto* vector  = std::bit_cast<std::vector<T>*>(context);
-        auto* pointer = std::bit_cast<const T*>(data);
-        auto  span    = std::span<const T>{ pointer, static_cast<std::size_t>(size) };
-
-        vector->append_range(span);
-    }
-    void free_image    (void* pointer)
-    {
-        ::stbi_image_free(pointer);
-    }
-}
 export namespace stb
 {
+    using void_t    = void         ;
     using bool_t    = bool         ;
     using byte_t    = std::uint8_t ;
     using int8_t    = std::int8_t  ;
@@ -34,6 +19,26 @@ export namespace stb
     using uint64_t  = std::uint64_t;
     using float32_t = float        ;
 
+    using size_t    = std::size_t  ;
+}
+       namespace stb
+{
+    template<typename T>
+    void write_function(stb::void_t* context, stb::void_t* data, stb::int32_t size)
+    {
+        auto* vector  = reinterpret_cast<std::vector<T>*>(context);
+        auto* pointer = reinterpret_cast<const T*>(data);
+        auto  span    = std::span<const T>{ pointer, static_cast<stb::size_t>(size) };
+
+        vector->append_range(span);
+    }
+    void free_image    (stb::void_t* pointer)
+    {
+        ::stbi_image_free(pointer);
+    }
+}
+export namespace stb
+{
     struct image_data
     {
         stb::uint32_t                  channels;
@@ -41,13 +46,11 @@ export namespace stb
         std::vector<stb::byte_t      > data;
     };
 
-
-
-    void set_flip_vertically_on_load (bool value)
+    void set_flip_vertically_on_load (stb::bool_t value)
     {
         ::stbi_set_flip_vertically_on_load(value);
     }
-    void set_flip_vertically_on_write(bool value)
+    void set_flip_vertically_on_write(stb::bool_t value)
     {
         ::stbi_flip_vertically_on_write(value);
     }
@@ -56,7 +59,7 @@ export namespace stb
     auto load_from_memory            (stb::uint32_t required_channels, std::span<const stb::byte_t> data) -> stb::image_data
     {
         auto* pointer    = static_cast<stb::byte_t*>(nullptr);
-        auto  size       = std::size_t{};
+        auto  size       = stb::size_t{};
         auto  dimensions = std::array<std::int32_t, 2u>{};
         auto  channels   = std::int32_t {};
 
@@ -92,8 +95,8 @@ export namespace stb
     {
         auto vector = std::vector<stb::byte_t>{};
         ::stbi_write_bmp_to_func(
-            stb::write_function<stb::byte_t>      ,
-            &vector, dimensions[0u], dimensions[1u],
+            stb::write_function<stb::byte_t>       , 
+            &vector, dimensions[0u], dimensions[1u], 
             channels, data.data()                 );
 
         return vector;
@@ -103,7 +106,7 @@ export namespace stb
         auto vector = std::vector<stb::float32_t>{};
         ::stbi_write_hdr_to_func(
             stb::write_function<stb::float32_t>               , 
-            &vector, dimensions[0u], dimensions[1u], channels, 
+            &vector, dimensions[0u], dimensions[1u], channels , 
             std::bit_cast<const stb::float32_t*>(data.data()));
 
         return vector;
@@ -112,7 +115,7 @@ export namespace stb
     {
         auto vector = std::vector<stb::byte_t>{};
         ::stbi_write_jpg_to_func(
-            stb::write_function<stb::byte_t>                ,
+            stb::write_function<stb::byte_t>                 , 
             &vector, dimensions[0u], dimensions[1u], channels, 
             data.data(), std::int32_t{ 100u }               );
 
@@ -122,7 +125,7 @@ export namespace stb
     {
         auto vector = std::vector<stb::byte_t>{};
         ::stbi_write_png_to_func(
-            stb::write_function<stb::byte_t>                ,
+            stb::write_function<stb::byte_t>                 , 
             &vector, dimensions[0u], dimensions[1u], channels, 
             data.data(), channels * dimensions[0u]          );
 
