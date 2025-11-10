@@ -43,7 +43,7 @@ The following program demonstrates how to render a simple triangle to the screen
 ```cpp
 import std;
 import chroma_gl;
-import vendor.rgfw;
+import rgfw;
 
 auto load_file(std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
 {
