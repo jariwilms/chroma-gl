@@ -4,7 +4,7 @@ import std;
 import chroma_gl;
 import rgfw;
 
-#include "load_file.hpp"
+#include "file.hpp"
 
 static inline auto create_grid(gl::uint32_t grid_size, gl::float32_t grid_spacing) -> std::vector<gl::vector_3f>
 {
@@ -56,8 +56,8 @@ static inline void instanced()
     vertex_array.attach<offset_layout>(offset_buffer);
     
     //Shader setup
-    auto const vertex_shader_binary   = load_file("examples/assets/shaders/compiled/instanced.vert.spv");
-    auto const fragment_shader_binary = load_file("examples/assets/shaders/compiled/instanced.frag.spv");
+    auto const vertex_shader_binary   = read_file("examples/assets/shaders/compiled/instanced.vert.spv");
+    auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/instanced.frag.spv");
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
     auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };

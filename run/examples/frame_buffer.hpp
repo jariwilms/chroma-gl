@@ -1,12 +1,10 @@
-#pragma once
-
 import std;
 import chroma_gl;
 import rgfw;
 
 #include "file.hpp"
 
-static inline void triangle()
+void frame_buffer()
 {
     //Vertex data
     auto const vertex_data            = std::vector<gl::float32_t>
@@ -46,9 +44,17 @@ static inline void triangle()
     auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };
     auto       pipeline               = gl::pipeline{ shader_list };
 
+    auto const my_color_specification = gl::frame_buffer_specification{ "my_color", gl::frame_buffer_surface_e::texture      , gl::texture_format_e      ::rgba_uint8_n              };
+    auto const my_depth_specification = gl::frame_buffer_specification{ "my_depth", gl::frame_buffer_surface_e::render_buffer, gl::render_buffer_format_e::depth_stencil_uint32_24_8 };
+    auto const my_attachment_map      = gl::frame_buffer_attachment_map_t
+    {
+        { gl::frame_buffer_attachment_e::color_0      , my_color_specification }, 
+        { gl::frame_buffer_attachment_e::depth_stencil, my_depth_specification }, 
+    };
+    auto       my_frame_buffer        = gl::frame_buffer{ my_attachment_map, window_dimensions };
 
-    
-    //Render loop
+
+
     while (window)
     {
         window.process_events();
@@ -57,10 +63,19 @@ static inline void triangle()
         gl::clear_color(gl::vector_4f{ 0.1f } );
         gl::clear      (gl::buffer_mask_e::all);
         
-        pipeline    .bind();
-        vertex_array.bind();
-        gl::draw_elements(gl::draw_mode_e::triangles, gl::draw_type_e::uint32, vertex_array.index_count(), gl::index_t{ 0u });
+        pipeline       .bind();
+        vertex_array   .bind();
+        my_frame_buffer.bind(gl::frame_buffer::target_e::read_write);
+        gl::draw_elements    (gl::draw_mode_e::triangles, gl::draw_type_e::uint32, vertex_array.index_count(), gl::index_t{ 0u });
+
+        gl::blit_frame_buffer(my_frame_buffer.handle(), gl::default_frame_buffer, gl::buffer_mask_e::color, gl::frame_buffer_filter_e::nearest, window_dimensions, window_dimensions);
 
         window.swap_buffers();
     }
+
+    auto       frame_buffer_pixels    = gl::read_pixels(window_dimensions, gl::pixel_data_format_e::rgba, gl::pixel_data_type_e::byte);
+    auto       image                  = gl::image{ gl::image::format_e::rgba_uint8, window_dimensions, std::move(frame_buffer_pixels) };
+    auto       encoded_image          = gl::image::encode<gl::image::extension_e::png>(gl::image::format_e::rgba_uint8, image);
+    
+    write_file("my_image.png", encoded_image);
 }

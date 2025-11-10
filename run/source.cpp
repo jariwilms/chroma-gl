@@ -1,6 +1,6 @@
 import std;
 import chroma_gl;
-import vendor.rgfw;
+import rgfw;
 
 #include "examples/triangle.hpp"
 

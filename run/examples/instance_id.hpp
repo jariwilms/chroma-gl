@@ -2,7 +2,7 @@ import std;
 import chroma_gl;
 import rgfw;
 
-#include "examples/load_file.hpp"
+#include "examples/read_file.hpp"
 
 static inline void instance_id()
 {
@@ -31,8 +31,8 @@ static inline void instance_id()
     vertex_array.attach<vertex_layout>(vertex_buffer);
     
     //Shader setup
-    auto const vertex_shader_binary   = load_file("examples/assets/shaders/compiled/instance_id.vert.spv"); //Make sure to compile shaders with --target-env=opengl
-    auto const fragment_shader_binary = load_file("examples/assets/shaders/compiled/instance_id.frag.spv"); //
+    auto const vertex_shader_binary   = read_file("examples/assets/shaders/compiled/instance_id.vert.spv"); //Make sure to compile shaders with --target-env=opengl
+    auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/instance_id.frag.spv"); //
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
     auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };
