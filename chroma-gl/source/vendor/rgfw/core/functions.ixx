@@ -74,6 +74,6 @@ export namespace rgfw
     }
     void window_close           (rgfw::window_t* window)
     {
-        return ::RGFW_window_close(window);
+        ::RGFW_window_close(window);
     }
 }
