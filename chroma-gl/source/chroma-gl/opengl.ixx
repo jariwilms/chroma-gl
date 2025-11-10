@@ -1961,7 +1961,7 @@ export namespace gl
     {
         ::glTextureBuffer(gl::to_underlying(texture), gl::to_underlying(format), gl::to_underlying(buffer));
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     void texture_buffer_range                             (gl::handle_t texture, gl::handle_t buffer, gl::buffer_format_e format, gl::range_t range)
     {
         const auto buffer_size = gl::get_buffer_parameter_value<gl::buffer_parameter_e::size>(buffer);
@@ -2886,7 +2886,7 @@ export namespace gl
     {
         ::glNamedFramebufferReadBuffer(gl::to_underlying(frame_buffer), gl::to_underlying(source));
     }
-    template<typename T>
+    template<typename T = gl::byte_t>
     auto read_pixels                                      (gl::area_t region, gl::pixel_data_format_e format, gl::pixel_data_type_e type) -> std::vector<T>
     {
         const auto bytes_per_pixel = map_pixel_data_format_component_count(format) * map_pixel_data_component_size(type);
