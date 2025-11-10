@@ -362,7 +362,6 @@ export namespace gl
         switch (dimensions)
         {
             case 2u: return gl::texture_target_e::_2d_multisample;
-            case 3u: return gl::texture_target_e::_2d_multisample_array;
 
             default: throw std::invalid_argument{ "invalid dimensions" };
         }
