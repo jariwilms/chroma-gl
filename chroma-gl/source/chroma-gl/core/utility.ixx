@@ -3,7 +3,7 @@ export module opengl.utility;
 import std;
 import opengl.domain;
 import opengl.types;
-import vendor.glm;
+import glm;
 
 export namespace gl
 {

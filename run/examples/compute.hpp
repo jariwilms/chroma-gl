@@ -1,8 +1,8 @@
 import std;
 import chroma_gl;
-import vendor.rgfw;
+import rgfw;
 
-#include "examples/load_file.hpp"
+#include "examples/read_file.hpp"
 
 static inline void compute()
 {
@@ -24,7 +24,7 @@ static inline void compute()
     auto       output_buffer          = gl::shader_storage_buffer<gl::float32_t>{ input_size };
     
     //Shader setup
-    auto const compute_shader_binary  = load_file("examples/assets/shaders/compiled/multiply.comp.spv");
+    auto const compute_shader_binary  = read_file("examples/assets/shaders/compiled/multiply.comp.spv");
     auto       compute_shader         = std::make_shared<gl::shader>(gl::shader::type_e::compute, "main", compute_shader_binary);
     auto       shader_list            = std::initializer_list{ compute_shader };
     auto       pipeline               = gl::pipeline{ shader_list };

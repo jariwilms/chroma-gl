@@ -1,9 +1,9 @@
-export module vendor.rgfw.structures;
+export module rgfw:structures;
 
 import std;
-import vendor.rgfw.flags;
-import vendor.rgfw.types;
-import vendor.rgfw.code;
+import :code;
+import :flags;
+import :types;
 
 export namespace rgfw
 {

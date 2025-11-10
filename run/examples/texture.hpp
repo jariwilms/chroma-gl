@@ -2,9 +2,9 @@
 
 import std;
 import chroma_gl;
-import vendor.rgfw;
+import rgfw;
 
-#include "load_file.hpp"
+#include "file.hpp"
 
 static inline void texture()
 {
@@ -41,15 +41,15 @@ static inline void texture()
     vertex_array.attach                     (index_buffer );
 
     //Shader setup
-    auto const vertex_shader_binary   = load_file("examples/assets/shaders/compiled/texture.vert.spv");
-    auto const fragment_shader_binary = load_file("examples/assets/shaders/compiled/texture.frag.spv");
+    auto const vertex_shader_binary   = read_file("examples/assets/shaders/compiled/texture.vert.spv");
+    auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/texture.frag.spv");
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
     auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };
     auto       pipeline               = gl::pipeline{ shader_list };
     
     //Texture loading
-    auto       image_data             = load_file("examples/assets/textures/opengl_logo.png");
+    auto       image_data             = read_file("examples/assets/textures/opengl_logo.png");
     auto       image                  = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
     auto       texture                = gl::texture_2d{ gl::texture_2d::format_e::rgba_uint8_n, image.dimensions() };
     auto const texture_state          = gl::texture_state

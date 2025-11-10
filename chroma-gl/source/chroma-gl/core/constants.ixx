@@ -1,7 +1,6 @@
 export module opengl.constants;
 
 import opengl.types;
-import <glad/gl.h>;
 
 export namespace gl
 {

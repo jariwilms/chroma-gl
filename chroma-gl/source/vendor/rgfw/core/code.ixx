@@ -1,7 +1,7 @@
-export module vendor.rgfw.code;
+export module rgfw:code;
 
 import std;
-import vendor.rgfw.types;
+import :types;
 
 export namespace rgfw
 {

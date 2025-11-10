@@ -1,13 +1,13 @@
-export module vendor.rgfw.window;
+export module rgfw:window    ;
 
 import std;
+import glad;
 import opengl.config;
-import vendor.glad;
-import vendor.rgfw.flags;
-import vendor.rgfw.functions;
-import vendor.rgfw.input;
-import vendor.rgfw.structures;
-import vendor.rgfw.types;
+import :flags;
+import :functions;
+import :input;
+import :structures;
+import :types;
 
 export namespace rgfw
 {
