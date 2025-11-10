@@ -3,7 +3,7 @@ export module opengl.io.image;
 import std;
 import opengl.config;
 import opengl.types;
-import vendor.stb;
+import stb;
 
 export namespace gl
 {
@@ -41,19 +41,19 @@ export namespace gl
             : format_{ format }, dimensions_{ dimensions }, data_{ std::from_range, std::forward<R>(source) } {}
 
         template<extension_e E>
-        static auto encode(const gl::image& image) -> auto
+        static auto encode(format_e format, const gl::image& image) -> auto
         {
             stb::set_flip_vertically_on_write(config::flip_images_vertically);
 
-            const auto channels   = map_channels(format_);
+            const auto channels   = map_channels(format);
             const auto dimensions = image.dimensions();
             const auto data       = image.data();
             
             using enum extension_e;
-            if constexpr (E == bmp) return stb::write_bmp_to_function(data, channels, dimensions);
-            if constexpr (E == jpg) return stb::write_jpg_to_function(data, channels, dimensions);
-            if constexpr (E == png) return stb::write_png_to_function(data, channels, dimensions);
-            if constexpr (E == hdr) return stb::write_hdr_to_function(data, channels, dimensions);
+            if constexpr (E == bmp) return stb::write_bmp_to_function(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
+            if constexpr (E == hdr) return stb::write_hdr_to_function(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
+            if constexpr (E == jpg) return stb::write_jpg_to_function(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
+            if constexpr (E == png) return stb::write_png_to_function(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
         }
         static auto decode(format_e format, std::span<const gl::byte_t> data) -> gl::image
         {
@@ -73,7 +73,7 @@ export namespace gl
                         default         : throw std::invalid_argument{ "invalid format" };
                     };
                 }, format);
-            const auto dimensions = gl::vector_2u{ stb_image.dimensions[0u], stb_image.dimensions[1u] };
+            const auto dimensions = std::bit_cast<gl::vector_2u>(stb_image.dimensions);
 
             return gl::image{ format, dimensions, std::move(stb_image.data) };
         }
