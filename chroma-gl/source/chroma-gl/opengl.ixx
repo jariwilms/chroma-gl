@@ -1681,6 +1681,65 @@ export namespace gl
         const auto* c_string = source_code.c_str();
         return static_cast<gl::handle_t>(::glCreateShaderProgramv(gl::to_underlying(type), gl::sizei_t{ 1 }, &c_string));
     }
+    template<gl::program_interface_parameter_e Parameter>
+    auto get_program_interface_value                      (gl::handle_t program, gl::program_interface_e interface) -> auto
+    {
+        auto get_program_interface_iv = [](gl::handle_t program, gl::program_interface_e interface, gl::program_interface_parameter_e parameter) -> gl::int32_t
+            {
+                auto value = gl::int32_t{};
+                ::glGetProgramInterfaceiv(gl::to_underlying(program), gl::to_underlying(interface), gl::to_underlying(parameter), &value);
+
+                return value;
+            };
+
+        using enum gl::program_interface_parameter_e;
+        if constexpr (Parameter == active_resources                   ) return static_cast<gl::uint32_t>(get_program_interface_iv(program, interface, Parameter));
+        if constexpr (Parameter == maximum_name_length                ) return static_cast<gl::size_t  >(get_program_interface_iv(program, interface, Parameter));
+        if constexpr (Parameter == maximum_number_active_variables    ) return static_cast<gl::uint32_t>(get_program_interface_iv(program, interface, Parameter));
+        if constexpr (Parameter == maximum_number_compatible_resources) return static_cast<gl::uint32_t>(get_program_interface_iv(program, interface, Parameter));
+    }
+    auto get_program_resource_index                       (gl::handle_t program, gl::program_interface_e interface, const std::string& identifier) -> gl::index_t
+    {
+        return ::glGetProgramResourceIndex(gl::to_underlying(program), gl::to_underlying(interface), identifier.c_str());
+    }
+    auto get_program_resource_name                        (gl::handle_t program, gl::program_interface_e interface, gl::index_t index) -> std::string
+    {
+        const auto maximum_name_length = gl::get_program_interface_value<gl::program_interface_parameter_e::maximum_name_length>(program, interface);
+              auto length              = gl::sizei_t{ 0u };
+              auto value               = std::string(maximum_name_length, '\0');
+        ::glGetProgramResourceName(gl::to_underlying(program), gl::to_underlying(interface), static_cast<gl::uint32_t>(index), static_cast<gl::sizei_t>(value.length()), &length, value.data());
+        
+        value.resize(length);
+        return value;
+    }
+    template<gl::program_resource_e... Resource>
+    auto get_program_resource_value                       (gl::handle_t program, gl::program_interface_e interface, gl::index_t index) -> std::array<gl::int32_t, sizeof...(Resource)>
+    {
+        const auto property_count = sizeof...(Resource);
+        const auto array          = std::array<gl::enum_t , property_count>{ gl::to_underlying(Resource)... };
+              auto value          = std::array<gl::int32_t, property_count>{};
+        ::glGetProgramResourceiv(
+            gl::to_underlying        (program), gl::to_underlying       (interface)     , 
+            static_cast<gl::uint32_t>(index)  , static_cast<gl::sizei_t>(property_count), 
+            array.data()                      , static_cast<gl::sizei_t>(array.size())  , 
+            nullptr                           , value.data()                           );
+
+        return value;
+    }
+    auto get_program_resource_location                    (gl::handle_t program, gl::program_interface_e interface, const std::string& identifier) -> gl::int32_t
+    {
+        const auto value = ::glGetProgramResourceLocation(gl::to_underlying(program), gl::to_underlying(interface), identifier.c_str());
+        if (value == -1) throw std::runtime_error{ "name does not identify an active variable or identifies an active variable that does not have a valid location" };
+
+        return value;
+    }
+    auto get_program_resource_location_index              (gl::handle_t program, gl::program_interface_e interface, const std::string& identifier) -> gl::int32_t
+    {
+        const auto value = ::glGetProgramResourceLocationIndex(gl::to_underlying(program), gl::to_underlying(gl::program_interface_e::program_output), identifier.c_str());
+        if (value == -1) throw std::runtime_error{ "name does not identify an active variable or identifies an active variable that does not have a valid location" };
+
+        return value;
+    }
     auto create_pipeline                                  () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
