@@ -1202,6 +1202,13 @@ export namespace gl
         vertex_subroutine                          = GL_VERTEX_SUBROUTINE                 , 
         vertex_subroutine_uniform                  = GL_VERTEX_SUBROUTINE_UNIFORM         , 
     };
+    enum class program_interface_parameter_e : gl::enum_t
+    {
+        active_resources                    = GL_ACTIVE_RESOURCES              , 
+        maximum_name_length                 = GL_MAX_NAME_LENGTH               , 
+        maximum_number_active_variables     = GL_MAX_NUM_ACTIVE_VARIABLES      , 
+        maximum_number_compatible_resources = GL_MAX_NUM_COMPATIBLE_SUBROUTINES,  
+    };
     enum class program_parameter_e : gl::enum_t
     {
         active_atomic_counter_buffers             = GL_ACTIVE_ATOMIC_COUNTER_BUFFERS        , 
