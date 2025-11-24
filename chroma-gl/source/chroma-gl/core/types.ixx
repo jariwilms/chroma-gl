@@ -7,6 +7,11 @@ import glm;
 export namespace gl
 {
     using bool_t                        = bool                         ;
+    enum                                : gl::bool_t 
+    { 
+        false_ = GL_FALSE, 
+        true_  = GL_TRUE , 
+    };
 
     using void_t                        = ::GLvoid                     ;
     using boolean_t                     = ::GLboolean                  ;
@@ -40,6 +45,10 @@ export namespace gl
     using time_t                        = ::khronos_utime_nanoseconds_t; //Duration expressed in nanoseconds
     using c_string                      = ::GLchar const*              ; //Null-terminated character array
     
+    enum class none_t                   : decltype(GL_NONE);
+    enum class binding_t                : gl::uint32_t;
+    enum class handle_t                 : gl::uint32_t;
+
     using debug_callback_t              = gl::void_t(__stdcall*)(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::sizei_t, gl::c_string, const gl::void_t*);
 
 
@@ -77,11 +86,6 @@ export namespace gl
     using quaternion_4f                 = gl::quaternion_t<gl::float32_t    >;
 
 
-
-    enum                                : gl::bool_t  { false_ = GL_FALSE, true_ = GL_TRUE, };
-    enum class none_t                   : decltype(GL_NONE);
-    enum class binding_t                : gl::uint32_t;
-    enum class handle_t                 : gl::uint32_t;
 
     template<typename... Ts>
     struct overload_t : Ts... { using Ts::operator()...; };
