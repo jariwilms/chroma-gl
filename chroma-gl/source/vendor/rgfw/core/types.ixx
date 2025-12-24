@@ -52,5 +52,5 @@ export namespace rgfw
 
 
 
-    constexpr auto function_address = ::RGFW_getProcAddress_OpenGL;
+    constexpr auto loader = ::RGFW_getProcAddress_OpenGL;
 }

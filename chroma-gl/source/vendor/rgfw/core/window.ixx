@@ -65,8 +65,9 @@ export namespace rgfw
                 .minor         = rgfw::int32_t{ 6 }              , 
                 .renderer      = rgfw::gl_renderer_e::accelerated, 
             };
+            
             rgfw::create_context(window_.get(), gl_hints);
-            if (!glad::initialize(rgfw::function_address)) throw std::runtime_error{ "failed to initialize glad" };
+            if (!glad::initialize(rgfw::loader)) throw std::runtime_error{ "failed to initialize glad" };
         }
 
         void rename        (std::string     const& title     )
