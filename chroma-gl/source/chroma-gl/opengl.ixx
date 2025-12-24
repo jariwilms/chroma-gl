@@ -1733,7 +1733,7 @@ export namespace gl
 
         return value;
     }
-    auto get_program_resource_location_index              (gl::handle_t program, gl::program_interface_e interface, const std::string& identifier) -> gl::int32_t
+    auto get_program_resource_location_index              (gl::handle_t program,                                    const std::string& identifier) -> gl::int32_t
     {
         const auto value = ::glGetProgramResourceLocationIndex(gl::to_underlying(program), gl::to_underlying(gl::program_interface_e::program_output), identifier.c_str());
         if (value == -1) throw std::runtime_error{ "name does not identify an active variable or identifies an active variable that does not have a valid location" };
