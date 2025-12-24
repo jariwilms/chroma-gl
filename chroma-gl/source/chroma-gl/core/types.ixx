@@ -30,6 +30,7 @@ export namespace gl
     using float32_t                     = ::GLfloat                    ;
     using float64_t                     = ::GLdouble                   ;
 
+    using binding_t                     = ::GLuint                     ; //Object binding
     using sizeu_t                       = ::GLuint                     ; //Unsigned 32-bit size-type
     using sizei_t                       = ::GLsizei                    ; //  Signed 32-bit size-type
     using size_t                        = ::khronos_usize_t            ; //Maximum possible size of an object on a given platform
@@ -45,11 +46,10 @@ export namespace gl
     using time_t                        = ::khronos_utime_nanoseconds_t; //Duration expressed in nanoseconds
     using c_string                      = ::GLchar const*              ; //Null-terminated character array
     
-    enum class none_t                   : decltype(GL_NONE);
-    enum class binding_t                : gl::uint32_t;
-    enum class handle_t                 : gl::uint32_t;
-
     using debug_callback_t              = gl::void_t(__stdcall*)(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::sizei_t, gl::c_string, const gl::void_t*);
+    
+    enum class none_t                   : decltype(GL_NONE);
+    enum class handle_t                 : gl::uint32_t;
 
 
 

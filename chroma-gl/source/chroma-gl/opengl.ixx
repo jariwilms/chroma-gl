@@ -1442,11 +1442,11 @@ export namespace gl
     }
     void bind_buffer_base                                 (gl::handle_t buffer, gl::buffer_base_target_e base_target, gl::binding_t binding)
     {
-        ::glBindBufferBase(gl::to_underlying(base_target), gl::to_underlying(binding), gl::to_underlying(buffer));
+        ::glBindBufferBase(gl::to_underlying(base_target), binding, gl::to_underlying(buffer));
     }
     void bind_buffers_base                                (std::span<const gl::handle_t> buffers, gl::buffer_base_target_e target, gl::binding_t start_binding)
     {
-        ::glBindBuffersBase(gl::to_underlying(target), gl::to_underlying(start_binding), static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
+        ::glBindBuffersBase(gl::to_underlying(target), start_binding, static_cast<gl::sizei_t>(buffers.size()), gl::to_underlying_pointer(buffers.data()));
     }
     template<typename T = gl::byte_t>
     void bind_buffer_range                                (gl::handle_t                  buffer , gl::buffer_base_target_e base_target, gl::binding_t binding,                 gl::range_t  range )
@@ -1818,7 +1818,7 @@ export namespace gl
     }
     void bind_texture_unit                                (gl::handle_t texture, gl::binding_t binding)
     {
-        ::glBindTextureUnit(gl::to_underlying(binding), gl::to_underlying(texture));
+        ::glBindTextureUnit(binding, gl::to_underlying(texture));
     }
     auto create_sampler                                   () -> gl::handle_t
     {
@@ -1844,7 +1844,7 @@ export namespace gl
     }
     void bind_sampler                                     (gl::handle_t sampler, gl::binding_t binding)
     {
-        ::glBindSampler(gl::to_underlying(binding), gl::to_underlying(sampler));
+        ::glBindSampler(binding, gl::to_underlying(sampler));
     }
     void bind_samplers                                    (std::span<const gl::handle_t> samplers, gl::index_t index)
     {
@@ -2430,7 +2430,7 @@ export namespace gl
     }
     void vertex_array_vertex_buffer                       (gl::handle_t vertex_array, gl::handle_t vertex_buffer, gl::binding_t binding, gl::ptrdiff_t element_offset, gl::ptrdiff_t element_stride)
     {
-        ::glVertexArrayVertexBuffer(gl::to_underlying(vertex_array), gl::to_underlying(binding), gl::to_underlying(vertex_buffer), static_cast<gl::intptr_t>(element_offset), static_cast<gl::sizei_t>(element_stride));
+        ::glVertexArrayVertexBuffer(gl::to_underlying(vertex_array), binding, gl::to_underlying(vertex_buffer), static_cast<gl::intptr_t>(element_offset), static_cast<gl::sizei_t>(element_stride));
     }
     void vertex_array_vertex_buffers                      (gl::handle_t vertex_array, std::span<const gl::handle_t> vertex_buffers, gl::index_t first_binding, std::span<const gl::ptrdiff_t> offsets, std::span<const gl::uint32_t> strides)
     {
@@ -2443,7 +2443,7 @@ export namespace gl
     }
     void vertex_array_attribute_binding                   (gl::handle_t vertex_array, gl::index_t attribute_index, gl::binding_t binding)
     {
-        ::glVertexArrayAttribBinding(gl::to_underlying(vertex_array), static_cast<gl::uint32_t>(attribute_index), gl::to_underlying(binding));
+        ::glVertexArrayAttribBinding(gl::to_underlying(vertex_array), static_cast<gl::uint32_t>(attribute_index), binding);
     }
     void enable_vertex_array_attribute                    (gl::handle_t vertex_array, gl::index_t attribute_index)
     {
@@ -2455,7 +2455,7 @@ export namespace gl
     }
     void vertex_array_binding_divisor                     (gl::handle_t vertex_array, gl::binding_t binding, gl::uint32_t instance_step_rate)
     {
-        ::glVertexArrayBindingDivisor(gl::to_underlying(vertex_array), gl::to_underlying(binding), instance_step_rate);
+        ::glVertexArrayBindingDivisor(gl::to_underlying(vertex_array), binding, instance_step_rate);
     }
     void primitive_restart_index                          (gl::index_t restart_index)
     {
