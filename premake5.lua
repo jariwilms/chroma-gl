@@ -59,9 +59,9 @@ project "chroma-gl"
 		return calls
 	end)
 
-group "Vendor"
-include "vendor/glad"
-include "vendor/glm"
-include "vendor/rgfw"
-include "vendor/stb"
-group ""
+	group "vendor"
+		include "vendor/glad"
+		include "vendor/glm"
+		include "vendor/rgfw"
+		include "vendor/stb"
+	group ""
