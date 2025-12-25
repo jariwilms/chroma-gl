@@ -13,6 +13,7 @@ export import opengl.object.shader;
 export import opengl.object.texture;
 export import opengl.object.vertex_array;
 export import opengl.projection;
+export import opengl.vertex;
 
 export namespace gl
 {
