@@ -2,32 +2,33 @@ import std;
 import chroma_gl;
 import rgfw;
 
-#include "examples/read_file.hpp"
+#include "examples/file.hpp"
 
 static inline void compute()
 {
-    //Buffer data
-    auto const input_size             = 1024u;
-    auto       input_data             = std::vector<gl::float32_t>(input_size);
-    auto       output_data            = std::vector<gl::float32_t>(input_size);
-    for (auto i = 0u; i < input_size; ++i) input_data[i] = static_cast<gl::float32_t>(i); //Set value of each element to its index
-    
-    
-
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
     auto       window                 = rgfw::window   { "my_window", window_dimensions, rgfw::window_display_mode_e::windowed, rgfw::false_ };
     auto const input                  = window.input_handler();
+    
+    //Buffer data
+    auto const input_size             = 1024u;
+    auto       input_data             = std::vector<gl::float32_t>(input_size);
+    auto       output_data            = std::vector<gl::float32_t>(input_size);
+    for (auto i = 0u; i < input_size; ++i)
+    {
+        input_data[i] = static_cast<gl::float32_t>(i); //Set value of each element to its index
+    }
 
-    //Triangle buffers
+    //Buffers and layouts
     auto       input_buffer           = gl::shader_storage_buffer<gl::float32_t>{ input_size };
     auto       output_buffer          = gl::shader_storage_buffer<gl::float32_t>{ input_size };
     
     //Shader setup
     auto const compute_shader_binary  = read_file("examples/assets/shaders/compiled/multiply.comp.spv");
     auto       compute_shader         = std::make_shared<gl::shader>(gl::shader::type_e::compute, "main", compute_shader_binary);
-    auto       shader_list            = std::initializer_list{ compute_shader };
-    auto       pipeline               = gl::pipeline{ shader_list };
+    auto       shaders                = std::initializer_list{ compute_shader };
+    auto       pipeline               = gl::pipeline{ shaders };
 
 
 

@@ -6,6 +6,11 @@ import rgfw;
 
 void frame_buffer()
 {
+    //Window creation
+    auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
+    auto       window                 = rgfw::window   { "my_window", window_dimensions };
+    auto const input                  = window.input_handler();
+
     //Vertex data
     auto const vertex_data            = std::vector<gl::float32_t>
     {
@@ -19,14 +24,7 @@ void frame_buffer()
            0u,    1u,    2u,                      //First  triangle
     };
 
-
-
-    //Window creation
-    auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "my_window", window_dimensions };
-    auto const input                  = window.input_handler();
-
-    //Triangle buffers
+    //Buffers and layouts
     auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
     auto       index_buffer           = gl::index_buffer                { index_data  };
     auto       vertex_array           = gl::vertex_array{};
@@ -41,8 +39,8 @@ void frame_buffer()
     auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/triangle.frag.spv");
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shader_list };
+    auto       shaders                = std::initializer_list{ vertex_shader, fragment_shader };
+    auto       pipeline               = gl::pipeline{ shaders };
 
     auto const my_color_specification = gl::frame_buffer_specification{ "my_color", gl::frame_buffer_surface_e::texture      , gl::texture_format_e      ::rgba_uint8_n              };
     auto const my_depth_specification = gl::frame_buffer_specification{ "my_depth", gl::frame_buffer_surface_e::render_buffer, gl::render_buffer_format_e::depth_stencil_uint32_24_8 };
@@ -73,8 +71,8 @@ void frame_buffer()
         window.swap_buffers();
     }
 
-    auto       frame_buffer_pixels    = gl::read_pixels(window_dimensions, gl::pixel_data_format_e::rgba, gl::pixel_data_type_e::byte);
-    auto       image                  = gl::image{ gl::image::format_e::rgba_uint8, window_dimensions, std::move(frame_buffer_pixels) };
+    auto       frame_buffer_pixels    = gl::read_pixels(window.dimensions(), gl::pixel_data_format_e::rgba, gl::pixel_data_type_e::byte);
+    auto       image                  = gl::image{ gl::image::format_e::rgba_uint8, window.dimensions(), std::move(frame_buffer_pixels) };
     auto       encoded_image          = gl::image::encode<gl::image::extension_e::png>(gl::image::format_e::rgba_uint8, image);
     
     write_file("my_image.png", encoded_image);

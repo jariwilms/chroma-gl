@@ -26,6 +26,11 @@ static inline auto create_grid(gl::uint32_t grid_size, gl::float32_t grid_spacin
 }
 static inline void instanced()
 {
+    //Window creation
+    auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
+    auto       window                 = rgfw::window   { "my_window", window_dimensions };
+    auto const input                  = window.input_handler();
+    
     //Vertex data
     auto const vertex_data            = std::vector<gl::float32_t>
     {
@@ -37,14 +42,7 @@ static inline void instanced()
     auto const spacing                = 0.2f;
     auto const offset_data            = create_grid(grid_size, spacing);
 
-
-
-    //Window creation
-    auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "my_window", window_dimensions };
-    auto const input                  = window.input_handler();
-
-    //Triangle buffers
+    //Buffers and layouts
     auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
     auto       offset_buffer          = gl::vertex_buffer<gl::vector_3f>{ offset_data };
     auto       vertex_array           = gl::vertex_array{};
@@ -60,8 +58,8 @@ static inline void instanced()
     auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/instanced.frag.spv");
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shader_list };
+    auto       shaders                = std::initializer_list{ vertex_shader, fragment_shader };
+    auto       pipeline               = gl::pipeline{ shaders };
 
 
 

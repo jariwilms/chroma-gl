@@ -8,29 +8,30 @@ import rgfw;
 
 static inline void triangle()
 {
-    //Vertex data
-    auto const vertex_data            = std::vector<gl::float32_t>
-    {
-        //  x      y      z,     r      g      b
-         0.0f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, //Top    middle (red  )
-        -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  0.0f, //Bottom left   (green)
-         0.5f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f, //Bottom right  (blue )
-    };
-    auto const index_data             = std::vector<gl::uint32_t>
-    {
-           0u,    1u,    2u,                      //First  triangle
-    };
-
-
-
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
     auto       window                 = rgfw::window   { "my_window", window_dimensions };
     auto const input                  = window.input_handler();
 
-    //Triangle buffers
-    auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
-    auto       index_buffer           = gl::index_buffer                { index_data  };
+    //Vertex data
+    struct     vertices
+    {
+        gl::vector_3f position;
+        gl::vector_3f color;
+    };
+    auto const position_data          = gl::vertex::triangle::positions | std::views::transform([](auto _) { return _ / 2.0f; }) | std::ranges::to<std::vector>();
+    auto const color_data             = std::array<gl::vector_3f, 3u>
+    {
+         gl::vector_3f{ 1.0f, 0.0f, 0.0f }, //red
+         gl::vector_3f{ 0.0f, 1.0f, 0.0f }, //green
+         gl::vector_3f{ 0.0f, 0.0f, 1.0f }, //blue
+    };
+    auto const vertex_data            = gl::make_interleaved<vertices>(position_data, color_data);
+    auto const index_data             = gl::vertex::triangle::indices;
+
+    //Buffers and layouts
+    auto       vertex_buffer          = gl::vertex_buffer<vertices>{ vertex_data };
+    auto       index_buffer           = gl::index_buffer           { index_data  };
     auto       vertex_array           = gl::vertex_array{};
     using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
     using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
@@ -43,8 +44,8 @@ static inline void triangle()
     auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/triangle.frag.spv");
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shader_list };
+    auto       shaders                = std::initializer_list{ vertex_shader, fragment_shader };
+    auto       pipeline               = gl::pipeline{ shaders };
 
 
     
