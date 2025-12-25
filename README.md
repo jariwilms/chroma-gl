@@ -22,7 +22,7 @@ This library is designed in two parts, and can be imported using the following m
 
 ## Getting Started
 >[!NOTE]
->The C++ module ecosystem is still maturing. Tooling support can be inconsistent, which may require manual project configuration.
+>The C++ module ecosystem is still maturing. Tooling support may be inconsistent.
 
 1. Create solution  
 Run the generate.bat script in the root directory. Premake will generate a Visual Studio solution (.sln) along with project files
