@@ -91,7 +91,7 @@ export namespace stb
         return image_data;
     }
 
-    auto write_bmp_to_function       (std::span<const stb::byte_t> data, stb::uint32_t channels, const std::array<stb::uint32_t, 2u>& dimensions) -> std::vector<stb::byte_t>
+    auto write_bmp                   (std::span<const stb::byte_t> data, stb::uint32_t channels, const std::array<stb::uint32_t, 2u>& dimensions) -> std::vector<stb::byte_t>
     {
         auto vector = std::vector<stb::byte_t>{};
         ::stbi_write_bmp_to_func(
@@ -101,7 +101,7 @@ export namespace stb
 
         return vector;
     }
-    auto write_hdr_to_function       (std::span<const stb::byte_t> data, stb::uint32_t channels, const std::array<stb::uint32_t, 2u>& dimensions) -> std::vector<stb::float32_t>
+    auto write_hdr                   (std::span<const stb::byte_t> data, stb::uint32_t channels, const std::array<stb::uint32_t, 2u>& dimensions) -> std::vector<stb::float32_t>
     {
         auto vector = std::vector<stb::float32_t>{};
         ::stbi_write_hdr_to_func(
@@ -111,7 +111,7 @@ export namespace stb
 
         return vector;
     }
-    auto write_jpg_to_function       (std::span<const stb::byte_t> data, stb::uint32_t channels, const std::array<stb::uint32_t, 2u>& dimensions) -> std::vector<stb::byte_t>
+    auto write_jpg                   (std::span<const stb::byte_t> data, stb::uint32_t channels, const std::array<stb::uint32_t, 2u>& dimensions) -> std::vector<stb::byte_t>
     {
         auto vector = std::vector<stb::byte_t>{};
         ::stbi_write_jpg_to_func(
@@ -121,7 +121,7 @@ export namespace stb
 
         return vector;
     }
-    auto write_png_to_function       (std::span<const stb::byte_t> data, stb::uint32_t channels, const std::array<stb::uint32_t, 2u>& dimensions) -> std::vector<stb::byte_t>
+    auto write_png                   (std::span<const stb::byte_t> data, stb::uint32_t channels, const std::array<stb::uint32_t, 2u>& dimensions) -> std::vector<stb::byte_t>
     {
         auto vector = std::vector<stb::byte_t>{};
         ::stbi_write_png_to_func(

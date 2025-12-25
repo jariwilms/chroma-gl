@@ -50,10 +50,10 @@ export namespace gl
             const auto data       = image.data();
             
             using enum extension_e;
-            if constexpr (E == bmp) return stb::write_bmp_to_function(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
-            if constexpr (E == hdr) return stb::write_hdr_to_function(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
-            if constexpr (E == jpg) return stb::write_jpg_to_function(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
-            if constexpr (E == png) return stb::write_png_to_function(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
+            if constexpr (E == bmp) return stb::write_bmp(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
+            if constexpr (E == hdr) return stb::write_hdr(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
+            if constexpr (E == jpg) return stb::write_jpg(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
+            if constexpr (E == png) return stb::write_png(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
         }
         static auto decode(format_e format, std::span<const gl::byte_t> data) -> gl::image
         {
