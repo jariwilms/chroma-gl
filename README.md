@@ -17,15 +17,16 @@ This library is designed in two parts, and can be imported using the following m
 
 ## Prerequisites
 * C++23 Compiler
-  * Visual Studio 2026 Insiders is highly recommended.
-* An OpenGL 4.6 compatible graphics driver.
+  * Visual Studio 2026 Insiders is highly recommended
+* An OpenGL 4.6 compatible graphics driver
 
 ## Getting Started
 >[!NOTE]
 >The C++ module ecosystem is still maturing. Tooling support may be inconsistent.
 
 1. Create solution  
-Run the generate.bat script in the root directory. Premake will generate a Visual Studio solution (.sln) along with project files
+Run the following command in the root directory: "generate.bat -s". Premake will generate a Visual Studio solution (.sln) along with project files
+Additionally, specifying the "-s" flag will create a standalone sandbox project
 2. Build the solution. If you do not encounter errors about missing module files, you may skip the next step
 3. (Optional) Fix module filename collisions
 Due to how Visual Studio currently handles C++ module dependencies, you may need to manually adjust some project settings
@@ -44,25 +45,12 @@ import std;
 import chroma_gl;
 import rgfw;
 
-auto read_file(std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
-{
-    auto file   = std::ifstream{ filepath, std::ios::binary | std::ios::ate };
-    if (!file) throw std::runtime_error{ "failed to open file" };
-
-    auto buffer = std::vector<gl::byte_t>(file.tellg());
-    file.seekg(0u);
-    file.read (reinterpret_cast<gl::char_t*>(buffer.data()), buffer.size());
-    
-    return buffer;
-}
-
 auto main() -> int
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "my_window", window_dimensions };
-    auto const input                  = window.input_handler();
-    
+    auto       window                 = rgfw::window   { "triangle example", window_dimensions };
+
     //Vertex data
     struct     vertices
     {
@@ -78,32 +66,31 @@ auto main() -> int
     };
     auto const vertex_data            = gl::make_interleaved<vertices>(position_data, color_data);
     auto const index_data             = gl::vertex::triangle::indices;
-    
+
     //Buffers and layouts
+    auto       vertex_array           = gl::vertex_array{};
     auto       vertex_buffer          = gl::vertex_buffer<vertices>{ vertex_data };
     auto       index_buffer           = gl::index_buffer           { index_data  };
-    auto       vertex_array           = gl::vertex_array{};
     using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
     using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
-    using      triangle_data_layout   = gl::vertex_layout<position_attribute, color_attribute>;
-    vertex_array.attach<triangle_data_layout>(vertex_buffer);
-    vertex_array.attach                      (index_buffer );
+    using      triangle_layout        = gl::interleaved_layout<position_attribute, color_attribute>;
+    vertex_array.attach<triangle_layout>(vertex_buffer);
+    vertex_array.attach                 (index_buffer );
     
     //Shader setup
-    auto const vertex_shader_binary   = read_file("examples/assets/shaders/compiled/triangle.vert.spv");
-    auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/triangle.frag.spv");
-    auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
-    auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shaders                = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shaders };
-        
-    
+    auto pipeline                     = gl::create_pipeline_from_files(
+        { 
+            { gl::shader::type_e::vertex  , "examples/assets/shaders/compiled/triangle.vert.spv" }, 
+            { gl::shader::type_e::fragment, "examples/assets/shaders/compiled/triangle.frag.spv" }, 
+        });
+
+
     
     //Render loop
     while (window)
     {
         window.process_events();
-        
+
         gl::viewport   (window.dimensions()   );
         gl::clear_color(gl::vector_4f{ 0.1f } );
         gl::clear      (gl::buffer_mask_e::all);
