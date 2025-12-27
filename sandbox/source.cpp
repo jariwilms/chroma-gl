@@ -11,12 +11,12 @@ import rgfw;
 
 auto main() -> int
 {
-    //compute();
-    //frame_buffer();
-    //instance_id();
-    //instanced();
-    //texture();
-    triangle();
+    ::triangle();
+    //::texture();
+    //::frame_buffer();
+    //::instanced();
+    //::instance_id();
+    //::compute();
 
     return 0;
 }

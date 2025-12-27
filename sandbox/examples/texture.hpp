@@ -4,14 +4,11 @@ import std;
 import chroma_gl;
 import rgfw;
 
-#include "file.hpp"
-
 static inline void texture()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "my_window", window_dimensions };
-    auto const input                  = window.input_handler();
+    auto       window                 = rgfw::window   { "texture example", window_dimensions };
     
     //Vertex data
     auto const vertex_data            = std::vector<gl::float32_t>
@@ -34,32 +31,31 @@ static inline void texture()
     auto       index_buffer           = gl::index_buffer                { index_data  };
     using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
     using      uv_attribute           = gl::vertex_attribute<gl::float32_t, 2u>;
-    using      texture_data_layout    = gl::vertex_layout<position_attribute, uv_attribute>;
-    vertex_array.attach<texture_data_layout>(vertex_buffer);
+    using      texture_layout         = gl::interleaved_layout<position_attribute, uv_attribute>;
+    vertex_array.attach<texture_layout>(vertex_buffer);
     vertex_array.attach                     (index_buffer );
 
     //Shader setup
-    auto const vertex_shader_binary   = read_file("examples/assets/shaders/compiled/texture.vert.spv");
-    auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/texture.frag.spv");
-    auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
-    auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shaders                = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shaders };
+    auto pipeline                     = gl::create_pipeline_from_files(
+        {
+            { gl::shader::type_e::vertex  , "examples/assets/shaders/compiled/texture.vert.spv" },
+            { gl::shader::type_e::fragment, "examples/assets/shaders/compiled/texture.frag.spv" },
+        });
     
     //Texture loading
-    auto       image_data             = read_file("examples/assets/textures/opengl_logo.png");
+    auto       image_data             = gl::io::read("examples/assets/textures/opengl_logo.png");
     auto       image                  = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
     auto       texture                = gl::texture_2d{ gl::texture_2d::format_e::rgba_uint8_n, image.dimensions() };
+    auto const pixel_data_descriptor  = gl::pixel_data_descriptor{ gl::texture_base_format_e::rgba, gl::pixel_data_type_e::byte };
     auto const texture_state          = gl::texture_state
     {
         .minification_filter  = gl::texture_minification_filter_e ::linear_mipmap_linear, 
         .magnification_filter = gl::texture_magnification_filter_e::linear              , 
         .maximum_anisotropy   = 16.0f                                                   , 
     };
-    auto const pixel_data_descriptor  = gl::pixel_data_descriptor{ gl::texture_base_format_e::rgba, gl::pixel_data_type_e::byte };
     texture.upload          (pixel_data_descriptor, image.data());
-    texture.generate_mipmaps();
     texture.apply           (texture_state);
+    texture.generate_mipmaps();
 
 
 

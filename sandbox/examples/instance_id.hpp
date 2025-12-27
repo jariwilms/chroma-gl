@@ -2,39 +2,35 @@ import std;
 import chroma_gl;
 import rgfw;
 
-#include "examples/file.hpp"
-
 static inline void instance_id()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "my_window", window_dimensions };
-    auto const input                  = window.input_handler();
+    auto       window                 = rgfw::window   { "instance id example", window_dimensions };
     
     //Vertex data
     auto const vertex_data            = std::vector<gl::float32_t>
     {
-         // positions    // colors
-         0.0f,   0.15f,  1.0f, 0.0f, 0.0f,  // top
-        -0.15f, -0.15f,  0.0f, 1.0f, 0.0f,  // bottom left
-         0.15f, -0.15f,  0.0f, 0.0f, 1.0f   // bottom right
+         // x      y      r      g      b 
+         0.0f,  0.1f,  1.0f,  0.0f,  0.0f,  // top
+        -0.1f, -0.1f,  0.0f,  1.0f,  0.0f,  // bottom left
+         0.1f, -0.1f,  0.0f,  0.0f,  1.0f   // bottom right
     };
 
     //Buffers and layouts
-    auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
     auto       vertex_array           = gl::vertex_array{};
+    auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
     using      position_attribute     = gl::vertex_attribute<gl::float32_t, 2u>;
     using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
-    using      vertex_layout          = gl::vertex_layout<position_attribute, color_attribute>;
-    vertex_array.attach<vertex_layout>(vertex_buffer);
+    using      instance_layout        = gl::interleaved_layout<position_attribute, color_attribute>;
+    vertex_array.attach<instance_layout>(vertex_buffer);
     
     //Shader setup
-    auto const vertex_shader_binary   = read_file("examples/assets/shaders/compiled/instance_id.vert.spv"); //Make sure to compile shaders with --target-env=opengl
-    auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/instance_id.frag.spv"); //
-    auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
-    auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shaders                = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shaders };
+    auto pipeline = gl::create_pipeline_from_files(
+        {
+            { gl::shader::type_e::vertex  , "examples/assets/shaders/compiled/instance_id.vert.spv" },
+            { gl::shader::type_e::fragment, "examples/assets/shaders/compiled/instance_id.frag.spv" },
+        });
 
 
 

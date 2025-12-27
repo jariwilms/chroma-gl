@@ -2,14 +2,11 @@ import std;
 import chroma_gl;
 import rgfw;
 
-#include "examples/file.hpp"
-
 static inline void compute()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "my_window", window_dimensions, rgfw::window_display_mode_e::windowed, rgfw::false_ };
-    auto const input                  = window.input_handler();
+    auto       window                 = rgfw::window   { "compute example", window_dimensions, rgfw::window_display_mode_e::windowed, rgfw::false_ };
     
     //Buffer data
     auto const input_size             = 1024u;
@@ -25,12 +22,10 @@ static inline void compute()
     auto       output_buffer          = gl::shader_storage_buffer<gl::float32_t>{ input_size };
     
     //Shader setup
-    auto const compute_shader_binary  = read_file("examples/assets/shaders/compiled/multiply.comp.spv");
-    auto       compute_shader         = std::make_shared<gl::shader>(gl::shader::type_e::compute, "main", compute_shader_binary);
-    auto       shaders                = std::initializer_list{ compute_shader };
-    auto       pipeline               = gl::pipeline{ shaders };
-
-
+    auto pipeline = gl::create_pipeline_from_files(
+        {
+            { gl::shader::type_e::compute, "examples/assets/shaders/compiled/multiply.comp.spv" },
+        });
 
     //Bindings and data upload
     pipeline     .bind ();
@@ -38,6 +33,8 @@ static inline void compute()
     output_buffer.bind (gl::binding_t{ 1u });
     input_buffer .upload(input_data);
     
+
+
     //Dispatch and CPU synchronization
     gl::dispatch_compute(gl::vector_3u{ input_size / 256u, 1u, 1u });
     auto       fence                  = gl::fence{}; //Fence is not placed by default

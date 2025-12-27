@@ -4,14 +4,11 @@ import std;
 import chroma_gl;
 import rgfw;
 
-#include "file.hpp"
-
 static inline void triangle()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "my_window", window_dimensions };
-    auto const input                  = window.input_handler();
+    auto       window                 = rgfw::window   { "triangle example", window_dimensions };
 
     //Vertex data
     struct     vertices
@@ -30,22 +27,21 @@ static inline void triangle()
     auto const index_data             = gl::vertex::triangle::indices;
 
     //Buffers and layouts
+    auto       vertex_array           = gl::vertex_array{};
     auto       vertex_buffer          = gl::vertex_buffer<vertices>{ vertex_data };
     auto       index_buffer           = gl::index_buffer           { index_data  };
-    auto       vertex_array           = gl::vertex_array{};
     using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
     using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
-    using      triangle_data_layout   = gl::vertex_layout<position_attribute, color_attribute>;
-    vertex_array.attach<triangle_data_layout>(vertex_buffer);
-    vertex_array.attach                      (index_buffer );
+    using      triangle_layout        = gl::interleaved_layout<position_attribute, color_attribute>;
+    vertex_array.attach<triangle_layout>(vertex_buffer);
+    vertex_array.attach                 (index_buffer );
     
     //Shader setup
-    auto const vertex_shader_binary   = read_file("examples/assets/shaders/compiled/triangle.vert.spv");
-    auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/triangle.frag.spv");
-    auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
-    auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shaders                = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shaders };
+    auto pipeline                     = gl::create_pipeline_from_files(
+        { 
+            { gl::shader::type_e::vertex  , "examples/assets/shaders/compiled/triangle.vert.spv" }, 
+            { gl::shader::type_e::fragment, "examples/assets/shaders/compiled/triangle.frag.spv" }, 
+        });
 
 
     
