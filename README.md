@@ -17,17 +17,17 @@ This library is designed in two parts, and can be imported using the following m
 
 ## Prerequisites
 * C++23 Compiler
-  * Visual Studio 2026 Insiders is heavily recommended.
+  * Visual Studio 2026 Insiders is highly recommended.
 * An OpenGL 4.6 compatible graphics driver.
 
 ## Getting Started
 >[!NOTE]
->The C++ module ecosystem is still maturing. Tooling support can be inconsistent, which may require manual project configuration.
+>The C++ module ecosystem is still maturing. Tooling support may be inconsistent.
 
 1. Create solution  
 Run the generate.bat script in the root directory. Premake will generate a Visual Studio solution (.sln) along with project files
-2. Build the solution. If you do not encounter errors about missing module files, you may skip step 3
-3. Configure Project in Visual Studio  
+2. Build the solution. If you do not encounter errors about missing module files, you may skip the next step
+3. (Optional) Fix module filename collisions
 Due to how Visual Studio currently handles C++ module dependencies, you may need to manually adjust some project settings
    1. In the Solution Explorer, right-click the chroma-gl project and select Properties
    2. Navigate to Configuration Properties -> C/C++ -> Output Files
@@ -39,13 +39,12 @@ Due to how Visual Studio currently handles C++ module dependencies, you may need
 
 ## Usage Example
 The following program demonstrates how to render a simple triangle to the screen.
-
 ```cpp
 import std;
 import chroma_gl;
 import rgfw;
 
-auto load_file(std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
+auto read_file(std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
 {
     auto file   = std::ifstream{ filepath, std::ios::binary | std::ios::ate };
     if (!file) throw std::runtime_error{ "failed to open file" };
@@ -59,29 +58,30 @@ auto load_file(std::filesystem::path const& filepath) -> std::vector<gl::byte_t>
 
 auto main() -> int
 {
-    //Vertex data
-    auto const vertex_data            = std::vector<gl::float32_t>
-    {
-        //  x      y      z,     r      g      b
-         0.0f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, //Top    middle (red  )
-        -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  0.0f, //Bottom left   (green)
-         0.5f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f, //Bottom right  (blue )
-    };
-    auto const index_data             = std::vector<gl::uint32_t>
-    {
-           0u,    1u,    2u,                      //First  triangle
-    };
-
-
-
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
     auto       window                 = rgfw::window   { "my_window", window_dimensions };
     auto const input                  = window.input_handler();
-
-    //Triangle buffers
-    auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
-    auto       index_buffer           = gl::index_buffer                { index_data  };
+    
+    //Vertex data
+    struct     vertices
+    {
+        gl::vector_3f position;
+        gl::vector_3f color;
+    };
+    auto const position_data          = gl::vertex::triangle::positions | std::views::transform([](auto _) { return _ / 2.0f; }) | std::ranges::to<std::vector>();
+    auto const color_data             = std::array<gl::vector_3f, 3u>
+    {
+         gl::vector_3f{ 1.0f, 0.0f, 0.0f }, //red
+         gl::vector_3f{ 0.0f, 1.0f, 0.0f }, //green
+         gl::vector_3f{ 0.0f, 0.0f, 1.0f }, //blue
+    };
+    auto const vertex_data            = gl::make_interleaved<vertices>(position_data, color_data);
+    auto const index_data             = gl::vertex::triangle::indices;
+    
+    //Buffers and layouts
+    auto       vertex_buffer          = gl::vertex_buffer<vertices>{ vertex_data };
+    auto       index_buffer           = gl::index_buffer           { index_data  };
     auto       vertex_array           = gl::vertex_array{};
     using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
     using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
@@ -90,20 +90,20 @@ auto main() -> int
     vertex_array.attach                      (index_buffer );
     
     //Shader setup
-    auto const vertex_shader_binary   = load_file("examples/assets/shaders/compiled/triangle.vert.spv");
-    auto const fragment_shader_binary = load_file("examples/assets/shaders/compiled/triangle.frag.spv");
+    auto const vertex_shader_binary   = read_file("examples/assets/shaders/compiled/triangle.vert.spv");
+    auto const fragment_shader_binary = read_file("examples/assets/shaders/compiled/triangle.frag.spv");
     auto       vertex_shader          = std::make_shared<gl::shader>(gl::shader::type_e::vertex  , "main", vertex_shader_binary  );
     auto       fragment_shader        = std::make_shared<gl::shader>(gl::shader::type_e::fragment, "main", fragment_shader_binary);
-    auto       shader_list            = std::initializer_list{ vertex_shader, fragment_shader };
-    auto       pipeline               = gl::pipeline{ shader_list };
-
-
+    auto       shaders                = std::initializer_list{ vertex_shader, fragment_shader };
+    auto       pipeline               = gl::pipeline{ shaders };
+        
+    
     
     //Render loop
     while (window)
     {
         window.process_events();
-
+        
         gl::viewport   (window.dimensions()   );
         gl::clear_color(gl::vector_4f{ 0.1f } );
         gl::clear      (gl::buffer_mask_e::all);
@@ -114,7 +114,8 @@ auto main() -> int
 
         window.swap_buffers();
     }
-
+    
+    
     return 0;
 }
 ```
