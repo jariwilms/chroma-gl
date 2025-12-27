@@ -7,11 +7,12 @@ import opengl.object.shader;
 
 export namespace gl
 {
+    using pipeline_layout_t = std::unordered_map<gl::program_stage_e, std::shared_ptr<gl::shader>>;
     class pipeline : public gl::object
     {
     public:
         using stage_e  = gl::program_stage_e;
-        using layout_t = std::unordered_map<stage_e, std::shared_ptr<gl::shader>>;
+        using layout_t = gl::pipeline_layout_t;
 
         explicit
         pipeline(std::span<const std::shared_ptr<gl::shader>> shaders)
@@ -37,7 +38,7 @@ export namespace gl
             
             const auto program_stage = gl::map_program_stage(shader->type());
             layout_.insert_or_assign(program_stage, shader);
-            gl::use_program_stages(handle(), shader->handle(), program_stage);
+            gl::use_program_stage(handle(), shader->handle(), program_stage);
         }
         void unstage  (stage_e stage)
         {

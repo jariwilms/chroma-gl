@@ -1766,9 +1766,9 @@ export namespace gl
     {
         ::glBindProgramPipeline(gl::to_underlying(pipeline));
     }
-    void use_program_stages                               (gl::handle_t pipeline, gl::handle_t program, gl::program_stage_e program_stages)
+    void use_program_stage                                (gl::handle_t pipeline, gl::handle_t program, gl::program_stage_e program_stage)
     {
-        ::glUseProgramStages(gl::to_underlying(pipeline), gl::to_underlying(program_stages), gl::to_underlying(program));
+        ::glUseProgramStages(gl::to_underlying(pipeline), gl::to_underlying(program_stage), gl::to_underlying(program));
     }
     auto get_program_binary                               (gl::handle_t program) -> gl::binary_info
     {
