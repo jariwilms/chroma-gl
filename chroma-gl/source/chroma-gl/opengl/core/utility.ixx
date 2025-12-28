@@ -32,22 +32,16 @@ export namespace gl
         return glm::value_ptr(value);
     }
 
-    template<std::ranges::range Range>
-    constexpr auto as_bytes             (const Range& source) -> std::span<const gl::byte_t>
+    template<std::ranges::range range>
+    constexpr auto as_bytes             (const range& source) -> std::span<const gl::byte_t>
     {
-        using value_t = typename Range::value_type;
+        using value_t = typename range::value_type;
         return std::span{ std::bit_cast<const gl::byte_t*>(source.data()), source.size() * sizeof(value_t) };
     }
     template<typename S, typename T> requires std::is_standard_layout_v<S>
     constexpr auto offset_of            (T S::* member) -> std::size_t
     {
         return reinterpret_cast<std::size_t>(&(static_cast<S*>(nullptr)->*member));
-    }
-    template<typename T>
-    constexpr auto ternary              (gl::bool_t condition, T true_type, T false_type) -> T
-    {
-        if   (condition) return true_type ;
-        else             return false_type;
     }
     
     constexpr auto clamp_range          (gl::range_t      range     , gl::size_t boundary) -> gl::range_t
@@ -57,7 +51,7 @@ export namespace gl
 
         return range;
     }
-    constexpr auto clamp_range          (gl::byte_range_t byte_range, gl::size_t  boundary) -> gl::byte_range_t
+    constexpr auto clamp_range          (gl::byte_range_t byte_range, gl::size_t boundary) -> gl::byte_range_t
     {
         byte_range.offset = std::min(byte_range.offset, boundary                    );
         byte_range.size   = std::min(byte_range.size  , boundary - byte_range.offset);
@@ -82,19 +76,19 @@ export namespace gl
     {
         return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
     }
-    auto range_intersection(gl::range_t first, gl::range_t second) -> gl::range_t
+              auto range_intersection   (gl::range_t first, gl::range_t second) -> gl::range_t
     {
         const auto intersect_index = std::max   (first.index              , second.index                   );
         const auto intersect_end   = std::min   (first.index + first.count, second.index  + second.count   );
-        const auto intersect_count = gl::ternary(intersect_end > intersect_index, intersect_end - intersect_index, gl::size_t{ 0u });
+        const auto intersect_count = intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
         
         return gl::range_t{ intersect_index, intersect_count };
     }
-    auto range_intersection(gl::byte_range_t first, gl::byte_range_t second) -> gl::byte_range_t
+              auto range_intersection   (gl::byte_range_t first, gl::byte_range_t second) -> gl::byte_range_t
     {
         const auto intersect_index = std::max   (first.offset             , second.offset              );
         const auto intersect_end   = std::min   (first.offset + first.size, second.offset + second.size);
-        const auto intersect_count = gl::ternary(intersect_end > intersect_index, intersect_end - intersect_index, gl::size_t{ 0u });
+        const auto intersect_count =intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
         
         return gl::byte_range_t{ intersect_count, intersect_index };
     }
@@ -116,10 +110,5 @@ export namespace gl
     constexpr auto mipmap_levels        (const gl::vector_t<gl::uint32_t, Count>& dimensions) -> gl::uint8_t
     {
         return static_cast<gl::uint8_t>(glm::levels(dimensions));
-    }
-
-              void todo                 ()
-    {
-        throw std::logic_error{ "the method or operation has not been implemented" };
     }
 }
