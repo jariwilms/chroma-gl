@@ -8,7 +8,6 @@ export namespace stb
 {
     using void_t    = void         ;
     using bool_t    = bool         ;
-    using byte_t    = std::uint8_t ;
     using int8_t    = std::int8_t  ;
     using int16_t   = std::int16_t ;
     using int32_t   = std::int32_t ;
@@ -18,7 +17,9 @@ export namespace stb
     using uint32_t  = std::uint32_t;
     using uint64_t  = std::uint64_t;
     using float32_t = float        ;
-
+    using float64_t = double       ;
+    
+    using byte_t    = std::uint8_t ;
     using size_t    = std::size_t  ;
 }
        namespace stb

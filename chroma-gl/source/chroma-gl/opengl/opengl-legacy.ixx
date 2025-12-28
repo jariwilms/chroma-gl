@@ -6,7 +6,7 @@ export import opengl.utility;
 import std;
 import <glad/gl.h>;
 
-export namespace gl::legacy
+export namespace gl::lgc
 {
     void get_boolean_value          (gl::data_e data,                    gl::boolean_t* value)
     {

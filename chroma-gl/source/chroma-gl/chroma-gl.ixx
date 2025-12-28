@@ -1,7 +1,7 @@
 export module chroma_gl;
-export import chroma_gl.io;
 export import opengl;
 export import opengl.context;
+export import opengl.io;
 export import opengl.io.image;
 export import opengl.object.buffer;
 export import opengl.object.cubemap;
