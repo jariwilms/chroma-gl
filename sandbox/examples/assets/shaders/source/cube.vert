@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec3 a_Position;
 
-layout (binding = 0) uniform mvp
+layout (binding  = 0) uniform mvp
 {
 	mat4 model;
 	mat4 view;
