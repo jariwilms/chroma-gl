@@ -5,15 +5,15 @@ import opengl;
 
 export namespace gl
 {
-    template<typename... Attributes>
+    template<typename... attribute_t>
     struct vertex_layout
     {
-        using tuple_t            = std::tuple<Attributes...>;
-        static const auto stride = static_cast<gl::size_t>((Attributes::stride + ...));
+        using tuple_t                = std::tuple<attribute_t...>;
+        static constexpr auto stride = static_cast<gl::size_t>((attribute_t::size + ...));
     };
 
-    template<typename... Attributes>
-    using interleaved_layout = gl::vertex_layout<Attributes...>;
-    template<typename    Attribute>
-    using separate_layout    = gl::vertex_layout<Attribute    >;
+    template<typename... attribute_t>
+    using interleaved_layout = gl::vertex_layout<attribute_t...>;
+    template<typename    attribute_t>
+    using separate_layout    = gl::vertex_layout<attribute_t    >;
 }
