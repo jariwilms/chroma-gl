@@ -20,9 +20,10 @@ static inline void compute()
     //Buffers and layouts
     auto       input_buffer           = gl::shader_storage_buffer<gl::float32_t>{ input_size };
     auto       output_buffer          = gl::shader_storage_buffer<gl::float32_t>{ input_size };
+    auto       fence                  = gl::fence{}; //Fence is not placed by default
     
     //Shader setup
-    auto pipeline = gl::create_pipeline_from_files(
+    auto       pipeline               = gl::create_pipeline_from_files(
         {
             { gl::shader::type_e::compute, "examples/assets/shaders/compiled/multiply.comp.spv" },
         });
@@ -33,14 +34,10 @@ static inline void compute()
     output_buffer.bind (gl::binding_t{ 1u });
     input_buffer .upload(input_data);
     
-
-
     //Dispatch and CPU synchronization
     gl::dispatch_compute(gl::vector_3u{ input_size / 256u, 1u, 1u });
-    auto       fence                  = gl::fence{}; //Fence is not placed by default
-    fence.place();                                   //Place the fence
-    //...                                            //Do other stuff
-    fence.wait();                                    //Wait for the result
-    
+    fence.place(); //Place the fence
+    //...          //Do other stuff
+    fence.wait();  //Wait for the result
     output_buffer.download(output_data);
 }
