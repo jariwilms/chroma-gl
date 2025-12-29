@@ -49,6 +49,10 @@ export namespace gl
         {
             return layout_;
         }
+        auto layout   () -> layout_t&
+        {
+            return layout_;
+        }
 
         auto operator=(pipeline&&) noexcept -> pipeline& = default;
 
