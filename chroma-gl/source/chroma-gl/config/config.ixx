@@ -13,5 +13,6 @@ export namespace gl::config
     constexpr auto version_major          = gl::uint32_t{ 4u };
     constexpr auto version_minor          = gl::uint32_t{ 6u };
     constexpr auto build_configuration    = config::build_configuration_e::BUILD_CONFIGURATION;
+    constexpr auto spir_v                 = gl::true_;
     constexpr auto flip_images_vertically = gl::true_;
 }
