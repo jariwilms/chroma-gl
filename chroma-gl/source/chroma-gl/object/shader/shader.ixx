@@ -41,6 +41,12 @@ export namespace gl
             gl::delete_program(handle());
         }
 
+        template<typename T>
+        void upload(gl::index_t location, const T& value)
+        {
+            gl::program_uniform(handle(), location, value);
+        }
+
         auto type() const -> type_e
         {
             return type_;

@@ -1740,6 +1740,45 @@ export namespace gl
 
         return value;
     }
+    template<typename T>
+    void program_uniform                                  (gl::handle_t program, gl::index_t location, const T& value)
+    {
+        const auto p     = gl::to_underlying(program);
+        const auto l     = static_cast<gl::int32_t>(location);
+        const auto count = gl::sizei_t{ 1 };
+
+             if constexpr (std::is_same_v<gl::int32_t    , T>) ::glProgramUniform1iv        (p, l, count,                              &value );
+        else if constexpr (std::is_same_v<gl::uint32_t   , T>) ::glProgramUniform1uiv       (p, l, count,                              &value );
+        else if constexpr (std::is_same_v<gl::float32_t  , T>) ::glProgramUniform1fv        (p, l, count,                              &value );
+
+        else if constexpr (std::is_same_v<gl::vector_1i  , T>) ::glProgramUniform4iv        (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_2i  , T>) ::glProgramUniform4iv        (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_3i  , T>) ::glProgramUniform4iv        (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_4i  , T>) ::glProgramUniform4iv        (p, l, count,             gl::value_pointer(value));
+
+        else if constexpr (std::is_same_v<gl::vector_1u  , T>) ::glProgramUniform4uiv       (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_2u  , T>) ::glProgramUniform4uiv       (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_3u  , T>) ::glProgramUniform4uiv       (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_4u  , T>) ::glProgramUniform4uiv       (p, l, count,             gl::value_pointer(value));
+        
+        else if constexpr (std::is_same_v<gl::vector_1f  , T>) ::glProgramUniform1fv        (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_2f  , T>) ::glProgramUniform2fv        (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_3f  , T>) ::glProgramUniform3fv        (p, l, count,             gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::vector_4f  , T>) ::glProgramUniform4fv        (p, l, count,             gl::value_pointer(value));
+
+        else if constexpr (std::is_same_v<gl::matrix_2f  , T>) ::glProgramUniformMatrix2fv  (p, l, count, gl::false_, gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::matrix_3f  , T>) ::glProgramUniformMatrix3fv  (p, l, count, gl::false_, gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::matrix_4f  , T>) ::glProgramUniformMatrix4fv  (p, l, count, gl::false_, gl::value_pointer(value));
+
+        else if constexpr (std::is_same_v<gl::matrix_2x3f, T>) ::glProgramUniformMatrix2x3fv(p, l, count, gl::false_, gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::matrix_2x4f, T>) ::glProgramUniformMatrix2x4fv(p, l, count, gl::false_, gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::matrix_3x2f, T>) ::glProgramUniformMatrix3x2fv(p, l, count, gl::false_, gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::matrix_3x4f, T>) ::glProgramUniformMatrix3x4fv(p, l, count, gl::false_, gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::matrix_4x2f, T>) ::glProgramUniformMatrix4x2fv(p, l, count, gl::false_, gl::value_pointer(value));
+        else if constexpr (std::is_same_v<gl::matrix_4x3f, T>) ::glProgramUniformMatrix4x3fv(p, l, count, gl::false_, gl::value_pointer(value));
+        
+        else static_assert(false && sizeof(T), "invalid uniform type");
+    }
     auto create_pipeline                                  () -> gl::handle_t
     {
         auto handle = gl::handle_t{};
