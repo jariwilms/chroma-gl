@@ -29,8 +29,8 @@ static inline void texture()
     auto       vertex_array           = gl::vertex_array{};
     auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
     auto       index_buffer           = gl::index_buffer                { index_data  };
-    using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
-    using      uv_attribute           = gl::vertex_attribute<gl::float32_t, 2u>;
+    using      position_attribute     = gl::vertex_attribute<gl::vector_3f>;
+    using      uv_attribute           = gl::vertex_attribute<gl::vector_2f>;
     using      texture_layout         = gl::interleaved_layout<position_attribute, uv_attribute>;
     vertex_array.attach<texture_layout>(vertex_buffer);
     vertex_array.attach                     (index_buffer );

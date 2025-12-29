@@ -44,14 +44,14 @@ static inline void instanced()
     auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
     auto       offset_buffer          = gl::vertex_buffer<gl::vector_3f>{ offset_data };
     using      vertex_attribute       = gl::vertex_attribute<gl::float32_t, 3u>;
-    using      offset_attribute       = gl::vertex_attribute<gl::float32_t, 3u, 1u>;
+    using      offset_attribute       = gl::vertex_attribute<gl::float32_t, 3u, 1u, 1u>; //Divisor must be 1
     using      vertex_layout          = gl::separate_layout<vertex_attribute>;
     using      offset_layout          = gl::separate_layout<offset_attribute>;
     vertex_array.attach<vertex_layout>(vertex_buffer);
     vertex_array.attach<offset_layout>(offset_buffer);
     
     //Shader setup
-    auto pipeline = gl::create_pipeline_from_files(
+    auto pipeline                     = gl::create_pipeline_from_files(
         {
             { gl::shader::type_e::vertex  , "examples/assets/shaders/compiled/instanced.vert.spv" },
             { gl::shader::type_e::fragment, "examples/assets/shaders/compiled/instanced.frag.spv" },

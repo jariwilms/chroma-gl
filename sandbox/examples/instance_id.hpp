@@ -20,8 +20,8 @@ static inline void instance_id()
     //Buffers and layouts
     auto       vertex_array           = gl::vertex_array{};
     auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
-    using      position_attribute     = gl::vertex_attribute<gl::float32_t, 2u>;
-    using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
+    using      position_attribute     = gl::vertex_attribute<gl::vector_2f>;
+    using      color_attribute        = gl::vertex_attribute<gl::vector_3f>;
     using      instance_layout        = gl::interleaved_layout<position_attribute, color_attribute>;
     vertex_array.attach<instance_layout>(vertex_buffer);
     
@@ -45,7 +45,7 @@ static inline void instance_id()
 
         pipeline    .bind();
         vertex_array.bind();
-        gl::draw_arrays_instanced(gl::draw_mode_e::triangles, 3, 100);
+        gl::draw_arrays_instanced(gl::draw_mode_e::triangles, 3u, 100u);
 
         window.swap_buffers();
     }

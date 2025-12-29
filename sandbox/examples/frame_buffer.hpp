@@ -13,27 +13,27 @@ void frame_buffer()
     auto const vertex_data            = std::vector<gl::float32_t>
     {
         //  x      y      z,     r      g      b
-         0.0f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, //Top    middle (red  )
-        -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  0.0f, //Bottom left   (green)
-         0.5f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f, //Bottom right  (blue )
+         0.0f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 
+        -0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 
+         0.5f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f, 
     };
     auto const index_data             = std::vector<gl::uint32_t>
     {
-           0u,    1u,    2u,                      //First  triangle
+           0u,    1u,    2u, 
     };
 
     //Buffers and layouts
     auto       vertex_array           = gl::vertex_array{};
     auto       vertex_buffer          = gl::vertex_buffer<gl::float32_t>{ vertex_data };
     auto       index_buffer           = gl::index_buffer                { index_data  };
-    using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
-    using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
+    using      position_attribute     = gl::vertex_attribute<gl::vector_3f>;
+    using      color_attribute        = gl::vertex_attribute<gl::vector_3f>;
     using      frame_buffer_layout    = gl::interleaved_layout<position_attribute, color_attribute>;
     vertex_array.attach<frame_buffer_layout>(vertex_buffer);
     vertex_array.attach                     (index_buffer );
     
     //Shader setup
-    auto pipeline = gl::create_pipeline_from_files(
+    auto pipeline                     = gl::create_pipeline_from_files(
         {
             { gl::shader::type_e::vertex  , "examples/assets/shaders/compiled/triangle.vert.spv" },
             { gl::shader::type_e::fragment, "examples/assets/shaders/compiled/triangle.frag.spv" },

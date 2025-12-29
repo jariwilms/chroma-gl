@@ -30,8 +30,8 @@ static inline void triangle()
     auto       vertex_array           = gl::vertex_array{};
     auto       vertex_buffer          = gl::vertex_buffer<vertices>{ vertex_data };
     auto       index_buffer           = gl::index_buffer           { index_data  };
-    using      position_attribute     = gl::vertex_attribute<gl::float32_t, 3u>;
-    using      color_attribute        = gl::vertex_attribute<gl::float32_t, 3u>;
+    using      position_attribute     = gl::vertex_attribute<gl::vector_3f>;
+    using      color_attribute        = gl::vertex_attribute<gl::vector_3f>;
     using      triangle_layout        = gl::interleaved_layout<position_attribute, color_attribute>;
     vertex_array.attach<triangle_layout>(vertex_buffer);
     vertex_array.attach                 (index_buffer );
@@ -44,15 +44,15 @@ static inline void triangle()
         });
 
 
-    
+
     //Render loop
     while (window)
     {
         window.process_events();
 
-        gl::viewport   (window.dimensions()   );
-        gl::clear_color(gl::vector_4f{ 0.1f } );
-        gl::clear      (gl::buffer_mask_e::all);
+        gl::viewport   (window.dimensions()    );
+        gl::clear_color(gl::color::white * 0.1f);
+        gl::clear      (gl::buffer_mask_e::all );
         
         pipeline    .bind();
         vertex_array.bind();
