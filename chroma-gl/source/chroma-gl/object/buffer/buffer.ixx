@@ -11,6 +11,10 @@ export namespace gl
     template<typename Derived, typename T>
     struct dynamic_upload
     {
+        void upload(const T& value           , gl::index_t offset = 0u)
+        {
+            upload(std::span<const T>{ &value, 1u }, offset);
+        }
         void upload(std::span<const T> memory, gl::index_t offset = 0u)
         {
                   auto& derived      = static_cast<Derived&>(*this);
@@ -25,6 +29,10 @@ export namespace gl
     template<typename Derived, typename T>
     struct dynamic_download
     {
+        void download(T& value           , gl::index_t offset = 0u)
+        {
+            download(std::span<T>{ &value, 1u }, offset);
+        }
         void download(std::span<T> memory, gl::index_t offset = 0u)
         {
                   auto& derived        = static_cast<Derived&>(*this);
@@ -250,9 +258,9 @@ export namespace gl
     using index_buffer          = gl::static_buffer<gl::uint32_t>;
 
     template<typename T>
-    using uniform_buffer        = gl::dynamic_buffer<T, gl::true_, gl::false_, gl::buffer_base_target_e::uniform_buffer>;
+    using uniform_buffer        = gl::dynamic_buffer   <T, gl::true_ , gl::false_, gl::buffer_base_target_e::uniform_buffer       >;
     template<typename T, gl::bool_t Upload = gl::true_, gl::bool_t Download = gl::true_>
-    using shader_storage_buffer = gl::persistent_buffer<T, Upload, Download, gl::buffer_base_target_e::shader_storage_buffer>;
+    using shader_storage_buffer = gl::persistent_buffer<T, Upload    , Download  , gl::buffer_base_target_e::shader_storage_buffer>;
 
     template<typename T, auto Binding = gl::none> 
     using shared_buffer         = gl::persistent_buffer<T, gl::true_ , gl::true_ , Binding>;
