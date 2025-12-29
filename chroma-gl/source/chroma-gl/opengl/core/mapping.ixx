@@ -10,16 +10,16 @@ export namespace gl
     template<typename T>
     auto map_attribute_type                    () -> gl::vertex_array_attribute_type_e
     {
-        if constexpr (std::is_same_v<T, gl::int8_t   >) return gl::vertex_array_attribute_type_e::int8   ;
-        if constexpr (std::is_same_v<T, gl::int16_t  >) return gl::vertex_array_attribute_type_e::int16  ;
-        if constexpr (std::is_same_v<T, gl::int32_t  >) return gl::vertex_array_attribute_type_e::int32  ;
-        if constexpr (std::is_same_v<T, gl::uint8_t  >) return gl::vertex_array_attribute_type_e::uint8  ;
-        if constexpr (std::is_same_v<T, gl::uint16_t >) return gl::vertex_array_attribute_type_e::uint16 ;
-        if constexpr (std::is_same_v<T, gl::uint32_t >) return gl::vertex_array_attribute_type_e::uint32 ;
-        if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
-        if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;
+             if constexpr (std::is_same_v<T, gl::int8_t   >) return gl::vertex_array_attribute_type_e::int8   ;
+        else if constexpr (std::is_same_v<T, gl::int16_t  >) return gl::vertex_array_attribute_type_e::int16  ;
+        else if constexpr (std::is_same_v<T, gl::int32_t  >) return gl::vertex_array_attribute_type_e::int32  ;
+        else if constexpr (std::is_same_v<T, gl::uint8_t  >) return gl::vertex_array_attribute_type_e::uint8  ;
+        else if constexpr (std::is_same_v<T, gl::uint16_t >) return gl::vertex_array_attribute_type_e::uint16 ;
+        else if constexpr (std::is_same_v<T, gl::uint32_t >) return gl::vertex_array_attribute_type_e::uint32 ;
+        else if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
+        else if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;
     }
-    auto map_buffer_base_format_component_count(gl::buffer_base_format_e buffer_base_format    ) -> gl::count_t
+    auto map_buffer_base_format_component_count(gl::buffer_base_format_e   buffer_base_format  ) -> gl::count_t
     {
         switch (buffer_base_format)
         {
@@ -48,7 +48,7 @@ export namespace gl
             default           : throw std::invalid_argument{ "invalid buffer base format"};
         }
     }
-    auto map_data_type_size                    (gl::data_type_e data_type) -> gl::size_t
+    auto map_data_type_size                    (gl::data_type_e            data_type           ) -> gl::size_t
     {
         switch (data_type)
         {
@@ -213,7 +213,7 @@ export namespace gl
             default                          : return gl::frame_buffer_attachment_e::color_0      ;
         }
     };
-    auto map_texture_base_format_component_count(gl::texture_base_format_e texture_base_format) -> gl::count_t
+    auto map_texture_base_format_component_count(gl::texture_base_format_e texture_base_format ) -> gl::count_t
     {
         switch (texture_base_format)
         {
@@ -348,7 +348,7 @@ export namespace gl
             default: throw std::invalid_argument{ "invalid dimensions" };
         }
     }
-    auto map_texture_array_target_multisample              (gl::uint32_t               dimensions          ) -> gl::texture_target_e
+    auto map_texture_array_target_multisample  (gl::uint32_t               dimensions          ) -> gl::texture_target_e
     {
         switch (dimensions)
         {
