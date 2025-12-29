@@ -7,15 +7,6 @@ import opengl;
 import opengl.object;
 import opengl.object.buffer;
 
-       namespace gl
-{
-    template<typename layout_t, typename function_t>
-    void visit_attributes(function_t&& function)
-    {
-        using tuple_t = typename layout_t::tuple_t;
-        std::apply([&](auto... attributes){ (function(attributes), ...); }, tuple_t{});
-    }
-}
 export namespace gl
 {
     class vertex_array : public gl::object
@@ -53,26 +44,29 @@ export namespace gl
             auto attribute_offset = gl::ptrdiff_t{ 0 };
 
             gl::vertex_array_vertex_buffer(handle(), vertex_buffer.handle(), binding_point_, gl::ptrdiff_t{ 0 }, layout_t::stride);
-            gl::visit_attributes<layout_t>([&](auto attribute)
+            std::apply([&](auto... attributes)
                 {
-                    using attribute_t = decltype(attribute);
-                    using component_t = typename attribute_t::component_t;
+                    (std::invoke([&](auto attribute)
+                        {
+                            using attribute_t = decltype(attribute);
+                            using component_t = typename attribute_t::component_t;
 
-                    gl::vertex_array_binding_divisor(handle(), binding_point_, attribute_t::divisor);
+                            gl::vertex_array_binding_divisor(handle(), binding_point_, attribute_t::divisor);
+                            for (auto index = gl::index_t{ 0u }; index < attribute_t::locations; ++index)
+                            {
+                                const auto location_offset = attribute_offset + (index * attribute_t::count * sizeof(component_t));
 
-                    for (auto index = gl::index_t{ 0u }; index < attribute_t::locations; ++index)
-                    {
-                        const auto location_offset = attribute_offset + (index * attribute_t::count * sizeof(component_t));
+                                gl::enable_vertex_array_attribute (handle(), attribute_location_);
+                                gl::vertex_array_attribute_format (handle(), gl::map_attribute_type<component_t>(), attribute_location_, attribute_t::count, location_offset, attribute_t::is_normalized);
+                                gl::vertex_array_attribute_binding(handle(), attribute_location_, binding_point_);
+                            
+                                ++attribute_location_;
+                            }
 
-                        gl::enable_vertex_array_attribute (handle(), attribute_location_);
-                        gl::vertex_array_attribute_format (handle(), gl::map_attribute_type<component_t>(), attribute_location_, attribute_t::count, location_offset, attribute_t::is_normalized);
-                        gl::vertex_array_attribute_binding(handle(), attribute_location_, binding_point_);
-
-                        ++attribute_location_;
-                    }
-
-                    attribute_offset += attribute_t::size;
-                });
+                            attribute_offset += attribute_t::size;
+                        }, attributes)
+                    , ...);
+                }, tuple_t{});
 
             ++binding_point_;
         }
