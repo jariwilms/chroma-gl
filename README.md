@@ -28,8 +28,7 @@ This library is designed in two parts, and can be imported using the following m
 Run the following command in the root directory: "generate.bat -s". Premake will generate a Visual Studio solution (.sln) along with project files
 Additionally, specifying the "-s" flag will create a standalone sandbox project
 2. Build the solution. If you do not encounter errors about missing module files, you may skip the next step
-3. (Optional) Fix module filename collisions
-Due to how Visual Studio currently handles C++ module dependencies, you may need to manually adjust some project settings
+3. (Optional) Due to how Visual Studio currently handles C++ module dependencies, you may need to manually adjust some project settings
    1. In the Solution Explorer, right-click the chroma-gl project and select Properties
    2. Navigate to Configuration Properties -> C/C++ -> Output Files
    3. Change the following settings to use the $(IntDir)%(RelativeDir) macro:
