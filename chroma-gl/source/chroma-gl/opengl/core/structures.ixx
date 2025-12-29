@@ -52,4 +52,26 @@ export namespace gl
         gl::count_t groups_y = {};
         gl::count_t groups_z = {};
     };
+
+
+
+    struct uniform_info
+    {
+        std::string        name;
+        gl::uniform_type_e type;
+        gl::size_t         offset;
+        gl::index_t        location;
+        gl::index_t        block_index;
+        gl::size_t         array_size;
+        gl::size_t         array_stride;
+        gl::size_t         matrix_stride;
+        gl::bool_t         is_row_major;
+    };
+    struct uniform_block_info
+    {
+        std::string   name;
+        gl::binding_t binding_point;
+        gl::size_t    size;
+        gl::count_t   active_uniforms;
+    };
 }
