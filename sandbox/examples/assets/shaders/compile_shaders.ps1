@@ -7,7 +7,7 @@ param(
 $Vendor          = "LunarG"
 $VendorDirectory = "$PSScriptRoot\lunarg"
 $Compiler        = "glslc.exe"
-$Flags           = @("--target-env=opengl", "-Werror", "-O")
+$Flags           = @("--target-env=opengl", "-Werror", "-O", "-g")
 $ShaderDirectory = "."
 $SourceDirectory = "$ShaderDirectory\source"
 $OutputDirectory = "$ShaderDirectory\compiled"
