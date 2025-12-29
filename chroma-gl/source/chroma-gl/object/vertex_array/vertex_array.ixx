@@ -7,7 +7,7 @@ import opengl;
 import opengl.object;
 import opengl.object.buffer;
 
-namespace gl
+       namespace gl
 {
     template<typename layout_t, typename function_t>
     void visit_attributes(function_t&& function)
@@ -46,10 +46,10 @@ export namespace gl
         }
 
         template<typename layout_t>
-        void attach     (gl::buffer& vertex_buffer, std::optional<gl::index_t> location_override = std::nullopt)
+        void attach     (gl::buffer& vertex_buffer, std::optional<gl::index_t> target_location = std::nullopt)
         {
             using tuple_t         = typename layout_t::tuple_t;
-            attribute_location_   = location_override.value_or(attribute_location_);
+            attribute_location_   = target_location.value_or(attribute_location_);
             auto attribute_offset = gl::ptrdiff_t{ 0 };
 
             gl::vertex_array_vertex_buffer(handle(), vertex_buffer.handle(), binding_point_, gl::ptrdiff_t{ 0 }, layout_t::stride);

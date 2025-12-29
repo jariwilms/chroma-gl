@@ -5,7 +5,8 @@ import opengl;
 
        namespace gl
 {
-    template<typename T> struct component_traits
+    template<typename T>
+    struct component_traits
     {
         using type = T;
         static constexpr auto count     = gl::size_t{ 1u };
@@ -46,5 +47,7 @@ export namespace gl
         static constexpr auto divisor       = divisor_v;
         static constexpr auto is_normalized = is_normalized_v;
         static constexpr auto size          = count * locations * sizeof(component_t);
+        
+        static_assert(std::is_integral_v<component_t> || std::is_floating_point_v<component_t>, "invalid vertex attribute type");
     };
 }
