@@ -31,22 +31,22 @@ export namespace gl
            gl::delete_vertex_array(handle());
         }
 
-        void bind()
+        void bind       ()
         {
             gl::bind_vertex_array(handle());
         }
 
-        void enable (gl::index_t index)
+        void enable     (gl::index_t index)
         {
             gl::enable_vertex_array_attribute(handle(), index);
         }
-        void disable(gl::index_t index)
+        void disable    (gl::index_t index)
         {
             gl::disable_vertex_array_attribute(handle(), index);
         }
 
         template<typename layout_t>
-        void attach(gl::buffer& vertex_buffer, std::optional<gl::index_t> location_override = std::nullopt)
+        void attach     (gl::buffer& vertex_buffer, std::optional<gl::index_t> location_override = std::nullopt)
         {
             using tuple_t         = typename layout_t::tuple_t;
             attribute_location_   = location_override.value_or(attribute_location_);
@@ -92,7 +92,7 @@ export namespace gl
             return index_count_;
         }
 
-        auto operator=(vertex_array&&) noexcept -> vertex_array& = default;
+        auto operator=  (vertex_array&&) noexcept -> vertex_array& = default;
 
     private:
         gl::index_t   attribute_location_;
