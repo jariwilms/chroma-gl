@@ -12,10 +12,10 @@ export import opengl.object.query;
 export import opengl.object.render_buffer;
 export import opengl.object.sampler;
 export import opengl.object.shader;
+export import opengl.object.shader.uniform_cache;
 export import opengl.object.texture;
 export import opengl.object.vertex_array;
 export import opengl.projection;
-export import opengl.uniform_cache;
 export import opengl.vertex;
 
 import std;
