@@ -1,7 +1,6 @@
 export module chroma_gl;
 export import opengl;
 export import opengl.color;
-export import opengl.context;
 export import opengl.io;
 export import opengl.io.image;
 export import opengl.object.buffer;

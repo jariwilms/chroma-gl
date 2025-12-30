@@ -4,9 +4,21 @@ import std;
 import opengl.flags;
 import opengl.types;
 
-export namespace gl
+export namespace gl::state
 {
-    struct frame_buffer_state
+    struct context
+    {
+        gl::context_flags_e      flags;
+        gl::context_profile_e    profile;
+        gl::uint32_t             major_version;
+        gl::uint32_t             minor_version;
+        std::string              vendor;
+        std::string              renderer;
+        std::string              version;
+        std::string              shading_language_version;
+        std::vector<std::string> extensions;
+    };
+    struct frame_buffer
     {
         gl::pixel_data_format_e color_read_format;
         gl::pixel_data_type_e   color_read_type;
@@ -20,7 +32,7 @@ export namespace gl
         gl::uint32_t            samples;
         gl::bool_t              supports_stereo;
     };
-    struct frame_buffer_attachment_state
+    struct frame_buffer_attachment
     {
         gl::size_t                                   alpha_size;
         gl::size_t                                   blue_size;
@@ -37,7 +49,7 @@ export namespace gl
         gl::uint32_t                                 texture_layer;
         gl::uint32_t                                 texture_level;
     };
-    struct sampler_state
+    struct sampler
     {
         gl::vector_4f                      border_color         = { 0.0f, 0.0f, 0.0f, 0.0f }                               ;
         gl::texture_compare_mode_e         compare_mode         = gl::texture_compare_mode_e        ::none                 ;
@@ -52,7 +64,7 @@ export namespace gl
         gl::float32_t                      maximum_lod          =  1000.0f                                                 ;
         gl::float32_t                      lod_bias             =     0.0f                                                 ;
     };
-    struct texture_state
+    struct texture
     {
         gl::uint32_t                                              base_level           =     0u                                                   ;
         gl::uint32_t                                              maximum_level        =  1000u                                                   ;

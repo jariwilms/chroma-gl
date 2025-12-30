@@ -168,10 +168,10 @@ export namespace gl
             else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid surface");
         }
         template<surface_e Surface = surface_e::texture>
-        void apply       (const std::string& identifier, const gl::texture_state& texture_state)
+        void apply       (const std::string& identifier, const gl::state::texture& state)
         {
-                 if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(texture_state);
-            else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(texture_state);
+                 if constexpr (Surface == surface_e::texture) textures_.at(identifier).apply(state);
+            else if constexpr (Surface == surface_e::cubemap) cubemaps_.at(identifier).apply(state);
             else static_assert(gl::false_ && gl::to_underlying(Surface), "invalid surface");
         }
 

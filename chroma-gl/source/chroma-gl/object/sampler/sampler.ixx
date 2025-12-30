@@ -13,10 +13,10 @@ export namespace gl
         using parameter_e = gl::sampler_parameter_e;
 
         explicit
-        sampler(const gl::sampler_state& sampler_state)
+        sampler(const gl::state::sampler& state)
             : gl::object{ gl::create_sampler() }
         {
-            apply(sampler_state);
+            apply(state);
         }
        ~sampler()
         {
@@ -33,22 +33,22 @@ export namespace gl
         {
             gl::sampler_parameter<Parameter>(handle(), value);
         }
-        void apply(const gl::sampler_state& sampler_state)
+        void apply(const gl::state::sampler& state)
         {
             using enum gl::sampler_parameter_e;
 
-            apply<border_color        >(sampler_state.border_color        );
-            apply<compare_mode        >(sampler_state.compare_mode        );
-            apply<compare_function    >(sampler_state.compare_function    );
-            apply<minification_filter >(sampler_state.minification_filter );
-            apply<magnification_filter>(sampler_state.magnification_filter);
-            apply<wrapping_s          >(sampler_state.wrapping_s          );
-            apply<wrapping_t          >(sampler_state.wrapping_t          );
-            apply<wrapping_r          >(sampler_state.wrapping_r          );
-            apply<maximum_anisotropy  >(sampler_state.maximum_anisotropy  );
-            apply<minimum_lod         >(sampler_state.minimum_lod         );
-            apply<maximum_lod         >(sampler_state.maximum_lod         );
-            apply<lod_bias            >(sampler_state.lod_bias            );
+            apply<border_color        >(state.border_color        );
+            apply<compare_mode        >(state.compare_mode        );
+            apply<compare_function    >(state.compare_function    );
+            apply<minification_filter >(state.minification_filter );
+            apply<magnification_filter>(state.magnification_filter);
+            apply<wrapping_s          >(state.wrapping_s          );
+            apply<wrapping_t          >(state.wrapping_t          );
+            apply<wrapping_r          >(state.wrapping_r          );
+            apply<maximum_anisotropy  >(state.maximum_anisotropy  );
+            apply<minimum_lod         >(state.minimum_lod         );
+            apply<maximum_lod         >(state.maximum_lod         );
+            apply<lod_bias            >(state.lod_bias            );
         }
     };
 }

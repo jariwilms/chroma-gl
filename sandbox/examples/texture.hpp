@@ -47,7 +47,7 @@ static inline void texture()
     auto       image                  = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
     auto       texture                = gl::texture_2d{ gl::texture_2d::format_e::rgba_uint8_n, image.dimensions() };
     auto const pixel_data_descriptor  = gl::pixel_data_descriptor{ gl::texture_base_format_e::rgba, gl::pixel_data_type_e::byte };
-    auto const texture_state          = gl::texture_state
+    auto const texture_state          = gl::state::texture
     {
         .minification_filter  = gl::texture_minification_filter_e ::linear_mipmap_linear, 
         .magnification_filter = gl::texture_magnification_filter_e::linear              , 

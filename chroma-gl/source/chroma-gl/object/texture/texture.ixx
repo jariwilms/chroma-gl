@@ -46,10 +46,10 @@ export namespace gl
             if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_storage_3d(handle(), format_, dimensions_, mipmap_levels_);
         }
         explicit
-        texture_n(format_e format, const vector_t& dimensions, const gl::texture_state& texture_state, gl::bool_t allocate_mipmaps = gl::true_)
+        texture_n(format_e format, const vector_t& dimensions, const gl::state::texture& state, gl::bool_t allocate_mipmaps = gl::true_)
             : texture_n{ format, dimensions, allocate_mipmaps }
         {
-            apply(texture_state);
+            apply(state);
         }
 
         void bind            (gl::binding_t slot)
@@ -77,28 +77,28 @@ export namespace gl
         {
             gl::texture_parameter<Parameter>(handle(), value);
         }
-        void apply           (const gl::texture_state& texture_state)
+        void apply           (const gl::state::texture& state)
         {
             using enum gl::texture_parameter_e;
 
-            apply<base_level          >(texture_state.base_level          );
-            apply<maximum_level       >(texture_state.maximum_level       );
-            apply<border_color        >(texture_state.border_color        );
-            apply<compare_function    >(texture_state.compare_function    );
-            apply<compare_mode        >(texture_state.compare_mode        );
-            apply<minification_filter >(texture_state.minification_filter );
-            apply<magnification_filter>(texture_state.magnification_filter);
-            apply<wrapping_r          >(texture_state.wrapping_r          );
-            apply<wrapping_s          >(texture_state.wrapping_s          );
-            apply<wrapping_t          >(texture_state.wrapping_t          );
-            apply<swizzle_r           >(texture_state.swizzle_r           );
-            apply<swizzle_g           >(texture_state.swizzle_g           );
-            apply<swizzle_b           >(texture_state.swizzle_b           );
-            apply<swizzle_a           >(texture_state.swizzle_a           );
-            apply<maximum_anisotropy  >(texture_state.maximum_anisotropy  );
-            apply<minimum_lod         >(texture_state.minimum_lod         );
-            apply<maximum_lod         >(texture_state.maximum_lod         );
-            apply<lod_bias            >(texture_state.lod_bias            );
+            apply<base_level          >(state.base_level          );
+            apply<maximum_level       >(state.maximum_level       );
+            apply<border_color        >(state.border_color        );
+            apply<compare_function    >(state.compare_function    );
+            apply<compare_mode        >(state.compare_mode        );
+            apply<minification_filter >(state.minification_filter );
+            apply<magnification_filter>(state.magnification_filter);
+            apply<wrapping_r          >(state.wrapping_r          );
+            apply<wrapping_s          >(state.wrapping_s          );
+            apply<wrapping_t          >(state.wrapping_t          );
+            apply<swizzle_r           >(state.swizzle_r           );
+            apply<swizzle_g           >(state.swizzle_g           );
+            apply<swizzle_b           >(state.swizzle_b           );
+            apply<swizzle_a           >(state.swizzle_a           );
+            apply<maximum_anisotropy  >(state.maximum_anisotropy  );
+            apply<minimum_lod         >(state.minimum_lod         );
+            apply<maximum_lod         >(state.maximum_lod         );
+            apply<lod_bias            >(state.lod_bias            );
         }
 
         auto format          () const -> format_e
@@ -229,28 +229,28 @@ export namespace gl
         {
             gl::texture_parameter<Parameter>(handle(), value);
         }
-        void apply           (const gl::texture_state& texture_state)
+        void apply           (const gl::state::texture& state)
         {
             using enum gl::texture_parameter_e;
 
-            apply<base_level          >(texture_state.base_level          );
-            apply<maximum_level       >(texture_state.maximum_level       );
-            apply<border_color        >(texture_state.border_color        );
-            apply<compare_function    >(texture_state.compare_function    );
-            apply<compare_mode        >(texture_state.compare_mode        );
-            apply<minification_filter >(texture_state.minification_filter );
-            apply<magnification_filter>(texture_state.magnification_filter);
-            apply<wrapping_r          >(texture_state.wrapping_r          );
-            apply<wrapping_s          >(texture_state.wrapping_s          );
-            apply<wrapping_t          >(texture_state.wrapping_t          );
-            apply<swizzle_r           >(texture_state.swizzle_r           );
-            apply<swizzle_g           >(texture_state.swizzle_g           );
-            apply<swizzle_b           >(texture_state.swizzle_b           );
-            apply<swizzle_a           >(texture_state.swizzle_a           );
-            apply<maximum_anisotropy  >(texture_state.maximum_anisotropy  );
-            apply<minimum_lod         >(texture_state.minimum_lod         );
-            apply<maximum_lod         >(texture_state.maximum_lod         );
-            apply<lod_bias            >(texture_state.lod_bias            );
+            apply<base_level          >(state.base_level          );
+            apply<maximum_level       >(state.maximum_level       );
+            apply<border_color        >(state.border_color        );
+            apply<compare_function    >(state.compare_function    );
+            apply<compare_mode        >(state.compare_mode        );
+            apply<minification_filter >(state.minification_filter );
+            apply<magnification_filter>(state.magnification_filter);
+            apply<wrapping_r          >(state.wrapping_r          );
+            apply<wrapping_s          >(state.wrapping_s          );
+            apply<wrapping_t          >(state.wrapping_t          );
+            apply<swizzle_r           >(state.swizzle_r           );
+            apply<swizzle_g           >(state.swizzle_g           );
+            apply<swizzle_b           >(state.swizzle_b           );
+            apply<swizzle_a           >(state.swizzle_a           );
+            apply<maximum_anisotropy  >(state.maximum_anisotropy  );
+            apply<minimum_lod         >(state.minimum_lod         );
+            apply<maximum_lod         >(state.maximum_lod         );
+            apply<lod_bias            >(state.lod_bias            );
         }
 
         auto count           () const -> gl::count_t
