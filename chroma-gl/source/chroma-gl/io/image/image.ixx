@@ -36,31 +36,31 @@ export namespace gl
             png, 
         };
 
-        template<std::ranges::range R>
-        explicit image(format_e format, const gl::vector_2u& dimensions, R&& source)
-            : format_{ format }, dimensions_{ dimensions }, data_{ std::from_range, std::forward<R>(source) } {}
+        template<std::ranges::range range_t>
+        explicit image(format_e format, gl::vector_2u dimensions, range_t&& range)
+            : format_{ format }, dimensions_{ dimensions }, data_{ std::from_range, std::forward<range_t>(range) } {}
 
-        template<extension_e E>
+        template<extension_e extension_v>
         static auto encode(format_e format, const gl::image& image) -> auto
         {
             stb::set_flip_vertically_on_write(config::flip_images_vertically);
 
-            const auto channels   = map_channels(format);
-            const auto dimensions = image.dimensions();
-            const auto data       = image.data();
+            auto const channels   = map_channels(format);
+            auto const dimensions = std::bit_cast<stb::vector_2u>(image.dimensions());
+            auto const memory     = image.data();
             
             using enum extension_e;
-            if constexpr (E == bmp) return stb::write_bmp(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
-            if constexpr (E == hdr) return stb::write_hdr(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
-            if constexpr (E == jpg) return stb::write_jpg(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
-            if constexpr (E == png) return stb::write_png(data, channels, std::bit_cast<std::array<stb::uint32_t, 2u>>(dimensions));
+            if constexpr (extension_v == bmp) return stb::write_bmp(dimensions, channels, memory);
+            if constexpr (extension_v == hdr) return stb::write_hdr(dimensions, channels, memory);
+            if constexpr (extension_v == jpg) return stb::write_jpg(dimensions, channels, memory);
+            if constexpr (extension_v == png) return stb::write_png(dimensions, channels, memory);
         }
         static auto decode(format_e format, std::span<const gl::byte_t> data) -> gl::image
         {
             stb::set_flip_vertically_on_load(gl::config::flip_images_vertically);
             
-            const auto channels   = map_channels(format);
-            const auto stb_image  = std::invoke([&](format_e format)
+            auto const channels   = map_channels(format);
+            auto const stb_image  = std::invoke([&](format_e format)
                 {
                     switch (format)
                     {
@@ -81,9 +81,9 @@ export namespace gl
                         default: throw std::invalid_argument{ "invalid format" };
                     };
                 }, format);
-            const auto dimensions = std::bit_cast<gl::vector_2u>(stb_image.dimensions);
+            auto const dimensions = std::bit_cast<gl::vector_2u>(stb_image.dimensions);
 
-            return gl::image{ format, dimensions, std::move(stb_image.data) };
+            return gl::image{ format, dimensions, std::move(stb_image.memory) };
         }
 
         auto format    () const -> format_e
@@ -105,12 +105,20 @@ export namespace gl
             switch (format)
             {
                 using enum format_e;
-                case r_uint8   : case r_uint16   :                                       return gl::uint32_t{ 1u };
-                case rg_uint8  : case rg_uint16  :                                       return gl::uint32_t{ 2u };
-                case rgb_uint8 : case rgb_uint16 : case rgb_float16 : case rgb_float32 : return gl::uint32_t{ 3u };
-                case rgba_uint8: case rgba_uint16: case rgba_float16: case rgba_float32: return gl::uint32_t{ 4u };
+                case r_uint8     : 
+                case r_uint16    : return gl::uint32_t{ 1u };
+                case rg_uint8    : 
+                case rg_uint16   : return gl::uint32_t{ 2u };
+                case rgb_uint8   : 
+                case rgb_uint16  : 
+                case rgb_float16 : 
+                case rgb_float32 : return gl::uint32_t{ 3u };
+                case rgba_uint8  : 
+                case rgba_uint16 : 
+                case rgba_float16: 
+                case rgba_float32: return gl::uint32_t{ 4u };
 
-                default        : throw std::invalid_argument{ "invalid format" };
+                default: throw std::invalid_argument{ "invalid format" };
             }
         }
 

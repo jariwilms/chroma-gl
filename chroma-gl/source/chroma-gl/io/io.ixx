@@ -7,9 +7,9 @@ export namespace gl::io
 {
     auto read (const std::filesystem::path& path) -> std::vector<gl::byte_t>
     {
-        const auto size   = std::filesystem::file_size(path);
-              auto buffer = std::vector<gl::byte_t>(size);
-              auto file   = std::ifstream(path, std::ios::binary);
+        auto const size   = std::filesystem::file_size(path);
+        auto       buffer = std::vector<gl::byte_t>(size);
+        auto       file   = std::ifstream(path, std::ios::binary);
         if (!file) throw std::runtime_error{ "failed to open file" };
 
         file.read(reinterpret_cast<gl::char_t*>(buffer.data()), size);

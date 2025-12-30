@@ -14,29 +14,32 @@ export namespace gl::color
         weighted_average, 
     };
 
-    template<color::model_e model, typename... Args>
-    constexpr auto mix(const gl::vector_4f&, const gl::vector_4f&, Args... args) = delete;
-    template<> constexpr auto mix<color::model_e::additive>        (const gl::vector_4f& first, const gl::vector_4f& second)
+    template<color::model_e model_v, typename... Args>
+    auto constexpr mix(gl::vector_4f, gl::vector_4f, Args...) = delete;
+    template<> 
+    auto constexpr mix<color::model_e::additive>        (gl::vector_4f alpha, gl::vector_4f beta)
     {
-        return glm::clamp(first + second, 0.0f, 1.0f);
+        return glm::clamp(alpha + beta, 0.0f, 1.0f);
     }
-    template<> constexpr auto mix<color::model_e::subtractive>     (const gl::vector_4f& first, const gl::vector_4f& second)
+    template<> 
+    auto constexpr mix<color::model_e::subtractive>     (gl::vector_4f alpha, gl::vector_4f beta)
     {
-        const auto first_inverted  = gl::vector_4f{ 1.0f } - first;
-        const auto second_inverted = gl::vector_4f{ 1.0f } - second;
-        return gl::vector_4f{ 1.0f } - glm::clamp(first_inverted + second_inverted, 0.0f, 1.0f);
+        auto const additive = color::mix<color::model_e::additive>(gl::vector_4f{ 1.0f } - alpha, gl::vector_4f{ 1.0f } - beta);
+        return gl::vector_4f{ 1.0f } - additive;
     }
-    template<> constexpr auto mix<color::model_e::average>         (const gl::vector_4f& first, const gl::vector_4f& second)
+    template<> 
+    auto constexpr mix<color::model_e::average>         (gl::vector_4f alpha, gl::vector_4f beta)
     {
-        return (first + second) * 0.5f;
+        return (alpha + beta) * 0.5f;
     }
-    template<> constexpr auto mix<color::model_e::weighted_average>(const gl::vector_4f& first, const gl::vector_4f& second, gl::float32_t weight)
+    template<> 
+    auto constexpr mix<color::model_e::weighted_average>(gl::vector_4f alpha, gl::vector_4f beta, gl::float32_t factor)
     {
-        weight = glm::clamp(weight, 0.0f, 1.0f);
-        return first * (1.0f - weight) + second * weight;
+        factor = glm::clamp(factor, 0.0f, 1.0f);
+        return alpha * (1.0f - factor) + beta * factor;
     }
 
-    constexpr auto from_hexadecimal(gl::uint32_t code) -> gl::vector_4f
+    auto constexpr from_hexadecimal(gl::uint32_t code) -> gl::vector_4f
     {
         return gl::vector_4f
         { 
@@ -47,15 +50,15 @@ export namespace gl::color
         };
     }
 
-    constexpr auto white       = gl::vector_4f{ 1.0f, 1.0f, 1.0f, 1.0f };
-    constexpr auto gray        = gl::vector_4f{ 0.5f, 0.5f, 0.5f, 1.0f };
-    constexpr auto black       = gl::vector_4f{ 0.0f, 0.0f, 0.0f, 1.0f };
-    constexpr auto red         = gl::vector_4f{ 1.0f, 0.0f, 0.0f, 1.0f };
-    constexpr auto green       = gl::vector_4f{ 0.0f, 1.0f, 0.0f, 1.0f };
-    constexpr auto blue        = gl::vector_4f{ 0.0f, 0.0f, 1.0f, 1.0f };
-    constexpr auto cyan        = gl::vector_4f{ 0.0f, 1.0f, 1.0f, 1.0f };
-    constexpr auto magenta     = gl::vector_4f{ 1.0f, 0.0f, 1.0f, 1.0f };
-    constexpr auto yellow      = gl::vector_4f{ 1.0f, 1.0f, 0.0f, 1.0f };
+    auto constexpr white       = gl::vector_4f{ 1.0f, 1.0f, 1.0f, 1.0f };
+    auto constexpr gray        = gl::vector_4f{ 0.5f, 0.5f, 0.5f, 1.0f };
+    auto constexpr black       = gl::vector_4f{ 0.0f, 0.0f, 0.0f, 1.0f };
+    auto constexpr red         = gl::vector_4f{ 1.0f, 0.0f, 0.0f, 1.0f };
+    auto constexpr green       = gl::vector_4f{ 0.0f, 1.0f, 0.0f, 1.0f };
+    auto constexpr blue        = gl::vector_4f{ 0.0f, 0.0f, 1.0f, 1.0f };
+    auto constexpr cyan        = gl::vector_4f{ 0.0f, 1.0f, 1.0f, 1.0f };
+    auto constexpr magenta     = gl::vector_4f{ 1.0f, 0.0f, 1.0f, 1.0f };
+    auto constexpr yellow      = gl::vector_4f{ 1.0f, 1.0f, 0.0f, 1.0f };
     
-    constexpr auto transparent = gl::vector_4f{ 0.0f, 0.0f, 0.0f, 0.0f };
+    auto constexpr transparent = gl::vector_4f{ 0.0f, 0.0f, 0.0f, 0.0f };
 }
