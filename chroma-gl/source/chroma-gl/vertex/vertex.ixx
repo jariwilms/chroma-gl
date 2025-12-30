@@ -1,4 +1,4 @@
-export module opengl.vertex;
+export module chroma_gl:vertex;
 
 import std;
 import opengl;

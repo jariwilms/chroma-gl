@@ -1,8 +1,8 @@
-export module opengl.structures;
+export module opengl:structures;
 
 import std;
-import opengl.flags;
-import opengl.types;
+import :flags;
+import :types;
 
 export namespace gl
 {

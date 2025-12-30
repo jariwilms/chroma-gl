@@ -1,8 +1,8 @@
-export module opengl.color;
+export module chroma_gl:color;
 
 import std;
-import opengl.types;
 import glm;
+import opengl;
 
 export namespace gl::color
 {

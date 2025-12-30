@@ -1,9 +1,9 @@
-export module opengl.io.image;
+export module chroma_gl:io.image;
 
 import std;
-import opengl.config;
-import opengl.types;
 import stb;
+import opengl;
+import :config;
 
 export namespace gl
 {

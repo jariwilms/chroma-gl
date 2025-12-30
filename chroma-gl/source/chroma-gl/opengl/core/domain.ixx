@@ -1,7 +1,7 @@
-export module opengl.domain;
+export module opengl:domain;
 
 import std;
-import opengl.types;
+import :types;
 
 export namespace gl
 {

@@ -1,8 +1,8 @@
-export module opengl.parameters;
+export module opengl:parameters;
 
 import std;
-import opengl.flags;
-import opengl.types;
+import :flags;
+import :types;
 
 export namespace gl
 {

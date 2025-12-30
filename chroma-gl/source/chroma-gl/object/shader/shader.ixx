@@ -1,9 +1,9 @@
-export module opengl.object.shader;
+export module chroma_gl:object.shader;
 
 import std;
 import opengl;
-import opengl.config;
-import opengl.object;
+import :config;
+import :object;
 
 export namespace gl
 {

@@ -1,6 +1,6 @@
-export module opengl.config;
+export module chroma_gl:config;
 
-import opengl.types;
+import opengl;
 
 export namespace gl::config
 {

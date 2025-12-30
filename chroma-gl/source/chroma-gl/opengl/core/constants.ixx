@@ -1,7 +1,7 @@
-export module opengl.constants;
+export module opengl:constants;
 
 import std;
-import opengl.types;
+import :types;
 
 export namespace gl
 {

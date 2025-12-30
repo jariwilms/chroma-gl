@@ -1,8 +1,8 @@
-export module opengl.projection;
+export module chroma_gl:projection;
 
 import std;
-import opengl;
 import glm;
+import opengl;
 
 export namespace gl
 {

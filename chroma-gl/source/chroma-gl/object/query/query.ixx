@@ -1,8 +1,8 @@
-export module opengl.object.query;
+export module chroma_gl:object.query;
 
 import std;
 import opengl;
-import opengl.object;
+import :object;
 
 export namespace gl
 {

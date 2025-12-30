@@ -1,10 +1,10 @@
-export module opengl.object.buffer;
+export module chroma_gl:object.buffer;
 
 import std;
 import opengl;
-import opengl.object;
-import opengl.object.fence;
-import opengl.object.memory_lock;
+import :object;
+import :object.fence;
+import :object.memory_lock;
 
 export namespace gl
 {

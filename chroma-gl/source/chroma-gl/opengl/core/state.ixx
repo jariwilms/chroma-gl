@@ -1,8 +1,8 @@
-export module opengl.state;
+export module opengl:state;
 
 import std;
-import opengl.flags;
-import opengl.types;
+import :flags;
+import :types;
 
 export namespace gl::state
 {

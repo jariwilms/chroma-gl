@@ -1,4 +1,4 @@
-export module opengl.object.fence;
+export module chroma_gl:object.fence;
 
 import std;
 import opengl;

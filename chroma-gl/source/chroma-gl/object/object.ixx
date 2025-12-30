@@ -1,4 +1,4 @@
-export module opengl.object;
+export module chroma_gl:object;
 
 import std;
 import opengl;

@@ -1,12 +1,12 @@
-export module opengl.legacy;
-export import opengl.flags;
-export import opengl.types;
-export import opengl.utility;
+export module opengl:legacy;
+export import :flags;
+export import :types;
+export import :utility;
 
 import std;
 import <glad/gl.h>;
 
-export namespace gl::lgc
+export namespace gl::legacy
 {
     void get_boolean_value          (gl::data_e data,                    gl::boolean_t* value)
     {

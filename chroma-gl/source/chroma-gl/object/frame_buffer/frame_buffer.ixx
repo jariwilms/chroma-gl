@@ -1,11 +1,11 @@
-export module opengl.object.frame_buffer;
+export module chroma_gl:object.frame_buffer;
 
 import std;
 import opengl;
-import opengl.object;
-import opengl.object.cubemap;
-import opengl.object.render_buffer;
-import opengl.object.texture;
+import :object;
+import :object.cubemap;
+import :object.render_buffer;
+import :object.texture;
 
 export namespace gl
 {

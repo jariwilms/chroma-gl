@@ -1,8 +1,8 @@
-export module opengl.utility;
+export module opengl:utility;
 
 import std;
-import opengl.domain;
-import opengl.types;
+import :domain;
+import :types;
 import glm;
 
 export namespace gl

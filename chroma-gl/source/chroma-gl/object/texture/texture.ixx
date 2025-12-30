@@ -1,8 +1,8 @@
-export module opengl.object.texture;
+export module chroma_gl:object.texture;
 
 import std;
 import opengl;
-import opengl.object;
+import :object;
 
 export namespace gl
 {
@@ -79,26 +79,24 @@ export namespace gl
         }
         void apply           (const gl::state::texture& state)
         {
-            using enum gl::texture_parameter_e;
-
-            apply<base_level          >(state.base_level          );
-            apply<maximum_level       >(state.maximum_level       );
-            apply<border_color        >(state.border_color        );
-            apply<compare_function    >(state.compare_function    );
-            apply<compare_mode        >(state.compare_mode        );
-            apply<minification_filter >(state.minification_filter );
-            apply<magnification_filter>(state.magnification_filter);
-            apply<wrapping_r          >(state.wrapping_r          );
-            apply<wrapping_s          >(state.wrapping_s          );
-            apply<wrapping_t          >(state.wrapping_t          );
-            apply<swizzle_r           >(state.swizzle_r           );
-            apply<swizzle_g           >(state.swizzle_g           );
-            apply<swizzle_b           >(state.swizzle_b           );
-            apply<swizzle_a           >(state.swizzle_a           );
-            apply<maximum_anisotropy  >(state.maximum_anisotropy  );
-            apply<minimum_lod         >(state.minimum_lod         );
-            apply<maximum_lod         >(state.maximum_lod         );
-            apply<lod_bias            >(state.lod_bias            );
+            apply<gl::texture_parameter_e::base_level          >(state.base_level          );
+            apply<gl::texture_parameter_e::maximum_level       >(state.maximum_level       );
+            apply<gl::texture_parameter_e::border_color        >(state.border_color        );
+            apply<gl::texture_parameter_e::compare_function    >(state.compare_function    );
+            apply<gl::texture_parameter_e::compare_mode        >(state.compare_mode        );
+            apply<gl::texture_parameter_e::minification_filter >(state.minification_filter );
+            apply<gl::texture_parameter_e::magnification_filter>(state.magnification_filter);
+            apply<gl::texture_parameter_e::wrapping_r          >(state.wrapping_r          );
+            apply<gl::texture_parameter_e::wrapping_s          >(state.wrapping_s          );
+            apply<gl::texture_parameter_e::wrapping_t          >(state.wrapping_t          );
+            apply<gl::texture_parameter_e::swizzle_r           >(state.swizzle_r           );
+            apply<gl::texture_parameter_e::swizzle_g           >(state.swizzle_g           );
+            apply<gl::texture_parameter_e::swizzle_b           >(state.swizzle_b           );
+            apply<gl::texture_parameter_e::swizzle_a           >(state.swizzle_a           );
+            apply<gl::texture_parameter_e::maximum_anisotropy  >(state.maximum_anisotropy  );
+            apply<gl::texture_parameter_e::minimum_lod         >(state.minimum_lod         );
+            apply<gl::texture_parameter_e::maximum_lod         >(state.maximum_lod         );
+            apply<gl::texture_parameter_e::lod_bias            >(state.lod_bias            );
         }
 
         auto format          () const -> format_e

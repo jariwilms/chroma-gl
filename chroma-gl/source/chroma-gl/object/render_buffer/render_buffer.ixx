@@ -1,8 +1,8 @@
-export module opengl.object.render_buffer;
+export module chroma_gl:object.render_buffer;
 
 import std;
 import opengl;
-import opengl.object;
+import :object;
 
 export namespace gl
 {

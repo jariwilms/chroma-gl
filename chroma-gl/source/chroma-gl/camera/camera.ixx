@@ -1,9 +1,9 @@
-export module opengl.camera;
+export module chroma_gl:camera;
 
 import std;
-import opengl.types;
-import opengl.projection;
 import glm;
+import opengl;
+import :projection;
 
 export namespace gl
 {

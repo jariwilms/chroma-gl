@@ -1,8 +1,7 @@
-export module rgfw:window    ;
+export module rgfw:window;
 
 import std;
 import glad;
-import opengl.config;
 import :flags;
 import :functions;
 import :input;
@@ -43,7 +42,7 @@ export namespace rgfw
         using display_mode_e = rgfw::window_display_mode_e;
 
         explicit
-        window(std::string const& title, rgfw::vector_2u const& dimensions, display_mode_e display_mode = display_mode_e::windowed, rgfw::bool_t show = rgfw::true_)
+        window(std::string const& title, rgfw::vector_2u const& dimensions, display_mode_e display_mode = display_mode_e::windowed, rgfw::bool_t show = rgfw::true_, rgfw::bool_t is_debug_context = rgfw::false_)
             : window_{}, input_{}, title_{ title }, dimensions_{ dimensions }, is_visible_{ show }, display_mode_{ display_mode }
         {
             auto const is_visible_flag  = is_visible_ ? rgfw::window_flags_e{} : rgfw::window_flags_e::hide;
@@ -55,7 +54,6 @@ export namespace rgfw
             input_                      = std::make_shared<rgfw::input>();
             if (!window_                                 ) throw std::runtime_error{ "failed to create window"   };
             
-            auto const is_debug_context = static_cast<rgfw::bool_t>(gl::config::build_configuration == gl::config::build_configuration_e::debug);
             auto       gl_hints         = rgfw::gl_hints
             {
                 .double_buffer = rgfw::true_                     , 

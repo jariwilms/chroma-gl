@@ -1,9 +1,9 @@
-export module opengl.flags;
+export module opengl:flags;
 
 import std;
 import <glad/gl.h>;
-import opengl.utility;
-import opengl.types;
+import :utility;
+import :types;
 
 export namespace gl
 {

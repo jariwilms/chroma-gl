@@ -1,15 +1,14 @@
 export module opengl;
-export import opengl.constants;
-export import opengl.domain;
-export import opengl.flags;
-export import opengl.mapping;
-export import opengl.meta;
-export import opengl.parameters;
-export import opengl.proxy;
-export import opengl.state;
-export import opengl.structures;
-export import opengl.types;
-export import opengl.utility;
+export import :constants;
+export import :domain;
+export import :flags;
+export import :mapping;
+export import :meta;
+export import :parameters;
+export import :state;
+export import :structures;
+export import :types;
+export import :utility;
 
 import std;
 import <glad/gl.h>;

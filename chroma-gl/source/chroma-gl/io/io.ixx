@@ -1,11 +1,11 @@
-export module opengl.io;
+export module chroma_gl:io;
 
 import std;
 import opengl;
 
 export namespace gl::io
 {
-    auto read(const std::filesystem::path& path) -> std::vector<gl::byte_t>
+    auto read (const std::filesystem::path& path) -> std::vector<gl::byte_t>
     {
         const auto size   = std::filesystem::file_size(path);
               auto buffer = std::vector<gl::byte_t>(size);

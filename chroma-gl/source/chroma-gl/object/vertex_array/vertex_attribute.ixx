@@ -1,4 +1,4 @@
-export module opengl.object.vertex_array:vertex_attribute;
+export module chroma_gl:object.vertex_array.vertex_attribute;
 
 import std;
 import opengl;

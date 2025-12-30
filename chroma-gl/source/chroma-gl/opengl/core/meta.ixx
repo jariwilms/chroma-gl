@@ -1,8 +1,8 @@
-export module opengl.meta;
+export module opengl:meta;
 
 import std;
-import opengl.flags;
-import opengl.types;
+import :flags;
+import :types;
 
 export namespace gl::meta
 {

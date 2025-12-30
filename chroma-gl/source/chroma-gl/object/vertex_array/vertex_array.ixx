@@ -1,11 +1,11 @@
-export module opengl.object.vertex_array;
-export import :vertex_attribute;
-export import :vertex_layout;
+export module chroma_gl:object.vertex_array;
+export import :object.vertex_array.vertex_attribute;
+export import :object.vertex_array.vertex_layout;
 
 import std;
 import opengl;
-import opengl.object;
-import opengl.object.buffer;
+import :object;
+import :object.buffer;
 
 export namespace gl
 {

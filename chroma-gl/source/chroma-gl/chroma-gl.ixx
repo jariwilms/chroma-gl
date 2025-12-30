@@ -1,21 +1,22 @@
 export module chroma_gl;
 export import opengl;
-export import opengl.color;
-export import opengl.io;
-export import opengl.io.image;
-export import opengl.object.buffer;
-export import opengl.object.cubemap;
-export import opengl.object.frame_buffer;
-export import opengl.object.pipeline;
-export import opengl.object.query;
-export import opengl.object.render_buffer;
-export import opengl.object.sampler;
-export import opengl.object.shader;
-export import opengl.object.shader.uniform_cache;
-export import opengl.object.texture;
-export import opengl.object.vertex_array;
-export import opengl.projection;
-export import opengl.vertex;
+export import :color;
+export import :io;
+export import :io.image;
+export import :object;
+export import :object.buffer;
+export import :object.cubemap;
+export import :object.frame_buffer;
+export import :object.pipeline;
+export import :object.query;
+export import :object.render_buffer;
+export import :object.sampler;
+export import :object.shader.uniform_cache;
+export import :object.shader;
+export import :object.texture;
+export import :object.vertex_array;
+export import :projection;
+export import :vertex;
 
 import std;
 

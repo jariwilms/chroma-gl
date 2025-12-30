@@ -1,8 +1,8 @@
-export module opengl.object.memory_lock;
+export module chroma_gl:object.memory_lock;
 
 import std;
 import opengl;
-import opengl.object.fence;
+import :object.fence;
 
 export namespace gl
 {

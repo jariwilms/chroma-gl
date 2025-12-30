@@ -1,4 +1,4 @@
-export module opengl.object.shader.uniform_cache;
+export module chroma_gl:object.shader.uniform_cache;
 
 import std;
 import opengl;

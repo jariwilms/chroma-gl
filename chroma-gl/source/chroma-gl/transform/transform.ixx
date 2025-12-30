@@ -1,6 +1,6 @@
-export module opengl.transform;
+export module chroma_gl:transform;
 
-import opengl.types;
+import opengl;
 
 export namespace gl
 {

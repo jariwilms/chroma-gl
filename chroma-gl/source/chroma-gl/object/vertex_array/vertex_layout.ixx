@@ -1,4 +1,4 @@
-export module opengl.object.vertex_array:vertex_layout;
+export module chroma_gl:object.vertex_array.vertex_layout;
 
 import std;
 import opengl;

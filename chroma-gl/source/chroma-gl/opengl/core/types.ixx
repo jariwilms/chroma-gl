@@ -1,4 +1,4 @@
-export module opengl.types;
+export module opengl:types;
 
 import std;
 import <glad/gl.h>;

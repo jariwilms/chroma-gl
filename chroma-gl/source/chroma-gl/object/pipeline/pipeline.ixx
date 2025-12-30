@@ -1,9 +1,9 @@
-export module opengl.object.pipeline;
+export module chroma_gl:object.pipeline;
 
 import std;
 import opengl;
-import opengl.object;
-import opengl.object.shader;
+import :object;
+import :object.shader;
 
 export namespace gl
 {
