@@ -230,7 +230,6 @@ export namespace gl
         void apply           (const gl::state::texture& state)
         {
             using enum gl::texture_parameter_e;
-
             apply<base_level          >(state.base_level          );
             apply<maximum_level       >(state.maximum_level       );
             apply<border_color        >(state.border_color        );

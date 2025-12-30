@@ -86,7 +86,6 @@ export namespace rgfw
                 switch (event.type)
                 {
                     using enum rgfw::event_type_e;
-
                     case data_drag             : 
                     {
                         auto const& data_drag_event = event.data_drag;
@@ -143,7 +142,7 @@ export namespace rgfw
                         break;
                     }
                     
-                    default                    : throw std::invalid_argument{ "invalid event type" };
+                    default: throw std::invalid_argument{ "invalid event type" };
                 }
             }
         }

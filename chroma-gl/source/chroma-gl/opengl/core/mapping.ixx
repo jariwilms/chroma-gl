@@ -43,7 +43,7 @@ export namespace gl
             case gl::buffer_base_format_e::stencil      : return 1u;
             case gl::buffer_base_format_e::depth_stencil: return 2u;
 
-            default           : throw std::invalid_argument{ "invalid buffer base format"};
+            default: throw std::invalid_argument{ "invalid buffer base format"};
         }
     }
     auto map_data_type_size                    (gl::data_type_e            data_type           ) -> gl::size_t
@@ -59,7 +59,7 @@ export namespace gl
             case gl::data_type_e::float32: return 4u;
             case gl::data_type_e::float64: return 8u;
             
-            default     : throw std::invalid_argument{ "invalid data type" };
+            default: throw std::invalid_argument{ "invalid data type" };
         }
     }
     auto map_draw_type_size                    (gl::draw_type_e            draw_type           ) -> gl::size_t
@@ -70,7 +70,7 @@ export namespace gl
             case gl::draw_type_e::uint16: return sizeof(gl::uint16_t);
             case gl::draw_type_e::uint32: return sizeof(gl::uint32_t);
 
-            default    : throw std::invalid_argument{ "invalid draw type" };
+            default: throw std::invalid_argument{ "invalid draw type" };
         }
     }
     auto map_frame_buffer_attachment           (gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
@@ -84,7 +84,7 @@ export namespace gl
             case gl::render_buffer_format_e::depth_stencil_uint32_24_8  :
             case gl::render_buffer_format_e::depth_stencil_float32_uint8: return gl::frame_buffer_attachment_e::depth_stencil;
 
-            default                         : return gl::frame_buffer_attachment_e::color_0      ;
+            default: return gl::frame_buffer_attachment_e::color_0;
         }
     }
     auto map_frame_buffer_attachment           (gl::texture_format_e       texture_format      ) -> gl::frame_buffer_attachment_e
@@ -98,7 +98,7 @@ export namespace gl
             case gl::texture_format_e::depth_stencil_uint24_n_uint8:
             case gl::texture_format_e::depth_stencil_float32_uint8 : return gl::frame_buffer_attachment_e::depth_stencil;
 
-            default                          : return gl::frame_buffer_attachment_e::color_0      ;
+            default: return gl::frame_buffer_attachment_e::color_0      ;
         }
     }
     auto map_pixel_data_component_size         (gl::pixel_data_type_e      pixel_data_type     ) -> gl::uint32_t
@@ -132,7 +132,7 @@ export namespace gl
             case gl::pixel_data_type_e::float32                  : return 4u;
             case gl::pixel_data_type_e::float32_uint32_24_8_r    : return 8u;
 
-            default                       : throw std::invalid_argument{ "invalid pixel data type" };
+            default: throw std::invalid_argument{ "invalid pixel data type" };
         }
     }
     auto map_pixel_data_format_component_count (gl::pixel_data_format_e    pixel_data_format   ) -> gl::uint32_t
@@ -150,7 +150,7 @@ export namespace gl
             case gl::pixel_data_format_e::stencil      : return 1u;
             case gl::pixel_data_format_e::depth_stencil: return 2u;
             
-            default           : throw std::invalid_argument{ "invalid pixel data format" };
+            default: throw std::invalid_argument{ "invalid pixel data format" };
         }
     }
     auto map_program_stage                     (gl::shader_type_e          shader_type         ) -> gl::program_stage_e
@@ -164,7 +164,7 @@ export namespace gl
             case gl::shader_type_e::fragment               : return gl::program_stage_e::fragment               ;
             case gl::shader_type_e::compute                : return gl::program_stage_e::compute                ;
 
-            default                                        : throw std::invalid_argument{ "invalid shader type" };
+            default: throw std::invalid_argument{ "invalid shader type" };
         }
     }
     auto map_render_buffer_attachment          (gl::render_buffer_format_e render_buffer_format) -> gl::frame_buffer_attachment_e
@@ -178,7 +178,7 @@ export namespace gl
             case gl::render_buffer_format_e::depth_stencil_uint32_24_8  :
             case gl::render_buffer_format_e::depth_stencil_float32_uint8: return gl::frame_buffer_attachment_e::depth_stencil;
 
-            default                                                     : return gl::frame_buffer_attachment_e::color_0      ;
+            default: return gl::frame_buffer_attachment_e::color_0;
         }
     };
     auto map_texture_attachment                (gl::texture_format_e       texture_format      ) -> gl::frame_buffer_attachment_e
@@ -192,7 +192,7 @@ export namespace gl
             case gl::texture_format_e::depth_stencil_uint24_n_uint8:
             case gl::texture_format_e::depth_stencil_float32_uint8 : return gl::frame_buffer_attachment_e::depth_stencil;
 
-            default                          : return gl::frame_buffer_attachment_e::color_0      ;
+            default: return gl::frame_buffer_attachment_e::color_0;
         }
     };
     auto map_texture_base_format_component_count(gl::texture_base_format_e texture_base_format ) -> gl::count_t
@@ -222,36 +222,90 @@ export namespace gl
             case gl::texture_base_format_e::depth  : return 1u;
             case gl::texture_base_format_e::stencil: return 1u;
 
-            default     : throw std::invalid_argument{ "invalid texture base format" };
+            default: throw std::invalid_argument{ "invalid texture base format" };
         }
     }
     auto map_texture_format_base               (gl::texture_format_e       texture_format      ) -> gl::texture_base_format_e
     {
         switch (texture_format)
         {
-            case gl::texture_format_e::r_uint8_n     : case gl::texture_format_e::r_uint16_n    : case gl::texture_format_e::r_int8_n     : case gl::texture_format_e::r_int16_n   : case gl::texture_format_e::r_float16  : case gl::texture_format_e::r_float32   :                                          return gl::texture_base_format_e::r      ;
-            case gl::texture_format_e::rg_uint8_n    : case gl::texture_format_e::rg_uint16_n   : case gl::texture_format_e::rg_int8_n    : case gl::texture_format_e::rg_int16_n  : case gl::texture_format_e::rg_float16 : case gl::texture_format_e::rg_float32  :                                          return gl::texture_base_format_e::rg     ;
-            case gl::texture_format_e::rgb_uint8_n   : case gl::texture_format_e::rgb_uint16_n  : case gl::texture_format_e::rgb_int8_n   : case gl::texture_format_e::rgb_int16_n : case gl::texture_format_e::srgb_uint8 : case gl::texture_format_e::rgb_float16 : case gl::texture_format_e::rgb_float32 : return gl::texture_base_format_e::rgb    ;
-            case gl::texture_format_e::rgba_uint8_n  : case gl::texture_format_e::rgba_uint16_n : case gl::texture_format_e::rgba_int8_n  : case gl::texture_format_e::rgba_int16_n: case gl::texture_format_e::srgba_uint8: case gl::texture_format_e::rgba_float16: case gl::texture_format_e::rgba_float32: return gl::texture_base_format_e::rgba   ;
-            case gl::texture_format_e::depth_uint16_n: case gl::texture_format_e::depth_uint24_n: case gl::texture_format_e::depth_float32:                                                                                                                                                                    return gl::texture_base_format_e::depth  ;
-            case gl::texture_format_e::stencil_uint8 :                                                                                                                                                                                                                                                         return gl::texture_base_format_e::stencil;
+            case gl::texture_format_e::r_uint8_n     : 
+            case gl::texture_format_e::r_uint16_n    : 
+            case gl::texture_format_e::r_int8_n      : 
+            case gl::texture_format_e::r_int16_n     : 
+            case gl::texture_format_e::r_float16     : 
+            case gl::texture_format_e::r_float32     : return gl::texture_base_format_e::r;
 
-            default          : throw std::invalid_argument{ "invalid format" };
+            case gl::texture_format_e::rg_uint8_n    : 
+            case gl::texture_format_e::rg_uint16_n   : 
+            case gl::texture_format_e::rg_int8_n     : 
+            case gl::texture_format_e::rg_int16_n    : 
+            case gl::texture_format_e::rg_float16    : 
+            case gl::texture_format_e::rg_float32    : return gl::texture_base_format_e::rg;
+
+            case gl::texture_format_e::rgb_uint8_n   : 
+            case gl::texture_format_e::rgb_uint16_n  : 
+            case gl::texture_format_e::rgb_int8_n    : 
+            case gl::texture_format_e::rgb_int16_n   : 
+            case gl::texture_format_e::srgb_uint8    : 
+            case gl::texture_format_e::rgb_float16   : 
+            case gl::texture_format_e::rgb_float32   : return gl::texture_base_format_e::rgb;
+
+            case gl::texture_format_e::rgba_uint8_n  : 
+            case gl::texture_format_e::rgba_uint16_n : 
+            case gl::texture_format_e::rgba_int8_n   : 
+            case gl::texture_format_e::rgba_int16_n  : 
+            case gl::texture_format_e::srgba_uint8   : 
+            case gl::texture_format_e::rgba_float16  : 
+            case gl::texture_format_e::rgba_float32  : return gl::texture_base_format_e::rgba;
+
+            case gl::texture_format_e::depth_uint16_n: 
+            case gl::texture_format_e::depth_uint24_n: 
+            case gl::texture_format_e::depth_float32 : return gl::texture_base_format_e::depth;
+
+            case gl::texture_format_e::stencil_uint8 : return gl::texture_base_format_e::stencil;
+
+            default: throw std::invalid_argument{ "invalid format" };
         }
     }
     auto map_texture_format_type               (gl::texture_format_e       texture_format      ) -> gl::pixel_data_type_e
     {
         switch (texture_format)
         {
-            case gl::texture_format_e::r_int8_n  : case gl::texture_format_e::rg_int8_n  : case gl::texture_format_e::rgb_int8_n  : case gl::texture_format_e::rgba_int8_n  : return gl::pixel_data_type_e::int8   ;
-            case gl::texture_format_e::r_int16_n : case gl::texture_format_e::rg_int16_n : case gl::texture_format_e::rgb_int16_n : case gl::texture_format_e::rgba_int16_n : return gl::pixel_data_type_e::int16  ;
-            case gl::texture_format_e::r_uint8_n : case gl::texture_format_e::rg_uint8_n : case gl::texture_format_e::rgb_uint8_n : case gl::texture_format_e::rgba_uint8_n : return gl::pixel_data_type_e::uint8  ;
-            case gl::texture_format_e::r_uint16_n: case gl::texture_format_e::rg_uint16_n: case gl::texture_format_e::rgb_uint16_n: case gl::texture_format_e::rgba_uint16_n: return gl::pixel_data_type_e::uint16 ;
-                                                                                           case gl::texture_format_e::srgb_uint8  : case gl::texture_format_e::srgba_uint8  : return gl::pixel_data_type_e::uint8  ;
-            case gl::texture_format_e::r_float16 : case gl::texture_format_e::rg_float16 : case gl::texture_format_e::rgb_float16 : case gl::texture_format_e::rgba_float16 : return gl::pixel_data_type_e::float16;
-            case gl::texture_format_e::r_float32 : case gl::texture_format_e::rg_float32 : case gl::texture_format_e::rgb_float32 : case gl::texture_format_e::rgba_float32 : return gl::pixel_data_type_e::float32;
+            case gl::texture_format_e::r_int8_n     : 
+            case gl::texture_format_e::rg_int8_n    : 
+            case gl::texture_format_e::rgb_int8_n   : 
+            case gl::texture_format_e::rgba_int8_n  : return gl::pixel_data_type_e::int8;
+
+            case gl::texture_format_e::r_int16_n    : 
+            case gl::texture_format_e::rg_int16_n   : 
+            case gl::texture_format_e::rgb_int16_n  : 
+            case gl::texture_format_e::rgba_int16_n : return gl::pixel_data_type_e::int16;
+
+            case gl::texture_format_e::r_uint8_n    : 
+            case gl::texture_format_e::rg_uint8_n   : 
+            case gl::texture_format_e::rgb_uint8_n  : 
+            case gl::texture_format_e::rgba_uint8_n : return gl::pixel_data_type_e::uint8;
+
+            case gl::texture_format_e::r_uint16_n   : 
+            case gl::texture_format_e::rg_uint16_n  : 
+            case gl::texture_format_e::rgb_uint16_n : 
+            case gl::texture_format_e::rgba_uint16_n: return gl::pixel_data_type_e::uint16;
+
+            case gl::texture_format_e::srgb_uint8   : 
+            case gl::texture_format_e::srgba_uint8  : return gl::pixel_data_type_e::uint8;
+
+            case gl::texture_format_e::r_float16    : 
+            case gl::texture_format_e::rg_float16   : 
+            case gl::texture_format_e::rgb_float16  : 
+            case gl::texture_format_e::rgba_float16 : return gl::pixel_data_type_e::float16;
+
+            case gl::texture_format_e::r_float32    : 
+            case gl::texture_format_e::rg_float32   : 
+            case gl::texture_format_e::rgb_float32  : 
+            case gl::texture_format_e::rgba_float32 : return gl::pixel_data_type_e::float32;
             
-            default        : throw std::invalid_argument{ "invalid format" };
+            default: throw std::invalid_argument{ "invalid format" };
         }
     }
     auto map_texture_format_size               (gl::texture_format_e       texture_format      ) -> gl::size_t
@@ -296,7 +350,7 @@ export namespace gl
             case gl::texture_format_e::depth_stencil_uint24_n_uint8: return  4u;
             case gl::texture_format_e::depth_stencil_float32_uint8 : return  5u;
 
-            default                          : throw std::invalid_argument{ "invalid format" };
+            default: throw std::invalid_argument{ "invalid format" };
         }
     }
     auto map_texture_target                    (gl::uint32_t               dimensions          ) -> gl::texture_target_e

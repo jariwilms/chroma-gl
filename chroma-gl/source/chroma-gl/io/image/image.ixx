@@ -65,12 +65,20 @@ export namespace gl
                     switch (format)
                     {
                         using enum format_e;
+                        case r_uint8     : 
+                        case rg_uint8    : 
+                        case rgb_uint8   : 
+                        case rgba_uint8  : return stb::load_from_memory<gl::uint8_t  >(channels, data);
+                        case r_uint16    : 
+                        case rg_uint16   : 
+                        case rgb_uint16  : 
+                        case rgba_uint16 : return stb::load_from_memory<gl::uint16_t >(channels, data);
+                        case rgb_float16 : 
+                        case rgba_float16: 
+                        case rgb_float32 : 
+                        case rgba_float32: return stb::load_from_memory<gl::float32_t>(channels, data);
 
-                        case r_uint8    : case rg_uint8    : case rgb_uint8  : case rgba_uint8  : return stb::load_from_memory<gl::uint8_t  >(channels, data);
-                        case r_uint16   : case rg_uint16   : case rgb_uint16 : case rgba_uint16 : return stb::load_from_memory<gl::uint16_t >(channels, data);
-                        case rgb_float16: case rgba_float16: case rgb_float32: case rgba_float32: return stb::load_from_memory<gl::float32_t>(channels, data);
-
-                        default         : throw std::invalid_argument{ "invalid format" };
+                        default: throw std::invalid_argument{ "invalid format" };
                     };
                 }, format);
             const auto dimensions = std::bit_cast<gl::vector_2u>(stb_image.dimensions);
@@ -97,7 +105,6 @@ export namespace gl
             switch (format)
             {
                 using enum format_e;
-                        
                 case r_uint8   : case r_uint16   :                                       return gl::uint32_t{ 1u };
                 case rg_uint8  : case rg_uint16  :                                       return gl::uint32_t{ 2u };
                 case rgb_uint8 : case rgb_uint16 : case rgb_float16 : case rgb_float32 : return gl::uint32_t{ 3u };

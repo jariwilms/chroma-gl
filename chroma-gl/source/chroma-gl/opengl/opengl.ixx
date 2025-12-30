@@ -2450,7 +2450,6 @@ export namespace gl
         switch (attribute_type)
         {
             using enum vertex_array_attribute_type_e;
-
             case int8                      : 
             case uint8                     : 
             case int16                     : 
@@ -2912,7 +2911,6 @@ export namespace gl
             };
 
         using enum gl::frame_buffer_attachment_e;
-
         if constexpr (
                       A == color_0      ||
                       A == color_1      ||

@@ -19,7 +19,6 @@ export namespace gl::meta
     consteval auto is_indexed_feature() -> gl::bool_t
     {
         using enum gl::feature_e;
-
         if constexpr (
             F == blending      || 
             F == scissor_test   ) return gl::true_ ;
@@ -29,7 +28,6 @@ export namespace gl::meta
     consteval auto is_indexed_data() -> gl::bool_t
     {
         using enum gl::data_e;
-
         if constexpr (
             D == atomic_counter_buffer_binding     || 
             D == blending_destination_alpha        || 
@@ -99,7 +97,6 @@ export namespace gl::meta
     consteval auto is_valid_texture_view() -> gl::bool_t
     {
         using enum gl::texture_target_e;
-
         if constexpr (
             (T == _1d                   && (U == _1d             || U == _1d_array                                                    )) ||
             (T == _2d                   && (U == _2d             || U == _2d_array                                                    )) ||

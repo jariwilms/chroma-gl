@@ -89,7 +89,6 @@ export namespace rgfw
             switch (event.type)
             {
                 using enum rgfw::event_type_e;
-
                 case key_pressed           :
                 {
                     auto const& key_event = event.key;
@@ -151,7 +150,7 @@ export namespace rgfw
                     break;
                 }
 
-                default                    : return;
+                default: return;
             }
 
         }
