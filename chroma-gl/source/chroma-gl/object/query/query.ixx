@@ -6,7 +6,7 @@ import :object;
 
 export namespace gl
 {
-    template<gl::query_target_e Target>
+    template<gl::query_target_e target_v>
     class base_query : public gl::object
     {
     public:
@@ -32,10 +32,10 @@ export namespace gl
     protected:
         explicit
         base_query()
-            : gl::object{ gl::create_query(Target) } {}
+            : gl::object{ gl::create_query(target_v) } {}
     };
-    template<gl::query_target_e Target>
-    class query : public gl::base_query<Target>
+    template<gl::query_target_e target_v>
+    class query : public gl::base_query<target_v>
     {
     public:
         explicit
@@ -43,11 +43,11 @@ export namespace gl
 
         void begin() 
         {
-            gl::begin_query(gl::base_query<Target>::handle(), Target);
+            gl::begin_query(gl::base_query<target_v>::handle(), target_v);
         }
         void end  () 
         {
-            gl::end_query(Target);
+            gl::end_query(target_v);
         }
     };
     template<>

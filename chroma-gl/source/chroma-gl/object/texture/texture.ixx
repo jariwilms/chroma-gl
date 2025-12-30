@@ -26,27 +26,27 @@ export namespace gl
 
 
 
-    template<gl::uint32_t Dimensions>
+    template<gl::uint32_t dimension_v>
     class texture_n : public gl::texture
     {
     public:
         using format_e = gl::texture_format_e;
-        using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
-        using region_t = gl::region_t<gl::uint32_t, Dimensions>;
+        using vector_t = gl::vector_t<gl::uint32_t, dimension_v>;
+        using region_t = gl::region_t<gl::uint32_t, dimension_v>;
 
         explicit
-        texture_n(format_e format, const vector_t& dimensions,                                         gl::bool_t allocate_mipmaps = gl::true_)
-            : gl::texture{ gl::map_texture_target(Dimensions) }
+        texture_n(format_e format, vector_t dimensions,                                  gl::bool_t allocate_mipmaps = gl::true_)
+            : gl::texture{ gl::map_texture_target(dimension_v) }
             , format_{ format }, dimensions_{ dimensions }, mipmap_levels_{ 1u }
         {
             if (allocate_mipmaps) mipmap_levels_ = gl::mipmap_levels(dimensions_);
 
-            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::texture_storage_1d(handle(), format_, dimensions_, mipmap_levels_);
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
-            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_storage_3d(handle(), format_, dimensions_, mipmap_levels_);
+            if constexpr (dimension_v == gl::uint32_t{ 1u }) gl::texture_storage_1d(handle(), format_, dimensions_, mipmap_levels_);
+            if constexpr (dimension_v == gl::uint32_t{ 2u }) gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
+            if constexpr (dimension_v == gl::uint32_t{ 3u }) gl::texture_storage_3d(handle(), format_, dimensions_, mipmap_levels_);
         }
         explicit
-        texture_n(format_e format, const vector_t& dimensions, const gl::state::texture& state, gl::bool_t allocate_mipmaps = gl::true_)
+        texture_n(format_e format, vector_t dimensions, gl::state::texture const& state, gl::bool_t allocate_mipmaps = gl::true_)
             : texture_n{ format, dimensions, allocate_mipmaps }
         {
             apply(state);
@@ -57,27 +57,27 @@ export namespace gl
             gl::bind_texture_unit(handle(), slot);
         }
 
-        void upload          (                                                 gl::texture_data_descriptor texture_data_descriptor, std::span<const gl::byte_t> memory)
+        void upload          (                                                 gl::texture_data_descriptor texture_data_descriptor, std::span<gl::byte_t const> memory)
         {
             upload(gl::uint32_t{ 0u }, dimensions_, texture_data_descriptor, memory);
         }
-        void upload          (gl::uint32_t image_level, region_t image_region, gl::texture_data_descriptor texture_data_descriptor, std::span<const gl::byte_t> memory)
+        void upload          (gl::uint32_t image_level, region_t image_region, gl::texture_data_descriptor texture_data_descriptor, std::span<gl::byte_t const> memory)
         {
-            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::texture_sub_image_1d(handle(), image_level, image_region, texture_data_descriptor, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_sub_image_2d(handle(), image_level, image_region, texture_data_descriptor, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::texture_sub_image_3d(handle(), image_level, image_region, texture_data_descriptor, memory);
+            if constexpr (dimension_v == gl::uint32_t{ 1u }) gl::texture_sub_image_1d(handle(), image_level, image_region, texture_data_descriptor, memory);
+            if constexpr (dimension_v == gl::uint32_t{ 2u }) gl::texture_sub_image_2d(handle(), image_level, image_region, texture_data_descriptor, memory);
+            if constexpr (dimension_v == gl::uint32_t{ 3u }) gl::texture_sub_image_3d(handle(), image_level, image_region, texture_data_descriptor, memory);
         }
         void generate_mipmaps()
         {
             gl::generate_texture_mipmaps(handle());
         }
         
-        template<gl::texture_parameter_e Parameter>
+        template<gl::texture_parameter_e parameter_v>
         void apply           (auto value)
         {
-            gl::texture_parameter<Parameter>(handle(), value);
+            gl::texture_parameter<parameter_v>(handle(), value);
         }
-        void apply           (const gl::state::texture& state)
+        void apply           (gl::state::texture const& state)
         {
             apply<gl::texture_parameter_e::base_level          >(state.base_level          );
             apply<gl::texture_parameter_e::maximum_level       >(state.maximum_level       );
@@ -103,7 +103,7 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions      () const -> const vector_t&
+        auto dimensions      () const -> vector_t
         {
             return dimensions_;
         }
@@ -117,42 +117,42 @@ export namespace gl
         vector_t     dimensions_;
         gl::uint32_t mipmap_levels_;
     };
-    template<gl::uint32_t Dimensions>
-    class compressed_texture_n : public gl::texture_n<Dimensions>
+    template<gl::uint32_t dimension_v>
+    class compressed_texture_n : public gl::texture_n<dimension_v>
     {
     public:
         using format_e = gl::texture_compressed_format_e;
-        using vector_t = gl::texture_n<Dimensions>::vector_t;
-        using region_t = gl::texture_n<Dimensions>::region_t;
+        using vector_t = gl::texture_n<dimension_v>::vector_t;
+        using region_t = gl::texture_n<dimension_v>::region_t;
 
         explicit
-        compressed_texture_n(format_e format, const vector_t& dimensions, gl::bool_t allocate_mipmaps = gl::true_)
-            : gl::texture_n<Dimensions>{ static_cast<gl::texture_n<Dimensions>::format_e>(format), dimensions, allocate_mipmaps } {}
+        compressed_texture_n(format_e format, vector_t dimensions, gl::bool_t allocate_mipmaps = gl::true_)
+            : gl::texture_n<dimension_v>{ static_cast<gl::texture_n<dimension_v>::format_e>(format), dimensions, allocate_mipmaps } {}
 
-        void upload(                                                 gl::compressed_texture_data_descriptor compressed_texture_data_descriptor, std::span<const gl::byte_t> memory)
+        void upload(                                                 gl::compressed_texture_data_descriptor compressed_texture_data_descriptor, std::span<gl::byte_t const> memory)
         {
-            upload(gl::uint32_t{ 0u }, gl::texture_n<Dimensions>::dimensions(), compressed_texture_data_descriptor.base_format, memory);
+            upload(gl::uint32_t{ 0u }, gl::texture_n<dimension_v>::dimensions(), compressed_texture_data_descriptor.base_format, memory);
         }
-        void upload(gl::uint32_t image_level, region_t image_region, gl::compressed_texture_data_descriptor compressed_texture_data_descriptor, std::span<const gl::byte_t> memory)
+        void upload(gl::uint32_t image_level, region_t image_region, gl::compressed_texture_data_descriptor compressed_texture_data_descriptor, std::span<gl::byte_t const> memory)
         {
-            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::compressed_texture_sub_image_1d(gl::texture_n<Dimensions>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::compressed_texture_sub_image_2d(gl::texture_n<Dimensions>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 3u }) gl::compressed_texture_sub_image_3d(gl::texture_n<Dimensions>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
+            if constexpr (dimension_v == gl::uint32_t{ 1u }) gl::compressed_texture_sub_image_1d(gl::texture_n<dimension_v>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
+            if constexpr (dimension_v == gl::uint32_t{ 2u }) gl::compressed_texture_sub_image_2d(gl::texture_n<dimension_v>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
+            if constexpr (dimension_v == gl::uint32_t{ 3u }) gl::compressed_texture_sub_image_3d(gl::texture_n<dimension_v>::handle(), image_level, image_region, compressed_texture_data_descriptor.base_format, memory);
         }
     };
-    template<gl::uint32_t Dimensions>
+    template<gl::uint32_t dimension_v>
     class multisample_texture_n : public gl::texture
     {
     public:
         using format_e = gl::texture_format_e;
-        using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
+        using vector_t = gl::vector_t<gl::uint32_t, dimension_v>;
 
         explicit
-        multisample_texture_n(format_e format, const vector_t& dimensions, gl::uint32_t sample_count, gl::bool_t use_fixed_sample_locations = gl::true_)
-            : gl::texture{ gl::map_texture_target_multisample(Dimensions) }
+        multisample_texture_n(format_e format, vector_t dimensions, gl::uint32_t sample_count, gl::bool_t use_fixed_sample_locations = gl::true_)
+            : gl::texture{ gl::map_texture_target_multisample(dimension_v) }
             , format_{ format }, dimensions_{ dimensions }, sample_count_{ sample_count }, has_fixed_sample_locations_{ use_fixed_sample_locations }
         {
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_storage_2d_multisample(handle(), format_, dimensions_, sample_count, has_fixed_sample_locations_);
+            if constexpr (dimension_v == gl::uint32_t{ 2u }) gl::texture_storage_2d_multisample(handle(), format_, dimensions_, sample_count, has_fixed_sample_locations_);
         }
         multisample_texture_n(multisample_texture_n&&) noexcept = default;
 
@@ -165,7 +165,7 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions                () const -> const vector_t&
+        auto dimensions                () const -> vector_t
         {
             return dimensions_;
         }
@@ -184,22 +184,22 @@ export namespace gl
         gl::uint32_t sample_count_;
         gl::bool_t   has_fixed_sample_locations_;
     };
-    template<gl::uint32_t Dimensions>
+    template<gl::uint32_t dimension_v>
     class texture_n_array : public gl::texture
     {
     public:
         using format_e = gl::texture_format_e;
-        using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
-        using region_t = gl::region_t<gl::uint32_t, Dimensions>;
+        using vector_t = gl::vector_t<gl::uint32_t, dimension_v>;
+        using region_t = gl::region_t<gl::uint32_t, dimension_v>;
 
-        texture_n_array(gl::count_t element_count, format_e format, const vector_t& dimensions, gl::bool_t allocate_mipmaps = gl::true_)
-            : gl::texture{ gl::map_texture_array_target(Dimensions) }
+        texture_n_array(gl::count_t element_count, format_e format, vector_t dimensions, gl::bool_t allocate_mipmaps = gl::true_)
+            : gl::texture{ gl::map_texture_array_target(dimension_v) }
             , element_count_{ element_count }, format_{ format }, dimensions_{ dimensions }, mipmap_levels_{ 1u }
         {
             if (allocate_mipmaps) mipmap_levels_ = gl::mipmap_levels(dimensions_);
 
-            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::texture_storage_2d(handle(), format_, gl::vector_2u{ dimensions_, element_count_ }, mipmap_levels_);
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_storage_3d(handle(), format_, gl::vector_3u{ dimensions_, element_count_ }, mipmap_levels_);
+            if constexpr (dimension_v == gl::uint32_t{ 1u }) gl::texture_storage_2d(handle(), format_, gl::vector_2u{ dimensions_, element_count_ }, mipmap_levels_);
+            if constexpr (dimension_v == gl::uint32_t{ 2u }) gl::texture_storage_3d(handle(), format_, gl::vector_3u{ dimensions_, element_count_ }, mipmap_levels_);
         }
 
         void bind            (gl::binding_t slot)
@@ -207,25 +207,25 @@ export namespace gl
             gl::bind_texture_unit(handle(), slot);
         }
 
-        void upload          (gl::index_t index,                                                  gl::texture_data_descriptor texture_data_descriptor, std::span<const gl::byte_t> memory)
+        void upload          (gl::index_t index,                                                  gl::texture_data_descriptor texture_data_descriptor, std::span<gl::byte_t const> memory)
         {
             upload(index, gl::uint32_t{ 0u }, dimensions_, texture_data_descriptor, memory);
         }
-        void upload          (gl::index_t index, gl::uint32_t image_level, region_t image_region, gl::texture_data_descriptor texture_data_descriptor, std::span<const gl::byte_t> memory)
+        void upload          (gl::index_t index, gl::uint32_t image_level, region_t image_region, gl::texture_data_descriptor texture_data_descriptor, std::span<gl::byte_t const> memory)
         {
-            const auto index_region = gl::region_t<gl::uint32_t, Dimensions + 1u>{ { image_region.origin, static_cast<gl::uint32_t>(index) }, { image_region.extent, gl::uint32_t{ 1u } } };
-            if constexpr (Dimensions == gl::uint32_t{ 1u }) gl::texture_sub_image_2d(handle(), image_level, index_region, texture_data_descriptor, memory);
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_sub_image_3d(handle(), image_level, index_region, texture_data_descriptor, memory);
+            auto const index_region = gl::region_t<gl::uint32_t, dimension_v + 1u>{ { image_region.origin, static_cast<gl::uint32_t>(index) }, { image_region.extent, gl::uint32_t{ 1u } } };
+            if constexpr (dimension_v == gl::uint32_t{ 1u }) gl::texture_sub_image_2d(handle(), image_level, index_region, texture_data_descriptor, memory);
+            if constexpr (dimension_v == gl::uint32_t{ 2u }) gl::texture_sub_image_3d(handle(), image_level, index_region, texture_data_descriptor, memory);
         }
         void generate_mipmaps()
         {
             gl::generate_texture_mipmaps(handle());
         }
 
-        template<gl::texture_parameter_e Parameter>
+        template<gl::texture_parameter_e parameter_v>
         void apply           (auto value)
         {
-            gl::texture_parameter<Parameter>(handle(), value);
+            gl::texture_parameter<parameter_v>(handle(), value);
         }
         void apply           (const gl::state::texture& state)
         {
@@ -258,7 +258,7 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions      () const -> const vector_t&
+        auto dimensions      () const -> vector_t
         {
             return dimensions_;
         }
@@ -273,18 +273,18 @@ export namespace gl
         vector_t     dimensions_;
         gl::uint32_t mipmap_levels_;
     };
-    template<gl::uint32_t Dimensions>
+    template<gl::uint32_t dimension_v>
     class multisample_texture_n_array : public gl::texture
     {
     public:
         using format_e = gl::texture_format_e;
-        using vector_t = gl::vector_t<gl::uint32_t, Dimensions>;
+        using vector_t = gl::vector_t<gl::uint32_t, dimension_v>;
 
-        multisample_texture_n_array(gl::count_t element_count, format_e format, const vector_t& dimensions, gl::uint32_t sample_count, gl::bool_t use_fixed_sample_locations = gl::true_)
-            : gl::texture{ gl::map_texture_array_target_multisample(Dimensions) }
+        multisample_texture_n_array(gl::count_t element_count, format_e format, vector_t dimensions, gl::uint32_t sample_count, gl::bool_t use_fixed_sample_locations = gl::true_)
+            : gl::texture{ gl::map_texture_array_target_multisample(dimension_v) }
             , element_count_{ element_count }, format_{ format }, dimensions_{ dimensions }, sample_count_{ sample_count }, has_fixed_sample_locations_{ use_fixed_sample_locations }
         {
-            if constexpr (Dimensions == gl::uint32_t{ 2u }) gl::texture_storage_3d_multisample(handle(), format_, gl::vector_3u{ dimensions_, element_count_ }, sample_count_, has_fixed_sample_locations_);
+            if constexpr (dimension_v == gl::uint32_t{ 2u }) gl::texture_storage_3d_multisample(handle(), format_, gl::vector_3u{ dimensions_, element_count_ }, sample_count_, has_fixed_sample_locations_);
         }
 
         void bind                      (gl::binding_t slot)
@@ -300,7 +300,7 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions                () const -> const vector_t&
+        auto dimensions                () const -> vector_t
         {
             return dimensions_;
         }

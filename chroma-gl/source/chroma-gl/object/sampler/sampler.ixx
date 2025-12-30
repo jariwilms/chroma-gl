@@ -13,7 +13,7 @@ export namespace gl
         using parameter_e = gl::sampler_parameter_e;
 
         explicit
-        sampler(const gl::state::sampler& state)
+        sampler(gl::state::sampler const& state)
             : gl::object{ gl::create_sampler() }
         {
             apply(state);
@@ -28,12 +28,12 @@ export namespace gl
             gl::bind_sampler(handle(), slot);
         }
 
-        template<gl::sampler_parameter_e Parameter>
+        template<gl::sampler_parameter_e parameter_v>
         void apply(auto value)
         {
-            gl::sampler_parameter<Parameter>(handle(), value);
+            gl::sampler_parameter<parameter_v>(handle(), value);
         }
-        void apply(const gl::state::sampler& state)
+        void apply(gl::state::sampler const& state)
         {
             apply<gl::sampler_parameter_e::border_color        >(state.border_color        );
             apply<gl::sampler_parameter_e::compare_mode        >(state.compare_mode        );

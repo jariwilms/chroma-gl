@@ -12,7 +12,7 @@ export namespace gl
         using format_e = gl::render_buffer_format_e;
 
         explicit
-        render_buffer(format_e format, const gl::vector_2u& dimensions)
+        render_buffer(format_e format, gl::vector_2u dimensions)
             : gl::object{ gl::create_render_buffer() }
             , format_{ format }, dimensions_{ dimensions }
         {
@@ -28,7 +28,7 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions() const -> const gl::vector_2u&
+        auto dimensions() const -> gl::vector_2u
         {
             return dimensions_;
         }
@@ -45,7 +45,7 @@ export namespace gl
         using format_e = gl::render_buffer_format_e;
 
         explicit
-        multisample_render_buffer(format_e format, const gl::vector_2u& dimensions, gl::uint32_t sample_count)
+        multisample_render_buffer(format_e format, gl::vector_2u dimensions, gl::uint32_t sample_count)
             : gl::object{ gl::create_render_buffer() }
             , format_{ format }, dimensions_{ dimensions }, sample_count_{ sample_count }
         {
@@ -61,7 +61,7 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions  () const -> const gl::vector_2u&
+        auto dimensions  () const -> gl::vector_2u
         {
             return dimensions_;
         }
@@ -70,7 +70,7 @@ export namespace gl
             return sample_count_;
         }
 
-        auto operator=(multisample_render_buffer&&) noexcept -> multisample_render_buffer & = default;
+        auto operator=(multisample_render_buffer&&) noexcept -> multisample_render_buffer& = default;
 
     private:
         format_e      format_;

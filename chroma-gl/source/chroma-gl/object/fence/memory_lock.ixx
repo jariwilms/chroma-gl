@@ -24,7 +24,7 @@ export namespace gl
             std::ranges::for_each(locks_, [&](gl::memory_lock_t& lock)
                 {
                     auto& [lock_fence, lock_range] = lock;
-                    if   (gl::range_overlaps(lock_range, range)) lock_fence.wait();
+                    if   (gl::range_overlaps(lock_range, range)) lock_fence     .wait();
                     else                                         remaining_locks.emplace_back(std::move(lock));
                 });
             

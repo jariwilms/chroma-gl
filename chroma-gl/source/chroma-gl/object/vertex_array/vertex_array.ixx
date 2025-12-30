@@ -54,7 +54,7 @@ export namespace gl
                             gl::vertex_array_binding_divisor(handle(), binding_point_, attribute_t::divisor);
                             for (auto index = gl::index_t{ 0u }; index < attribute_t::locations; ++index)
                             {
-                                const auto location_offset = attribute_offset + (index * attribute_t::count * sizeof(component_t));
+                                auto const location_offset = attribute_offset + (index * attribute_t::count * sizeof(component_t));
 
                                 gl::enable_vertex_array_attribute (handle(), attribute_location_);
                                 gl::vertex_array_attribute_format (handle(), gl::map_attribute_type<component_t>(), attribute_location_, attribute_t::count, location_offset, attribute_t::is_normalized);

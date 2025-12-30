@@ -9,7 +9,7 @@ export namespace gl
     struct vertex_layout
     {
         using tuple_t                = std::tuple<attribute_t...>;
-        static constexpr auto stride = static_cast<gl::size_t>((attribute_t::size + ...));
+        static auto constexpr stride = static_cast<gl::size_t>((attribute_t::size + ...));
     };
 
     template<typename... attribute_t>

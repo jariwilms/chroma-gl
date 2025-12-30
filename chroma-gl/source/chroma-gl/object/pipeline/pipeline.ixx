@@ -15,7 +15,7 @@ export namespace gl
         using layout_t = gl::pipeline_layout_t;
 
         explicit
-        pipeline(std::span<const std::shared_ptr<gl::shader>> shaders)
+        pipeline(std::span<std::shared_ptr<gl::shader> const> shaders)
             : gl::object{ gl::create_pipeline() }
             , layout_{}
         {
@@ -36,7 +36,7 @@ export namespace gl
         {
             if (!shader) return;
             
-            const auto program_stage = gl::map_program_stage(shader->type());
+            auto const program_stage = gl::map_program_stage(shader->type());
             layout_.insert_or_assign(program_stage, shader);
             gl::use_program_stage(handle(), shader->handle(), program_stage);
         }
@@ -45,7 +45,7 @@ export namespace gl
             layout_.erase(stage);
         }
 
-        auto layout   () const -> const layout_t&
+        auto layout   () const -> layout_t const&
         {
             return layout_;
         }
