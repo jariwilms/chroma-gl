@@ -19,7 +19,7 @@ export namespace gl
         {
                   auto& derived      = static_cast<Derived&>(*this);
             const auto  upload_range = gl::clamp_range(gl::range_t{ offset, memory.size() }, derived.count());
-            if (upload_range.empty()) return;
+            if (upload_range.is_empty()) return;
 
             auto mapped_memory       = gl::map_buffer_range<T>(derived.handle(), gl::buffer_mapping_range_access_flags_e::write, upload_range);
             std::memcpy(mapped_memory.data() + upload_range.index, memory.data(), upload_range.count * sizeof(T));
@@ -37,7 +37,7 @@ export namespace gl
         {
                   auto& derived        = static_cast<Derived&>(*this);
             const auto  download_range = gl::clamp_range(gl::range_t{ offset, memory.size() }, derived.count());
-            if (download_range.empty()) return;
+            if (download_range.is_empty()) return;
 
             auto mapped_memory         = gl::map_buffer_range<T>(derived.handle(), gl::buffer_mapping_range_access_flags_e::read, download_range);
             std::memcpy(memory.data(), mapped_memory.data() + download_range.index, download_range.count * sizeof(T));
@@ -60,7 +60,7 @@ export namespace gl
         {
                   auto& derived      = static_cast<Derived&>(*this);
             const auto  upload_range = gl::clamp_range(gl::range_t{ offset, memory.size() }, derived.count());
-            if (upload_range.empty()) return;
+            if (upload_range.is_empty()) return;
 
             derived.memory_locker_.wait(upload_range);
             std::memcpy(derived.mapped_memory_.data() + upload_range.index, memory.data(), upload_range.count * sizeof(T));
@@ -74,7 +74,7 @@ export namespace gl
         {
                   auto& derived        = static_cast<Derived&>(*this);
             const auto  download_range = gl::clamp_range(gl::range_t{ offset, memory.size() }, derived.count());
-            if (download_range.empty()) return;
+            if (download_range.is_empty()) return;
 
             derived.memory_locker_.wait(download_range);
             std::memcpy(memory.data(), derived.mapped_memory_.data() + download_range.index, download_range.count * sizeof(T));

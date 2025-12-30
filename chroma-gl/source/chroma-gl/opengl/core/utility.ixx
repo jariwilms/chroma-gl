@@ -1,9 +1,9 @@
 export module opengl:utility;
 
 import std;
+import glm;
 import :domain;
 import :types;
-import glm;
 
 export namespace gl
 {
@@ -44,6 +44,16 @@ export namespace gl
         return reinterpret_cast<gl::size_t>(&(static_cast<S*>(nullptr)->*member));
     }
     
+    template<typename T>
+    auto convert_range        (gl::range_t      range) -> gl::byte_range_t
+    {
+        return gl::byte_range_t{ range.index * sizeof(T), range.count * sizeof(T) };
+    }
+    template<typename T>
+    auto convert_range        (gl::byte_range_t range) -> gl::range_t
+    {
+        return gl::range_t{ range.offset / sizeof(T), range.size / sizeof(T) };
+    }
     auto clamp_range          (gl::range_t      range     , gl::size_t boundary) -> gl::range_t
     {
         range.index = std::min(range.index, boundary              );
@@ -57,24 +67,6 @@ export namespace gl
         byte_range.size   = std::min(byte_range.size  , boundary - byte_range.offset);
 
         return byte_range;
-    }
-    template<typename T>
-    auto convert_range        (gl::range_t      range) -> gl::byte_range_t
-    {
-        return gl::byte_range_t{ range.index * sizeof(T), range.count * sizeof(T) };
-    }
-    template<typename T>
-    auto convert_range        (gl::byte_range_t range) -> gl::range_t
-    {
-        return gl::range_t{ range.offset / sizeof(T), range.size / sizeof(T) };
-    }
-    auto range_overlaps       (gl::range_t      first, gl::range_t      second) -> gl::bool_t
-    {
-        return (first.index < second.index + second.count) && (second.index < first.index + second.count);
-    }
-    auto range_overlaps       (gl::byte_range_t first, gl::byte_range_t second) -> gl::bool_t
-    {
-        return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
     }
     auto range_intersection   (gl::range_t      first, gl::range_t      second) -> gl::range_t
     {
@@ -91,6 +83,14 @@ export namespace gl
         const auto intersect_count =intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
         
         return gl::byte_range_t{ intersect_count, intersect_index };
+    }
+    auto range_overlaps       (gl::range_t      first, gl::range_t      second) -> gl::bool_t
+    {
+        return (first.index < second.index + second.count) && (second.index < first.index + second.count);
+    }
+    auto range_overlaps       (gl::byte_range_t first, gl::byte_range_t second) -> gl::bool_t
+    {
+        return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
     }
     template<typename T, gl::uint32_t Components>
     auto clamp_region         (const gl::region_t<T, Components>& region, const gl::vector_t<T, Components>& boundary) -> gl::region_t<T, Components>

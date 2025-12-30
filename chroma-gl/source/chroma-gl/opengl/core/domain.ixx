@@ -13,6 +13,17 @@ export namespace gl
         region_t(const gl::vector_t<T, Components>& origin, const gl::vector_t<T, Components>& extent)
             : origin{ origin }, extent{ extent } {}
 
+        auto is_empty  () const -> gl::bool_t
+        {
+            const auto* value_pointer = std::addressof(extent.x);
+            for (auto index = gl::index_t{ 0u }; index < Components; ++index)
+            {
+                if (value_pointer[index] != T{ 0 }) return gl::false_;
+            }
+
+            return gl::true_;
+        }
+
         auto operator==(const region_t&) const -> gl::bool_t = default;
 
         gl::vector_t<T, Components> origin;
@@ -25,7 +36,7 @@ export namespace gl
         range_t(gl::index_t index, gl::count_t count)
             : index{ index }, count{ count } {}
 
-        auto empty() const -> gl::bool_t
+        auto is_empty  () const -> gl::bool_t
         {
             return count == gl::count_t{ 0u };
         }
@@ -42,7 +53,7 @@ export namespace gl
         byte_range_t(gl::size_t offset, gl::size_t size)
             : offset{ offset }, size{ size } {}
 
-        auto empty() const -> gl::bool_t
+        auto is_empty  () const -> gl::bool_t
         {
             return size == gl::size_t{ 0u };
         }
