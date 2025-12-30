@@ -1970,53 +1970,53 @@ export namespace gl
         all          = arithmetic  | bitwise                                , 
     };
     
-    constexpr auto operator&              (gl::flag_operation_e left   , gl::flag_operation_e right) -> gl::flag_operation_e { return std::bit_cast<gl::flag_operation_e>(std::to_underlying(left) & std::to_underlying(right)); }
-    constexpr auto operator|              (gl::flag_operation_e left   , gl::flag_operation_e right) -> gl::flag_operation_e { return std::bit_cast<gl::flag_operation_e>(std::to_underlying(left) | std::to_underlying(right)); }
-    constexpr auto supports_enum_operation(gl::flag_operation_e enabled, gl::flag_operation_e check) -> gl::bool_t           { return (enabled & check) == check; }
+    auto constexpr operator&         (gl::flag_operation_e alpha    , gl::flag_operation_e beta ) -> gl::flag_operation_e { return std::bit_cast<gl::flag_operation_e>(std::to_underlying(alpha) & std::to_underlying(beta)); }
+    auto constexpr operator|         (gl::flag_operation_e alpha    , gl::flag_operation_e beta ) -> gl::flag_operation_e { return std::bit_cast<gl::flag_operation_e>(std::to_underlying(alpha) | std::to_underlying(beta)); }
+    auto constexpr supports_operation(gl::flag_operation_e operation, gl::flag_operation_e check) -> gl::bool_t           { return (operation & check) == check; }
 
-    template<typename T> struct enum_operation { static constexpr auto value = gl::flag_operation_e::none; };
-    template<typename T> constexpr auto enum_operation_v = gl::enum_operation<T>::value;
+    template<typename enum_t> struct enum_operation { static auto constexpr value = gl::flag_operation_e::none; };
+    template<typename enum_t> constexpr auto enum_operation_v = gl::enum_operation<enum_t>::value;
 
-    template<typename T> concept has_addition    = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::addition   );
-    template<typename T> concept has_subtraction = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::subtraction);
-    template<typename T> concept has_bitwise_and = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::bitwise_and);
-    template<typename T> concept has_bitwise_or  = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::bitwise_or );
-    template<typename T> concept has_bitwise_xor = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::bitwise_xor);
-    template<typename T> concept has_bitwise_not = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::bitwise_not);
-    template<typename T> concept has_compare     = std::is_enum_v<T> && gl::supports_enum_operation(gl::enum_operation_v<T>, gl::flag_operation_e::compare    );
+    template<typename enum_t> concept has_addition    = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::addition   );
+    template<typename enum_t> concept has_subtraction = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::subtraction);
+    template<typename enum_t> concept has_bitwise_and = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::bitwise_and);
+    template<typename enum_t> concept has_bitwise_or  = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::bitwise_or );
+    template<typename enum_t> concept has_bitwise_xor = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::bitwise_xor);
+    template<typename enum_t> concept has_bitwise_not = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::bitwise_not);
+    template<typename enum_t> concept has_compare     = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::compare    );
 
-    template<gl::has_addition    T                 > constexpr auto operator+ (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) +  std::to_underlying(right)); }
-    template<gl::has_addition    T, std::integral U> constexpr auto operator+ (T  left, U right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) +                     right ); }
-    template<gl::has_subtraction T                 > constexpr auto operator- (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) -  std::to_underlying(right)); }
-    template<gl::has_subtraction T, std::integral U> constexpr auto operator- (T  left, U right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) -                     right ); }
-    template<gl::has_bitwise_and T                 > constexpr auto operator& (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) &  std::to_underlying(right)); }
-    template<gl::has_bitwise_or  T                 > constexpr auto operator| (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) |  std::to_underlying(right)); }
-    template<gl::has_bitwise_xor T                 > constexpr auto operator^ (T  left, T right) noexcept -> T          { return static_cast<T>(std::to_underlying(left) ^  std::to_underlying(right)); }
-    template<gl::has_bitwise_not T                 > constexpr auto operator~ (         T right) noexcept -> T          { return static_cast<T>(                         ~  std::to_underlying(right)); }          
-    template<gl::has_addition    T                 > constexpr auto operator+=(T& left, T right) noexcept -> T&         { return                left = left + right                                   ; }
-    template<gl::has_addition    T, std::integral U> constexpr auto operator+=(T& left, U right) noexcept -> T&         { return                left = left + right                                   ; }
-    template<gl::has_subtraction T                 > constexpr auto operator-=(T& left, T right) noexcept -> T&         { return                left = left - right                                   ; }
-    template<gl::has_subtraction T, std::integral U> constexpr auto operator-=(T& left, U right) noexcept -> T&         { return                left = left - right                                   ; }
-    template<gl::has_bitwise_and T                 > constexpr auto operator&=(T& left, T right) noexcept -> T&         { return                left = left & right                                   ; }
-    template<gl::has_bitwise_or  T                 > constexpr auto operator|=(T& left, T right) noexcept -> T&         { return                left = left | right                                   ; }
-    template<gl::has_bitwise_xor T                 > constexpr auto operator^=(T& left, T right) noexcept -> T&         { return                left = left ^ right                                   ; }
-    template<gl::has_compare     T                 > constexpr auto operator< (T  left, T right) noexcept -> gl::bool_t { return                std::to_underlying(left) <  std::to_underlying(right) ; }
-    template<gl::has_compare     T                 > constexpr auto operator> (T  left, T right) noexcept -> gl::bool_t { return                std::to_underlying(left) >  std::to_underlying(right) ; }
-    template<gl::has_compare     T                 > constexpr auto operator<=(T  left, T right) noexcept -> gl::bool_t { return                std::to_underlying(left) <= std::to_underlying(right) ; }
-    template<gl::has_compare     T                 > constexpr auto operator>=(T  left, T right) noexcept -> gl::bool_t { return                std::to_underlying(left) >= std::to_underlying(right) ; }
+    template<gl::has_addition    enum_t                          > auto constexpr operator+ (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) +  std::to_underlying(beta)); }
+    template<gl::has_addition    enum_t, std::integral integral_t> auto constexpr operator+ (enum_t  alpha, integral_t beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) +                     beta ); }
+    template<gl::has_subtraction enum_t                          > auto constexpr operator- (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) -  std::to_underlying(beta)); }
+    template<gl::has_subtraction enum_t, std::integral integral_t> auto constexpr operator- (enum_t  alpha, integral_t beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) -                     beta ); }
+    template<gl::has_bitwise_and enum_t                          > auto constexpr operator& (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) &  std::to_underlying(beta)); }
+    template<gl::has_bitwise_or  enum_t                          > auto constexpr operator| (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) |  std::to_underlying(beta)); }
+    template<gl::has_bitwise_xor enum_t                          > auto constexpr operator^ (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) ^  std::to_underlying(beta)); }
+    template<gl::has_bitwise_not enum_t                          > auto constexpr operator~ (               enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(                          ~  std::to_underlying(beta)); }          
+    template<gl::has_addition    enum_t                          > auto constexpr operator+=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha + beta; }
+    template<gl::has_addition    enum_t, std::integral integral_t> auto constexpr operator+=(enum_t& alpha, integral_t beta) noexcept -> enum_t&    { return alpha = alpha + beta; }
+    template<gl::has_subtraction enum_t                          > auto constexpr operator-=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha - beta; }
+    template<gl::has_subtraction enum_t, std::integral integral_t> auto constexpr operator-=(enum_t& alpha, integral_t beta) noexcept -> enum_t&    { return alpha = alpha - beta; }
+    template<gl::has_bitwise_and enum_t                          > auto constexpr operator&=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha & beta; }
+    template<gl::has_bitwise_or  enum_t                          > auto constexpr operator|=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha | beta; }
+    template<gl::has_bitwise_xor enum_t                          > auto constexpr operator^=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha ^ beta; }
+    template<gl::has_compare     enum_t                          > auto constexpr operator< (enum_t  alpha, enum_t     beta) noexcept -> gl::bool_t { return std::to_underlying(alpha) <  std::to_underlying(beta) ; }
+    template<gl::has_compare     enum_t                          > auto constexpr operator> (enum_t  alpha, enum_t     beta) noexcept -> gl::bool_t { return std::to_underlying(alpha) >  std::to_underlying(beta) ; }
+    template<gl::has_compare     enum_t                          > auto constexpr operator<=(enum_t  alpha, enum_t     beta) noexcept -> gl::bool_t { return std::to_underlying(alpha) <= std::to_underlying(beta) ; }
+    template<gl::has_compare     enum_t                          > auto constexpr operator>=(enum_t  alpha, enum_t     beta) noexcept -> gl::bool_t { return std::to_underlying(alpha) >= std::to_underlying(beta) ; }
 
-    template<> struct gl::enum_operation<gl::buffer_mapping_range_access_flags_e> { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
-    template<> struct gl::enum_operation<gl::buffer_mask_e                      > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
-    template<> struct gl::enum_operation<gl::buffer_storage_flags_e             > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
-    template<> struct gl::enum_operation<gl::context_flags_e                    > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
-    template<> struct gl::enum_operation<gl::context_profile_e                  > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
-    template<> struct gl::enum_operation<gl::cubemap_face_e                     > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
-    template<> struct gl::enum_operation<gl::feature_e                          > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
-    template<> struct gl::enum_operation<gl::frame_buffer_attachment_e          > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
-    template<> struct gl::enum_operation<gl::frame_buffer_color_attachment_e    > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
-    template<> struct gl::enum_operation<gl::frame_buffer_source_e              > { static constexpr auto value = gl::flag_operation_e::arithmetic; };
-    template<> struct gl::enum_operation<gl::memory_barrier_e                   > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
-    template<> struct gl::enum_operation<gl::memory_regional_barrier_e          > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
-    template<> struct gl::enum_operation<gl::program_stage_e                    > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
-    template<> struct gl::enum_operation<gl::synchronization_command_e          > { static constexpr auto value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::buffer_mapping_range_access_flags_e> { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::buffer_mask_e                      > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::buffer_storage_flags_e             > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::context_flags_e                    > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::context_profile_e                  > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::cubemap_face_e                     > { static auto constexpr value = gl::flag_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::feature_e                          > { static auto constexpr value = gl::flag_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::frame_buffer_attachment_e          > { static auto constexpr value = gl::flag_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::frame_buffer_color_attachment_e    > { static auto constexpr value = gl::flag_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::frame_buffer_source_e              > { static auto constexpr value = gl::flag_operation_e::arithmetic; };
+    template<> struct gl::enum_operation<gl::memory_barrier_e                   > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::memory_regional_barrier_e          > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::program_stage_e                    > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
+    template<> struct gl::enum_operation<gl::synchronization_command_e          > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
 }

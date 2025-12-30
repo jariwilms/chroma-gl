@@ -6,108 +6,107 @@ import :types;
 
 export namespace gl::meta
 {
-    template<typename T, typename... Ts>
-    constexpr auto all_same_type_v          = std::conjunction_v<std::is_same<T, Ts>...>;
-    template<auto value, auto min, auto max>
-    constexpr auto within_open_interval_v   = (value >  min && value <  max);
-    template<auto value, auto min, auto max>
-    constexpr auto within_closed_interval_v = (value >= min && value <= max);
+    template<typename alpha_t, typename... beta_t>
+    auto constexpr all_same_type_v          = std::conjunction_v<std::is_same<alpha_t, beta_t>...>;
+    template<auto check_v, auto mininum_v, auto maximum_v>
+    auto constexpr within_open_interval_v   = (check_v >  mininum_v && check_v <  maximum_v);
+    template<auto check_v, auto minimum_v, auto maximum_v>
+    auto constexpr within_closed_interval_v = (check_v >= minimum_v && check_v <= maximum_v);
 
 
 
-    template<gl::feature_e F>
-    consteval auto is_indexed_feature() -> gl::bool_t
+    template<gl::feature_e feature_v>
+    auto constexpr is_indexed_feature() -> gl::bool_t
     {
         using enum gl::feature_e;
-        if constexpr (
-            F == blending      || 
-            F == scissor_test   ) return gl::true_ ;
-        else                      return gl::false_;
+        if   constexpr (feature_v == blending || feature_v == scissor_test) return gl::true_ ;
+        else                                                                return gl::false_;
     }
-    template<gl::data_e D>
-    consteval auto is_indexed_data() -> gl::bool_t
+    template<gl::data_e data_v>
+    auto constexpr is_indexed_data() -> gl::bool_t
     {
         using enum gl::data_e;
         if constexpr (
-            D == atomic_counter_buffer_binding     || 
-            D == blending_destination_alpha        || 
-            D == blending_destination_rgb          || 
-            D == blending_equation_alpha           || 
-            D == blending_equation_rgb             || 
-            D == blending_source_alpha             || 
-            D == blending_source_rgb               || 
-            D == image_binding_access              || 
-            D == image_binding_format              || 
-            D == image_binding_layer               || 
-            D == image_binding_layered             || 
-            D == image_binding_level               || 
-            D == image_binding_name                || 
-            D == maximum_compute_work_group_count  || 
-            D == maximum_compute_work_group_count  || 
-            D == maximum_compute_work_group_size   || 
-            D == maximum_compute_work_group_size   || 
-            D == query_buffer_binding              || 
-            D == sample_mask_value                 || 
-            D == sample_mask_value                 || 
-            D == scissor_box                       || 
-            D == shader_storage_buffer_binding     || 
-            D == shader_storage_buffer_size        || 
-            D == shader_storage_buffer_size        || 
-            D == shader_storage_buffer_start       || 
-            D == shader_storage_buffer_start       || 
-            D == transform_feedback_buffer_binding || 
-            D == transform_feedback_buffer_size    || 
-            D == transform_feedback_buffer_size    || 
-            D == transform_feedback_buffer_start   || 
-            D == transform_feedback_buffer_start   || 
-            D == uniform_buffer_binding            || 
-            D == uniform_buffer_size               || 
-            D == uniform_buffer_size               || 
-            D == uniform_buffer_start              || 
-            D == uniform_buffer_start              || 
-            D == vertex_binding_buffer             || 
-            D == vertex_binding_buffer             || 
-            D == vertex_binding_divisor            || 
-            D == vertex_binding_divisor            || 
-            D == vertex_binding_offset             || 
-            D == vertex_binding_offset             || 
-            D == vertex_binding_stride             || 
-            D == vertex_binding_stride             || 
-            D == viewport                           ) return gl::true_ ;
-        else                                          return gl::false_;
+            data_v == atomic_counter_buffer_binding     || 
+            data_v == blending_destination_alpha        || 
+            data_v == blending_destination_rgb          || 
+            data_v == blending_equation_alpha           || 
+            data_v == blending_equation_rgb             || 
+            data_v == blending_source_alpha             || 
+            data_v == blending_source_rgb               || 
+            data_v == image_binding_access              || 
+            data_v == image_binding_format              || 
+            data_v == image_binding_layer               || 
+            data_v == image_binding_layered             || 
+            data_v == image_binding_level               || 
+            data_v == image_binding_name                || 
+            data_v == maximum_compute_work_group_count  || 
+            data_v == maximum_compute_work_group_count  || 
+            data_v == maximum_compute_work_group_size   || 
+            data_v == maximum_compute_work_group_size   || 
+            data_v == query_buffer_binding              || 
+            data_v == sample_mask_value                 || 
+            data_v == sample_mask_value                 || 
+            data_v == scissor_box                       || 
+            data_v == shader_storage_buffer_binding     || 
+            data_v == shader_storage_buffer_size        || 
+            data_v == shader_storage_buffer_size        || 
+            data_v == shader_storage_buffer_start       || 
+            data_v == shader_storage_buffer_start       || 
+            data_v == transform_feedback_buffer_binding || 
+            data_v == transform_feedback_buffer_size    || 
+            data_v == transform_feedback_buffer_size    || 
+            data_v == transform_feedback_buffer_start   || 
+            data_v == transform_feedback_buffer_start   || 
+            data_v == uniform_buffer_binding            || 
+            data_v == uniform_buffer_size               || 
+            data_v == uniform_buffer_size               || 
+            data_v == uniform_buffer_start              || 
+            data_v == uniform_buffer_start              || 
+            data_v == vertex_binding_buffer             || 
+            data_v == vertex_binding_buffer             || 
+            data_v == vertex_binding_divisor            || 
+            data_v == vertex_binding_divisor            || 
+            data_v == vertex_binding_offset             || 
+            data_v == vertex_binding_offset             || 
+            data_v == vertex_binding_stride             || 
+            data_v == vertex_binding_stride             || 
+            data_v == viewport                           ) return gl::true_ ;
+        else                                               return gl::false_;
     }
-    template<gl::data_e D>
+    template<gl::data_e data_v>
     consteval auto is_non_indexed_data() -> gl::bool_t
     {
-        return !meta::is_indexed_data<D>();
+        return !meta::is_indexed_data<data_v>();
     }  
-    template<gl::context_property_e P>
+    template<gl::context_property_e property_v>
     consteval auto is_indexed_property() -> gl::bool_t
     {
-        if   constexpr (P == gl::context_property_e::extensions) return gl::true_ ;
-        else                                                     return gl::false_;
+        if   constexpr (property_v == gl::context_property_e::extensions) return gl::true_ ;
+        else                                                              return gl::false_;
     }
-    template<gl::context_property_e P>
+    template<gl::context_property_e property_v>
     consteval auto is_non_indexed_property() -> gl::bool_t
     {
-        if   constexpr (P == gl::context_property_e::extensions) return gl::false_;
-        else                                                     return gl::true_ ;
+        if   constexpr (property_v == gl::context_property_e::extensions) return gl::false_;
+        else                                                              return gl::true_ ;
     }
-    template<gl::texture_target_e T, gl::texture_target_e U>
+    template<gl::texture_target_e from_v, gl::texture_target_e to_v>
     consteval auto is_valid_texture_view() -> gl::bool_t
     {
         using enum gl::texture_target_e;
         if constexpr (
-            (T == _1d                   && (U == _1d             || U == _1d_array                                                    )) ||
-            (T == _2d                   && (U == _2d             || U == _2d_array                                                    )) ||
-            (T == _3d                   && (U == _3d                                                                                  )) ||
-            (T == cubemap               && (U == cubemap         || U == _2d                   || U == _2d_array || U == cubemap_array)) ||
-            (T == rectangle             && (U == rectangle                                                                            )) ||
-            (T == _1d_array             && (U == _1d             || U == _1d_array                                                    )) ||
-            (T == _2d_array             && (U == _2d             || U == _2d_array                                                    )) ||
-            (T == cubemap_array         && (U == _2d             || U == _2d_array             || U == cubemap  || U == cubemap_array )) ||
-            (T == _2d_multisample       && (U == _2d_multisample || U == _2d_multisample_array                                        )) ||
-            (T == _2d_multisample_array && (U == _2d_multisample || U == _2d_multisample_array                                        ))  ) return gl::true_ ;
-        else                                                                                                                                return gl::false_;
+            (from_v == _1d                   && (to_v == _1d             || to_v == _1d_array                                                          )) || 
+            (from_v == _2d                   && (to_v == _2d             || to_v == _2d_array                                                          )) || 
+            (from_v == _3d                   && (to_v == _3d                                                                                           )) || 
+            (from_v == cubemap               && (to_v == cubemap         || to_v == _2d                   || to_v == _2d_array || to_v == cubemap_array)) || 
+            (from_v == rectangle             && (to_v == rectangle                                                                                     )) || 
+            (from_v == _1d_array             && (to_v == _1d             || to_v == _1d_array                                                          )) || 
+            (from_v == _2d_array             && (to_v == _2d             || to_v == _2d_array                                                          )) || 
+            (from_v == cubemap_array         && (to_v == _2d             || to_v == _2d_array             || to_v == cubemap  || to_v == cubemap_array )) || 
+            (from_v == _2d_multisample       && (to_v == _2d_multisample || to_v == _2d_multisample_array                                              )) || 
+            (from_v == _2d_multisample_array && (to_v == _2d_multisample || to_v == _2d_multisample_array                                              ))  ) 
+             return gl::true_ ;
+        else return gl::false_;
     }
 }

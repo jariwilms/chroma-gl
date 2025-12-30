@@ -7,108 +7,110 @@ import :types;
 
 export namespace gl
 {
-    template<typename T>
-    auto to_underlying        (      T        value) noexcept ->       std::underlying_type_t<T>
+    template<typename value_t>
+    auto to_underlying        (value_t              value) noexcept -> std::underlying_type_t<value_t>
     {
-        return static_cast<std::underlying_type_t<T>>(value);
+        return static_cast<std::underlying_type_t<value_t>>(value);
     }
-    template<typename T>
-    auto to_underlying_pointer(      T* const value) noexcept ->       std::underlying_type_t<T>* const
+    template<typename value_t>
+    auto to_underlying_pointer(value_t      * const value) noexcept -> std::underlying_type_t<value_t>      * const
     {
-        return std::bit_cast<std::underlying_type_t<T>* const>(value);
+        return std::bit_cast<std::underlying_type_t<value_t>* const>(value);
     }
-    template<typename T>
-    auto to_underlying_pointer(const T* const value) noexcept -> const std::underlying_type_t<T>* const
+    template<typename value_t>
+    auto to_underlying_pointer(value_t const* const value) noexcept -> std::underlying_type_t<value_t> const* const
     {
-        return std::bit_cast<const std::underlying_type_t<T>* const>(value);
+        return std::bit_cast<std::underlying_type_t<value_t> const* const>(value);
     }
 
-    auto value_pointer        (      auto& value) -> auto*
+    auto value_pointer        (auto      & value) -> auto*
     {
         return glm::value_ptr(value);
     }
-    auto value_pointer        (const auto& value) -> const auto*
+    auto value_pointer        (auto const& value) -> auto const*
     {
         return glm::value_ptr(value);
     }
 
-    template<std::ranges::range range>
-    auto as_bytes             (const range& source) -> std::span<const gl::byte_t>
+    template<std::ranges::range range_t>
+    auto as_bytes             (range_t const& range) -> std::span<gl::byte_t const>
     {
-        using value_t = typename range::value_type;
-        return std::span{ std::bit_cast<const gl::byte_t*>(source.data()), source.size() * sizeof(value_t) };
+        using value_t = typename range_t::value_type;
+        return std::span{ std::bit_cast<gl::byte_t const*>(range.data()), range.size() * sizeof(value_t) };
     }
-    template<typename S, typename T> requires std::is_standard_layout_v<S>
-    auto offset_of            (T S::* member) -> std::size_t
+    template<typename structure_t, typename member_t> requires std::is_standard_layout_v<structure_t>
+    auto offset_of            (member_t structure_t::* member) -> gl::size_t
     {
-        return reinterpret_cast<gl::size_t>(&(static_cast<S*>(nullptr)->*member));
+        return reinterpret_cast<gl::size_t>(&(static_cast<structure_t*>(nullptr)->*member));
     }
+
+
     
-    template<typename T>
-    auto convert_range        (gl::range_t      range) -> gl::byte_range_t
+    template<typename element_t>
+    auto convert_range        (gl::range_t      range                                ) -> gl::byte_range_t
     {
-        return gl::byte_range_t{ range.index * sizeof(T), range.count * sizeof(T) };
+        return gl::byte_range_t{ range.index * sizeof(element_t), range.count * sizeof(element_t) };
     }
-    template<typename T>
-    auto convert_range        (gl::byte_range_t range) -> gl::range_t
+    template<typename element_t>
+    auto convert_range        (gl::byte_range_t range                                ) -> gl::range_t
     {
-        return gl::range_t{ range.offset / sizeof(T), range.size / sizeof(T) };
+        return gl::range_t{ range.offset / sizeof(element_t), range.size / sizeof(element_t) };
     }
-    auto clamp_range          (gl::range_t      range     , gl::size_t boundary) -> gl::range_t
+    auto clamp_range          (gl::range_t      range     , gl::size_t       boundary) -> gl::range_t
     {
         range.index = std::min(range.index, boundary              );
         range.count = std::min(range.count, boundary - range.index);
 
         return range;
     }
-    auto clamp_range          (gl::byte_range_t byte_range, gl::size_t boundary) -> gl::byte_range_t
+    auto clamp_range          (gl::byte_range_t byte_range, gl::size_t       boundary) -> gl::byte_range_t
     {
         byte_range.offset = std::min(byte_range.offset, boundary                    );
         byte_range.size   = std::min(byte_range.size  , boundary - byte_range.offset);
 
         return byte_range;
     }
-    auto range_intersection   (gl::range_t      first, gl::range_t      second) -> gl::range_t
+    auto range_intersection   (gl::range_t      alpha     , gl::range_t      beta    ) -> gl::range_t
     {
-        const auto intersect_index = std::max   (first.index              , second.index                   );
-        const auto intersect_end   = std::min   (first.index + first.count, second.index  + second.count   );
-        const auto intersect_count = intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
+        auto const intersect_index = std::max   (alpha.index              , beta.index                 );
+        auto const intersect_end   = std::min   (alpha.index + alpha.count, beta.index  + beta.count   );
+        auto const intersect_count = intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
         
         return gl::range_t{ intersect_index, intersect_count };
     }
-    auto range_intersection   (gl::byte_range_t first, gl::byte_range_t second) -> gl::byte_range_t
+    auto range_intersection   (gl::byte_range_t alpha     , gl::byte_range_t beta    ) -> gl::byte_range_t
     {
-        const auto intersect_index = std::max   (first.offset             , second.offset              );
-        const auto intersect_end   = std::min   (first.offset + first.size, second.offset + second.size);
-        const auto intersect_count =intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
+        auto const intersect_index = std::max   (alpha.offset             , beta.offset            );
+        auto const intersect_end   = std::min   (alpha.offset + alpha.size, beta.offset + beta.size);
+        auto const intersect_count =intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
         
         return gl::byte_range_t{ intersect_count, intersect_index };
     }
-    auto range_overlaps       (gl::range_t      first, gl::range_t      second) -> gl::bool_t
+    auto range_overlaps       (gl::range_t      alpha     , gl::range_t      beta    ) -> gl::bool_t
     {
-        return (first.index < second.index + second.count) && (second.index < first.index + second.count);
+        return (alpha.index < beta.index + beta.count) && (beta.index < alpha.index + beta.count);
     }
-    auto range_overlaps       (gl::byte_range_t first, gl::byte_range_t second) -> gl::bool_t
+    auto range_overlaps       (gl::byte_range_t alpha     , gl::byte_range_t beta    ) -> gl::bool_t
     {
-        return (first.offset < second.offset + second.size) && (second.offset < first.offset + second.size);
+        return (alpha.offset < beta.offset + beta.size) && (beta.offset < alpha.offset + beta.size);
     }
-    template<typename T, gl::uint32_t Components>
-    auto clamp_region         (const gl::region_t<T, Components>& region, const gl::vector_t<T, Components>& boundary) -> gl::region_t<T, Components>
+    template<typename element_t, gl::uint32_t component_v>
+    auto clamp_region         (gl::region_t<element_t, component_v> region, gl::vector_t<element_t, component_v> boundary) -> gl::region_t<element_t, component_v>
     {
-        auto result = gl::region_t<T, Components>{};
-        std::ranges::for_each(std::views::iota(0u, Components), [&](auto index)
+        auto result = gl::region_t<element_t, component_v>{};
+        std::ranges::for_each(std::views::iota(0u, component_v), [&](auto index)
             {
-                const auto maximum_extent = T{ boundary[index] - std::clamp(region.origin[index], T{ 0 }, boundary[index]) };
-                result.origin[index]      = std::clamp(region.origin[index], T{ 0 }, boundary[index]);
-                result.extent[index]      = std::clamp(region.extent[index], T{ 0 }, maximum_extent );
+                auto const maximum_extent = element_t{ boundary[index] - std::clamp(region.origin[index], element_t{ 0 }, boundary[index]) };
+                result.origin[index]      = std::clamp(region.origin[index], element_t{ 0 }, boundary[index]);
+                result.extent[index]      = std::clamp(region.extent[index], element_t{ 0 }, maximum_extent );
             });
 
         return result;
     }
 
-    template<gl::uint32_t Count>
-    auto mipmap_levels        (const gl::vector_t<gl::uint32_t, Count>& dimensions) -> gl::uint8_t
+    template<typename element_t, gl::uint32_t component_v> requires (std::is_integral_v<element_t>)
+    auto mipmap_levels        (gl::vector_t<element_t, component_v> dimensions) -> element_t
     {
-        return static_cast<gl::uint8_t>(glm::levels(dimensions));
+        return static_cast<element_t>(glm::levels(dimensions));
     }
 }

@@ -8,14 +8,14 @@ export namespace gl
     template<typename T, gl::uint32_t Components>
     struct region_t
     {
-        region_t(                                           const gl::vector_t<T, Components>& extent)
+        region_t(                                    gl::vector_t<T, Components> extent)
             : origin{        }, extent{ extent } {}
-        region_t(const gl::vector_t<T, Components>& origin, const gl::vector_t<T, Components>& extent)
+        region_t(gl::vector_t<T, Components> origin, gl::vector_t<T, Components> extent)
             : origin{ origin }, extent{ extent } {}
 
         auto is_empty  () const -> gl::bool_t
         {
-            const auto* value_pointer = std::addressof(extent.x);
+            auto const* value_pointer = std::addressof(extent.x);
             for (auto index = gl::index_t{ 0u }; index < Components; ++index)
             {
                 if (value_pointer[index] != T{ 0 }) return gl::false_;
@@ -24,7 +24,7 @@ export namespace gl
             return gl::true_;
         }
 
-        auto operator==(const region_t&) const -> gl::bool_t = default;
+        auto operator==(region_t const&) const -> gl::bool_t = default;
 
         gl::vector_t<T, Components> origin;
         gl::vector_t<T, Components> extent;
@@ -41,7 +41,7 @@ export namespace gl
             return count == gl::count_t{ 0u };
         }
 
-        auto operator==(const range_t&) const -> gl::bool_t = default;
+        auto operator==(range_t const&) const -> gl::bool_t = default;
 
         gl::index_t index;
         gl::count_t count;
@@ -58,7 +58,7 @@ export namespace gl
             return size == gl::size_t{ 0u };
         }
 
-        auto operator==(const byte_range_t&) const -> gl::bool_t = default;
+        auto operator==(byte_range_t const&) const -> gl::bool_t = default;
 
         gl::size_t offset;
         gl::size_t size  ;

@@ -46,19 +46,19 @@ export namespace gl
     using time_t                        = ::khronos_utime_nanoseconds_t; //Duration expressed in nanoseconds
     using c_string                      = ::GLchar const*              ; //Null-terminated character array
     
-    using debug_callback_t              = gl::void_t(__stdcall*)(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::sizei_t, gl::c_string, const gl::void_t*);
+    using debug_callback_t              = gl::void_t(__stdcall*)(gl::enum_t, gl::enum_t, gl::uint32_t, gl::enum_t, gl::sizei_t, gl::c_string, gl::void_t const*);
     
     enum class none_t                   : decltype(GL_NONE);
     enum class handle_t                 : gl::uint32_t;
 
 
 
-    template<typename T, gl::uint32_t Components>
-    using vector_t                      = glm::vec<Components, T, glm::packed_highp>;
-    template<typename T, gl::uint32_t Columns, gl::uint32_t Rows = Columns>
-    using matrix_t                      = glm::mat<Columns, Rows, T>;
-    template<typename T>
-    using quaternion_t                  = glm::qua<T, glm::packed_highp>;
+    template<typename element_t, gl::uint32_t component_v>
+    using vector_t                      = glm::vec<component_v, element_t, glm::packed_highp>;
+    template<typename element_t, gl::uint32_t column_v, gl::uint32_t row_v = column_v>
+    using matrix_t                      = glm::mat<column_v, row_v, element_t>;
+    template<typename element_t>
+    using quaternion_t                  = glm::qua<element_t, glm::packed_highp>;
 
     using vector_1b                     = gl::vector_t    <gl::boolean_t,     1u>;
     using vector_2b                     = gl::vector_t    <gl::boolean_t,     2u>;
@@ -96,6 +96,6 @@ export namespace gl
 
 
 
-    template<typename... Ts>
-    struct overload_t : Ts... { using Ts::operator()...; };
+    template<typename... visitor_t>
+    struct overload_t : visitor_t... { using visitor_t::operator()...; };
 }
