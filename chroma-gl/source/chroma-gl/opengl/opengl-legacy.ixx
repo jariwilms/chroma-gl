@@ -7,18 +7,18 @@ import <glad/gl.h>;
 
 namespace gl
 {
-    template<typename T, gl::size_t count_v>
+    template<typename element_t, gl::size_t count_v>
     struct value_traits
     {
-        using type = std::array<T, count_v>;
+        using type = std::array<element_t, count_v>;
     };
-    template<typename T>
-    struct value_traits<T, 1u>
+    template<typename element_t>
+    struct value_traits<element_t, 1u>
     {
-        using type = T;
+        using type = element_t;
     };
-    template<typename T, gl::size_t count_v>
-    using value_traits_t = value_traits<T, count_v>::type;
+    template<typename element_t, gl::size_t count_v>
+    using value_traits_t = value_traits<element_t, count_v>::type;
 
     template<typename data_t, gl::size_t count_v>
     auto value_pointer(gl::value_traits_t<data_t, count_v>& value) -> data_t*
