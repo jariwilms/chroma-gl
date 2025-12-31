@@ -9,6 +9,11 @@ export import :state;
 export import :structures;
 export import :types;
 export import :utility;
+#ifdef GL_LEGACY
+export import :legacy;
+#else
+       import :legacy;
+#endif
 
 import std;
 import <glad/gl.h>;
@@ -26,8 +31,6 @@ export namespace gl
     //
     //Functions are organized according to their appearance in the OpenGL 4.6 Core Profile Specification
     //Reference: https://registry.khronos.org/OpenGL/specs/gl/glspec46.core.pdf
-
-
 
 
 
@@ -1807,6 +1810,10 @@ export namespace gl
     void use_program_stage                                (gl::handle_t pipeline, gl::handle_t program, gl::program_stage_e program_stage)
     {
         ::glUseProgramStages(gl::to_underlying(pipeline), gl::to_underlying(program_stage), gl::to_underlying(program));
+    }
+    void active_shader_program                            (gl::handle_t pipeline, gl::handle_t program)
+    {
+        ::glActiveShaderProgram(gl::to_underlying(pipeline), gl::to_underlying(program));
     }
     auto get_program_binary                               (gl::handle_t program) -> gl::binary_info
     {
