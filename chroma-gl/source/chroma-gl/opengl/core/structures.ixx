@@ -20,11 +20,11 @@ export namespace gl
 
     struct message_log
     {
-        gl ::uint32_t         id       = {};
-        std::string           message  = {};
-        gl ::debug_source_e   source   = {};
-        gl ::debug_type_e     type     = {};
-        gl ::debug_severity_e severity = {};
+        gl::uint32_t         id       = {};
+        gl::debug_source_e   source   = {};
+        gl::debug_type_e     type     = {};
+        gl::debug_severity_e severity = {};
+        std::string          message  = {};
     };
     struct binary_info
     {

@@ -33,7 +33,8 @@ export namespace gl
     using binding_t                     = ::GLuint                     ; //Object binding
     using sizeu_t                       = ::GLuint                     ; //Unsigned 32-bit size-type
     using sizei_t                       = ::GLsizei                    ; //  Signed 32-bit size-type
-    using size_t                        = ::khronos_usize_t            ; //Maximum possible size of an object on a given platform
+    using size_t                        = ::khronos_usize_t            ; //Size in bytes
+    using offset_t                      = ::khronos_usize_t            ; //Size in bytes offset
     using count_t                       = ::khronos_usize_t            ; //Number of elements
     using index_t                       = ::khronos_usize_t            ; //Number of elements offset
     using sizeiptr_t                    = ::GLsizeiptr                 ; //Address pointer

@@ -48,9 +48,9 @@ export namespace gl
     };
     struct byte_range_t
     {
-        byte_range_t(                   gl::size_t size)
+        byte_range_t(                     gl::size_t size)
             : offset{     0u }, size{ size } {}
-        byte_range_t(gl::size_t offset, gl::size_t size)
+        byte_range_t(gl::offset_t offset, gl::size_t size)
             : offset{ offset }, size{ size } {}
 
         auto is_empty  () const -> gl::bool_t
@@ -60,8 +60,8 @@ export namespace gl
 
         auto operator==(byte_range_t const&) const -> gl::bool_t = default;
 
-        gl::size_t offset;
-        gl::size_t size  ;
+        gl::offset_t offset;
+        gl::size_t   size  ;
     };
 
     using length_t       = gl::region_t<gl::uint32_t, 1u>;

@@ -20,6 +20,10 @@ export namespace gl
         referenced_by_tessellation_evaluation_shader = GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_EVALUATION_SHADER, 
         referenced_by_vertex_shader                  = GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_VERTEX_SHADER         , 
     };
+    enum class binary_format_e : gl::enum_t
+    {
+
+    };
     enum class blending_equation_e : gl::enum_t
     {
         add              = GL_FUNC_ADD             , 
