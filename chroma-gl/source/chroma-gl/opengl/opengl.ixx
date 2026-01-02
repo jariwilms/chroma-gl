@@ -1141,7 +1141,7 @@ export namespace gl
         else if constexpr (std::is_same_v<gl::matrix_4x2f, uniform_t>) ::glProgramUniformMatrix4x2fv(gl::to_underlying(program), static_cast<gl::int32_t>(location), count, gl::false_, gl::value_pointer(value));
         else if constexpr (std::is_same_v<gl::matrix_4x3f, uniform_t>) ::glProgramUniformMatrix4x3fv(gl::to_underlying(program), static_cast<gl::int32_t>(location), count, gl::false_, gl::value_pointer(value));
         
-        else static_assert(false && sizeof(uniform_t), "invalid uniform type");
+        else static_assert(gl::false_ && sizeof(uniform_t), "invalid uniform type");
     }
     auto create_pipeline                                  () -> gl::handle_t
     {
