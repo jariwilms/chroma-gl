@@ -14,8 +14,8 @@ export namespace gl::color
         weighted_average, 
     };
 
-    template<color::model_e model_v, typename... Args>
-    auto constexpr mix(gl::vector_4f, gl::vector_4f, Args...) = delete;
+    template<color::model_e model_v, typename... argument_t>
+    auto constexpr mix(gl::vector_4f, gl::vector_4f, argument_t...) = delete;
     template<> 
     auto constexpr mix<color::model_e::additive>        (gl::vector_4f alpha, gl::vector_4f beta)
     {

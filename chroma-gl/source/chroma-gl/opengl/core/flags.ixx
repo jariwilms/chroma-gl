@@ -2014,7 +2014,7 @@ export namespace gl
     auto constexpr supports_operation(gl::flag_operation_e operation, gl::flag_operation_e check) -> gl::bool_t           { return (operation & check) == check; }
 
     template<typename enum_t> struct enum_operation { static auto constexpr value = gl::flag_operation_e::none; };
-    template<typename enum_t> constexpr auto enum_operation_v = gl::enum_operation<enum_t>::value;
+    template<typename enum_t> auto constexpr enum_operation_v = gl::enum_operation<enum_t>::value;
 
     template<typename enum_t> concept has_addition    = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::addition   );
     template<typename enum_t> concept has_subtraction = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::subtraction);

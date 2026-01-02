@@ -24,8 +24,8 @@ export namespace gl
         }
         void wait     ()
         {
-                  auto status  = gl::client_wait_sync(sync_, gl::synchronization_command_e::flush, gl::time_t{ 0u });
-            const auto timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
+            auto       status  = gl::client_wait_sync(sync_, gl::synchronization_command_e::flush, gl::time_t{ 0u });
+            auto const timeout = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds{ 1u }).count();
             while (status == gl::synchronization_status_e::timeout_expired)
             {
                 status = gl::client_wait_sync(sync_, gl::synchronization_command_e::flush, timeout);

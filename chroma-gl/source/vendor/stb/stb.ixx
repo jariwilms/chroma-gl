@@ -22,23 +22,23 @@ export namespace stb
     using byte_t    = std::uint8_t ;
     using size_t    = std::size_t  ;
 
-    template<typename T>
+    template<typename element_t>
     struct vector
     {
-        T x;
-        T y;
+        element_t x;
+        element_t y;
     };
     using vector_2i = stb::vector<stb::int32_t >;
     using vector_2u = stb::vector<stb::uint32_t>;
 }
        namespace stb
 {
-    template<typename T>
+    template<typename element_t>
     void write_function(stb::void_t* context, stb::void_t* data, stb::int32_t size)
     {
-        auto* vector  = reinterpret_cast<std::vector<T>*>(context);
-        auto* pointer = reinterpret_cast<const T*>(data);
-        auto  span    = std::span<const T>{ pointer, static_cast<stb::size_t>(size) };
+        auto* vector  = reinterpret_cast<std::vector<element_t>     *>(context);
+        auto* pointer = reinterpret_cast<            element_t const*>(data);
+        auto  span    = std::span<element_t const>{ pointer, static_cast<stb::size_t>(size) };
 
         vector->append_range(span);
     }
@@ -65,32 +65,32 @@ export namespace stb
         ::stbi_flip_vertically_on_write(value);
     }
 
-    template<typename T>
-    auto load_from_memory            (stb::uint32_t required_channels, std::span<const stb::byte_t> memory) -> stb::image
+    template<typename element_t>
+    auto load_from_memory            (stb::uint32_t required_channels, std::span<stb::byte_t const> memory) -> stb::image
     {
         auto* pointer    = static_cast<stb::byte_t*>(nullptr);
         auto  size       = stb::size_t{};
         auto  dimensions = stb::vector_2i{};
         auto  channels   = std::int32_t{};
 
-        if constexpr (std::is_same_v<T, stb::byte_t   >)
+        if constexpr (std::is_same_v<element_t, stb::byte_t   >)
         {
             pointer = std::bit_cast<stb::byte_t*>(::stbi_load_from_memory(memory.data(), static_cast<std::int32_t>(memory.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
             size    = sizeof(stb::byte_t) * required_channels * dimensions.x * dimensions.y;
         }
-        if constexpr (std::is_same_v<T, stb::uint16_t >)
+        if constexpr (std::is_same_v<element_t, stb::uint16_t >)
         {
             pointer = std::bit_cast<stb::byte_t*>(::stbi_load_16_from_memory(memory.data(), static_cast<std::int32_t>(memory.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
             size    = sizeof(stb::uint16_t) * required_channels * dimensions.x * dimensions.y;
         }
-        if constexpr (std::is_same_v<T, stb::float32_t>)
+        if constexpr (std::is_same_v<element_t, stb::float32_t>)
         {
             pointer = std::bit_cast<stb::byte_t*>(::stbi_loadf_from_memory(memory.data(), static_cast<std::int32_t>(memory.size_bytes()), &dimensions.x, &dimensions.y, &channels, required_channels));
             size    = sizeof(stb::float32_t) * required_channels * dimensions.x * dimensions.y;
         }
 
-        const auto span  = std::span<stb::byte_t>{ pointer, size };
-        const auto image = stb::image
+        auto const span  = std::span<stb::byte_t>{ pointer, size };
+        auto const image = stb::image
         {
             .channels   = static_cast<stb::uint32_t>   (channels  )        , 
             .dimensions = std::bit_cast<stb::vector_2u>(dimensions)        , 

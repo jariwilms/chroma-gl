@@ -5,30 +5,6 @@ import :types;
 
 export namespace gl
 {
-    template<typename T, gl::uint32_t Components>
-    struct region_t
-    {
-        region_t(                                    gl::vector_t<T, Components> extent)
-            : origin{        }, extent{ extent } {}
-        region_t(gl::vector_t<T, Components> origin, gl::vector_t<T, Components> extent)
-            : origin{ origin }, extent{ extent } {}
-
-        auto is_empty  () const -> gl::bool_t
-        {
-            auto const* value_pointer = std::addressof(extent.x);
-            for (auto index = gl::index_t{ 0u }; index < Components; ++index)
-            {
-                if (value_pointer[index] != T{ 0 }) return gl::false_;
-            }
-
-            return gl::true_;
-        }
-
-        auto operator==(region_t const&) const -> gl::bool_t = default;
-
-        gl::vector_t<T, Components> origin;
-        gl::vector_t<T, Components> extent;
-    };
     struct      range_t
     {
         range_t(                   gl::count_t count)
@@ -62,6 +38,30 @@ export namespace gl
 
         gl::offset_t offset;
         gl::size_t   size  ;
+    };
+    template<typename element_t, gl::uint32_t component_v>
+    struct region_t
+    {
+        region_t(                                             gl::vector_t<element_t, component_v> extent)
+            : origin{        }, extent{ extent } {}
+        region_t(gl::vector_t<element_t, component_v> origin, gl::vector_t<element_t, component_v> extent)
+            : origin{ origin }, extent{ extent } {}
+
+        auto is_empty  () const -> gl::bool_t
+        {
+            auto const* value_pointer = std::addressof(extent.x);
+            for (auto index = gl::index_t{ 0u }; index < component_v; ++index)
+            {
+                if (value_pointer[index] != element_t{ 0 }) return gl::false_;
+            }
+
+            return gl::true_;
+        }
+
+        auto operator==(region_t const&) const -> gl::bool_t = default;
+
+        gl::vector_t<element_t, component_v> origin;
+        gl::vector_t<element_t, component_v> extent;
     };
 
     using length_t       = gl::region_t<gl::uint32_t, 1u>;
