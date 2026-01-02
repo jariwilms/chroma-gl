@@ -120,7 +120,7 @@ export namespace gl
         }
     };
 
-    template<typename T> struct bindable_buffer_traits;
+    template<typename target_t> struct bindable_buffer_traits;
     template<> struct bindable_buffer_traits<gl::none_t              > { template<typename derived_t, gl::none_t               target_v> using type = gl::non_bindable_buffer <derived_t, target_v>; };
     template<> struct bindable_buffer_traits<gl::buffer_target_e     > { template<typename derived_t, gl::buffer_target_e      target_v> using type = gl::bindable_buffer     <derived_t, target_v>; };
     template<> struct bindable_buffer_traits<gl::buffer_base_target_e> { template<typename derived_t, gl::buffer_base_target_e target_v> using type = gl::base_bindable_buffer<derived_t, target_v>; };

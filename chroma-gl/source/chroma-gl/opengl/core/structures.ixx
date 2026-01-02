@@ -6,10 +6,10 @@ import :types;
 
 export namespace gl
 {
-    template<typename T>
+    template<typename format_t>
     struct pixel_data_descriptor
     {
-        T                     base_format     = T                    ::rgba;
+        format_t              base_format     = format_t             ::rgba;
         gl::pixel_data_type_e pixel_data_type = gl::pixel_data_type_e::byte;
     };
     using  texture_data_descriptor            = gl::pixel_data_descriptor<gl::texture_base_format_e           >;
@@ -31,28 +31,6 @@ export namespace gl
         gl::enum_t              format = {};
         std::vector<gl::byte_t> binary = {}; 
     };
-    struct draw_elements_indirect_command
-    {
-        gl::count_t count          = {};
-        gl::count_t instance_count = {};
-        gl::index_t first          = {};
-        gl::index_t base_vertex    = {};
-        gl::index_t base_instance  = {};
-    };
-    struct draw_arrays_indirect_command
-    {
-        gl::count_t count          = {};
-        gl::count_t instance_count = {};
-        gl::index_t first          = {};
-        gl::index_t base_instance  = {};
-    };
-    struct dispatch_indirect_command
-    {
-        gl::vector_t<gl::count_t, 3u> groups = {};
-    };
-
-
-
     struct uniform_info
     {
         std::string        name;
@@ -71,5 +49,24 @@ export namespace gl
         gl::binding_t binding_point;
         gl::size_t    size;
         gl::count_t   active_uniforms;
+    };
+    struct draw_elements_indirect_command
+    {
+        gl::count_t count          = {};
+        gl::count_t instance_count = {};
+        gl::index_t first          = {};
+        gl::index_t base_vertex    = {};
+        gl::index_t base_instance  = {};
+    };
+    struct draw_arrays_indirect_command
+    {
+        gl::count_t count          = {};
+        gl::count_t instance_count = {};
+        gl::index_t first          = {};
+        gl::index_t base_instance  = {};
+    };
+    struct dispatch_indirect_command
+    {
+        gl::vector_3u groups = {};
     };
 }

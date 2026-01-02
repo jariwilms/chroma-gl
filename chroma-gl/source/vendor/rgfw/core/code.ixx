@@ -162,7 +162,7 @@ export namespace rgfw
         scroll_lock = ::RGFW_modScrollLock, 
     };
 
-    constexpr auto operator>(rgfw::key_e      left, rgfw::key_e      right) noexcept -> rgfw::bool_t { return std::to_underlying(left) > std::to_underlying(right); }
-    constexpr auto operator>(rgfw::button_e   left, rgfw::button_e   right) noexcept -> rgfw::bool_t { return std::to_underlying(left) > std::to_underlying(right); }
-    constexpr auto operator>(rgfw::modifier_e left, rgfw::modifier_e right) noexcept -> rgfw::bool_t { return std::to_underlying(left) > std::to_underlying(right); }
+    auto constexpr operator>(rgfw::key_e      left, rgfw::key_e      right) noexcept -> rgfw::bool_t { return std::to_underlying(left) > std::to_underlying(right); }
+    auto constexpr operator>(rgfw::button_e   left, rgfw::button_e   right) noexcept -> rgfw::bool_t { return std::to_underlying(left) > std::to_underlying(right); }
+    auto constexpr operator>(rgfw::modifier_e left, rgfw::modifier_e right) noexcept -> rgfw::bool_t { return std::to_underlying(left) > std::to_underlying(right); }
 }

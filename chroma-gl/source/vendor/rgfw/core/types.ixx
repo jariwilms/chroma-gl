@@ -8,6 +8,12 @@ export namespace rgfw
 {
     using void_t        =   void           ;
     using bool_t        = ::RGFW_bool      ;
+    enum                : rgfw::bool_t
+    {
+        false_ = RGFW_FALSE, 
+        true_  = RGFW_TRUE , 
+    };
+
     using char_t        =   char           ;
     using byte_t        = ::u8             ;
     using uint8_t       = ::uint8_t        ;
@@ -33,24 +39,18 @@ export namespace rgfw
     using gl_context_t  = ::RGFW_glContext ;
     using egl_context_t = ::RGFW_eglContext;
 
-    enum : rgfw::bool_t
-    {
-        false_ = RGFW_FALSE, 
-        true_  = RGFW_TRUE , 
-    };
+
+
+    template<typename element_t, rgfw::uint32_t component_v>
+    using vector_t      = glm::vec<component_v, element_t, glm::packed_highp>;
+    using vector_2i     = rgfw::vector_t<rgfw::int32_t  , 2u>;
+    using vector_4i     = rgfw::vector_t<rgfw::int32_t  , 4u>;
+    using vector_2u     = rgfw::vector_t<rgfw::uint32_t , 2u>;
+    using vector_4u     = rgfw::vector_t<rgfw::uint32_t , 4u>;
+    using vector_2f     = rgfw::vector_t<rgfw::float32_t, 2u>;
+    using vector_4f     = rgfw::vector_t<rgfw::float32_t, 4u>;
 
 
 
-    template<typename T, rgfw::uint32_t Components>
-    using vector_t    = glm::vec<Components, T, glm::packed_highp>;
-    using vector_2i   = rgfw::vector_t<rgfw::int32_t  , 2u>;
-    using vector_4i   = rgfw::vector_t<rgfw::int32_t  , 4u>;
-    using vector_2u   = rgfw::vector_t<rgfw::uint32_t , 2u>;
-    using vector_4u   = rgfw::vector_t<rgfw::uint32_t , 4u>;
-    using vector_2f   = rgfw::vector_t<rgfw::float32_t, 2u>;
-    using vector_4f   = rgfw::vector_t<rgfw::float32_t, 4u>;
-
-
-
-    constexpr auto loader = ::RGFW_getProcAddress_OpenGL;
+    auto constexpr loader = ::RGFW_getProcAddress_OpenGL;
 }

@@ -209,6 +209,8 @@ export namespace gl
         else return static_cast<gl::enum_t>(legacy::get_internal_format32_value(internal_format, internal_format_target, parameter_v));
     }
 
+
+
     //Chapter 4 - Event Model
     template<gl::synchronization_property_e property_v>
     auto get_sync_value                                   (gl::sync_t sync) -> auto

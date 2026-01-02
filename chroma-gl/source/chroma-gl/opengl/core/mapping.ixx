@@ -7,17 +7,17 @@ import :utility;
 
 export namespace gl
 {
-    template<typename T>
+    template<typename attribute_t>
     auto map_attribute_type                     () -> gl::vertex_array_attribute_type_e
     {
-             if constexpr (std::is_same_v<T, gl::int8_t   >) return gl::vertex_array_attribute_type_e::int8   ;
-        else if constexpr (std::is_same_v<T, gl::int16_t  >) return gl::vertex_array_attribute_type_e::int16  ;
-        else if constexpr (std::is_same_v<T, gl::int32_t  >) return gl::vertex_array_attribute_type_e::int32  ;
-        else if constexpr (std::is_same_v<T, gl::uint8_t  >) return gl::vertex_array_attribute_type_e::uint8  ;
-        else if constexpr (std::is_same_v<T, gl::uint16_t >) return gl::vertex_array_attribute_type_e::uint16 ;
-        else if constexpr (std::is_same_v<T, gl::uint32_t >) return gl::vertex_array_attribute_type_e::uint32 ;
-        else if constexpr (std::is_same_v<T, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
-        else if constexpr (std::is_same_v<T, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;
+             if constexpr (std::is_same_v<attribute_t, gl::int8_t   >) return gl::vertex_array_attribute_type_e::int8   ;
+        else if constexpr (std::is_same_v<attribute_t, gl::int16_t  >) return gl::vertex_array_attribute_type_e::int16  ;
+        else if constexpr (std::is_same_v<attribute_t, gl::int32_t  >) return gl::vertex_array_attribute_type_e::int32  ;
+        else if constexpr (std::is_same_v<attribute_t, gl::uint8_t  >) return gl::vertex_array_attribute_type_e::uint8  ;
+        else if constexpr (std::is_same_v<attribute_t, gl::uint16_t >) return gl::vertex_array_attribute_type_e::uint16 ;
+        else if constexpr (std::is_same_v<attribute_t, gl::uint32_t >) return gl::vertex_array_attribute_type_e::uint32 ;
+        else if constexpr (std::is_same_v<attribute_t, gl::float32_t>) return gl::vertex_array_attribute_type_e::float32;
+        else if constexpr (std::is_same_v<attribute_t, gl::float64_t>) return gl::vertex_array_attribute_type_e::float64;
     }
     auto map_buffer_base_format_component_count (gl::buffer_base_format_e   buffer_base_format  ) -> gl::count_t
     {
