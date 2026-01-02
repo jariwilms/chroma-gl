@@ -685,21 +685,21 @@ export namespace gl
             gl::to_underlying_pointer(severities.data()) , 
                                       lengths   .data()  , 
                                       buffer    .data() );
+
         auto       messages                     = std::vector<gl::message_log>(retrieved_message_count);
         auto       offset                       = gl::offset_t{ 0u };
-
-        for (auto i = gl::index_t{ 0u }; i < retrieved_message_count; ++i)
+        for (auto index = gl::index_t{ 0u }; index < retrieved_message_count; ++index)
         {
-            messages[i] = gl::message_log
+            messages[index] = gl::message_log
             {
-                .id       = ids[i],
-                .source   = sources[i],
-                .type     = types[i],
-                .severity = severities[i],
-                .message  = std::string(buffer.data() + offset, lengths[i])
+                .id       = ids       [index], 
+                .source   = sources   [index], 
+                .type     = types     [index], 
+                .severity = severities[index], 
+                .message  = std::string(buffer.data() + offset, lengths[index])
             };
 
-            offset += lengths[i];
+            offset += lengths[index];
         }
     
         return messages;
