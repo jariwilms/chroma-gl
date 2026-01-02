@@ -28,7 +28,7 @@ export namespace gl
     };
     struct binary_info
     {
-        gl ::enum_t             format = {};
+        gl::enum_t              format = {};
         std::vector<gl::byte_t> binary = {}; 
     };
     struct draw_elements_indirect_command
@@ -48,9 +48,7 @@ export namespace gl
     };
     struct dispatch_indirect_command
     {
-        gl::count_t groups_x = {};
-        gl::count_t groups_y = {};
-        gl::count_t groups_z = {};
+        gl::vector_t<gl::count_t, 3u> groups = {};
     };
 
 
