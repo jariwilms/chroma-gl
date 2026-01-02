@@ -23,13 +23,13 @@ export namespace gl
             gl::shader_binary    (shader, gl::shader_binary_format_e::spir_v, binary);
             gl::specialize_shader(shader, entry_point);
 
-            auto const compile_status = gl::get_shader_value<gl::shader_parameter_e::compile_status>(shader);
+            auto const compile_status = gl::get_shader_parameter<gl::shader_parameter_e::compile_status>(shader);
             if (compile_status != gl::true_) throw std::runtime_error{ gl::get_shader_info_log(shader) };
             
             gl::attach_shader(handle(), shader);
             gl::link_program (handle()        );
 
-            auto const link_status    = gl::get_program_value<gl::program_parameter_e::link_status>(handle());
+            auto const link_status    = gl::get_program_parameter<gl::program_parameter_e::link_status>(handle());
             if (link_status != gl::true_) throw std::runtime_error{ gl::get_program_info_log(handle()) };
 
             gl::detach_shader(handle(), shader);

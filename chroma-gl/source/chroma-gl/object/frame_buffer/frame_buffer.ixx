@@ -145,6 +145,7 @@ export namespace gl
                  if constexpr (surface_v == surface_e::texture      ) gl::frame_buffer_texture      (handle(), textures_      .at(identifier).handle(), attachment, image_level);
             else if constexpr (surface_v == surface_e::cubemap      ) gl::frame_buffer_texture      (handle(), cubemaps_      .at(identifier).handle(), attachment, image_level);
             else if constexpr (surface_v == surface_e::render_buffer) gl::frame_buffer_render_buffer(handle(), render_buffers_.at(identifier).handle(), attachment             );
+            else static_assert(gl::false_ && gl::to_underlying(surface_v), "invalid surface");
         }
 
         void read_from   (source_e color_source)
@@ -233,7 +234,7 @@ export namespace gl
                         attach<surface_e::render_buffer>(specification.identifier, attachment);
                     }
 
-                    default                      : throw std::invalid_argument{ "invalid surface" };
+                    default: throw std::invalid_argument{ "invalid surface" };
                 }
             });
 
@@ -270,7 +271,7 @@ export namespace gl
         template<surface_e surface_v = surface_e::texture>
         void bind_surface(std::string const& identifier, gl::binding_t slot)
         {
-            if constexpr (surface_v == surface_e::texture) textures_.at(identifier)->bind(slot);
+            if   constexpr (surface_v == surface_e::texture) textures_.at(identifier)->bind(slot);
             else static_assert(gl::false_ && gl::to_underlying(surface_v), "invalid surface");
         }
 
@@ -279,6 +280,7 @@ export namespace gl
         {
                  if constexpr (surface_v == surface_e::texture      ) gl::frame_buffer_texture      (handle(), textures_      .at(identifier).handle(), attachment, image_level);
             else if constexpr (surface_v == surface_e::render_buffer) gl::frame_buffer_render_buffer(handle(), render_buffers_.at(identifier).handle(), attachment             );
+            else static_assert(gl::false_ && gl::to_underlying(surface_v), "invalid surface");
         }
 
         void read_from   (source_e color_source)
@@ -299,6 +301,7 @@ export namespace gl
         {
                  if constexpr (surface_v == surface_e::texture      ) return textures_      .at(identifier);
             else if constexpr (surface_v == surface_e::render_buffer) return render_buffers_.at(identifier);
+            else static_assert(gl::false_ && gl::to_underlying(surface_v), "invalid surface");
         }
         auto dimensions  ()                              const -> gl::vector_2u
         {

@@ -20,11 +20,11 @@ export namespace gl
 
         auto is_available() const -> gl::bool_t
         {
-            return gl::get_query_object_value<gl::query_parameter_e::result_available>(handle());
+            return gl::get_query_object_parameter<gl::query_parameter_e::result_available>(handle());
         }
         auto result      () const -> auto
         {
-            return gl::get_query_object_value<gl::query_parameter_e::result>(handle());
+            return gl::get_query_object_parameter<gl::query_parameter_e::result>(handle());
         }
 
         auto operator=(base_query&&) noexcept -> base_query & = default;
