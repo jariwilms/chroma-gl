@@ -466,6 +466,109 @@ export namespace gl::legacy
         return value;
     };
 
+    auto get_program_interface_int32_value                (gl::handle_t program, gl::program_interface_e interface, gl::program_interface_parameter_e parameter                   ) -> gl::int32_t
+    {
+        auto value = gl::int32_t{};
+        ::glGetProgramInterfaceiv(gl::to_underlying(program), gl::to_underlying(interface), gl::to_underlying(parameter), &value);
+
+        return value;
+    };
+    auto get_program_interface_int32_value                (gl::handle_t program, gl::program_interface_e interface, gl::program_interface_parameter_e parameter, gl::count_t count) -> std::vector<gl::int32_t>
+    {
+        auto value = std::vector<gl::int32_t>(count);
+        ::glGetProgramInterfaceiv(gl::to_underlying(program), gl::to_underlying(interface), gl::to_underlying(parameter), value.data());
+
+        return value;
+    };
+
+    void sampler_parameter_int32_value                    (gl::handle_t sampler, gl::sampler_parameter_e parameter, gl::int32_t   value)
+    {
+        ::glSamplerParameterIiv(gl::to_underlying(sampler), gl::to_underlying(parameter), &value);
+    };
+    void sampler_parameter_uint32_value                   (gl::handle_t sampler, gl::sampler_parameter_e parameter, gl::uint32_t  value)
+    {
+        ::glSamplerParameterIuiv(gl::to_underlying(sampler), gl::to_underlying(parameter), &value);
+    };
+    void sampler_parameter_float32_value                  (gl::handle_t sampler, gl::sampler_parameter_e parameter, gl::float32_t value)
+    {
+        ::glSamplerParameterfv(gl::to_underlying(sampler), gl::to_underlying(parameter), &value);
+    };
+
+    void texture_parameter_int32_value                    (gl::handle_t texture, gl::texture_parameter_e parameter, gl::int32_t   value)
+    {
+        ::glTextureParameteri(gl::to_underlying(texture), gl::to_underlying(parameter), value);
+    };
+    void texture_parameter_uint32_value                   (gl::handle_t texture, gl::texture_parameter_e parameter, gl::uint32_t  value)
+    {
+        ::glTextureParameteri(gl::to_underlying(texture), gl::to_underlying(parameter), static_cast<gl::int32_t>(value));
+    };
+    void texture_parameter_float32_value                  (gl::handle_t texture, gl::texture_parameter_e parameter, gl::float32_t value)
+    {
+        ::glTextureParameterfv(gl::to_underlying(texture), gl::to_underlying(parameter), &value);
+    };
+
+    void frame_buffer_parameter_int32_value               (gl::handle_t frame_buffer, gl::frame_buffer_parameter_e parameter, gl::uint32_t value)
+        {
+            ::glNamedFramebufferParameteri(gl::to_underlying(frame_buffer), gl::to_underlying(parameter), static_cast<gl::int32_t>(value));
+        };
+
+    void patch_parameter_int32_value                      (gl::patch_parameter_e parameter, gl::int32_t   value)
+        {
+            ::glPatchParameteri(gl::to_underlying(parameter), value);
+        };
+    void patch_parameter_float32_value                    (gl::patch_parameter_e parameter, gl::float32_t value)
+        {
+            ::glPatchParameterfv(gl::to_underlying(parameter), &value);
+        };
+
+    void vertex_array_attribute_format_int32              (gl::handle_t vertex_array, gl::index_t attribute_index, gl::vertex_array_attribute_type_e attribute_type, gl::count_t attribute_count, gl::ptrdiff_t byte_offset)
+        {
+            ::glVertexArrayAttribIFormat(
+                gl::to_underlying        (vertex_array)   , 
+                static_cast<gl::uint32_t>(attribute_index), static_cast<gl::int32_t> (attribute_count), 
+                gl::to_underlying        (attribute_type) , static_cast<gl::uint32_t>(byte_offset)   );
+        };
+    void vertex_array_attribute_format_float32            (gl::handle_t vertex_array, gl::index_t attribute_index, gl::vertex_array_attribute_type_e attribute_type, gl::count_t attribute_count, gl::ptrdiff_t byte_offset, gl::bool_t is_normalized)
+        {
+            ::glVertexArrayAttribFormat(
+                gl::to_underlying        (vertex_array)   , 
+                static_cast<gl::uint32_t>(attribute_index),                static_cast<gl::int32_t> (attribute_count), 
+                gl::to_underlying        (attribute_type) , is_normalized, static_cast<gl::uint32_t>(byte_offset)   );
+        };
+    void vertex_array_attribute_format_float64            (gl::handle_t vertex_array, gl::index_t attribute_index, gl::vertex_array_attribute_type_e attribute_type, gl::count_t attribute_count, gl::ptrdiff_t byte_offset                          )
+        {
+            ::glVertexArrayAttribLFormat(
+                gl::to_underlying        (vertex_array)   , 
+                static_cast<gl::uint32_t>(attribute_index), static_cast<gl::int32_t> (attribute_count), 
+                gl::to_underlying        (attribute_type) , static_cast<gl::uint32_t>(byte_offset)   );
+        };
+
+    void point_parameter_int32                            (gl::point_parameter_e parameter, gl::int32_t   value)
+        {
+            ::glPointParameteri(gl::to_underlying(parameter), value);
+        };
+    void point_parameter_float32                          (gl::point_parameter_e parameter, gl::float32_t value)
+        {
+            ::glPointParameterf(gl::to_underlying(parameter), value);
+        };
+
+    void clear_frame_buffer_int32_value                   (gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, gl::int32_t   const* value)
+    {
+        ::glClearNamedFramebufferiv(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), static_cast<gl::int32_t>(index), value);
+    };
+    void clear_frame_buffer_uint32_value                  (gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, gl::uint32_t  const* value)
+    {
+        ::glClearNamedFramebufferuiv(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), static_cast<gl::int32_t>(index), value);
+    };
+    void clear_frame_buffer_float32_value                 (gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, gl::float32_t const* value)
+    {
+        ::glClearNamedFramebufferfv(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), static_cast<gl::int32_t>(index), value);
+    };
+    void clear_frame_buffer_fi                            (gl::handle_t frame_buffer, gl::frame_buffer_attachment_e attachment, gl::index_t index, gl::float32_t depth, gl::int32_t stencil)
+    {
+        ::glClearNamedFramebufferfi(gl::to_underlying(frame_buffer), gl::to_underlying(attachment), static_cast<gl::int32_t>(index), depth, stencil);
+    };
+
     auto get_error                                        () -> gl::error_flag_e
     {
         return static_cast<gl::error_flag_e>(::glGetError());
