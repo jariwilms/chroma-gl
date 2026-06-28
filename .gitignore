@@ -8,6 +8,7 @@
 
 # Visual Studio project files
 *.sln
+*.slnx
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user

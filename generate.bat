@@ -1,10 +1,19 @@
 @echo off
+setlocal EnableExtensions
 
-setlocal
+set "ROOT=%~dp0"
+set "PREMAKE=%ROOT%tools\premake5\premake5.exe"
+set "PREMAKE_FILE=%ROOT%premake5.lua"
 
-set "PREMAKE_FILE=premake5.lua"
-if /i "%~1"=="-s" (set "PREMAKE_FILE=premake5-sandbox.lua")
+if /i "%~1"=="-s" (
+    set "PREMAKE_FILE=%ROOT%premake5-sandbox.lua"
+)
 
-CALL tools\premake5\premake5.exe --file=%PREMAKE_FILE% vs2022
+if not exist "%PREMAKE%" (
+    echo Error: Premake executable not found:
+    echo   "%PREMAKE%"
+    exit /b 1
+)
 
-endlocal
+call "%PREMAKE%" --file="%PREMAKE_FILE%" vs2026
+exit /b %ERRORLEVEL%
