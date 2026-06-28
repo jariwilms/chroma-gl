@@ -19,7 +19,7 @@ export namespace gl
             : handle_{ handle } {}
         explicit 
         object(object&& other) noexcept
-            : handle_{ std::exchange(other.handle_ , gl::null_object) } {}
+            : handle_{ std::exchange(other.handle_, gl::null_object) } {}
 
         auto handle() const -> gl::handle_t
         {
