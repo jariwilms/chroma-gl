@@ -57,7 +57,7 @@ export namespace gl
     template<typename element_t, gl::uint32_t component_v>
     using vector_t                      = glm::vec<component_v, element_t, glm::packed_highp>;
     template<typename element_t, gl::uint32_t column_v, gl::uint32_t row_v = column_v>
-    using matrix_t                      = glm::mat<column_v, row_v, element_t>;
+    using matrix_t                      = glm::mat<column_v, row_v, element_t, glm::packed_highp>;
     template<typename element_t>
     using quaternion_t                  = glm::qua<element_t, glm::packed_highp>;
 

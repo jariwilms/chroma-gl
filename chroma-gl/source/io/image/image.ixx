@@ -41,7 +41,7 @@ export namespace gl
             : format_{ format }, dimensions_{ dimensions }, data_{ std::from_range, std::forward<range_t>(range) } {}
 
         template<extension_e extension_v>
-        static auto encode(format_e format, const gl::image& image) -> auto
+        static auto encode(format_e format, gl::image const& image) -> auto
         {
             stb::set_flip_vertically_on_write(config::flip_images_vertically);
 
@@ -55,7 +55,7 @@ export namespace gl
             if constexpr (extension_v == jpg) return stb::write_jpg(dimensions, channels, memory);
             if constexpr (extension_v == png) return stb::write_png(dimensions, channels, memory);
         }
-        static auto decode(format_e format, std::span<const gl::byte_t> data) -> gl::image
+        static auto decode(format_e format, std::span<gl::byte_t const> data) -> gl::image
         {
             stb::set_flip_vertically_on_load(gl::config::flip_images_vertically);
             
@@ -90,11 +90,11 @@ export namespace gl
         {
             return format_;
         }
-        auto dimensions() const -> const gl::vector_2u&
+        auto dimensions() const -> gl::vector_2u
         {
             return dimensions_;
         }
-        auto data      () const -> std::span<const gl::byte_t>
+        auto data      () const -> std::span<gl::byte_t const>
         {
             return data_;
         }
