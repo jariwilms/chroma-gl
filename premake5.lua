@@ -1,6 +1,6 @@
 workspace "chroma-gl"
-    configurations { "Debug", "Release" }
     architecture   "x86_64"
+    configurations { "Debug", "Release" }
     startproject   "chroma-gl"
 
     filter "configurations:Debug"
@@ -48,6 +48,11 @@ project "chroma-gl"
     buildstlmodules  "On"
     warnings         "Extra"
     externalwarnings "Off"
+	
+    defines {
+        "RGFW_IMPLEMENTATION",
+        "RGFW_OPENGL",
+    }
     includedirs {
         "chroma-gl/source",
         "vendor/glad/include",
@@ -65,10 +70,7 @@ project "chroma-gl"
         "stb",
         "opengl32.lib",
     }
-    defines {
-        "RGFW_IMPLEMENTATION",
-        "RGFW_OPENGL",
-    }
+	
     filter "configurations:Debug"
         defines { "BUILD_CONFIGURATION=debug" }
     filter "configurations:Release"
