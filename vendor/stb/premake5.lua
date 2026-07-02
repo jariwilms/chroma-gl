@@ -8,7 +8,7 @@ project "stb"
 	files { "include/stb/stb_image.h", "include/stb/stb_image_write.h", "source/stb.c" }
 
 	usage "PUBLIC"
-		defines     { "STB_IMAGE_IMPLEMENTATION", "STB_IMAGE_WRITE_IMPLEMENTATION" }
+		defines     { "STB_IMAGE_IMPLEMENTATION", "STB_IMAGE_READ_IMPLEMENTATION", "STB_IMAGE_WRITE_IMPLEMENTATION" }
 		includedirs { "include" }
 	usage "INTERFACE"
 		links { "stb" }

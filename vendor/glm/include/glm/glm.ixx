@@ -1097,6 +1097,7 @@ export namespace glm {
 	using glm::length;
 	using glm::lessThan;
 	using glm::lessThanEqual;
+	using glm::levels;
 	using glm::log;
 	using glm::log2;
 	using glm::matrixCompMult;
@@ -2318,7 +2319,6 @@ export namespace glm {
 		using glm::equal;
 		using glm::euclidean;
 		using glm::euler;
-		using glm::eulerAngles;
 		using glm::eulerAngleX;
 		using glm::eulerAngleXY;
 		using glm::eulerAngleXYX;
@@ -2340,6 +2340,7 @@ export namespace glm {
 		using glm::eulerAngleZY;
 		using glm::eulerAngleZYX;
 		using glm::eulerAngleZYZ;
+		using glm::eulerAngles;
 		using glm::exp;
 		using glm::exp2;
 		using glm::exponentialEaseIn;
@@ -2430,16 +2431,17 @@ export namespace glm {
 		using glm::inversesqrt;
 		using glm::iround;
 		using glm::isCompNull;
-		using glm::isdenormal;
-		using glm::isfinite;
 		using glm::isIdentity;
-		using glm::isinf;
-		using glm::isnan;
 		using glm::isNormalized;
 		using glm::isNull;
 		using glm::isOrthogonal;
+		using glm::isdenormal;
+		using glm::isfinite;
+		using glm::isinf;
+		using glm::isnan;
 		using glm::l1Norm;
 		using glm::l2Norm;
+		using glm::lMaxNorm;
 		using glm::ldexp;
 		using glm::leftHanded;
 		using glm::length;
@@ -2447,10 +2449,8 @@ export namespace glm {
 		using glm::lerp;
 		using glm::lessThan;
 		using glm::lessThanEqual;
-		using glm::levels;
 		using glm::linearGradient;
 		using glm::linearInterpolation;
-		using glm::lMaxNorm;
 		using glm::ln_ln_two;
 		using glm::ln_ten;
 		using glm::ln_two;
@@ -2498,8 +2498,10 @@ export namespace glm {
 		using glm::nlz;
 		using glm::normalize;
 		using glm::normalizeDot;
-		using glm::not_;
 		using glm::notEqual;
+		using glm::not_;
+		using glm::YCoCg2rgb;
+		using glm::YCoCgR2rgb;
 		using glm::one;
 		using glm::one_over_pi;
 		using glm::one_over_root_two;
@@ -2515,11 +2517,11 @@ export namespace glm {
 		using glm::orthoLH_NO;
 		using glm::orthoLH_ZO;
 		using glm::orthoNO;
-		using glm::orthonormalize;
 		using glm::orthoRH;
 		using glm::orthoRH_NO;
 		using glm::orthoRH_ZO;
 		using glm::orthoZO;
+		using glm::orthonormalize;
 		using glm::outerProduct;
 		using glm::packDouble2x32;
 		using glm::packHalf2x16;
@@ -2571,11 +2573,11 @@ export namespace glm {
 		using glm::quarticEaseIn;
 		using glm::quarticEaseInOut;
 		using glm::quarticEaseOut;
-		using glm::quat_cast;
-		using glm::quat_identity;
 		using glm::quatLookAt;
 		using glm::quatLookAtLH;
 		using glm::quatLookAtRH;
+		using glm::quat_cast;
+		using glm::quat_identity;
 		using glm::quinticEaseIn;
 		using glm::quinticEaseInOut;
 		using glm::quinticEaseOut;
@@ -2634,6 +2636,9 @@ export namespace glm {
 		using glm::tanh;
 		using glm::third;
 		using glm::three_over_two_pi;
+		using glm::toMat3;
+		using glm::toMat4;
+		using glm::toQuat;
 		using glm::translate;
 		using glm::transpose;
 		using glm::triangleNormal;
@@ -2646,15 +2651,15 @@ export namespace glm {
 		using glm::uaddCarry;
 		using glm::uintBitsToFloat;
 		using glm::umulExtended;
+		using glm::unProject;
+		using glm::unProjectNO;
+		using glm::unProjectZO;
 		using glm::unpackDouble2x32;
 		using glm::unpackHalf2x16;
 		using glm::unpackSnorm2x16;
 		using glm::unpackSnorm4x8;
 		using glm::unpackUnorm2x16;
 		using glm::unpackUnorm4x8;
-		using glm::unProject;
-		using glm::unProjectNO;
-		using glm::unProjectZO;
 		using glm::uround;
 		using glm::usubBorrow;
 		using glm::value_ptr;
@@ -2662,8 +2667,6 @@ export namespace glm {
 		using glm::wxyz;
 		using glm::yaw;
 		using glm::yawPitchRoll;
-		using glm::YCoCg2rgb;
-		using glm::YCoCgR2rgb;
 		using glm::zero;
 	}
 #   endif

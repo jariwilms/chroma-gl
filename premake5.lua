@@ -33,7 +33,6 @@ group "vendor"
 group ""
 
 include "chroma-gl"
-
 if _OPTIONS["sandbox"] then
     include "sandbox"
 end

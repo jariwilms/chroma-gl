@@ -5,7 +5,7 @@ project "glad"
 	staticruntime "On"
 	warnings      "Off"
 	
-	files { "include/glad/gl.h", "src/gl.c" }
+	files { "include/glad/gl.h", "source/gl.c" }
 	
 	usage "PUBLIC"
 		includedirs { "include" }
