@@ -53,8 +53,8 @@ static inline void instanced()
     //Shader setup
     auto pipeline                     = gl::create_pipeline_from_files(
         {
-            { gl::shader::type_e::vertex  , "examples/assets/shaders/compiled/instanced.vert.spv" },
-            { gl::shader::type_e::fragment, "examples/assets/shaders/compiled/instanced.frag.spv" },
+            { gl::shader::type_e::vertex  , "source/examples/assets/shaders/compiled/instanced.vert.spv" },
+            { gl::shader::type_e::fragment, "source/examples/assets/shaders/compiled/instanced.frag.spv" },
         });
 
 

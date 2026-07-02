@@ -38,12 +38,12 @@ static inline void texture()
     //Shader setup
     auto pipeline                     = gl::create_pipeline_from_files(
         {
-            { gl::shader::type_e::vertex  , "examples/assets/shaders/compiled/texture.vert.spv" },
-            { gl::shader::type_e::fragment, "examples/assets/shaders/compiled/texture.frag.spv" },
+            { gl::shader::type_e::vertex  , "source/examples/assets/shaders/compiled/texture.vert.spv" },
+            { gl::shader::type_e::fragment, "source/examples/assets/shaders/compiled/texture.frag.spv" },
         });
     
     //Texture loading
-    auto       image_data             = gl::io::read("examples/assets/textures/opengl_logo.png");
+    auto       image_data             = gl::io::read("source/examples/assets/textures/opengl_logo.png");
     auto       image                  = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
     auto       texture                = gl::texture_2d{ gl::texture_2d::format_e::rgba_uint8_n, image.dimensions() };
     auto const pixel_data_descriptor  = gl::pixel_data_descriptor{ gl::texture_base_format_e::rgba, gl::pixel_data_type_e::byte };

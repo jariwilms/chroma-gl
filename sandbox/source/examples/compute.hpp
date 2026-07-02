@@ -25,7 +25,7 @@ static inline void compute()
     //Shader setup
     auto       pipeline               = gl::create_pipeline_from_files(
         {
-            { gl::shader::type_e::compute, "examples/assets/shaders/compiled/multiply.comp.spv" },
+            { gl::shader::type_e::compute, "source/examples/assets/shaders/compiled/multiply.comp.spv" },
         });
 
     //Bindings and data upload

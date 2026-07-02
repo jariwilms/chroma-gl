@@ -1,12 +1,12 @@
 @echo off
 setlocal EnableExtensions
-
 set "ROOT=%~dp0"
 set "PREMAKE=%ROOT%tools\premake5\premake5.exe"
 set "PREMAKE_FILE=%ROOT%premake5.lua"
+set "SANDBOX_FLAG="
 
 if /i "%~1"=="-s" (
-    set "PREMAKE_FILE=%ROOT%premake5-sandbox.lua"
+    set "SANDBOX_FLAG=--sandbox"
 )
 
 if not exist "%PREMAKE%" (
@@ -15,5 +15,5 @@ if not exist "%PREMAKE%" (
     exit /b 1
 )
 
-call "%PREMAKE%" --file="%PREMAKE_FILE%" vs2026
+call "%PREMAKE%" --file="%PREMAKE_FILE%" %SANDBOX_FLAG% vs2026
 exit /b %ERRORLEVEL%

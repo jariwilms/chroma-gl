@@ -5,10 +5,9 @@ project "rgfw"
 	staticruntime "On"
 	warnings      "Off"
 	
-	includedirs {
-		"include", 
-	}
-	files {
-		"include/rgfw/rgfw.h", 
-		"include/rgfw/rgfw.c", 
-	}
+	files { "include/rgfw/rgfw.h", "include/rgfw/rgfw.c" }
+
+	usage "PUBLIC"
+		includedirs { "include" }
+	usage "INTERFACE"
+		links { "rgfw" }

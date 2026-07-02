@@ -1,8 +1,18 @@
+newoption {
+    trigger     = "sandbox",
+    description = "Build the sandbox project"
+}
+
 workspace "chroma-gl"
     architecture   "x86_64"
     configurations { "Debug", "Release" }
-    startproject   "chroma-gl"
-
+	
+	if _OPTIONS["sandbox"] then
+        startproject "sandbox"
+    else
+        startproject "chroma-gl"
+    end
+	
     filter "configurations:Debug"
         runtime   "Debug"
         symbols   "On"
@@ -15,22 +25,6 @@ workspace "chroma-gl"
         objdir    "%{wks.location}/build/release/%{prj.name}"
     filter {}
 
--- Visual Studio: Bugfix for conflicting C++ module names
--- Credit: larioteo — https://github.com/premake/premake-core/issues/2177
-require("vstudio")
-premake.override(premake.vstudio.vc2010.elements, "clCompile", function(base, prj)
-    local m     = premake.vstudio.vc2010
-    local calls = base(prj)
-    if premake.project.iscpp(prj) then
-        table.insertafter(calls, premake.xmlDeclaration, function()
-            premake.w('<ModuleDependenciesFile>$(IntDir)\\%%(RelativeDir)</ModuleDependenciesFile>')
-            premake.w('<ModuleOutputFile>$(IntDir)\\%%(RelativeDir)</ModuleOutputFile>')
-            premake.w('<ObjectFileName>$(IntDir)\\%%(RelativeDir)</ObjectFileName>')
-        end)
-    end
-    return calls
-end)
-
 group "vendor"
     include "vendor/glad"
     include "vendor/glm"
@@ -38,41 +32,26 @@ group "vendor"
     include "vendor/stb"
 group ""
 
-project "chroma-gl"
-    location         "chroma-gl"
-    language         "C++"
-    cppdialect       "C++23"
-    kind             "StaticLib"
-    staticruntime    "On"
-    enablemodules    "On"
-    buildstlmodules  "On"
-    warnings         "Extra"
-    externalwarnings "Off"
+include "chroma-gl"
+
+if _OPTIONS["sandbox"] then
+    include "sandbox"
+end
+
+if not premake._moduleOutputOverrideApplied then
+    premake._moduleOutputOverrideApplied = true
 	
-    defines {
-        "RGFW_IMPLEMENTATION",
-        "RGFW_OPENGL",
-    }
-    includedirs {
-        "chroma-gl/source",
-        "vendor/glad/include",
-        "vendor/glm/include",
-        "vendor/rgfw/include",
-        "vendor/stb/include",
-    }
-    files {
-        "chroma-gl/**.ixx",
-    }
-    links {
-        "glad",
-        "glm",
-        "rgfw",
-        "stb",
-        "opengl32.lib",
-    }
-	
-    filter "configurations:Debug"
-        defines { "BUILD_CONFIGURATION=debug" }
-    filter "configurations:Release"
-        defines { "BUILD_CONFIGURATION=release" }
-    filter {}
+	require("vstudio")
+	premake.override(premake.vstudio.vc2010.elements, "clCompile", function(base, prj)
+		local m     = premake.vstudio.vc2010
+		local calls = base(prj)
+		if premake.project.iscpp(prj) then
+			table.insertafter(calls, premake.xmlDeclaration, function()
+				premake.w('<ModuleDependenciesFile>$(IntDir)\\%%(RelativeDir)</ModuleDependenciesFile>')
+				premake.w('<ModuleOutputFile>$(IntDir)\\%%(RelativeDir)</ModuleOutputFile>')
+				premake.w('<ObjectFileName>$(IntDir)\\%%(RelativeDir)</ObjectFileName>')
+			end)
+		end
+		return calls
+	end)
+end
