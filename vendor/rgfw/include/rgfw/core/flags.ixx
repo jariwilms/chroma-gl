@@ -100,5 +100,5 @@ export namespace rgfw
 
 
 
-    constexpr auto operator|(rgfw::window_flags_e left, rgfw::window_flags_e right) noexcept -> rgfw::window_flags_e { return static_cast<rgfw::window_flags_e>(std::to_underlying(left) | std::to_underlying(right)); }
+    auto constexpr operator|(rgfw::window_flags_e left, rgfw::window_flags_e right) noexcept -> rgfw::window_flags_e { return static_cast<rgfw::window_flags_e>(std::to_underlying(left) | std::to_underlying(right)); }
 }

@@ -8,12 +8,11 @@ project "chroma-gl"
 	warnings         "Extra"
 	externalwarnings "Off"
 
-	uses  { "glad", "glm", "rgfw", "stb" }
-	files { "source/**.ixx", "vendor/**.ixx" }
+	files { "source/**.ixx" }
 
 	usage "PUBLIC"
-		defines     { "RGFW_OPENGL" }
-		includedirs { "source", "vendor" }
+		uses        { "glad", "glm", "rgfw", "stb" }
+		includedirs { "source" }
 		links       { "opengl32.lib" }
 
 		filter "configurations:Debug"
