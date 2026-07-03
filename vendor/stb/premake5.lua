@@ -7,9 +7,9 @@ project "stb"
 	warnings      "Off"
 	
 	defines { "STB_IMAGE_IMPLEMENTATION", "STB_IMAGE_READ_IMPLEMENTATION", "STB_IMAGE_WRITE_IMPLEMENTATION" }
-	files   { "include/stb/stb_image.h", "include/stb/stb_image_write.h", "include/stb/module/**.ixx" }
+	files   { "include/stb/stb_image.h", "include/stb/stb_image_write.h", "module/stb/**.ixx" }
 
 	usage "PUBLIC"
-		includedirs { "include" }
+		includedirs { "include", "module" }
 	usage "INTERFACE"
 		links { "stb" }

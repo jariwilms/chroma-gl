@@ -7,11 +7,11 @@ project "rgfw"
 	warnings      "Off"
 	
 	defines { "RGFW_IMPLEMENTATION" }
-	files   { "include/rgfw/**.h", "include/rgfw/module/**.ixx" }
+	files   { "include/rgfw/**.h", "module/rgfw/**.ixx" }
 
 	usage "PUBLIC"
 		uses        { "glad", "glm" }
 		defines     { "RGFW_OPENGL" }
-		includedirs { "include" }
+		includedirs { "include", "module" }
 	usage "INTERFACE"
 		links { "rgfw" }

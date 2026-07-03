@@ -6,13 +6,13 @@ project "glad"
 	enablemodules "On"
 	warnings      "Off"
 	
-	files { "include/glad/**.h", "include/glad/**.c", "include/glad/module/**.ixx" }
+	files { "include/glad/**.h", "include/glad/**.c", "module/glad/**.ixx" }
 	
 	filter "files:**.c"
         compileas "C"
     filter {}
 	
 	usage "PUBLIC"
-		includedirs { "include" }
+		includedirs { "include", "module" }
 	usage "INTERFACE"
 		links { "glad" }
