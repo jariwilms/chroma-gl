@@ -6,12 +6,19 @@ import :types;
 
 export namespace rgfw
 {
+    enum class initialization_flag_e : RGFW_initFlags
+    {
+        opengl = RGFW_initOpenGL, 
+        vulkan = RGFW_initVulkan, 
+        direcx = RGFW_initX11   , 
+    };
     enum class event_type_e : ::RGFW_eventType
     {
+        close                  = ::RGFW_windowClose        , 
         data_drag              = ::RGFW_dataDrag           , 
         data_drop              = ::RGFW_dataDrop           , 
-        focus_in               = ::RGFW_focusIn            , 
-        focus_out              = ::RGFW_focusOut           , 
+        focus_in               = ::RGFW_windowFocusIn      , 
+        focus_out              = ::RGFW_windowFocusOut     , 
         key_pressed            = ::RGFW_keyPressed         , 
         key_released           = ::RGFW_keyReleased        , 
         mouse_button_pressed   = ::RGFW_mouseButtonPressed , 
@@ -21,7 +28,6 @@ export namespace rgfw
         mouse_position_changed = ::RGFW_mousePosChanged    , 
         mouse_scroll           = ::RGFW_mouseScroll        , 
         none                   = ::RGFW_eventNone          , 
-        quit                   = ::RGFW_quit               , 
         scale_updated          = ::RGFW_scaleUpdated       , 
         window_maximized       = ::RGFW_windowMaximized    , 
         window_minimized       = ::RGFW_windowMinimized    , 
@@ -69,10 +75,11 @@ export namespace rgfw
     };
     enum class event_flag_e : ::RGFW_eventFlag
     {
+        close                  = ::RGFW_windowCloseFlag        , 
         data_drag              = ::RGFW_dataDragFlag           , 
         data_drop              = ::RGFW_dataDropFlag           , 
-        focus_in               = ::RGFW_focusInFlag            , 
-        focus_out              = ::RGFW_focusOutFlag           , 
+        focus_in               = ::RGFW_windowFocusInFlag      , 
+        focus_out              = ::RGFW_windowFocusOutFlag     , 
         key_pressed            = ::RGFW_keyPressedFlag         , 
         key_released           = ::RGFW_keyReleasedFlag        , 
         mouse_button_pressed   = ::RGFW_mouseButtonPressedFlag , 
@@ -81,18 +88,17 @@ export namespace rgfw
         mouse_leave            = ::RGFW_mouseLeaveFlag         , 
         mouse_position_changed = ::RGFW_mousePosChangedFlag    , 
         mouse_scroll           = ::RGFW_mouseScrollFlag        , 
-        quit                   = ::RGFW_quitFlag               , 
         scale_updated          = ::RGFW_scaleUpdatedFlag       , 
-        window_moved           = ::RGFW_windowMovedFlag        , 
         window_maximized       = ::RGFW_windowMaximizedFlag    , 
         window_minimized       = ::RGFW_windowMinimizedFlag    , 
+        window_moved           = ::RGFW_windowMovedFlag        , 
         window_refresh         = ::RGFW_windowRefreshFlag      , 
         window_resized         = ::RGFW_windowResizedFlag      , 
         window_restored        = ::RGFW_windowRestoredFlag     , 
 
         all_events             = ::RGFW_allEventFlags          , 
-        data_drop_events       = ::RGFW_dataDropEventsFlag     , 
-        focus_events           = ::RGFW_focusEventsFlag        , 
+        data_drop_events       = ::RGFW_dataDragDropEventsFlag , 
+        focus_events           = ::RGFW_windowFocusEventsFlag  , 
         key_events             = ::RGFW_keyEventsFlag          , 
         mouse_events           = ::RGFW_mouseEventsFlag        , 
         window_events          = ::RGFW_windowEventsFlag       , 
@@ -100,5 +106,5 @@ export namespace rgfw
 
 
 
-    constexpr auto operator|(rgfw::window_flags_e left, rgfw::window_flags_e right) noexcept -> rgfw::window_flags_e { return static_cast<rgfw::window_flags_e>(std::to_underlying(left) | std::to_underlying(right)); }
+    auto constexpr operator|(rgfw::window_flags_e left, rgfw::window_flags_e right) noexcept -> rgfw::window_flags_e { return static_cast<rgfw::window_flags_e>(std::to_underlying(left) | std::to_underlying(right)); }
 }

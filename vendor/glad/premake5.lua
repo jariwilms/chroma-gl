@@ -1,11 +1,16 @@
 project "glad"
-	language      "C"
-	cdialect      "C23"
+	language      "C++"
+	cppdialect    "C++23"
 	kind          "StaticLib"
 	staticruntime "On"
+	enablemodules "On"
 	warnings      "Off"
 	
-	files { "include/glad/gl.h", "source/gl.c" }
+	files { "include/glad/**.h", "include/glad/**.c", "include/glad/module/**.ixx" }
+	
+	filter "files:**.c"
+        compileas "C"
+    filter {}
 	
 	usage "PUBLIC"
 		includedirs { "include" }

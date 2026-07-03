@@ -1,14 +1,17 @@
 project "rgfw"
-	language      "C"
-	cdialect      "C23"
+	language      "C++"
+	cppdialect    "C++23"
 	kind          "StaticLib"
 	staticruntime "On"
+	enablemodules "On"
 	warnings      "Off"
 	
-	files { "include/rgfw/rgfw.h", "include/rgfw/rgfw.c" }
+	defines { "RGFW_IMPLEMENTATION" }
+	files   { "include/rgfw/**.h", "include/rgfw/module/**.ixx" }
 
 	usage "PUBLIC"
-		defines     { "RGFW_IMPLEMENTATION" }
+		uses        { "glad", "glm" }
+		defines     { "RGFW_OPENGL" }
 		includedirs { "include" }
 	usage "INTERFACE"
 		links { "rgfw" }

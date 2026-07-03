@@ -9,5 +9,5 @@ project "sandbox"
     externalwarnings "Off"
 	
 	uses        { "chroma-gl" }
-    includedirs { "%{wks.location}/sandbox/source" }
+    includedirs { "source" }
     files       { "source/**.hpp", "source/**.cpp", "source/**.ixx" }

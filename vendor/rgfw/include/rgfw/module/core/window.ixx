@@ -45,6 +45,8 @@ export namespace rgfw
         window(std::string const& title, rgfw::vector_2u const& dimensions, display_mode_e display_mode = display_mode_e::windowed, rgfw::bool_t show = rgfw::true_, rgfw::bool_t is_debug_context = rgfw::false_)
             : window_{}, input_{}, title_{ title }, dimensions_{ dimensions }, is_visible_{ show }, display_mode_{ display_mode }
         {
+            rgfw::initialize(title, rgfw::initialization_flag_e::opengl);
+
             auto const is_visible_flag  = is_visible_ ? rgfw::window_flags_e{} : rgfw::window_flags_e::hide;
             auto const window_flags     = 
                 rgfw::window_flags_e::center          | 
@@ -86,6 +88,7 @@ export namespace rgfw
                 switch (event.type)
                 {
                     using enum rgfw::event_type_e;
+                    case close                 : break;
                     case data_drag             : 
                     {
                         auto const& data_drag_event = event.data_drag;
@@ -117,7 +120,6 @@ export namespace rgfw
                     case mouse_position_changed: input_->process(event);
                     case mouse_scroll          : input_->process(event);
                     case none                  : break;
-                    case quit                  : break;
                     case scale_updated         : break;
                     case window_maximized      : 
                     {

@@ -8,6 +8,10 @@ import :types;
 
 export namespace rgfw
 {
+    auto initialize(std::string const& class_name, rgfw::initialization_flag_e initialization_flag)
+    {
+        ::RGFW_init(class_name.c_str(), std::to_underlying(initialization_flag));
+    }
     auto create_window          (std::string const& title, rgfw::vector_2u offset, rgfw::vector_2u position, rgfw::window_flags_e flags) -> rgfw::window_t*
     {
         return ::RGFW_createWindow(
