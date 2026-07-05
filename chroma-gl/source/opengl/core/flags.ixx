@@ -835,7 +835,7 @@ export namespace gl
         texture_cube_map             = GL_TEXTURE_CUBE_MAP            , 
         texture_cube_map_array       = GL_TEXTURE_CUBE_MAP_ARRAY      , 
         texture_rectangle            = GL_TEXTURE_RECTANGLE           , 
-        renderbuffer                 = GL_RENDERBUFFER                , 
+        render_buffer                = GL_RENDERBUFFER                , 
     };
     enum class internal_format_parameter_e : gl::enum_t
     {
@@ -1803,118 +1803,118 @@ export namespace gl
     };
     enum class uniform_type_e : gl::enum_t
     {
-        bool_                            = GL_BOOL                                     , 
+        bool_                             = GL_BOOL                                     , 
         
-        float32                          = GL_FLOAT                                    , 
-        float64                          = GL_DOUBLE                                   , 
+        float32                           = GL_FLOAT                                    , 
+        float64                           = GL_DOUBLE                                   , 
         
-        image_buffer                     = GL_IMAGE_BUFFER                             , 
-        image_cube                       = GL_IMAGE_CUBE                               , 
-        image1d                          = GL_IMAGE_1D                                 , 
-        image1d_array                    = GL_IMAGE_1D_ARRAY                           , 
-        image2d                          = GL_IMAGE_2D                                 , 
-        image2d_array                    = GL_IMAGE_2D_ARRAY                           , 
-        image2d_multisample              = GL_IMAGE_2D_MULTISAMPLE                     , 
-        image2d_multisample_array        = GL_IMAGE_2D_MULTISAMPLE_ARRAY               , 
-        image2d_rectangle                = GL_IMAGE_2D_RECT                            , 
-        image3d                          = GL_IMAGE_3D                                 , 
+        image_buffer                      = GL_IMAGE_BUFFER                             , 
+        image_cube                        = GL_IMAGE_CUBE                               , 
+        image_1d                          = GL_IMAGE_1D                                 , 
+        image_1d_array                    = GL_IMAGE_1D_ARRAY                           , 
+        image_2d                          = GL_IMAGE_2D                                 , 
+        image_2d_array                    = GL_IMAGE_2D_ARRAY                           , 
+        image_2d_multisample              = GL_IMAGE_2D_MULTISAMPLE                     , 
+        image_2d_multisample_array        = GL_IMAGE_2D_MULTISAMPLE_ARRAY               , 
+        image_2d_rectangle                = GL_IMAGE_2D_RECT                            , 
+        image_3d                          = GL_IMAGE_3D                                 , 
         
-        int_image_buffer                 = GL_INT_IMAGE_BUFFER                         , 
-        int_image_cube                   = GL_INT_IMAGE_CUBE                           , 
-        int_image1d                      = GL_INT_IMAGE_1D                             , 
-        int_image1d_array                = GL_INT_IMAGE_1D_ARRAY                       , 
-        int_image2d                      = GL_INT_IMAGE_2D                             , 
-        int_image2d_array                = GL_INT_IMAGE_2D_ARRAY                       , 
-        int_image2d_multisample          = GL_INT_IMAGE_2D_MULTISAMPLE                 , 
-        int_image2d_multisample_array    = GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY           , 
-        int_image2d_rectangle            = GL_INT_IMAGE_2D_RECT                        , 
-        int_image3d                      = GL_INT_IMAGE_3D                             , 
-        int_sampler_buffer               = GL_INT_SAMPLER_BUFFER                       , 
-        int_sampler_cube                 = GL_INT_SAMPLER_CUBE                         , 
-        int_sampler1d                    = GL_INT_SAMPLER_1D                           , 
-        int_sampler1d_array              = GL_INT_SAMPLER_1D_ARRAY                     , 
-        int_sampler2d                    = GL_INT_SAMPLER_2D                           , 
-        int_sampler2d_array              = GL_INT_SAMPLER_2D_ARRAY                     , 
-        int_sampler2d_multisample        = GL_INT_SAMPLER_2D_MULTISAMPLE               , 
-        int_sampler2d_multisample_array  = GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY         , 
-        int_sampler2d_rectangle          = GL_INT_SAMPLER_2D_RECT                      , 
-        int_sampler3d                    = GL_INT_SAMPLER_3D                           , 
-        int32                            = GL_INT                                      , 
+        int_image_buffer                  = GL_INT_IMAGE_BUFFER                         , 
+        int_image_cube                    = GL_INT_IMAGE_CUBE                           , 
+        int_image_1d                      = GL_INT_IMAGE_1D                             , 
+        int_image_1d_array                = GL_INT_IMAGE_1D_ARRAY                       , 
+        int_image_2d                      = GL_INT_IMAGE_2D                             , 
+        int_image_2d_array                = GL_INT_IMAGE_2D_ARRAY                       , 
+        int_image_2d_multisample          = GL_INT_IMAGE_2D_MULTISAMPLE                 , 
+        int_image_2d_multisample_array    = GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY           , 
+        int_image_2d_rectangle            = GL_INT_IMAGE_2D_RECT                        , 
+        int_image_3d                      = GL_INT_IMAGE_3D                             , 
+        int_sampler_buffer                = GL_INT_SAMPLER_BUFFER                       , 
+        int_sampler_cube                  = GL_INT_SAMPLER_CUBE                         , 
+        int_sampler_1d                    = GL_INT_SAMPLER_1D                           , 
+        int_sampler_1d_array              = GL_INT_SAMPLER_1D_ARRAY                     , 
+        int_sampler_2d                    = GL_INT_SAMPLER_2D                           , 
+        int_sampler_2d_array              = GL_INT_SAMPLER_2D_ARRAY                     , 
+        int_sampler_2d_multisample        = GL_INT_SAMPLER_2D_MULTISAMPLE               , 
+        int_sampler_2d_multisample_array  = GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY         , 
+        int_sampler_2d_rectangle          = GL_INT_SAMPLER_2D_RECT                      , 
+        int_sampler_3d                    = GL_INT_SAMPLER_3D                           , 
+        int32                             = GL_INT                                      , 
         
-        matrix2d                         = GL_DOUBLE_MAT2                              , 
-        matrix2f                         = GL_FLOAT_MAT2                               , 
-        matrix2x3d                       = GL_DOUBLE_MAT2x3                            , 
-        matrix2x3f                       = GL_FLOAT_MAT2x3                             , 
-        matrix2x4d                       = GL_DOUBLE_MAT2x4                            , 
-        matrix2x4f                       = GL_FLOAT_MAT2x4                             , 
-        matrix3d                         = GL_DOUBLE_MAT3                              , 
-        matrix3f                         = GL_FLOAT_MAT3                               , 
-        matrix3x2d                       = GL_DOUBLE_MAT3x2                            , 
-        matrix3x2f                       = GL_FLOAT_MAT3x2                             , 
-        matrix3x4d                       = GL_DOUBLE_MAT3x4                            , 
-        matrix3x4f                       = GL_FLOAT_MAT3x4                             , 
-        matrix4d                         = GL_DOUBLE_MAT4                              , 
-        matrix4f                         = GL_FLOAT_MAT4                               , 
-        matrix4x2d                       = GL_DOUBLE_MAT4x2                            , 
-        matrix4x2f                       = GL_FLOAT_MAT4x2                             , 
-        matrix4x3d                       = GL_DOUBLE_MAT4x3                            , 
-        matrix4x3f                       = GL_FLOAT_MAT4x3                             , 
+        matrix_2d                         = GL_DOUBLE_MAT2                              , 
+        matrix_2f                         = GL_FLOAT_MAT2                               , 
+        matrix_2x3d                       = GL_DOUBLE_MAT2x3                            , 
+        matrix_2x3f                       = GL_FLOAT_MAT2x3                             , 
+        matrix_2x4d                       = GL_DOUBLE_MAT2x4                            , 
+        matrix_2x4f                       = GL_FLOAT_MAT2x4                             , 
+        matrix_3d                         = GL_DOUBLE_MAT3                              , 
+        matrix_3f                         = GL_FLOAT_MAT3                               , 
+        matrix_3x2d                       = GL_DOUBLE_MAT3x2                            , 
+        matrix_3x2f                       = GL_FLOAT_MAT3x2                             , 
+        matrix_3x4d                       = GL_DOUBLE_MAT3x4                            , 
+        matrix_3x4f                       = GL_FLOAT_MAT3x4                             , 
+        matrix_4d                         = GL_DOUBLE_MAT4                              , 
+        matrix_4f                         = GL_FLOAT_MAT4                               , 
+        matrix_4x2d                       = GL_DOUBLE_MAT4x2                            , 
+        matrix_4x2f                       = GL_FLOAT_MAT4x2                             , 
+        matrix_4x3d                       = GL_DOUBLE_MAT4x3                            , 
+        matrix_4x3f                       = GL_FLOAT_MAT4x3                             , 
         
-        sampler_buffer                   = GL_SAMPLER_BUFFER                           , 
-        sampler_cube                     = GL_SAMPLER_CUBE                             , 
-        sampler_cube_shadow              = GL_SAMPLER_CUBE_SHADOW                      , 
-        sampler1d                        = GL_SAMPLER_1D                               , 
-        sampler1d_array                  = GL_SAMPLER_1D_ARRAY                         , 
-        sampler1d_array_shadow           = GL_SAMPLER_1D_ARRAY_SHADOW                  , 
-        sampler1d_shadow                 = GL_SAMPLER_1D_SHADOW                        , 
-        sampler2d                        = GL_SAMPLER_2D                               , 
-        sampler2d_array                  = GL_SAMPLER_2D_ARRAY                         , 
-        sampler2d_array_shadow           = GL_SAMPLER_2D_ARRAY_SHADOW                  , 
-        sampler2d_multisample            = GL_SAMPLER_2D_MULTISAMPLE                   , 
-        sampler2d_multisample_array      = GL_SAMPLER_2D_MULTISAMPLE_ARRAY             , 
-        sampler2d_rectangle              = GL_SAMPLER_2D_RECT                          , 
-        sampler2d_rectangle_shadow       = GL_SAMPLER_2D_RECT_SHADOW                   , 
-        sampler2d_shadow                 = GL_SAMPLER_2D_SHADOW                        , 
-        sampler3d                        = GL_SAMPLER_3D                               , 
+        sampler_buffer                    = GL_SAMPLER_BUFFER                           , 
+        sampler_cube                      = GL_SAMPLER_CUBE                             , 
+        sampler_cube_shadow               = GL_SAMPLER_CUBE_SHADOW                      , 
+        sampler_1d                        = GL_SAMPLER_1D                               , 
+        sampler_1d_array                  = GL_SAMPLER_1D_ARRAY                         , 
+        sampler_1d_array_shadow           = GL_SAMPLER_1D_ARRAY_SHADOW                  , 
+        sampler_1d_shadow                 = GL_SAMPLER_1D_SHADOW                        , 
+        sampler_2d                        = GL_SAMPLER_2D                               , 
+        sampler_2d_array                  = GL_SAMPLER_2D_ARRAY                         , 
+        sampler_2d_array_shadow           = GL_SAMPLER_2D_ARRAY_SHADOW                  , 
+        sampler_2d_multisample            = GL_SAMPLER_2D_MULTISAMPLE                   , 
+        sampler_2d_multisample_array      = GL_SAMPLER_2D_MULTISAMPLE_ARRAY             , 
+        sampler_2d_rectangle              = GL_SAMPLER_2D_RECT                          , 
+        sampler_2d_rectangle_shadow       = GL_SAMPLER_2D_RECT_SHADOW                   , 
+        sampler_2d_shadow                 = GL_SAMPLER_2D_SHADOW                        , 
+        sampler_3d                        = GL_SAMPLER_3D                               , 
         
-        uint_atomic_counter              = GL_UNSIGNED_INT_ATOMIC_COUNTER              , 
-        uint_image_buffer                = GL_UNSIGNED_INT_IMAGE_BUFFER                , 
-        uint_image_cube                  = GL_UNSIGNED_INT_IMAGE_CUBE                  , 
-        uint_image1d                     = GL_UNSIGNED_INT_IMAGE_1D                    , 
-        uint_image1d_array               = GL_UNSIGNED_INT_IMAGE_1D_ARRAY              , 
-        uint_image2d                     = GL_UNSIGNED_INT_IMAGE_2D                    , 
-        uint_image2d_array               = GL_UNSIGNED_INT_IMAGE_2D_ARRAY              , 
-        uint_image2d_multisample         = GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE        , 
-        uint_image2d_multisample_array   = GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY  , 
-        uint_image2d_rectangle           = GL_UNSIGNED_INT_IMAGE_2D_RECT               , 
-        uint_image3d                     = GL_UNSIGNED_INT_IMAGE_3D                    , 
-        uint_sampler_buffer              = GL_UNSIGNED_INT_SAMPLER_BUFFER              , 
-        uint_sampler_cube                = GL_UNSIGNED_INT_SAMPLER_CUBE                , 
-        uint_sampler1d                   = GL_UNSIGNED_INT_SAMPLER_1D                  , 
-        uint_sampler1d_array             = GL_UNSIGNED_INT_SAMPLER_1D_ARRAY            , 
-        uint_sampler2d                   = GL_UNSIGNED_INT_SAMPLER_2D                  , 
-        uint_sampler2d_array             = GL_UNSIGNED_INT_SAMPLER_2D_ARRAY            , 
-        uint_sampler2d_multisample       = GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE      , 
-        uint_sampler2d_multisample_array = GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY, 
-        uint_sampler2d_rectangle         = GL_UNSIGNED_INT_SAMPLER_2D_RECT             , 
-        uint_sampler3d                   = GL_UNSIGNED_INT_SAMPLER_3D                  , 
-        uint32                           = GL_UNSIGNED_INT                             , 
+        uint_atomic_counter               = GL_UNSIGNED_INT_ATOMIC_COUNTER              , 
+        uint_image_buffer                 = GL_UNSIGNED_INT_IMAGE_BUFFER                , 
+        uint_image_cube                   = GL_UNSIGNED_INT_IMAGE_CUBE                  , 
+        uint_image_1d                     = GL_UNSIGNED_INT_IMAGE_1D                    , 
+        uint_image_1d_array               = GL_UNSIGNED_INT_IMAGE_1D_ARRAY              , 
+        uint_image_2d                     = GL_UNSIGNED_INT_IMAGE_2D                    , 
+        uint_image_2d_array               = GL_UNSIGNED_INT_IMAGE_2D_ARRAY              , 
+        uint_image_2d_multisample         = GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE        , 
+        uint_image_2d_multisample_array   = GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY  , 
+        uint_image_2d_rectangle           = GL_UNSIGNED_INT_IMAGE_2D_RECT               , 
+        uint_image_3d                     = GL_UNSIGNED_INT_IMAGE_3D                    , 
+        uint_sampler_buffer               = GL_UNSIGNED_INT_SAMPLER_BUFFER              , 
+        uint_sampler_cube                 = GL_UNSIGNED_INT_SAMPLER_CUBE                , 
+        uint_sampler_1d                   = GL_UNSIGNED_INT_SAMPLER_1D                  , 
+        uint_sampler_1d_array             = GL_UNSIGNED_INT_SAMPLER_1D_ARRAY            , 
+        uint_sampler_2d                   = GL_UNSIGNED_INT_SAMPLER_2D                  , 
+        uint_sampler_2d_array             = GL_UNSIGNED_INT_SAMPLER_2D_ARRAY            , 
+        uint_sampler_2d_multisample       = GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE      , 
+        uint_sampler_2d_multisample_array = GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY, 
+        uint_sampler_2d_rectangle         = GL_UNSIGNED_INT_SAMPLER_2D_RECT             , 
+        uint_sampler_3d                   = GL_UNSIGNED_INT_SAMPLER_3D                  , 
+        uint32                            = GL_UNSIGNED_INT                             , 
         
-        vector2b                         = GL_BOOL_VEC2                                , 
-        vector2d                         = GL_DOUBLE_VEC2                              , 
-        vector2f                         = GL_FLOAT_VEC2                               , 
-        vector2i                         = GL_INT_VEC2                                 , 
-        vector2u                         = GL_UNSIGNED_INT_VEC2                        , 
-        vector3b                         = GL_BOOL_VEC3                                , 
-        vector3d                         = GL_DOUBLE_VEC3                              , 
-        vector3f                         = GL_FLOAT_VEC3                               , 
-        vector3i                         = GL_INT_VEC3                                 , 
-        vector3u                         = GL_UNSIGNED_INT_VEC3                        , 
-        vector4b                         = GL_BOOL_VEC4                                , 
-        vector4d                         = GL_DOUBLE_VEC4                              , 
-        vector4f                         = GL_FLOAT_VEC4                               , 
-        vector4i                         = GL_INT_VEC4                                 , 
-        vector4u                         = GL_UNSIGNED_INT_VEC4                        , 
+        vector_2b                         = GL_BOOL_VEC2                                , 
+        vector_2d                         = GL_DOUBLE_VEC2                              , 
+        vector_2f                         = GL_FLOAT_VEC2                               , 
+        vector_2i                         = GL_INT_VEC2                                 , 
+        vector_2u                         = GL_UNSIGNED_INT_VEC2                        , 
+        vector_3b                         = GL_BOOL_VEC3                                , 
+        vector_3d                         = GL_DOUBLE_VEC3                              , 
+        vector_3f                         = GL_FLOAT_VEC3                               , 
+        vector_3i                         = GL_INT_VEC3                                 , 
+        vector_3u                         = GL_UNSIGNED_INT_VEC3                        , 
+        vector_4b                         = GL_BOOL_VEC4                                , 
+        vector_4d                         = GL_DOUBLE_VEC4                              , 
+        vector_4f                         = GL_FLOAT_VEC4                               , 
+        vector_4i                         = GL_INT_VEC4                                 , 
+        vector_4u                         = GL_UNSIGNED_INT_VEC4                        , 
     };
     enum class uniform_block_info_e : gl::enum_t
     {
@@ -2009,9 +2009,9 @@ export namespace gl
         all          = arithmetic  | bitwise                                , 
     };
     
-    auto constexpr operator&         (gl::flag_operation_e alpha    , gl::flag_operation_e beta ) -> gl::flag_operation_e { return std::bit_cast<gl::flag_operation_e>(std::to_underlying(alpha) & std::to_underlying(beta)); }
-    auto constexpr operator|         (gl::flag_operation_e alpha    , gl::flag_operation_e beta ) -> gl::flag_operation_e { return std::bit_cast<gl::flag_operation_e>(std::to_underlying(alpha) | std::to_underlying(beta)); }
-    auto constexpr supports_operation(gl::flag_operation_e operation, gl::flag_operation_e check) -> gl::bool_t           { return (operation & check) == check; }
+    auto constexpr operator&         (gl::flag_operation_e first    , gl::flag_operation_e second) -> gl::flag_operation_e { return std::bit_cast<gl::flag_operation_e>(std::to_underlying(first) & std::to_underlying(second)); }
+    auto constexpr operator|         (gl::flag_operation_e first    , gl::flag_operation_e second) -> gl::flag_operation_e { return std::bit_cast<gl::flag_operation_e>(std::to_underlying(first) | std::to_underlying(second)); }
+    auto constexpr supports_operation(gl::flag_operation_e operation, gl::flag_operation_e check ) -> gl::bool_t           { return (operation & check) == check; }
 
     template<typename enum_t> struct enum_operation { static auto constexpr value = gl::flag_operation_e::none; };
     template<typename enum_t> auto constexpr enum_operation_v = gl::enum_operation<enum_t>::value;
@@ -2024,25 +2024,27 @@ export namespace gl
     template<typename enum_t> concept has_bitwise_not = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::bitwise_not);
     template<typename enum_t> concept has_compare     = std::is_enum_v<enum_t> && gl::supports_operation(gl::enum_operation_v<enum_t>, gl::flag_operation_e::compare    );
 
-    template<gl::has_addition    enum_t                          > auto constexpr operator+ (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) +  std::to_underlying(beta)); }
-    template<gl::has_addition    enum_t, std::integral integral_t> auto constexpr operator+ (enum_t  alpha, integral_t beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) +                     beta ); }
-    template<gl::has_subtraction enum_t                          > auto constexpr operator- (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) -  std::to_underlying(beta)); }
-    template<gl::has_subtraction enum_t, std::integral integral_t> auto constexpr operator- (enum_t  alpha, integral_t beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) -                     beta ); }
-    template<gl::has_bitwise_and enum_t                          > auto constexpr operator& (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) &  std::to_underlying(beta)); }
-    template<gl::has_bitwise_or  enum_t                          > auto constexpr operator| (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) |  std::to_underlying(beta)); }
-    template<gl::has_bitwise_xor enum_t                          > auto constexpr operator^ (enum_t  alpha, enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(alpha) ^  std::to_underlying(beta)); }
-    template<gl::has_bitwise_not enum_t                          > auto constexpr operator~ (               enum_t     beta) noexcept -> enum_t     { return static_cast<enum_t>(                          ~  std::to_underlying(beta)); }          
-    template<gl::has_addition    enum_t                          > auto constexpr operator+=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha + beta; }
-    template<gl::has_addition    enum_t, std::integral integral_t> auto constexpr operator+=(enum_t& alpha, integral_t beta) noexcept -> enum_t&    { return alpha = alpha + beta; }
-    template<gl::has_subtraction enum_t                          > auto constexpr operator-=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha - beta; }
-    template<gl::has_subtraction enum_t, std::integral integral_t> auto constexpr operator-=(enum_t& alpha, integral_t beta) noexcept -> enum_t&    { return alpha = alpha - beta; }
-    template<gl::has_bitwise_and enum_t                          > auto constexpr operator&=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha & beta; }
-    template<gl::has_bitwise_or  enum_t                          > auto constexpr operator|=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha | beta; }
-    template<gl::has_bitwise_xor enum_t                          > auto constexpr operator^=(enum_t& alpha, enum_t     beta) noexcept -> enum_t&    { return alpha = alpha ^ beta; }
-    template<gl::has_compare     enum_t                          > auto constexpr operator< (enum_t  alpha, enum_t     beta) noexcept -> gl::bool_t { return std::to_underlying(alpha) <  std::to_underlying(beta) ; }
-    template<gl::has_compare     enum_t                          > auto constexpr operator> (enum_t  alpha, enum_t     beta) noexcept -> gl::bool_t { return std::to_underlying(alpha) >  std::to_underlying(beta) ; }
-    template<gl::has_compare     enum_t                          > auto constexpr operator<=(enum_t  alpha, enum_t     beta) noexcept -> gl::bool_t { return std::to_underlying(alpha) <= std::to_underlying(beta) ; }
-    template<gl::has_compare     enum_t                          > auto constexpr operator>=(enum_t  alpha, enum_t     beta) noexcept -> gl::bool_t { return std::to_underlying(alpha) >= std::to_underlying(beta) ; }
+    template<gl::has_addition    enum_t                          > auto constexpr operator+ (enum_t  first, enum_t     second) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(first) +  std::to_underlying(second)); }
+    template<gl::has_addition    enum_t, std::integral integral_t> auto constexpr operator+ (enum_t  first, integral_t second) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(first) +                     second ); }
+    template<gl::has_subtraction enum_t                          > auto constexpr operator- (enum_t  first, enum_t     second) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(first) -  std::to_underlying(second)); }
+    template<gl::has_subtraction enum_t, std::integral integral_t> auto constexpr operator- (enum_t  first, integral_t second) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(first) -                     second ); }
+    template<gl::has_bitwise_and enum_t                          > auto constexpr operator& (enum_t  first, enum_t     second) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(first) &  std::to_underlying(second)); }
+    template<gl::has_bitwise_or  enum_t                          > auto constexpr operator| (enum_t  first, enum_t     second) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(first) |  std::to_underlying(second)); }
+    template<gl::has_bitwise_xor enum_t                          > auto constexpr operator^ (enum_t  first, enum_t     second) noexcept -> enum_t     { return static_cast<enum_t>(std::to_underlying(first) ^  std::to_underlying(second)); }
+    template<gl::has_bitwise_not enum_t                          > auto constexpr operator~ (               enum_t     second) noexcept -> enum_t     { return static_cast<enum_t>(                          ~  std::to_underlying(second)); }          
+    template<gl::has_addition    enum_t                          > auto constexpr operator+=(enum_t& first, enum_t     second) noexcept -> enum_t&    { return first = first + second; }
+    template<gl::has_addition    enum_t, std::integral integral_t> auto constexpr operator+=(enum_t& first, integral_t second) noexcept -> enum_t&    { return first = first + second; }
+    template<gl::has_subtraction enum_t                          > auto constexpr operator-=(enum_t& first, enum_t     second) noexcept -> enum_t&    { return first = first - second; }
+    template<gl::has_subtraction enum_t, std::integral integral_t> auto constexpr operator-=(enum_t& first, integral_t second) noexcept -> enum_t&    { return first = first - second; }
+    template<gl::has_bitwise_and enum_t                          > auto constexpr operator&=(enum_t& first, enum_t     second) noexcept -> enum_t&    { return first = first & second; }
+    template<gl::has_bitwise_or  enum_t                          > auto constexpr operator|=(enum_t& first, enum_t     second) noexcept -> enum_t&    { return first = first | second; }
+    template<gl::has_bitwise_xor enum_t                          > auto constexpr operator^=(enum_t& first, enum_t     second) noexcept -> enum_t&    { return first = first ^ second; }
+    template<gl::has_compare     enum_t                          > auto constexpr operator< (enum_t  first, enum_t     second) noexcept -> gl::bool_t { return std::to_underlying(first) <  std::to_underlying(second) ; }
+    template<gl::has_compare     enum_t                          > auto constexpr operator> (enum_t  first, enum_t     second) noexcept -> gl::bool_t { return std::to_underlying(first) >  std::to_underlying(second) ; }
+    template<gl::has_compare     enum_t                          > auto constexpr operator<=(enum_t  first, enum_t     second) noexcept -> gl::bool_t { return std::to_underlying(first) <= std::to_underlying(second) ; }
+    template<gl::has_compare     enum_t                          > auto constexpr operator>=(enum_t  first, enum_t     second) noexcept -> gl::bool_t { return std::to_underlying(first) >= std::to_underlying(second) ; }
+
+
 
     template<> struct gl::enum_operation<gl::buffer_mapping_range_access_flags_e> { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
     template<> struct gl::enum_operation<gl::buffer_mask_e                      > { static auto constexpr value = gl::flag_operation_e::bitwise   ; };
