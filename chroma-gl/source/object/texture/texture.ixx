@@ -32,7 +32,7 @@ export namespace gl
     public:
         using format_e = gl::texture_format_e;
         using vector_t = gl::vector_t<gl::uint32_t, dimension_v>;
-        using region_t = gl::region_t<gl::uint32_t, dimension_v>;
+        using region_t = gl::region<gl::uint32_t, dimension_v>;
 
         explicit
         texture_n(format_e format, vector_t dimensions,                                  gl::bool_t allocate_mipmaps = gl::true_)
@@ -190,7 +190,7 @@ export namespace gl
     public:
         using format_e = gl::texture_format_e;
         using vector_t = gl::vector_t<gl::uint32_t, dimension_v>;
-        using region_t = gl::region_t<gl::uint32_t, dimension_v>;
+        using region_t = gl::region<gl::uint32_t, dimension_v>;
 
         texture_n_array(gl::count_t element_count, format_e format, vector_t dimensions, gl::bool_t allocate_mipmaps = gl::true_)
             : gl::texture{ gl::map_texture_array_target(dimension_v) }
@@ -213,7 +213,7 @@ export namespace gl
         }
         void upload          (gl::index_t index, gl::uint32_t image_level, region_t image_region, gl::texture_data_descriptor texture_data_descriptor, std::span<gl::byte_t const> memory)
         {
-            auto const index_region = gl::region_t<gl::uint32_t, dimension_v + 1u>{ { image_region.origin, static_cast<gl::uint32_t>(index) }, { image_region.extent, gl::uint32_t{ 1u } } };
+            auto const index_region = gl::region<gl::uint32_t, dimension_v + 1u>{ { image_region.origin, static_cast<gl::uint32_t>(index) }, { image_region.extent, gl::uint32_t{ 1u } } };
             if constexpr (dimension_v == gl::uint32_t{ 1u }) gl::texture_sub_image_2d(handle(), image_level, index_region, texture_data_descriptor, memory);
             if constexpr (dimension_v == gl::uint32_t{ 2u }) gl::texture_sub_image_3d(handle(), image_level, index_region, texture_data_descriptor, memory);
         }

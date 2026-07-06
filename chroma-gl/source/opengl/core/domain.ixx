@@ -5,67 +5,71 @@ import :types;
 
 export namespace gl
 {
-    struct      range_t
+    struct index_range
     {
-        range_t(                   gl::count_t count)
-            : index{    0u }, count{ count } {}
-        range_t(gl::index_t index, gl::count_t count)
+        constexpr
+            index_range(gl::count_t count)
+            : index{ 0u }, count{ count } {}
+        constexpr
+            index_range(gl::index_t index, gl::count_t count)
             : index{ index }, count{ count } {}
 
-        auto is_empty  () const -> gl::bool_t
+        auto constexpr is_empty() const -> gl::bool_t
         {
             return count == gl::count_t{ 0u };
         }
 
-        auto operator==(range_t const&) const -> gl::bool_t = default;
+        auto constexpr operator==(index_range const&) const -> gl::bool_t = default;
 
         gl::index_t index;
         gl::count_t count;
     };
-    struct byte_range_t
+    struct byte_range
     {
-        byte_range_t(                     gl::size_t size)
-            : offset{     0u }, size{ size } {}
-        byte_range_t(gl::offset_t offset, gl::size_t size)
+        constexpr
+            byte_range(gl::size_t size)
+            : offset{ 0u }, size{ size } {}
+        constexpr
+            byte_range(gl::offset_t offset, gl::size_t size)
             : offset{ offset }, size{ size } {}
 
-        auto is_empty  () const -> gl::bool_t
+        auto constexpr is_empty() const -> gl::bool_t
         {
             return size == gl::size_t{ 0u };
         }
 
-        auto operator==(byte_range_t const&) const -> gl::bool_t = default;
+        auto constexpr operator==(byte_range const&) const -> gl::bool_t = default;
 
         gl::offset_t offset;
-        gl::size_t   size  ;
+        gl::size_t   size;
     };
-    template<typename element_t, gl::uint32_t component_v>
-    struct region_t
+    template<std::totally_ordered element_t, gl::size_t dimension_v>
+    struct region
     {
-        region_t(                                             gl::vector_t<element_t, component_v> extent)
-            : origin{        }, extent{ extent } {}
-        region_t(gl::vector_t<element_t, component_v> origin, gl::vector_t<element_t, component_v> extent)
-            : origin{ origin }, extent{ extent } {}
+        constexpr
+        region(gl::vector_t<element_t, dimension_v> const& extent = {}, gl::vector_t<element_t, dimension_v> const& origin = {})
+            : extent{ extent }, origin{ origin } {}
 
-        auto is_empty  () const -> gl::bool_t
+        auto constexpr is_empty() const -> gl::bool_t
         {
-            auto const* value_pointer = std::addressof(extent.x);
-            for (auto index = gl::index_t{ 0u }; index < component_v; ++index)
+            for (auto index = gl::size_t{ 0u }; index < dimension_v; ++index)
             {
-                if (value_pointer[index] != element_t{ 0 }) return gl::false_;
+                if (extent[index] <= element_t{})
+                {
+                    return gl::true_;
+                }
             }
-
-            return gl::true_;
+            return gl::false_;
         }
 
-        auto operator==(region_t const&) const -> gl::bool_t = default;
+        auto constexpr operator==(region const&) const -> gl::bool_t = default;
 
-        gl::vector_t<element_t, component_v> origin;
-        gl::vector_t<element_t, component_v> extent;
+        gl::vector_t<element_t, dimension_v> extent;
+        gl::vector_t<element_t, dimension_v> origin;
     };
 
-    using length_t       = gl::region_t<gl::uint32_t, 1u>;
-    using area_t         = gl::region_t<gl::uint32_t, 2u>;
-    using volume_t       = gl::region_t<gl::uint32_t, 3u>;
-    using hyper_volume_t = gl::region_t<gl::uint32_t, 4u>; //Yes, this exists
+    using line      = gl::region<gl::uint32_t, 1u>;
+    using rectangle = gl::region<gl::uint32_t, 2u>;
+    using box       = gl::region<gl::uint32_t, 3u>;
+    using hyper_box = gl::region<gl::uint32_t, 4u>;
 }

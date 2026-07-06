@@ -6,19 +6,19 @@ import :object.fence;
 
 export namespace gl
 {
-    using memory_lock_t = std::tuple<gl::fence, gl::range_t>;
+    using memory_lock_t = std::tuple<gl::fence, gl::index_range>;
     class memory_locker
     {
     public:
         memory_locker()
             : locks_{} {}
 
-        void lock(gl::range_t range)
+        void lock(gl::index_range range)
         {
             auto& [fence, _] = locks_.emplace_back(gl::fence{}, range);
             fence.place();
         }
-        void wait(gl::range_t range)
+        void wait(gl::index_range range)
         {
             auto remaining_locks = std::vector<gl::memory_lock_t>{};
             std::ranges::for_each(locks_, [&](gl::memory_lock_t& lock)

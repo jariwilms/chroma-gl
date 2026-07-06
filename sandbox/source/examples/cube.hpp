@@ -103,7 +103,7 @@ static inline void cube()
         
         pipeline    .bind();
         vertex_array.bind();
-        gl::draw_arrays(gl::draw_mode_e::triangles, gl::range_t{ 36u });
+        gl::draw_arrays(gl::draw_mode_e::triangles, gl::index_range{ 36u });
 
         window.swap_buffers();
     }

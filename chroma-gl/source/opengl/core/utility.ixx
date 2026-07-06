@@ -47,57 +47,57 @@ export namespace gl
 
     
     template<typename element_t>
-    auto convert_range        (gl::range_t      range                                ) -> gl::byte_range_t
+    auto convert_range        (gl::index_range range                               ) -> gl::byte_range
     {
-        return gl::byte_range_t{ range.index * sizeof(element_t), range.count * sizeof(element_t) };
+        return gl::byte_range{ range.index * sizeof(element_t), range.count * sizeof(element_t) };
     }
     template<typename element_t>
-    auto convert_range        (gl::byte_range_t range                                ) -> gl::range_t
+    auto convert_range        (gl::byte_range  range                               ) -> gl::index_range
     {
-        return gl::range_t{ range.offset / sizeof(element_t), range.size / sizeof(element_t) };
+        return gl::index_range{ range.offset / sizeof(element_t), range.size / sizeof(element_t) };
     }
-    auto clamp_range          (gl::range_t      range     , gl::size_t       boundary) -> gl::range_t
+    auto clamp_range          (gl::index_range range, gl::size_t      boundary) -> gl::index_range
     {
         range.index = std::min(range.index, boundary              );
         range.count = std::min(range.count, boundary - range.index);
 
         return range;
     }
-    auto clamp_range          (gl::byte_range_t byte_range, gl::size_t       boundary) -> gl::byte_range_t
+    auto clamp_range          (gl::byte_range  range, gl::size_t      boundary) -> gl::byte_range
     {
         byte_range.offset = std::min(byte_range.offset, boundary                    );
         byte_range.size   = std::min(byte_range.size  , boundary - byte_range.offset);
 
         return byte_range;
     }
-    auto range_intersection   (gl::range_t      alpha     , gl::range_t      beta    ) -> gl::range_t
+    auto range_intersection   (gl::index_range alpha, gl::index_range beta    ) -> gl::index_range
     {
         auto const intersect_index = std::max   (alpha.index              , beta.index                 );
         auto const intersect_end   = std::min   (alpha.index + alpha.count, beta.index  + beta.count   );
         auto const intersect_count = intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
         
-        return gl::range_t{ intersect_index, intersect_count };
+        return gl::index_range{ intersect_index, intersect_count };
     }
-    auto range_intersection   (gl::byte_range_t alpha     , gl::byte_range_t beta    ) -> gl::byte_range_t
+    auto range_intersection   (gl::byte_range  alpha, gl::byte_range  beta    ) -> gl::byte_range
     {
         auto const intersect_index = std::max   (alpha.offset             , beta.offset            );
         auto const intersect_end   = std::min   (alpha.offset + alpha.size, beta.offset + beta.size);
         auto const intersect_count =intersect_end > intersect_index ? intersect_end - intersect_index : gl::size_t{ 0u };
         
-        return gl::byte_range_t{ intersect_count, intersect_index };
+        return gl::byte_range{ intersect_count, intersect_index };
     }
-    auto range_overlaps       (gl::range_t      alpha     , gl::range_t      beta    ) -> gl::bool_t
+    auto range_overlaps       (gl::index_range alpha, gl::index_range beta    ) -> gl::bool_t
     {
         return (alpha.index < beta.index + beta.count) && (beta.index < alpha.index + beta.count);
     }
-    auto range_overlaps       (gl::byte_range_t alpha     , gl::byte_range_t beta    ) -> gl::bool_t
+    auto range_overlaps       (gl::byte_range  alpha, gl::byte_range  beta    ) -> gl::bool_t
     {
         return (alpha.offset < beta.offset + beta.size) && (beta.offset < alpha.offset + beta.size);
     }
     template<typename element_t, gl::uint32_t component_v>
-    auto clamp_region         (gl::region_t<element_t, component_v> region, gl::vector_t<element_t, component_v> boundary) -> gl::region_t<element_t, component_v>
+    auto clamp_region         (gl::region<element_t, component_v> region, gl::vector_t<element_t, component_v> boundary) -> gl::region<element_t, component_v>
     {
-        auto result = gl::region_t<element_t, component_v>{};
+        auto result = gl::region<element_t, component_v>{};
         std::ranges::for_each(std::views::iota(0u, component_v), [&](auto index)
             {
                 auto const maximum_extent = element_t{ boundary[index] - std::clamp(region.origin[index], element_t{ 0 }, boundary[index]) };

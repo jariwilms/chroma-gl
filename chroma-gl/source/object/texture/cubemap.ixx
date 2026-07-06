@@ -24,16 +24,16 @@ export namespace gl
             gl::texture_storage_2d(handle(), format_, dimensions_, mipmap_levels_);
         }
         
-        void upload          (face_e face,                                                  gl::texture_data_descriptor texture_data_descriptor,           std::span<gl::byte_t const>            memory)
+        void upload          (face_e face,                                                     gl::texture_data_descriptor texture_data_descriptor,           std::span<gl::byte_t const>            memory)
         {
             upload(face, gl::uint32_t{ 0u }, dimensions_, texture_data_descriptor, memory);
         }
-        void upload          (face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::texture_data_descriptor texture_data_descriptor,           std::span<gl::byte_t const>            memory)
+        void upload          (face_e face, gl::uint32_t image_level, gl::rectangle image_area, gl::texture_data_descriptor texture_data_descriptor,           std::span<gl::byte_t const>            memory)
         {
-            auto const image_volume = gl::volume_t{ gl::vector_3u{ image_area.origin, gl::to_underlying(face - face_e::positive_x) }, gl::vector_3u{ image_area.extent, 1u }, };
+            auto const image_volume = gl::box{ gl::vector_3u{ image_area.origin, gl::to_underlying(face - face_e::positive_x) }, gl::vector_3u{ image_area.extent, 1u }, };
             gl::texture_sub_image_3d(handle(), image_level, image_volume, texture_data_descriptor, memory);
         }
-        void upload          (                                                              gl::texture_data_descriptor texture_data_descriptor, std::span<std::span<gl::byte_t const> const, 6u> memory)
+        void upload          (                                                                 gl::texture_data_descriptor texture_data_descriptor, std::span<std::span<gl::byte_t const> const, 6u> memory)
         {
             for (auto const [face_index, face_memory] : std::views::enumerate(memory))
             {
@@ -106,17 +106,17 @@ export namespace gl
             gl::texture_storage_3d(handle(), format_, gl::vector_3u{ dimensions_, element_count_ }, mipmap_levels_);
         }
 
-        void upload          (gl::index_t index, face_e face,                                                  gl::texture_data_descriptor texture_data_descriptor,           std::span<gl::byte_t const>            memory)
+        void upload          (gl::index_t index, face_e face,                                                     gl::texture_data_descriptor texture_data_descriptor,           std::span<gl::byte_t const>            memory)
         {
             upload(index, face, gl::uint32_t{ 0u }, dimensions_, texture_data_descriptor, memory);
         }
-        void upload          (gl::index_t index, face_e face, gl::uint32_t image_level, gl::area_t image_area, gl::texture_data_descriptor texture_data_descriptor,           std::span<gl::byte_t const>            memory)
+        void upload          (gl::index_t index, face_e face, gl::uint32_t image_level, gl::rectangle image_area, gl::texture_data_descriptor texture_data_descriptor,           std::span<gl::byte_t const>            memory)
         {
             auto const face_origin  = index * 6u + gl::to_underlying(face - face_e::positive_x);
-            auto const image_volume = gl::volume_t{ gl::vector_3u{ image_area.origin, face_origin }, gl::vector_3u{ image_area.extent, 1u } };
+            auto const image_volume = gl::box{ gl::vector_3u{ image_area.origin, face_origin }, gl::vector_3u{ image_area.extent, 1u } };
             gl::texture_sub_image_3d(handle(), image_level, image_volume, texture_data_descriptor, memory);
         }
-        void upload          (gl::index_t index,                                                               gl::texture_data_descriptor texture_data_descriptor, std::span<std::span<gl::byte_t const> const, 6u> memory)
+        void upload          (gl::index_t index,                                                                  gl::texture_data_descriptor texture_data_descriptor, std::span<std::span<gl::byte_t const> const, 6u> memory)
         {
             for (auto const [face_index, face_memory] : std::views::enumerate(memory))
             {

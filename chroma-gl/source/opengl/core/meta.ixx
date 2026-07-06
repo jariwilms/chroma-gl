@@ -286,7 +286,7 @@ export namespace gl::meta
     template<> struct data_tag<gl::data_e::sample_coverage_value                                >{ using type = gl::float32_t                    ; };
     template<> struct data_tag<gl::data_e::sampler_binding                                      >{ using type = gl::handle_t                     ; };
     template<> struct data_tag<gl::data_e::samples                                              >{ using type = gl::bitfield_t                   ; };
-    template<> struct data_tag<gl::data_e::scissor_box                                          >{ using type = gl::area_t                       ; };
+    template<> struct data_tag<gl::data_e::scissor_box                                          >{ using type = gl::rectangle                    ; };
     template<> struct data_tag<gl::data_e::shader_compiler                                      >{ using type = gl::boolean_t                    ; };
     template<> struct data_tag<gl::data_e::shader_storage_buffer_binding                        >{ using type = gl::handle_t                     ; };
     template<> struct data_tag<gl::data_e::shader_storage_buffer_offset_alignment               >{ using type = gl::uint32_t                     ; };
@@ -339,7 +339,7 @@ export namespace gl::meta
     template<> struct data_tag<gl::data_e::unpack_skip_rows                                     >{ using type = gl::uint32_t                     ; };
     template<> struct data_tag<gl::data_e::unpack_swap_bytes                                    >{ using type = gl::boolean_t                    ; };
     template<> struct data_tag<gl::data_e::vertex_array_binding                                 >{ using type = gl::handle_t                     ; };
-    template<> struct data_tag<gl::data_e::viewport                                             >{ using type = gl::area_t                       ; };
+    template<> struct data_tag<gl::data_e::viewport                                             >{ using type = gl::rectangle                    ; };
     template<> struct data_tag<gl::data_e::viewport_bounds_range                                >{ using type = gl::vector_2i                    ; };
     template<> struct data_tag<gl::data_e::viewport_index_provoking_vertex                      >{ using type = gl::provoking_vertex_convention_e; };
     template<> struct data_tag<gl::data_e::viewport_sub_pixel_bits                              >{ using type = gl::uint32_t                     ; };
@@ -380,7 +380,7 @@ export namespace gl::meta
     template<> struct indexed_data_tag<gl::data_e::vertex_binding_divisor           >{ using type = gl::uint32_t           ; };
     template<> struct indexed_data_tag<gl::data_e::vertex_binding_offset            >{ using type = gl::size_t             ; };
     template<> struct indexed_data_tag<gl::data_e::vertex_binding_stride            >{ using type = gl::size_t             ; };
-    template<> struct indexed_data_tag<gl::data_e::viewport                         >{ using type = gl::area_t             ; };
+    template<> struct indexed_data_tag<gl::data_e::viewport                         >{ using type = gl::rectangle          ; };
 
 
 
