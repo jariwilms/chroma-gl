@@ -238,15 +238,6 @@ export namespace gl
         linear = GL_LINEAR, 
         srgb   = GL_SRGB  , 
     };
-    enum class compressed_texture_base_format_e : gl::enum_t
-    {
-        r     = GL_COMPRESSED_RED       , 
-        rg    = GL_COMPRESSED_RG        , 
-        rgb   = GL_COMPRESSED_RGB       , 
-        rgba  = GL_COMPRESSED_RGBA      , 
-        srgb  = GL_COMPRESSED_SRGB      , 
-        srgba = GL_COMPRESSED_SRGB_ALPHA, 
-    };
     enum class context_flags_e : gl::bitfield_t
     {
         forward_compatible = GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT,  
@@ -1558,6 +1549,15 @@ export namespace gl
         uint32   = GL_UNSIGNED_INT       , 
         uint32_n = GL_UNSIGNED_NORMALIZED, 
         float32  = GL_FLOAT              , 
+    };
+    enum class texture_compressed_base_format_e : gl::enum_t
+    {
+        r     = GL_COMPRESSED_RED       , 
+        rg    = GL_COMPRESSED_RG        , 
+        rgb   = GL_COMPRESSED_RGB       , 
+        rgba  = GL_COMPRESSED_RGBA      , 
+        srgb  = GL_COMPRESSED_SRGB      , 
+        srgba = GL_COMPRESSED_SRGB_ALPHA, 
     };
     enum class texture_compressed_format_e : gl::enum_t
     {

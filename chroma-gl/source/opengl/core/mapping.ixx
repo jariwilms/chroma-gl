@@ -101,9 +101,9 @@ export namespace gl
             default: return gl::frame_buffer_attachment_e::color_0      ;
         }
     }
-    auto map_pixel_data_component_size          (gl::pixel_data_type_e      pixel_data_type     ) -> gl::uint32_t
+    auto map_pixel_data_component_size          (gl::pixel_data_type_e data_type) -> gl::uint32_t
     {
-        switch (pixel_data_type)
+        switch (data_type)
         {
             case gl::pixel_data_type_e::int8                     : return 1u;
             case gl::pixel_data_type_e::int16                    : return 2u;

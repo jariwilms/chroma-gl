@@ -9,11 +9,11 @@ export namespace gl
     template<typename format_t>
     struct pixel_data_descriptor
     {
-        format_t              base_format     = format_t             ::rgba;
-        gl::pixel_data_type_e pixel_data_type = gl::pixel_data_type_e::byte;
+        format_t              base_format = format_t             ::rgba;
+        gl::pixel_data_type_e data_type   = gl::pixel_data_type_e::byte;
     };
     using  texture_data_descriptor            = gl::pixel_data_descriptor<gl::texture_base_format_e           >;
-    using  compressed_texture_data_descriptor = gl::pixel_data_descriptor<gl::compressed_texture_base_format_e>;
+    using  compressed_texture_data_descriptor = gl::pixel_data_descriptor<gl::texture_compressed_base_format_e>;
     using  buffer_data_descriptor             = gl::pixel_data_descriptor<gl::buffer_base_format_e            >;
 
 
