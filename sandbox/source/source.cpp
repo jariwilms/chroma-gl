@@ -6,14 +6,14 @@ import chroma_gl;
 //#include "examples/frame_buffer.hpp"
 //#include "examples/instance_id.hpp"
 //#include "examples/instanced.hpp"
-//#include "examples/texture.hpp"
+#include "examples/texture.hpp"
 #include "examples/triangle.hpp"
 
 auto main() -> int
 {
     ::triangle();
     //::cube();
-    //::texture();
+    ::texture();
     //::frame_buffer();
     //::instanced();
     //::instance_id();

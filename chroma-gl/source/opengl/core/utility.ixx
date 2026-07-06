@@ -65,10 +65,10 @@ export namespace gl
     }
     auto clamp_range          (gl::byte_range  range, gl::size_t      boundary) -> gl::byte_range
     {
-        byte_range.offset = std::min(byte_range.offset, boundary                    );
-        byte_range.size   = std::min(byte_range.size  , boundary - byte_range.offset);
+        range.offset = std::min(range.offset, boundary               );
+        range.size   = std::min(range.size  , boundary - range.offset);
 
-        return byte_range;
+        return range;
     }
     auto range_intersection   (gl::index_range alpha, gl::index_range beta    ) -> gl::index_range
     {

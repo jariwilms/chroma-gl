@@ -33,7 +33,7 @@ static inline void texture()
     using      uv_attribute           = gl::vertex_attribute<gl::vector_2f>;
     using      texture_layout         = gl::interleaved_layout<position_attribute, uv_attribute>;
     vertex_array.attach<texture_layout>(vertex_buffer);
-    vertex_array.attach                     (index_buffer );
+    vertex_array.attach                (index_buffer );
 
     //Shader setup
     auto pipeline                     = gl::create_pipeline_from_files(

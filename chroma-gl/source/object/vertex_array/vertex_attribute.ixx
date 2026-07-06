@@ -12,19 +12,19 @@ import opengl;
         static auto constexpr count     = gl::size_t{ 1u };
         static auto constexpr locations = gl::size_t{ 1u };
     };
-    template<typename component_t, gl::uint32_t Components>
-    struct component_traits<gl::vector_t<component_t, Components>>
+    template<typename component_t, gl::size_t components_v>
+    struct component_traits<gl::vector_t<component_t, components_v>>
     { 
         using type = component_t; 
-        static auto constexpr count     = gl::size_t{ Components };
-        static auto constexpr locations = gl::size_t{ 1u         };
+        static auto constexpr count     = gl::size_t{ components_v };
+        static auto constexpr locations = gl::size_t{ 1u           };
     };
-    template<typename component_t, gl::uint32_t Columns, gl::uint32_t Rows>
-    struct component_traits<gl::matrix_t<component_t, Columns, Rows>>
+    template<typename component_t, gl::size_t columns_v, gl::size_t rows_v>
+    struct component_traits<gl::matrix_t<component_t, columns_v, rows_v>>
     {
         using type = component_t;
-        static auto constexpr count     = gl::size_t{ Columns };
-        static auto constexpr locations = gl::size_t{ Rows    };
+        static auto constexpr count     = gl::size_t{ columns_v };
+        static auto constexpr locations = gl::size_t{ rows_v    };
     };
     template<typename component_t>
     struct component_traits<gl::quaternion_t<component_t>>

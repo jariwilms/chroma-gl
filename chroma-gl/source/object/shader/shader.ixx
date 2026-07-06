@@ -42,7 +42,7 @@ export namespace gl
         }
 
         template<typename value_t>
-        void upload(gl::index_t location, const value_t& value)
+        void upload(gl::index_t location, value_t const& value)
         {
             gl::program_uniform(handle(), location, value);
         }
