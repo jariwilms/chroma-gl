@@ -33,7 +33,7 @@ export namespace gl
 
         return texture;
     }
-    auto create_pipeline_from_files(const std::unordered_map<gl::shader::type_e, std::filesystem::path>& file_names) -> gl::pipeline
+    auto create_pipeline_from_files(std::unordered_map<gl::shader::type_e, std::filesystem::path> const& file_names) -> gl::pipeline
     {
         auto shaders = std::vector<std::shared_ptr<gl::shader>>{};
         std::ranges::for_each(file_names, [&](auto const iterator)

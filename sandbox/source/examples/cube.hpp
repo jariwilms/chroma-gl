@@ -48,11 +48,11 @@ static inline void cube()
     auto       mvp_uniform            = gl::uniform_buffer<mvp>{ gl::count_t{ 1u } };
     auto       matrices               = mvp
     {
-        gl::matrix_4f{ 1.0f }                                                                                     , 
-        glm::lookAt(camera_position, gl::vector_3f{ 0.0f }, gl::vector_3f{ 0.0f,  1.0f,  0.0f })                  , 
-        gl::create_projection<gl::projection_type_e::perspective>(glm::radians(45.0f), aspect_ratio, 0.1f, 100.0f), 
+        gl::matrix_4f{ 1.0f }                                                                   , 
+        glm::lookAt(camera_position, gl::vector_3f{ 0.0f }, gl::vector_3f{ 0.0f,  1.0f,  0.0f }), 
+        gl::projection::perspective(glm::radians(45.0f), aspect_ratio, 0.1f, 100.0f)            , 
     };
-
+    
     mvp_uniform.bind(gl::binding_t{ 0u });
     mvp_uniform.upload(matrices);
 

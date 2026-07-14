@@ -16,7 +16,7 @@ export namespace gl
             : gl::object{ gl::create_pipeline() } {}
         explicit
         pipeline(std::span<std::shared_ptr<gl::shader> const> shaders)
-            : gl::object{ gl::create_pipeline() }
+            : pipeline{}
         {
             std::ranges::for_each(shaders, [&](auto shader) { link(shader); });
         }
