@@ -20,17 +20,24 @@ import <glad/gl.h>;
 
 export namespace gl
 {
-    //C++ OpenGL Wrapper Library
-    //
-    //This library provides a modern, robust, and user-friendly interface for OpenGL
-    //Its primary goals are to:
-    //    * Offer a more intuitive and correct interface for development
-    //    * Encapsulate existing OpenGL functions, simplifying integration of additional logic
-    //    * Cache state in order to eliminate redundant driver calls
-    //    * Provide compile-and runtime safety through comprehensive input validation
-    //
-    //Functions are organized according to their appearance in the OpenGL 4.6 Core Profile Specification
-    //Reference: https://registry.khronos.org/OpenGL/specs/gl/glspec46.core.pdf
+    /*      __                                           __
+      _____/ /_  _________  ____ ___  ____ _      ____ _/ /
+     / ___/ __ \/ ___/ __ \/ __ `__ \/ __ `/_____/ __ `/ / 
+    / /__/ / / / /  / /_/ / / / / / / /_/ /_____/ /_/ / /  
+    \___/_/ /_/_/   \____/_/ /_/ /_/\__,_/      \__, /_/   
+                                               /____/*/
+
+    /*
+    This library provides a modern, robust, and user-friendly interface for OpenGL
+    Its primary goals are to:
+        * Offer a more intuitive and correct interface for development
+        * Encapsulate existing OpenGL functions, simplifying integration of additional logic
+        * Cache state in order to eliminate redundant driver calls
+        * Provide compile-and runtime safety through input validation
+    
+    Functions are organized according to their appearance in the OpenGL 4.6 Core Profile Specification
+    Reference: https://registry.khronos.org/OpenGL/specs/gl/glspec46.core.pdf
+    */
 
 
 

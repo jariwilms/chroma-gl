@@ -1,9 +1,8 @@
 export module chroma_gl;
 export import opengl;
 export import :color;
-export import :io;
 export import :io.image;
-export import :object;
+export import :io;
 export import :object.buffer;
 export import :object.cubemap;
 export import :object.frame_buffer;
@@ -15,6 +14,7 @@ export import :object.shader.uniform_cache;
 export import :object.shader;
 export import :object.texture;
 export import :object.vertex_array;
+export import :object;
 export import :projection;
 export import :vertex;
 
@@ -22,7 +22,7 @@ import std;
 
 export namespace gl
 {
-    auto create_texture_from_file  (const std::filesystem::path& path) -> gl::texture_2d
+    auto create_texture_from_file  (std::filesystem::path const& path) -> gl::texture_2d
     {
         auto       image_data            = gl::io::read(path);
         auto       image                 = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
@@ -33,10 +33,10 @@ export namespace gl
 
         return texture;
     }
-    auto create_pipeline_from_files(const std::unordered_map<gl::shader::type_e, std::string_view>& filenames) -> gl::pipeline
+    auto create_pipeline_from_files(const std::unordered_map<gl::shader::type_e, std::filesystem::path>& file_names) -> gl::pipeline
     {
         auto shaders = std::vector<std::shared_ptr<gl::shader>>{};
-        std::ranges::for_each(filenames, [&](auto iterator)
+        std::ranges::for_each(file_names, [&](auto const iterator)
             {
                 auto const binary = gl::io::read(iterator.second);
                 shaders.emplace_back(std::make_shared<gl::shader>(iterator.first, "main", binary));

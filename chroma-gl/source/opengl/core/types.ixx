@@ -7,11 +7,8 @@ import glm;
 export namespace gl
 {
     using bool_t                        = bool                         ;
-    enum                                : gl::bool_t 
-    { 
-        false_ = GL_FALSE, 
-        true_  = GL_TRUE , 
-    };
+    enum                                : gl::bool_t { false_  = GL_FALSE, true_   = GL_TRUE };
+    enum                                : gl::bool_t { failure = GL_FALSE, success = GL_TRUE };
 
     using void_t                        = ::GLvoid                     ;
     using boolean_t                     = ::GLboolean                  ;

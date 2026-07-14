@@ -7,12 +7,16 @@ import :types;
 
 export namespace gl::meta
 {
-    template<typename alpha_t, typename... beta_t>
-    auto constexpr all_same_type_v          = std::conjunction_v<std::is_same<alpha_t, beta_t>...>;
-    template<auto check_v, auto mininum_v, auto maximum_v>
-    auto constexpr within_open_interval_v   = (check_v >  mininum_v && check_v <  maximum_v);
+    template<typename first_t, typename... remaining_t>
+    concept all_same_type          = (std::same_as<first_t, remaining_t> && ...);
+    template<typename first_t, typename... remaining_t>
+    concept all_of_type            = (std::same_as<std::remove_cvref_t<first_t>, std::remove_cvref_t<remaining_t>> && ...);
+    template<typename base_t, typename... value_t>
+    concept all_derived_from       = (std::derived_from<std::remove_cvref_t<value_t>, base_t> && ...);
     template<auto check_v, auto minimum_v, auto maximum_v>
-    auto constexpr within_closed_interval_v = (check_v >= minimum_v && check_v <= maximum_v);
+    concept within_open_interval   = (check_v > minimum_v && check_v < maximum_v);
+    template<auto check_v, auto minimum_v, auto maximum_v>
+    concept within_closed_interval = (check_v >= minimum_v && check_v <= maximum_v);
 
 
 
