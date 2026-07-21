@@ -6,8 +6,8 @@ import <rgfw/rgfw.h>;
 
 export namespace rgfw
 {
-    using void_t        =   void           ;
-    using bool_t        = ::RGFW_bool      ;
+    using void_t        = void             ;
+    using bool_t        = bool             ;
     enum                : rgfw::bool_t
     {
         false_ = RGFW_FALSE, 
@@ -36,7 +36,7 @@ export namespace rgfw
     using event_t       = ::RGFW_event     ;
     using event_type_t  = ::RGFW_eventType ;
     using event_flag_t  = ::RGFW_eventFlag ;
-    using gl_context_t  = ::RGFW_glContext ;
+    using gl_context_t  = ::RGFW_glContext;
     using egl_context_t = ::RGFW_eglContext;
 
 

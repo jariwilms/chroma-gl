@@ -6,7 +6,8 @@ static inline void compute()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "compute example", window_dimensions, rgfw::window_display_mode_e::windowed, rgfw::false_ };
+    auto const window_flags           = rgfw::window::flags_e::center | rgfw::window::flags_e::scale_to_monitor;
+    auto       window                 = rgfw::window{ "compute", window_dimensions, window_flags };
     
     //Buffer data
     auto const input_size             = 1024u;
@@ -25,7 +26,7 @@ static inline void compute()
     //Shader setup
     auto       pipeline               = gl::create_pipeline_from_files(
         {
-            { gl::shader::type_e::compute, "source/examples/assets/shaders/compiled/multiply.comp.spv" },
+            { gl::shader::type_e::compute, "assets/shaders/compiled/multiply.comp.spv" },
         });
 
     //Bindings and data upload

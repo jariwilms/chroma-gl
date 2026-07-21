@@ -8,7 +8,8 @@ static inline void texture()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "texture example", window_dimensions };
+    auto const window_flags           = rgfw::window::flags_e::center | rgfw::window::flags_e::scale_to_monitor;
+    auto       window                 = rgfw::window   { "texture", window_dimensions, window_flags };
     
     //Vertex data
     auto const vertex_data            = std::vector<gl::float32_t>
@@ -38,22 +39,22 @@ static inline void texture()
     //Shader setup
     auto pipeline                     = gl::create_pipeline_from_files(
         {
-            { gl::shader::type_e::vertex  , "source/examples/assets/shaders/compiled/texture.vert.spv" },
-            { gl::shader::type_e::fragment, "source/examples/assets/shaders/compiled/texture.frag.spv" },
+            { gl::shader::type_e::vertex  , "assets/shaders/compiled/texture.vert.spv" },
+            { gl::shader::type_e::fragment, "assets/shaders/compiled/texture.frag.spv" },
         });
     
     //Texture loading
-    auto       image_data             = gl::io::read("source/examples/assets/textures/opengl_logo.png");
-    auto       image                  = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
-    auto       texture                = gl::texture_2d{ gl::texture_2d::format_e::rgba_uint8_n, image.dimensions() };
-    auto const pixel_data_descriptor  = gl::pixel_data_descriptor{ gl::texture_base_format_e::rgba, gl::pixel_data_type_e::byte };
-    auto const texture_state          = gl::state::texture
+    auto       image_data              = gl::io::read("assets/textures/opengl_logo.png");
+    auto       image                   = gl::image::decode(gl::image::format_e::rgba_uint8, image_data);
+    auto       texture                 = gl::texture_2d{ gl::texture_2d::format_e::rgba_uint8_n, image.dimensions() };
+    auto const texture_data_descriptor = gl::texture_data_descriptor{ gl::texture_base_format_e::rgba, gl::pixel_data_type_e::byte };
+    auto const texture_state           = gl::state::texture
     {
         .minification_filter  = gl::texture_minification_filter_e ::linear_mipmap_linear, 
         .magnification_filter = gl::texture_magnification_filter_e::linear              , 
         .maximum_anisotropy   = 16.0f                                                   , 
     };
-    texture.upload          (pixel_data_descriptor, image.data());
+    texture.upload          (texture_data_descriptor, image.data());
     texture.apply           (texture_state);
     texture.generate_mipmaps();
 

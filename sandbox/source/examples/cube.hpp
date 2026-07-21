@@ -9,7 +9,8 @@ static inline void cube()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "triangle example", window_dimensions };
+    auto const window_flags           = rgfw::window::flags_e::center | rgfw::window::flags_e::scale_to_monitor;
+    auto       window                 = rgfw::window{ "cube", window_dimensions, window_flags };
     auto       input                  = window.input_handler();
 
     //Vertex data
@@ -59,8 +60,8 @@ static inline void cube()
     //Shader setup
     auto       pipeline               = gl::create_pipeline_from_files(
         { 
-            { gl::shader::type_e::vertex  , "source/examples/assets/shaders/compiled/cube.vert.spv" }, 
-            { gl::shader::type_e::fragment, "source/examples/assets/shaders/compiled/cube.frag.spv" }, 
+            { gl::shader::type_e::vertex  , "assets/shaders/compiled/cube.vert.spv" }, 
+            { gl::shader::type_e::fragment, "assets/shaders/compiled/cube.frag.spv" }, 
         });
 
     //Timing

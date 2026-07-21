@@ -6,7 +6,8 @@ void frame_buffer()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "frame buffer example", window_dimensions };
+    auto const window_flags           = rgfw::window::flags_e::center | rgfw::window::flags_e::scale_to_monitor;
+    auto       window                 = rgfw::window{ "frame buffer", window_dimensions, window_flags };
     auto const input                  = window.input_handler();
 
     //Vertex data
@@ -35,13 +36,13 @@ void frame_buffer()
     //Shader setup
     auto pipeline                     = gl::create_pipeline_from_files(
         {
-            { gl::shader::type_e::vertex  , "source/examples/assets/shaders/compiled/triangle.vert.spv" },
-            { gl::shader::type_e::fragment, "source/examples/assets/shaders/compiled/triangle.frag.spv" },
+            { gl::shader::type_e::vertex  , "assets/shaders/compiled/triangle.vert.spv" },
+            { gl::shader::type_e::fragment, "assets/shaders/compiled/triangle.frag.spv" },
         });
 
     //Frame Buffer Specification
-    auto const color_specification    = gl::frame_buffer_specification{ "my_color", gl::frame_buffer_surface_e::texture      , gl::texture_format_e      ::rgba_uint8_n              };
-    auto const depth_specification    = gl::frame_buffer_specification{ "my_depth", gl::frame_buffer_surface_e::render_buffer, gl::render_buffer_format_e::depth_stencil_uint32_24_8 };
+    auto const color_specification    = gl::frame_buffer_specification<>{ "my_color", gl::frame_buffer_surface_e::texture      , gl::texture_format_e      ::rgba_uint8_n              };
+    auto const depth_specification    = gl::frame_buffer_specification<>{ "my_depth", gl::frame_buffer_surface_e::render_buffer, gl::render_buffer_format_e::depth_stencil_uint32_24_8 };
     auto const attachment_map         = gl::frame_buffer_attachment_map_t
     {
         { gl::frame_buffer_attachment_e::color_0      , color_specification }, 
@@ -60,8 +61,8 @@ void frame_buffer()
         gl::clear_color(gl::vector_4f{ 0.1f } );
         gl::clear      (gl::buffer_mask_e::all);
         
-        pipeline       .bind();
-        vertex_array   .bind();
+        pipeline    .bind();
+        vertex_array.bind();
         frame_buffer.bind(gl::frame_buffer::target_e::read_write);
         gl::draw_elements    (gl::draw_mode_e::triangles, gl::draw_type_e::uint32, vertex_array.index_count(), gl::index_t{ 0u });
         gl::blit_frame_buffer(frame_buffer.handle(), gl::default_frame_buffer, gl::buffer_mask_e::color, gl::frame_buffer_filter_e::nearest, window_dimensions, window_dimensions);

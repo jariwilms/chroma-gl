@@ -89,45 +89,46 @@ export namespace rgfw
             switch (event.type)
             {
                 using enum rgfw::event_type_e;
+                case key_character         : break;
                 case key_pressed           :
                 {
                     auto const& key_event = event.key;
-                    auto const& symbol    = static_cast<rgfw::key_e>(key_event.symbol);
-                    if (symbol > rgfw::key_e::__maximum) return;
+                    auto const  value     = key_event.value;
+                    if (value > std::numeric_limits<rgfw::uint8_t>::max()) return;
 
-                    active_keys_[std::to_underlying(symbol)] = rgfw::true_;
+                    active_keys_[value] = rgfw::true_;
                     break;
                 }
                 case key_released          :
                 {
                     auto const& key_event = event.key;
-                    auto const& symbol    = static_cast<rgfw::key_e>(key_event.symbol);
-                    if (symbol > rgfw::key_e::__maximum) return;
+                    auto const  value     = key_event.value;
+                    if (value > std::numeric_limits<rgfw::uint8_t>::max()) return;
 
-                    active_keys_[std::to_underlying(symbol)] = rgfw::false_;
+                    active_keys_[value] = rgfw::false_;
                     break;
                 }
                 case mouse_button_pressed  :
                 {
                     auto const& mouse_button_event = event.mouse_button;
-                    auto const& symbol             = static_cast<rgfw::button_e>(mouse_button_event.value);
-                    if (symbol > rgfw::button_e::__maximum) return;
+                    auto const  value              = mouse_button_event.value;
+                    if (value > std::numeric_limits<rgfw::uint8_t>::max()) return;
 
-                    active_buttons_[std::to_underlying(symbol)] = rgfw::true_;
+                    active_buttons_[value] = rgfw::true_;
                     break;
                 }
                 case mouse_button_released :
                 {
                     auto const& mouse_button_event = event.mouse_button;
-                    auto const& symbol             = static_cast<rgfw::button_e>(mouse_button_event.value);
-                    if (symbol > rgfw::button_e::__maximum) return;
+                    auto const  value              = mouse_button_event.value;
+                    if (value > std::numeric_limits<rgfw::uint8_t>::max()) return;
 
-                    active_buttons_[std::to_underlying(symbol)] = rgfw::false_;
+                    active_buttons_[value] = rgfw::false_;
                     break;
                 }
                 case mouse_enter           : break;
                 case mouse_leave           : break;
-                case mouse_position_changed: 
+                case mouse_motion          : 
                 {
                     auto const& mouse_position_event = event.mouse_position;
                     cursor_position_ = rgfw::vector_2u
@@ -149,20 +150,24 @@ export namespace rgfw
 
                     break;
                 }
+                case window_close : 
+                {
 
-                default: return;
+                }
+
+                default                    : return;
             }
 
         }
 
     private:
-        std::bitset<std::to_underlying(rgfw::key_e   ::__maximum)> active_keys_;
-        std::bitset<std::to_underlying(rgfw::key_e   ::__maximum)> last_active_keys_;
-        std::bitset<std::to_underlying(rgfw::button_e::__maximum)> active_buttons_;
-        std::bitset<std::to_underlying(rgfw::button_e::__maximum)> last_active_buttons_;
-        rgfw::vector_2u                                            cursor_position_;
-        rgfw::vector_2u                                            last_cursor_position_;
-        rgfw::vector_2u                                            scroll_wheel_;
-        rgfw::vector_2u                                            last_scroll_wheel_;
+        std::bitset<std::numeric_limits<rgfw::uint8_t>::max()> active_keys_;
+        std::bitset<std::numeric_limits<rgfw::uint8_t>::max()> last_active_keys_;
+        std::bitset<std::numeric_limits<rgfw::uint8_t>::max()> active_buttons_;
+        std::bitset<std::numeric_limits<rgfw::uint8_t>::max()> last_active_buttons_;
+        rgfw::vector_2u                                        cursor_position_;
+        rgfw::vector_2u                                        last_cursor_position_;
+        rgfw::vector_2u                                        scroll_wheel_;
+        rgfw::vector_2u                                        last_scroll_wheel_;
     };
 }

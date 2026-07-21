@@ -8,7 +8,7 @@ import :types;
 
 export namespace rgfw
 {
-    auto initialize(std::string const& class_name, rgfw::initialization_flag_e initialization_flag)
+    auto initialize             (std::string const& class_name, rgfw::initialization_flag_e initialization_flag)
     {
         ::RGFW_init(class_name.c_str(), std::to_underlying(initialization_flag));
     }
@@ -20,9 +20,9 @@ export namespace rgfw
             static_cast<rgfw::int32_t>(position.x), static_cast<rgfw::int32_t>(position.y), 
             std::to_underlying(flags)            );
     }
-    auto create_context         (rgfw::window_t* window, rgfw::gl_hints& gl_hints)
+    auto create_context         (rgfw::window_t* window, rgfw::gl_hints& gl_hints) -> rgfw::gl_context_t*
     {
-        ::RGFW_window_createContext_OpenGL(window, reinterpret_cast<::RGFW_glHints*>(&gl_hints));
+        return ::RGFW_window_createContext_OpenGL(window, reinterpret_cast<::RGFW_glHints*>(&gl_hints));
     }
 
     void make_current_context   (rgfw::window_t* window)
@@ -55,6 +55,14 @@ export namespace rgfw
     void window_resize          (rgfw::window_t* window, rgfw::vector_2u const& dimensions)
     {
         ::RGFW_window_resize(window, static_cast<rgfw::int32_t>(dimensions.x), static_cast<rgfw::int32_t>(dimensions.y));
+    }
+    void window_set_border      (rgfw::window_t* window, rgfw::bool_t state)
+    {
+        ::RGFW_window_setBorder(window, state);
+    }
+    void window_set_fullscreen  (rgfw::window_t* window, rgfw::bool_t state)
+    {
+        ::RGFW_window_setFullscreen(window, state);
     }
     void window_set_should_close(rgfw::window_t* window, rgfw::bool_t state)
     {

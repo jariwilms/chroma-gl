@@ -8,7 +8,8 @@ static inline void triangle()
 {
     //Window creation
     auto const window_dimensions      = rgfw::vector_2u{ 1280u, 720u };
-    auto       window                 = rgfw::window   { "triangle example", window_dimensions };
+    auto const window_flags           = rgfw::window::flags_e::center | rgfw::window::flags_e::scale_to_monitor;
+    auto       window                 = rgfw::window{ "triangle", window_dimensions, window_flags };
 
     //Vertex data
     struct     vertices
@@ -39,8 +40,8 @@ static inline void triangle()
     //Shader setup
     auto pipeline                     = gl::create_pipeline_from_files(
         { 
-            { gl::shader::type_e::vertex  , "source/examples/assets/shaders/compiled/triangle.vert.spv" }, 
-            { gl::shader::type_e::fragment, "source/examples/assets/shaders/compiled/triangle.frag.spv" }, 
+            { gl::shader::type_e::vertex  , "assets/shaders/compiled/triangle.vert.spv" }, 
+            { gl::shader::type_e::fragment, "assets/shaders/compiled/triangle.frag.spv" }, 
         });
 
 

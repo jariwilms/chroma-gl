@@ -7,24 +7,37 @@ export namespace rgfw
 {
     enum class key_e : rgfw::key_t
     {
-        key_null        = ::RGFW_keyNULL        , 
-        escape          = ::RGFW_keyEscape      ,
-        backtick        = ::RGFW_keyBacktick    ,
-        _0              = ::RGFW_key0           , 
-        _1              = ::RGFW_key1           , 
-        _2              = ::RGFW_key2           , 
-        _3              = ::RGFW_key3           , 
-        _4              = ::RGFW_key4           , 
-        _5              = ::RGFW_key5           , 
-        _6              = ::RGFW_key6           , 
-        _7              = ::RGFW_key7           , 
-        _8              = ::RGFW_key8           , 
-        _9              = ::RGFW_key9           , 
-        minus           = ::RGFW_keyMinus       , 
-        equals          = ::RGFW_keyEquals      , 
+        null            = ::RGFW_keyNULL        , 
         backspace       = ::RGFW_keyBackSpace   , 
-        tab             = ::RGFW_keyTab         , 
+        horizontal_tab  = ::RGFW_keyTab         , 
+        enter           = ::RGFW_keyEnter       , 
+        return_         = ::RGFW_keyReturn      , 
+
+        escape          = ::RGFW_keyEscape      , 
         space           = ::RGFW_keySpace       , 
+
+        apostrophe      = ::RGFW_keyApostrophe  , 
+        comma           = ::RGFW_keyComma       , 
+        period          = ::RGFW_keyPeriod      , 
+        slash           = ::RGFW_keySlash       , 
+
+        zero            = ::RGFW_key0           , 
+        one             = ::RGFW_key1           , 
+        two             = ::RGFW_key2           , 
+        three           = ::RGFW_key3           , 
+        four            = ::RGFW_key4           , 
+        five            = ::RGFW_key5           , 
+        six             = ::RGFW_key6           , 
+        seven           = ::RGFW_key7           , 
+        eight           = ::RGFW_key8           , 
+        nine            = ::RGFW_key9           , 
+
+        minus           = ::RGFW_keyMinus       , 
+        semicolon       = ::RGFW_keySemicolon   , 
+        equals          = ::RGFW_keyEquals      , 
+        
+        backtick        = ::RGFW_keyBacktick    , 
+
         a               = ::RGFW_keyA           , 
         b               = ::RGFW_keyB           , 
         c               = ::RGFW_keyC           , 
@@ -51,26 +64,22 @@ export namespace rgfw
         x               = ::RGFW_keyX           , 
         y               = ::RGFW_keyY           , 
         z               = ::RGFW_keyZ           , 
-        period          = ::RGFW_keyPeriod      , 
-        comma           = ::RGFW_keyComma       , 
-        slash           = ::RGFW_keySlash       , 
+
         bracket         = ::RGFW_keyBracket     , 
-        close_bracket   = ::RGFW_keyCloseBracket, 
-        semicolon       = ::RGFW_keySemicolon   , 
-        apostrophe      = ::RGFW_keyApostrophe  , 
         backslash       = ::RGFW_keyBackSlash   , 
-        return_         = ::RGFW_keyReturn      , 
-        enter           = ::RGFW_keyEnter       , 
+        close_bracket   = ::RGFW_keyCloseBracket, 
+
         delete_         = ::RGFW_keyDelete      , 
-        function_1      = ::RGFW_keyF1          , 
-        function_2      = ::RGFW_keyF2          , 
-        function_3      = ::RGFW_keyF3          , 
-        function_4      = ::RGFW_keyF4          , 
-        function_5      = ::RGFW_keyF5          , 
-        function_6      = ::RGFW_keyF6          , 
-        function_7      = ::RGFW_keyF7          , 
-        function_8      = ::RGFW_keyF8          , 
-        function_9      = ::RGFW_keyF9          , 
+
+        function_01     = ::RGFW_keyF1          , 
+        function_02     = ::RGFW_keyF2          , 
+        function_03     = ::RGFW_keyF3          , 
+        function_04     = ::RGFW_keyF4          , 
+        function_05     = ::RGFW_keyF5          , 
+        function_06     = ::RGFW_keyF6          , 
+        function_07     = ::RGFW_keyF7          , 
+        function_08     = ::RGFW_keyF8          , 
+        function_09     = ::RGFW_keyF9          , 
         function_10     = ::RGFW_keyF10         , 
         function_11     = ::RGFW_keyF11         , 
         function_12     = ::RGFW_keyF12         , 
@@ -87,6 +96,7 @@ export namespace rgfw
         function_23     = ::RGFW_keyF23         , 
         function_24     = ::RGFW_keyF24         , 
         function_25     = ::RGFW_keyF25         , 
+
         caps_lock       = ::RGFW_keyCapsLock    , 
         left_shift      = ::RGFW_keyShiftL      , 
         left_control    = ::RGFW_keyControlL    , 
@@ -96,6 +106,7 @@ export namespace rgfw
         right_control   = ::RGFW_keyControlR    , 
         right_alt       = ::RGFW_keyAltR        , 
         right_super     = ::RGFW_keySuperR      , 
+
         up              = ::RGFW_keyUp          , 
         down            = ::RGFW_keyDown        , 
         left            = ::RGFW_keyLeft        , 
@@ -107,6 +118,7 @@ export namespace rgfw
         page_up         = ::RGFW_keyPageUp      , 
         page_down       = ::RGFW_keyPageDown    , 
         num_lock        = ::RGFW_keyNumLock     , 
+
         keypad_slash    = ::RGFW_keyPadSlash    , 
         keypad_multiply = ::RGFW_keyPadMultiply , 
         keypad_plus     = ::RGFW_keyPadPlus     , 
@@ -124,18 +136,12 @@ export namespace rgfw
         keypad_0        = ::RGFW_keyPad0        , 
         keypad_period   = ::RGFW_keyPadPeriod   , 
         keypad_return   = ::RGFW_keyPadReturn   , 
+
         scroll_lock     = ::RGFW_keyScrollLock  , 
         print_screen    = ::RGFW_keyPrintScreen , 
         pause           = ::RGFW_keyPause       , 
         world_1         = ::RGFW_keyWorld1      , 
         world_2         = ::RGFW_keyWorld2      , 
-
-        shift           = left_shift            , 
-        control         = left_control          , 
-        alt             = left_alt              , 
-        super           = left_super            , 
-
-        __maximum       = std::numeric_limits<rgfw::uint8_t>::max(), 
     };
     enum class button_e : rgfw::button_t
     {
@@ -147,9 +153,6 @@ export namespace rgfw
         miscellaneous_3 = ::RGFW_mouseMisc3 , 
         miscellaneous_4 = ::RGFW_mouseMisc4 , 
         miscellaneous_5 = ::RGFW_mouseMisc5 , 
-        final           = ::RGFW_mouseFinal , 
-
-        __maximum = std::numeric_limits<rgfw::uint8_t>::max(), 
     };
     enum class modifier_e : rgfw::modifier_t
     {
